@@ -1,0 +1,299 @@
+package net.ooder.esd.bean.view;
+
+import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.CustomBean;
+import net.ooder.esd.annotation.*;
+import net.ooder.esd.annotation.event.CustomEvent;
+import net.ooder.esd.annotation.field.ToolBarMenu;
+import net.ooder.esd.bean.*;
+import net.ooder.esd.bean.grid.PageBarBean;
+import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.dsm.view.field.FieldGalleryConfig;
+import net.ooder.esd.engine.enums.MenuBarBean;
+import net.ooder.esd.tool.component.Component;
+import net.ooder.esd.tool.component.GalleryComponent;
+import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.properties.item.TabListItem;
+import net.ooder.esd.util.XUIUtil;
+import net.ooder.web.util.AnnotationUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
+public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends CustomEvent> extends CustomViewBean<FieldGalleryConfig, TabListItem, GalleryComponent> implements ComponentBean<GalleryComponent> {
+
+    List<String> moreColors;
+    List<String> iconColors;
+    List<String> fontColors;
+    List<String> itemColors;
+    Boolean autoIconColor;
+    Boolean autoItemColor;
+    Boolean autoFontColor;
+    RightContextMenuBean contextMenuBean;
+    PageBarBean pageBar;
+    EnumsClassBean enumsClassBean;
+
+    public BaseGalleryViewBean() {
+        super();
+    }
+
+
+    public BaseGalleryViewBean(MethodConfig methodConfig) {
+        super(methodConfig);
+    }
+
+
+    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        super.updateBaseModule(moduleComponent);
+        Component component = moduleComponent.getCurrComponent();
+        if (moduleComponent != null && moduleComponent.getMethodAPIBean() != null) {
+            MethodConfig sourceMethod = moduleComponent.getMethodAPIBean();
+            this.methodName = sourceMethod.getMethodName();
+            this.sourceClassName = sourceMethod.getSourceClassName();
+            this.domainId = sourceMethod.getDomainId();
+        }
+
+        this.name = XUIUtil.formatJavaName(component.getAlias(), false);
+        return javaSrcBeans;
+    }
+
+
+    protected void initBaseGrid(Class clazz) {
+        List<M> toolBarMenu = getCustomMenu();
+        List<M> bottombarMenu = getBottombarMenu();
+        List<M> customMenu = getCustomMenu();
+        if (this.getEnumClass() == null && clazz != null && clazz.isEnum()) {
+            this.setEnumClass(clazz);
+        }
+
+        EnumsClass enums = AnnotationUtil.getClassAnnotation(clazz, EnumsClass.class);
+        if (enums != null && enums.clazz() != null) {
+            this.setEnumClass(enums.clazz());
+            this.enumsClassBean = new EnumsClassBean(enums.clazz());
+        }
+
+        if (customMenu != null && customMenu.size() > 0) {
+            if (this.menuBar == null) {
+                this.menuBar = AnnotationUtil.fillDefaultValue(MenuBarMenu.class, new MenuBarBean());
+            }
+        }
+
+        if (bottombarMenu != null && bottombarMenu.size() > 0) {
+            if (this.bottomBar == null) {
+                this.bottomBar = AnnotationUtil.fillDefaultValue(BottomBarMenu.class, new BottomBarMenuBean());
+            }
+        }
+        PageBar pageBarAnnotation = AnnotationUtil.getClassAnnotation(clazz, PageBar.class);
+        if (pageBarAnnotation != null) {
+            pageBar = new PageBarBean(pageBarAnnotation);
+            if (pageBar.getPageCount() == 20) {
+                pageBar.setPageCount(8);
+            }
+        }
+
+        RightContextMenu contextMenu = AnnotationUtil.getClassAnnotation(clazz, RightContextMenu.class);
+        if (contextMenu != null) {
+            contextMenuBean = new RightContextMenuBean(this.getId(),contextMenu);
+        }
+
+    }
+
+
+    @Override
+    @JSONField(serialize = false)
+    public Set<Class> getOtherClass() {
+        Set<Class> classSet = super.getOtherClass();
+        if (contextMenuBean != null && contextMenuBean.getMenuClass() != null) {
+            classSet.addAll(Arrays.asList(contextMenuBean.getMenuClass()));
+        }
+        return classSet;
+    }
+
+
+    @JSONField(serialize = false)
+    public List<CustomBean> getAnnotationBeans() {
+        List<M> toolBarMenu = getCustomMenu();
+        List<M> bottombarMenu = getBottombarMenu();
+        List<M> customMenu = getCustomMenu();
+        List<CustomBean> annotationBeans = super.getAnnotationBeans();
+        if (toolBar != null) {
+            annotationBeans.add(toolBar);
+        }
+        if (pageBar != null) {
+            annotationBeans.add(pageBar);
+        }
+        if (menuBar == null) {
+            if (customMenu != null && customMenu.size() > 0) {
+                this.menuBar = AnnotationUtil.fillDefaultValue(MenuBarMenu.class, new MenuBarBean());
+            }
+        }
+        if (toolBar == null) {
+            if (toolBarMenu != null && toolBarMenu.size() > 0) {
+                this.toolBar = AnnotationUtil.fillDefaultValue(ToolBarMenu.class, new ToolBarMenuBean());
+            }
+        }
+
+        if (bottomBar == null) {
+            if (bottombarMenu != null && bottombarMenu.size() > 0) {
+                this.bottomBar = AnnotationUtil.fillDefaultValue(BottomBarMenu.class, new BottomBarMenuBean());
+            }
+        }
+
+
+        if (menuBar != null) {
+            annotationBeans.add(menuBar);
+        }
+
+        if (bottomBar != null) {
+            annotationBeans.add(bottomBar);
+        }
+
+        if (contextMenuBean != null) {
+            annotationBeans.add(contextMenuBean);
+        }
+
+        annotationBeans.add(this);
+
+        return annotationBeans;
+    }
+
+
+    @Override
+    public ToolBarMenuBean getToolBar() {
+        if (toolBar == null) {
+            List<M> toolBarMenu = getCustomMenu();
+            if (toolBarMenu != null && toolBarMenu.size() > 0) {
+                this.toolBar = AnnotationUtil.fillDefaultValue(ToolBarMenu.class, new ToolBarMenuBean());
+                this.toolBar.setMenus(toolBarMenu.toArray(new CustomMenu[]{}));
+            }
+        }
+        return toolBar;
+    }
+
+    @Override
+    public MenuBarBean getMenuBar() {
+        if (menuBar == null) {
+            List<M> customMenu = getCustomMenu();
+            if (customMenu != null && customMenu.size() > 0) {
+                this.menuBar = AnnotationUtil.fillDefaultValue(MenuBarMenu.class, new MenuBarBean());
+                this.menuBar.setMenus(customMenu.toArray(new CustomMenu[]{}));
+            }
+        }
+        return menuBar;
+    }
+
+
+    @Override
+    public BottomBarMenuBean getBottomBar() {
+        if (bottomBar == null) {
+            List<M> bottombarMenu = getBottombarMenu();
+            if (bottombarMenu != null && bottombarMenu.size() > 0) {
+                this.bottomBar = AnnotationUtil.fillDefaultValue(BottomBarMenu.class, new BottomBarMenuBean());
+                this.bottomBar.setBottombar(bottombarMenu.toArray(new CustomMenu[]{}));
+            }
+        }
+        return bottomBar;
+    }
+
+
+    public abstract List<M> getToolBarMenu();
+
+    public abstract List<M> getCustomMenu();
+
+
+    public abstract List<M> getBottombarMenu();
+
+    public abstract Set<E> getEvent();
+
+    public List<String> getMoreColors() {
+        return moreColors;
+    }
+
+    public void setMoreColors(List<String> moreColors) {
+        this.moreColors = moreColors;
+    }
+
+    public List<String> getIconColors() {
+        return iconColors;
+    }
+
+    public void setIconColors(List<String> iconColors) {
+        this.iconColors = iconColors;
+    }
+
+    public List<String> getFontColors() {
+        return fontColors;
+    }
+
+    public void setFontColors(List<String> fontColors) {
+        this.fontColors = fontColors;
+    }
+
+    public List<String> getItemColors() {
+        return itemColors;
+    }
+
+    public void setItemColors(List<String> itemColors) {
+        this.itemColors = itemColors;
+    }
+
+    public Boolean getAutoIconColor() {
+        return autoIconColor;
+    }
+
+    public void setAutoIconColor(Boolean autoIconColor) {
+        this.autoIconColor = autoIconColor;
+    }
+
+    public Boolean getAutoItemColor() {
+        return autoItemColor;
+    }
+
+    public void setAutoItemColor(Boolean autoItemColor) {
+        this.autoItemColor = autoItemColor;
+    }
+
+    public Boolean getAutoFontColor() {
+        return autoFontColor;
+    }
+
+    public void setAutoFontColor(Boolean autoFontColor) {
+        this.autoFontColor = autoFontColor;
+    }
+
+    public RightContextMenuBean getContextMenuBean() {
+        return contextMenuBean;
+    }
+
+    public RightContextMenuBean genContextMenuBean() {
+        if (contextMenuBean == null) {
+            contextMenuBean = new RightContextMenuBean(this.id==null?this.getMethodName():this.id);
+            AnnotationUtil.fillDefaultValue(RightContextMenu.class, contextMenuBean);
+        }
+        return contextMenuBean;
+    }
+
+    public void setContextMenuBean(RightContextMenuBean contextMenuBean) {
+        this.contextMenuBean = contextMenuBean;
+    }
+
+    public PageBarBean getPageBar() {
+        return pageBar;
+    }
+
+    public void setPageBar(PageBarBean pageBar) {
+        this.pageBar = pageBar;
+    }
+
+    public EnumsClassBean getEnumsClassBean() {
+        return enumsClassBean;
+    }
+
+    public void setEnumsClassBean(EnumsClassBean enumsClassBean) {
+        this.enumsClassBean = enumsClassBean;
+    }
+
+}

@@ -1,0 +1,113 @@
+package net.ooder.esd.bean.field;
+
+import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.esd.annotation.CustomClass;
+import net.ooder.esd.annotation.field.NavFoldingTabsFieldAnnotation;
+import net.ooder.esd.annotation.field.TabsFieldAnnotation;
+import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.ui.CustomViewType;
+import net.ooder.esd.annotation.ui.ModuleViewType;
+import net.ooder.esd.bean.BaseWidgetBean;
+import net.ooder.esd.bean.ContainerBean;
+import net.ooder.esd.bean.view.NavFoldingTabsViewBean;
+import net.ooder.esd.custom.component.form.field.CustomFieldFoldingTabsComponent;
+import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.FoldingTabsComponent;
+import net.ooder.esd.tool.component.TabsComponent;
+import net.ooder.esd.tool.properties.CustomWidgetBean;
+import net.ooder.annotation.AnnotationType;
+import net.ooder.web.util.AnnotationUtil;
+
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
+import java.util.Set;
+@CustomClass(clazz = CustomFieldFoldingTabsComponent.class,
+        viewType = CustomViewType.COMPONENT,
+        moduleType = ModuleViewType.NAVFOLDINGTABSCONFIG,
+        componentType = ComponentType.FOLDINGTABS
+)
+@AnnotationType(clazz = NavFoldingTabsFieldAnnotation.class)
+public class CustomFoldingTabsFieldBean extends BaseWidgetBean<NavFoldingTabsViewBean, FoldingTabsComponent> {
+
+    public CustomFoldingTabsFieldBean() {
+
+    }
+
+    public CustomFoldingTabsFieldBean(FoldingTabsComponent tabsComponent) {
+        update(null, tabsComponent);
+    }
+
+
+    public CustomFoldingTabsFieldBean(ModuleComponent parentModuleComponent, FoldingTabsComponent tabsComponent) {
+        update(parentModuleComponent, tabsComponent);
+    }
+
+    @Override
+    public NavFoldingTabsViewBean createViewBean(ModuleComponent currModuleComponent, FoldingTabsComponent component) {
+        if (viewBean == null) {
+            viewBean = new NavFoldingTabsViewBean(currModuleComponent);
+        } else {
+            viewBean.updateModule(currModuleComponent);
+        }
+        viewBean.updateContainerBean(component);
+        return viewBean;
+    }
+
+
+
+
+    void initProperties(TabsComponent component) {
+        if (containerBean == null) {
+            containerBean = new ContainerBean(component);
+        } else {
+            containerBean.update(component);
+        }
+
+        widgetBean = new CustomWidgetBean(component.getProperties());
+
+    }
+
+    @Override
+    @JSONField(serialize = false)
+    public Set<Class> getOtherClass() {
+        return new HashSet<>();
+    }
+
+
+    public CustomFoldingTabsFieldBean(Set<Annotation> annotations) {
+        AnnotationUtil.fillDefaultValue(TabsFieldAnnotation.class, this);
+        for (Annotation annotation : annotations) {
+            if (annotation instanceof TabsFieldAnnotation) {
+                fillData((TabsFieldAnnotation) annotation);
+            }
+        }
+    }
+
+
+    public CustomFoldingTabsFieldBean(TabsFieldAnnotation annotation) {
+        fillData(annotation);
+    }
+
+    public CustomFoldingTabsFieldBean fillData(TabsFieldAnnotation annotation) {
+        return AnnotationUtil.fillBean(annotation, this);
+    }
+
+    public String toAnnotationStr() {
+        return AnnotationUtil.toAnnotationStr(this);
+    }
+
+
+
+    @Override
+    public ComponentType getComponentType() {
+        return ComponentType.FOLDINGTABS;
+    }
+
+    public ContainerBean getContainerBean() {
+        return containerBean;
+    }
+
+    public void setContainerBean(ContainerBean containerBean) {
+        this.containerBean = containerBean;
+    }
+}

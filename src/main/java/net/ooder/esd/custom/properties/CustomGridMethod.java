@@ -1,0 +1,41 @@
+package net.ooder.esd.custom.properties;
+
+public enum CustomGridMethod {
+
+    setProperties,
+    setUIValue,
+    setCaption,
+    fireItemClickEvent,
+    updateCellValue,
+    updateRowValue,
+    updateHotRow,
+    resetCellValue,
+    updateGridValue,
+    toggleRow,
+    insertItems,
+    updateItem,
+    removeItems,
+    clearItems,
+    triggerFormulas,
+    setActiveRow,
+    sortColumn,
+    autoRowHeight,
+    editCellbyRowCol,
+    focusCellbyRowCol,
+    setActiveCell,
+    offEditor,
+    updateEditor,
+    setRawData,
+    insertRows,
+    updateRow,
+    setRowMap,
+    removeRows,
+    removeAllRows,
+    insertCol,
+    updateHeader,
+    removeCols,
+    setHeader,
+    editItem,
+    setData
+
+}
