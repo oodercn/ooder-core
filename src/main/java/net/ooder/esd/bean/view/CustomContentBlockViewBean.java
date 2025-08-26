@@ -25,7 +25,7 @@ import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.ContentBlockProperties;
 import net.ooder.esd.tool.properties.Event;
 import net.ooder.esd.tool.properties.item.ContentBlockItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
@@ -92,7 +92,7 @@ public class CustomContentBlockViewBean extends BaseGalleryViewBean<ContentBlock
         ContentBlockComponent contentBlockComponent = (ContentBlockComponent) moduleComponent.getCurrComponent();
         ContentBlockProperties contentBlockProperties = contentBlockComponent.getProperties();
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(contentBlockProperties), Map.class), this, false, false);
-        this.name = XUIUtil.formatJavaName(contentBlockComponent.getAlias(), false);
+        this.name = OODUtil.formatJavaName(contentBlockComponent.getAlias(), false);
         this.contentBlockItems = contentBlockProperties.getItems();
 
         if (contentBlockItems != null && contentBlockItems.size() > 0) {
@@ -115,7 +115,7 @@ public class CustomContentBlockViewBean extends BaseGalleryViewBean<ContentBlock
                 }
             }
         }
-        this.name = XUIUtil.formatJavaName(contentBlockComponent.getAlias(), false);
+        this.name = OODUtil.formatJavaName(contentBlockComponent.getAlias(), false);
         addChildJavaSrc(javaSrcBeans);
         return javaSrcBeans;
     }

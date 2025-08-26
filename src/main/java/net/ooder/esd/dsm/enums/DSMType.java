@@ -8,7 +8,7 @@ public enum DSMType implements IconEnumstype {
     REPOSITORY("仓储库", "iconfont iconchucun", "spafont spa-icon-json-file", "java.repository.JavaEditor"),
     AGGREGATION("领域聚合", "spafont spa-icon-c-buttonview", "spafont spa-icon-c-webapi", "java.agg.AggEditor"),
     VIEW("视图工厂", "spafont spa-icon-c-grid", "spafont spa-icon-designview", "java.view.JavaViewEditor"),
-    CUSTOMDOMAIN("通用域", "xui-icon-upload", "spafont spa-icon-c-webapi", "java.agg.AggEditor"),
+    CUSTOMDOMAIN("通用域", "ood-icon-upload", "spafont spa-icon-c-webapi", "java.agg.AggEditor"),
     SUPPORTDOMAIN("支撑域", "bpmfont bpmworkflow", "spafont spa-icon-c-webapi", "java.agg.AggEditor"),
     USERDOMAIN("用户域", "spafont spa-icon-module", "spafont spa-icon-c-webapi", "java.agg.AggEditor");
 

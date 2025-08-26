@@ -27,7 +27,7 @@ import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
 import net.ooder.esd.dsm.repository.RepositoryInst;
 import net.ooder.esd.dsm.view.ViewInst;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.web.AggregationBean;
 import net.ooder.web.util.MethodUtil;
 import org.springframework.stereotype.Controller;
@@ -110,7 +110,7 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
             fullClassName = dsmBean.getRootPackage().getPackageName() + "." + fullClassName;
         }
         this.packageName = fullClassName.substring(0, fullClassName.lastIndexOf("."));
-        this.simClassName = XUIUtil.formatJavaName(fullClassName.substring(fullClassName.lastIndexOf(".") + 1), true);
+        this.simClassName = OODUtil.formatJavaName(fullClassName.substring(fullClassName.lastIndexOf(".") + 1), true);
         this.className = simClassName;
         this.baseUrl = StringUtility.replace(packageName, ".", "/");
         try {

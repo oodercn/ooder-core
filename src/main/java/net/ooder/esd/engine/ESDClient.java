@@ -20,7 +20,7 @@ import net.ooder.esd.dsm.temp.DSMBean;
 import net.ooder.esd.engine.enums.PackageType;
 import net.ooder.esd.manager.plugins.api.enums.APIType;
 import net.ooder.esd.manager.plugins.api.node.APIPaths;
-import net.ooder.esd.manager.plugins.api.node.XUIAPIConfig;
+import net.ooder.esd.manager.plugins.api.node.OODAPIConfig;
 import net.ooder.esd.manager.plugins.font.node.FontConfig;
 import net.ooder.esd.manager.plugins.img.node.ImgConfig;
 import net.ooder.esd.manager.plugins.style.node.StyleConfig;
@@ -240,7 +240,7 @@ public interface ESDClient {
     @MethodChinaName(cname = "获取该版本下所有服务地址")
     public List<APIPaths> getAPIPathsByProject(String versionName) throws JDSException;
     @MethodChinaName(cname = "查询该版本下所有服务地址")
-    public List<XUIAPIConfig> searchLocalService(String versionName, String pattern) throws JDSException;
+    public List<OODAPIConfig> searchLocalService(String versionName, String pattern) throws JDSException;
     @MethodChinaName(cname = "获取工程该版本所有字体库")
     public List<FontConfig> getFontByProject(String versionName) throws JDSException;
     @MethodChinaName(cname = "获取工程各版本字体库配置")

@@ -34,7 +34,7 @@ public class UIComponentNode {
 
     public String key;
 
-    public String cls = "xui.UI.ComboInput";
+    public String cls = "ood.UI.ComboInput";
 
     public String imageClass = "spafot spa-icon-c-";
 

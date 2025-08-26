@@ -17,7 +17,7 @@ import net.ooder.esd.manager.plugins.api.enums.APIPathType;
 import net.ooder.esd.manager.plugins.api.enums.APIType;
 import net.ooder.esd.manager.plugins.api.node.APIPaths;
 import net.ooder.esd.manager.plugins.api.node.APIServer;
-import net.ooder.esd.manager.plugins.api.node.XUIAPIConfig;
+import net.ooder.esd.manager.plugins.api.node.OODAPIConfig;
 import net.ooder.esd.engine.MySpace;
 import net.ooder.esd.engine.inner.INProject;
 import net.ooder.esd.engine.inner.INProjectVersion;
@@ -463,8 +463,8 @@ public class APIFactory {
     }
 
 
-    public List<XUIAPIConfig> searchLocalService(String projectName, String pattern) throws JDSException {
-        List<XUIAPIConfig> configs = new ArrayList<XUIAPIConfig>();
+    public List<OODAPIConfig> searchLocalService(String projectName, String pattern) throws JDSException {
+        List<OODAPIConfig> configs = new ArrayList<OODAPIConfig>();
         List<APIConfig> configsList = scannerAPIConfig(null, null);
         List<String> apiFitle = new ArrayList<String>();
         if (projectName != null) {
@@ -473,31 +473,31 @@ public class APIFactory {
         }
 
         for (APIConfig config : configsList) {
-            XUIAPIConfig classConfig = new XUIAPIConfig(config.getName(), "-----------------------" + config.getDesc() + "----------------------------", true);
-            List<XUIAPIConfig> apiconfigs = new ArrayList<XUIAPIConfig>();
+            OODAPIConfig classConfig = new OODAPIConfig(config.getName(), "-----------------------" + config.getDesc() + "----------------------------", true);
+            List<OODAPIConfig> apiconfigs = new ArrayList<OODAPIConfig>();
             if (pattern != null && !pattern.equals("")) {
                 Pattern p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
                 List<RequestMethodBean> methods = config.getMethods();
                 for (RequestMethodBean methodBean : methods) {
-                    XUIAPIConfig xuiapiConfig = new XUIAPIConfig(methodBean);
-                    Matcher matcher = p.matcher(xuiapiConfig.getId());
+                    OODAPIConfig oodapiConfig = new OODAPIConfig(methodBean);
+                    Matcher matcher = p.matcher(oodapiConfig.getId());
                     if (matcher.find()) {
-                        if (!configs.contains(xuiapiConfig)) {
-                            // if (apiFitle.contains(APIFactory.LoclHostName + ":" + xuiapiConfig.getId())) {
-                            apiconfigs.add(xuiapiConfig);
+                        if (!configs.contains(oodapiConfig)) {
+                            // if (apiFitle.contains(APIFactory.LoclHostName + ":" + oodapiConfig.getId())) {
+                            apiconfigs.add(oodapiConfig);
                             //}
                         }
                     }
-                    // configs.add(xuiapiConfig);
+                    // configs.add(oodapiConfig);
                 }
             } else {
                 configs.add(classConfig);
                 List<RequestMethodBean> methods = config.getMethods();
                 for (RequestMethodBean methodBean : methods) {
-                    XUIAPIConfig xuiapiConfig = new XUIAPIConfig(methodBean);
-                    if (!configs.contains(xuiapiConfig)) {
-                        if (apiFitle.contains(APIFactory.LoclHostName + ":" + xuiapiConfig.getId())) {
-                            apiconfigs.add(xuiapiConfig);
+                    OODAPIConfig oodapiConfig = new OODAPIConfig(methodBean);
+                    if (!configs.contains(oodapiConfig)) {
+                        if (apiFitle.contains(APIFactory.LoclHostName + ":" + oodapiConfig.getId())) {
+                            apiconfigs.add(oodapiConfig);
                         }
                     }
                 }
@@ -704,14 +704,14 @@ public class APIFactory {
         return classSet;
     }
 
-    private List<XUIAPIConfig> getMethodConfig(String className) {
-        List<XUIAPIConfig> configs = new ArrayList<XUIAPIConfig>();
+    private List<OODAPIConfig> getMethodConfig(String className) {
+        List<OODAPIConfig> configs = new ArrayList<OODAPIConfig>();
         try {
             APIConfig config = APIConfigFactory.getInstance().getAPIConfig(className);
             List<RequestMethodBean> methods = config.getMethods();
             for (RequestMethodBean methodBean : methods) {
-                XUIAPIConfig xuiapiConfig = new XUIAPIConfig(methodBean);
-                configs.add(xuiapiConfig);
+                OODAPIConfig oodapiConfig = new OODAPIConfig(methodBean);
+                configs.add(oodapiConfig);
             }
         } catch (Throwable e) {
             e.printStackTrace();

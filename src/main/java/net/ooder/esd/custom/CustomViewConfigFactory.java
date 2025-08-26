@@ -14,7 +14,7 @@ import net.ooder.esd.bean.WidgetBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;
 import net.ooder.esd.tool.component.Component;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -160,7 +160,7 @@ public class CustomViewConfigFactory {
         Set<Annotation> annotationSet = AnnotationUtil.getAllAnnotations(method, true);
         if (method.getName().startsWith("get")) {
             Field field = null;
-            String fieldName = XUIUtil.formatJavaName(method.getName(), false);
+            String fieldName = OODUtil.formatJavaName(method.getName(), false);
             try {
                 field = method.getDeclaringClass().getDeclaredField(fieldName);
             } catch (NoSuchFieldException e) {

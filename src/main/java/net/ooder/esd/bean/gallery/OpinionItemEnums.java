@@ -8,11 +8,11 @@ public enum OpinionItemEnums implements IOpiniontem, IconEnumstype {
 
     a("item1", "fa fa-lg fa-close"),
 
-    b("item2", "xui-icon-number1"),
+    b("item2", "ood-icon-number1"),
 
-    c("item3", "xui-icon-number2"),
+    c("item3", "ood-icon-number2"),
 
-    d("item4", "xui-icon-number3");
+    d("item4", "ood-icon-number3");
 
     private String id;
     private String type;

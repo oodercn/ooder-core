@@ -47,7 +47,7 @@ import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.esd.tool.properties.PopMenuProperties;
 import net.ooder.esd.tool.properties.item.CmdItem;
 import net.ooder.esd.tool.properties.item.UIItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -297,11 +297,11 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
 
 
     public ComponentBean findComByAlias(String alias) {
-        String path = XUIUtil.formatJavaName(alias, false).toLowerCase();
+        String path = OODUtil.formatJavaName(alias, false).toLowerCase();
         List<T> esdfields = this.getAllFields();
-        if (this.getId() != null && XUIUtil.formatJavaName(this.getId(), false).toLowerCase().equals(path)) {
+        if (this.getId() != null && OODUtil.formatJavaName(this.getId(), false).toLowerCase().equals(path)) {
             return this;
-        } else if (this.getName() != null && XUIUtil.formatJavaName(this.getName(), false).toLowerCase().equals(path)) {
+        } else if (this.getName() != null && OODUtil.formatJavaName(this.getName(), false).toLowerCase().equals(path)) {
             return this;
         } else {
             for (T esdField : esdfields) {
@@ -326,12 +326,12 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
     }
 
     public ComponentBean findComByPath(String path) {
-        path = XUIUtil.formatJavaName(path, false);
+        path = OODUtil.formatJavaName(path, false);
         if (path != null) {
             path = path.toLowerCase();
         }
         List<T> esdfields = this.getAllFields();
-        if (XUIUtil.formatJavaName(this.getXpath(), false).equals(path)) {
+        if (OODUtil.formatJavaName(this.getXpath(), false).equals(path)) {
             return this;
         } else {
             for (T esdField : esdfields) {
@@ -339,7 +339,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
                     FieldFormConfig fieldFormConfig = (FieldFormConfig) esdField;
                     String filePath = this.getXpath();
                     if (!this.getXpath().toLowerCase().endsWith("." + fieldFormConfig.getFieldname().toLowerCase())) {
-                        filePath = XUIUtil.formatJavaName(filePath + "." + fieldFormConfig.getFieldname(), false);
+                        filePath = OODUtil.formatJavaName(filePath + "." + fieldFormConfig.getFieldname(), false);
                     }
                     if (filePath.equals(path)) {
                         ComponentBean componentBean = fieldFormConfig.getWidgetConfig();
@@ -384,9 +384,9 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         }
 
 
-        XPath xuiAnn = AnnotationUtil.getClassAnnotation(clazz, XPath.class);
-        if (xuiAnn != null) {
-            xpathBean = new XPathBean(xuiAnn);
+        XPath oodAnn = AnnotationUtil.getClassAnnotation(clazz, XPath.class);
+        if (oodAnn != null) {
+            xpathBean = new XPathBean(oodAnn);
         }
 
         MenuBarMenu customMenuBar = AnnotationUtil.getClassAnnotation(clazz, MenuBarMenu.class);
@@ -1406,18 +1406,18 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
 
     public AggRootBuild getAggRootBuild(ModuleComponent moduleComponent, Component component) throws JDSException {
         String parentClassName = moduleComponent.getClassName();
-        String simClass = XUIUtil.formatJavaName(moduleComponent.getCurrComponent().getAlias(), true);
+        String simClass = OODUtil.formatJavaName(moduleComponent.getCurrComponent().getAlias(), true);
         if (!parentClassName.endsWith("." + simClass)) {
             parentClassName = parentClassName.toLowerCase() + "." + simClass;
         }
         String projectName = moduleComponent.getProjectName();
-        String cSimClass = XUIUtil.formatJavaName(component.getAlias(), true);
+        String cSimClass = OODUtil.formatJavaName(component.getAlias(), true);
         String cPackageName = parentClassName.toLowerCase();
         String cEuClassName = cPackageName + "." + cSimClass;
         DSMProperties dsmProperties = new DSMProperties();
         dsmProperties.setSourceClassName(moduleComponent.getClassName());
         ModuleProperties moduleProperties = new ModuleProperties();
-        moduleProperties.setMethodName(XUIUtil.getGetMethodName(component.getAlias()));
+        moduleProperties.setMethodName(OODUtil.getGetMethodName(component.getAlias()));
         moduleProperties.setDsmProperties(dsmProperties);
 
         ModuleComponent childComponent = new ModuleComponent();
@@ -1489,8 +1489,8 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
             DSMProperties dsmProperties = moduleComponent.getProperties().getDsmProperties();
             if (dsmProperties != null && dsmProperties.getRealPath() != null) {
                 realPath = dsmProperties.getRealPath();
-                String fieldName = XUIUtil.formatJavaName(component.getAlias(), false).toLowerCase();
-                if (!XUIUtil.formatJavaName(realPath, false).endsWith("." + fieldName)) {
+                String fieldName = OODUtil.formatJavaName(component.getAlias(), false).toLowerCase();
+                if (!OODUtil.formatJavaName(realPath, false).endsWith("." + fieldName)) {
                     realPath = realPath + "." + component.getAlias();
                 }
             }

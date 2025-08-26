@@ -27,7 +27,7 @@ import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.FormLayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.form.*;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
@@ -132,7 +132,7 @@ public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
         super.updateBaseModule(moduleComponent);
         updateBar();
         FormLayoutComponent currComponent = (FormLayoutComponent) moduleComponent.getCurrComponent();
-        this.name = XUIUtil.formatJavaName(currComponent.getAlias(), false);
+        this.name = OODUtil.formatJavaName(currComponent.getAlias(), false);
         if (containerBean == null) {
             containerBean = new ContainerBean(currComponent);
         } else {

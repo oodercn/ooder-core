@@ -23,7 +23,7 @@ import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Event;
 import net.ooder.esd.tool.properties.item.OpinionItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
@@ -80,7 +80,7 @@ public class CustomOpinionViewBean extends BaseGalleryViewBean<OpinionMenu, Cust
         OpinionComponent opinionComponent = (OpinionComponent) moduleComponent.getCurrComponent();
         OpinionProperties opinionProperties = opinionComponent.getProperties();
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(opinionProperties), Map.class), this, false, false);
-        this.name = XUIUtil.formatJavaName(opinionComponent.getAlias(), false);
+        this.name = OODUtil.formatJavaName(opinionComponent.getAlias(), false);
         List<OpinionItem> opinionItems = opinionProperties.getItems();
 
         if (opinionItems != null && opinionItems.size() > 0) {
@@ -103,7 +103,7 @@ public class CustomOpinionViewBean extends BaseGalleryViewBean<OpinionMenu, Cust
                 }
             }
         }
-        this.name = XUIUtil.formatJavaName(opinionComponent.getAlias(), false);
+        this.name = OODUtil.formatJavaName(opinionComponent.getAlias(), false);
         return javaSrcBeans;
     }
 

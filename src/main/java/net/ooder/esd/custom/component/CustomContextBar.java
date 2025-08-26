@@ -321,7 +321,7 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
                 if (component != null) {
                     component.getProperties().addQuaryArgs("viewBarId", this.getId());
                     if (!this.isDyn()) {
-                        moduleComponent.getCustomFunctions().put("checkOptMenu", "function(viewBarId,e,item){this.ViewMenuBar[viewBarId].setTagVar(item.tagVar);this.ViewMenuBar[viewBarId].pop(xui.Event.getPos(e));}");
+                        moduleComponent.getCustomFunctions().put("checkOptMenu", "function(viewBarId,e,item){this.ViewMenuBar[viewBarId].setTagVar(item.tagVar);this.ViewMenuBar[viewBarId].pop(ood.Event.getPos(e));}");
                         Action action = new Action(TreeViewEventEnum.onContextmenu);
                         action.setDesc("判断缓存菜单");
                         action.setMethod(CustomGlobalMethod.call.getType());

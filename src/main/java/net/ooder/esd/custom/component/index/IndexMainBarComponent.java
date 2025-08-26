@@ -65,12 +65,12 @@ public class IndexMainBarComponent extends DivComponent {
         GalleryItem searchItem = new GalleryItem();
         searchItem.setCaption("查询");
         searchItem.setId("search");
-        searchItem.setImageClass("xui-icon-search");
+        searchItem.setImageClass("ood-icon-search");
 
         GalleryItem taskItem = new GalleryItem();
         taskItem.setCaption("任务");
         taskItem.setId("task");
-        taskItem.setImageClass("xui-uicmd-file");
+        taskItem.setImageClass("ood-uicmd-file");
         taskItem.setFlagText("1");
 
 
@@ -159,7 +159,7 @@ public class IndexMainBarComponent extends DivComponent {
             logoProperties.setTabindex(4);
             logoProperties.setPosition("static");
             logoProperties.setCaption("");
-            logoProperties.setImageClass("xui-icon-sort-checked");
+            logoProperties.setImageClass("ood-icon-sort-checked");
             logoProperties.setFontColor("#FFFFFF");
             return logoLabelCom;
         }

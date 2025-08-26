@@ -29,7 +29,7 @@ import net.ooder.esd.tool.component.MenuBarComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.MenuBarProperties;
 import net.ooder.esd.tool.properties.item.TabListItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
@@ -164,7 +164,7 @@ public class NavMenuBarViewBean extends NavComboBaseViewBean<TreeListItem> {
 
     @Override
     public ComponentBean findComByPath(String path) {
-        path = XUIUtil.formatJavaName(path, false);
+        path = OODUtil.formatJavaName(path, false);
         if (path != null) {
             path = path.toLowerCase();
         }

@@ -48,7 +48,7 @@ import net.ooder.esd.manager.esdserver.ESDServerUtil;
 import net.ooder.esd.manager.plugins.api.APIFactory;
 import net.ooder.esd.manager.plugins.api.enums.APIType;
 import net.ooder.esd.manager.plugins.api.node.APIPaths;
-import net.ooder.esd.manager.plugins.api.node.XUIAPIConfig;
+import net.ooder.esd.manager.plugins.api.node.OODAPIConfig;
 import net.ooder.esd.manager.plugins.font.FontFactory;
 import net.ooder.esd.manager.plugins.font.node.FontConfig;
 import net.ooder.esd.manager.plugins.img.ImgFactory;
@@ -484,7 +484,7 @@ public class ESDClientImpl implements ESDClient {
                 return;
             }
             chrome.printLog("开始导出文件。。。", true);
-            chrome.execScript("xui.busy('export','正在导出文件 请勿操作！');");
+            chrome.execScript("ood.busy('export','正在导出文件 请勿操作！');");
             localPath = JDSConfig.Config.rootServerHome().getAbsolutePath() + File.separator + EXPORT_PATH + "/" + version.getProject().getProjectName() + "/";
             File configfile = new File(localPath + "/" + ServerProjectConfig.fileName);
 
@@ -616,7 +616,7 @@ public class ESDClientImpl implements ESDClient {
             }
 
             chrome.printLog("导出完毕，请将导出copy 运行环境！ 耗时：" + (System.currentTimeMillis() - time) + "ms，", true);
-            chrome.execScript("xui.free('export')");
+            chrome.execScript("ood.free('export')");
             File rootFile = new File(JDSUtil.getJdsRealPath());
             String zipFilePath = StringUtility.replace(zipFile.getAbsolutePath(), rootFile.getAbsolutePath(), "");
             zipFilePath = StringUtility.replace(zipFilePath, "\\", "/");
@@ -629,7 +629,7 @@ public class ESDClientImpl implements ESDClient {
             e.printStackTrace();
 
         } finally {
-            chrome.execScript("xui.free('export')");
+            chrome.execScript("ood.free('export')");
         }
 
 
@@ -1370,7 +1370,7 @@ public class ESDClientImpl implements ESDClient {
     }
 
     @Override
-    public List<XUIAPIConfig> searchLocalService(String versionName, String pattern) throws JDSException {
+    public List<OODAPIConfig> searchLocalService(String versionName, String pattern) throws JDSException {
         return this.apiFactory.searchLocalService(versionName, pattern);
     }
 

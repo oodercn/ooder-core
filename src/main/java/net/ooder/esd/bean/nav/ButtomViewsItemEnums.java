@@ -6,7 +6,7 @@ import net.ooder.esd.annotation.ui.IconColorEnum;
 import net.ooder.esd.annotation.ui.ItemColorEnum;
 
 public enum ButtomViewsItemEnums implements ButtonViewsItem {
-    a("page1", "xui-icon-xui", false, false, false, Void.class),
+    a("page1", "ood-icon-ood", false, false, false, Void.class),
     b("page2", "dsmfont dsm-huitiaojilu", false, false, false, Void.class),
     c("page3", "iotfont iotmenling", false, false, false, Void.class),
     d("page4", "dsmfont dsm-shujuyuan", false, false, false, Void.class);

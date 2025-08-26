@@ -121,7 +121,7 @@ public class DSMAnnotationUtil {
         List<CustomClass> customClasses = new ArrayList<CustomClass>();
         Field field = null;
         if (method.getName().startsWith("get") && hasField) {
-            String fieldName = XUIUtil.formatJavaName(method.getName(), false);
+            String fieldName = OODUtil.formatJavaName(method.getName(), false);
             try {
                 field = method.getDeclaringClass().getDeclaredField(fieldName);
             } catch (NoSuchFieldException e) {

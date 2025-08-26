@@ -18,7 +18,7 @@ import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.ViewInst;
 import net.ooder.esd.dsm.view.context.ActionViewRoot;
 import net.ooder.esd.engine.enums.MenuBarBean;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.web.RequestParamBean;
 
 import java.io.File;
@@ -97,7 +97,7 @@ public class GenActionJava extends BaseAggCallabel {
                 bindClassName = clazzList[0].getName();
             }
             if (bindClassName == null) {
-                bindClassName = packageName + "." + XUIUtil.formatJavaName(name + item.getId(), true);
+                bindClassName = packageName + "." + OODUtil.formatJavaName(name + item.getId(), true);
             }
             try {
                 try {

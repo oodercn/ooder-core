@@ -26,14 +26,14 @@ import net.ooder.esd.dsm.aggregation.FieldAggConfig;
 import net.ooder.esd.dsm.gen.view.GenFormChildModule;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
-import net.ooder.esd.tool.XUITypeMapping;
+import net.ooder.esd.tool.OODTypeMapping;
 import net.ooder.esd.tool.component.APICallerComponent;
 import net.ooder.esd.tool.component.BlockComponent;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.item.UIItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.web.RemoteConnectionManager;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
@@ -155,7 +155,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
 ////                    if (treeListItems != null && treeListItems.size() > 0) {
 ////                        Class bindClass = listFieldProperties.getEnumClass();
 ////                        if (bindClass == null) {
-////                            String bindClassName = packageName + "." + XUIUtil.formatJavaName(this.name, true);
+////                            String bindClassName = packageName + "." + OODUtil.formatJavaName(this.name, true);
 ////                            try {
 ////                                DomainInst domainInst = DSMFactory.getInstance().getDomainInstById(this.getDomainId());
 ////                                ViewInst viewInst = DSMFactory.getInstance().getViewManager().createDefaultView(domainInst);
@@ -286,10 +286,10 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         if (inputType == null) {
             inputType = ComboInputType.input;
         }
-        clazz = XUITypeMapping.guessResultType(componentType);
+        clazz = OODTypeMapping.guessResultType(componentType);
         ComboType comboType = inputType.getComboType();
         if (comboType != null) {
-            clazz = XUITypeMapping.guessResultComboType(comboType);
+            clazz = OODTypeMapping.guessResultComboType(comboType);
         }
         return createField(fieldName, componentType, moduleComponent, inputType, clazz, targer);
 
@@ -429,7 +429,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
             config = fieldConfigMap.get(fieldName);
         }
         if (config == null) {
-            fieldName = XUIUtil.formatJavaName(component.getAlias(), false);
+            fieldName = OODUtil.formatJavaName(component.getAlias(), false);
             config = fieldConfigMap.get(fieldName);
         }
         if (config == null) {

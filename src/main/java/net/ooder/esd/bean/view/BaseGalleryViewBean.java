@@ -14,7 +14,7 @@ import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.GalleryComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.item.TabListItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
             this.domainId = sourceMethod.getDomainId();
         }
 
-        this.name = XUIUtil.formatJavaName(component.getAlias(), false);
+        this.name = OODUtil.formatJavaName(component.getAlias(), false);
         return javaSrcBeans;
     }
 

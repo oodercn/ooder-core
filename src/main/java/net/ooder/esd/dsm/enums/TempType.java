@@ -13,7 +13,7 @@ public enum TempType implements Enumstype {
     GALLERY("画廊", "spafont spa-icon-c-iconslist", DomainType.VIEW),
     FORM("表单", "spafont spa-icon-c-richeditor", DomainType.VIEW),
     TREE("树形", "spafont spafont spa-icon-c-treeview", DomainType.VIEW),
-    CHARTS("统计图表", "xui-uicmd-location", DomainType.VIEW),
+    CHARTS("统计图表", "ood-uicmd-location", DomainType.VIEW),
     SVG("SVG绘图", "spafont spa-icon-editpath", DomainType.VIEW),
     MODULE("内嵌模块", "spafont spa-icon-conf", DomainType.VIEW),
     DIC("字典辅助", "spafont spa-icon-function", DomainType.VIEW),

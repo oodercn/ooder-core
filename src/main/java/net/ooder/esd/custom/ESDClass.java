@@ -20,7 +20,7 @@ import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.domain.CustomDomain;
 import net.ooder.esd.dsm.repository.database.proxy.DSMColProxy;
 import net.ooder.esd.dsm.repository.database.proxy.DSMTableProxy;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.web.AggregationBean;
 import net.ooder.web.EntityBean;
 import net.ooder.web.RequestMappingBean;
@@ -461,7 +461,7 @@ public class ESDClass {
     public ESDField getField(String name) {
         ESDField esdField = this.getEsdFieldMap().get(name);
         if (esdField == null) {
-            name = XUIUtil.formatJavaName(name, false);
+            name = OODUtil.formatJavaName(name, false);
             esdField = this.getEsdFieldMap().get(name);
         }
         if (esdField == null) {

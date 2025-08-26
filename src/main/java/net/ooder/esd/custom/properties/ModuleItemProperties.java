@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class ModuleItemProperties extends GalleryNavItem {
 
-    String defaultImageClass = "xui-icon-number";
+    String defaultImageClass = "ood-icon-number";
 
 
     public ModuleItemProperties(Enum enumType) {

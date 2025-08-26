@@ -25,7 +25,7 @@ import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Event;
 import net.ooder.esd.tool.properties.TitleBlockProperties;
 import net.ooder.esd.tool.properties.item.TitleBlockItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
@@ -84,7 +84,7 @@ public class CustomTitleBlockViewBean extends BaseGalleryViewBean<TitleBlockMenu
         TitleBlockComponent titleBlockComponent = (TitleBlockComponent) moduleComponent.getCurrComponent();
         TitleBlockProperties titleBlockProperties = titleBlockComponent.getProperties();
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(titleBlockProperties), Map.class), this, false, false);
-        this.name = XUIUtil.formatJavaName(titleBlockComponent.getAlias(), false);
+        this.name = OODUtil.formatJavaName(titleBlockComponent.getAlias(), false);
         this.titleBlockItems = titleBlockProperties.getItems();
         if (titleBlockItems != null && titleBlockItems.size() > 0) {
             titleBlockItemBeans = new ArrayList<>();
@@ -106,7 +106,7 @@ public class CustomTitleBlockViewBean extends BaseGalleryViewBean<TitleBlockMenu
                 }
             }
         }
-        this.name = XUIUtil.formatJavaName(titleBlockComponent.getAlias(), false);
+        this.name = OODUtil.formatJavaName(titleBlockComponent.getAlias(), false);
         addChildJavaSrc(javaSrcBeans);
         return javaSrcBeans;
     }

@@ -14,7 +14,7 @@ import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.UrlPathData;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.web.RequestParamBean;
 
 import java.util.*;
@@ -22,7 +22,7 @@ import java.util.*;
 public class ClassNavGroupComponent extends GroupComponent {
 
     public ClassNavGroupComponent(EUModule parentModule, GroupItemBean itemBean, Map valueMap) throws JDSException {
-        this.setAlias(XUIUtil.formatJavaName(itemBean.getMethodName(), true));
+        this.setAlias(OODUtil.formatJavaName(itemBean.getMethodName(), true));
         init(itemBean.getMethodConfig(), parentModule, valueMap);
         this.setProperties(new ClassNavGroupProperties(itemBean, itemBean.getContainerBean()));
 

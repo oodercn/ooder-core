@@ -9,26 +9,26 @@ import net.ooder.web.RequestMethodBean;
 
 import java.util.Map;
 
-public class XUIAPIConfig implements Comparable<XUIAPIConfig> {
+public class OODAPIConfig implements Comparable<OODAPIConfig> {
     String id;
     String caption;
     Boolean disabled = false;
     APICallerProperties properties;
 
 
-    public XUIAPIConfig(String id, String caption, Boolean disabled) {
+    public OODAPIConfig(String id, String caption, Boolean disabled) {
         this.id = id;
         this.caption = caption;
         this.disabled = disabled;
 
     }
 
-    XUIAPIConfig(String id, String caption) {
+    OODAPIConfig(String id, String caption) {
         this.id = id;
         this.caption = caption;
     }
 
-    public XUIAPIConfig(MethodConfig methodBean) {
+    public OODAPIConfig(MethodConfig methodBean) {
         String str = methodBean.getMetaInfo();
         this.id = methodBean.getUrl();
         this.caption = id + methodBean.getName() + "" + str;
@@ -36,7 +36,7 @@ public class XUIAPIConfig implements Comparable<XUIAPIConfig> {
 
     }
 
-    public XUIAPIConfig(RequestMethodBean methodBean) {
+    public OODAPIConfig(RequestMethodBean methodBean) {
         this.id = methodBean.getMappingBean().getName();
         Map<String, String> params = methodBean.getParamsMap();
         String str = "(";
@@ -106,15 +106,15 @@ public class XUIAPIConfig implements Comparable<XUIAPIConfig> {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj != null && obj instanceof XUIAPIConfig) {
-            XUIAPIConfig test = (XUIAPIConfig) obj;
+        if (obj != null && obj instanceof OODAPIConfig) {
+            OODAPIConfig test = (OODAPIConfig) obj;
             return test.getId().equals(this.getId());
         }
         return super.equals(obj);
     }
 
     @Override
-    public int compareTo(XUIAPIConfig o) {
+    public int compareTo(OODAPIConfig o) {
         return id.compareTo(o.id);
     }
 }

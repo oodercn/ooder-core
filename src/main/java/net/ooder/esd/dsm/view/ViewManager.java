@@ -56,7 +56,7 @@ import net.ooder.esd.tool.component.MenuBarComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.tool.properties.list.ListFieldProperties;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.server.JDSServer;
 import net.ooder.vfs.FileInfo;
 import net.ooder.vfs.Folder;
@@ -825,7 +825,7 @@ public class ViewManager {
                 bindClassName = clazzList[0].getName();
             }
             if (bindClassName == null) {
-                bindClassName = packageName + "." + XUIUtil.formatJavaName(name + item.getId(), true);
+                bindClassName = packageName + "." + OODUtil.formatJavaName(name + item.getId(), true);
             }
             try {
                 try {
@@ -988,7 +988,7 @@ public class ViewManager {
                 bindClassName = clazzList[0].getName();
             }
             if (bindClassName == null) {
-                bindClassName = packageName + "." + XUIUtil.formatJavaName(name + item.getId(), true);
+                bindClassName = packageName + "." + OODUtil.formatJavaName(name + item.getId(), true);
             }
             try {
                 try {
@@ -1199,7 +1199,7 @@ public class ViewManager {
                 if (javatemp.getPackagePostfix() != null && !javatemp.getPackagePostfix().equals("")) {
                     packageName = packageName + "." + javatemp.getPackagePostfix();
                 }
-                String className = StringUtility.replace(javatemp.getNamePostfix(), "**", XUIUtil.formatJavaName(viewInst.getSpace(), true));
+                String className = StringUtility.replace(javatemp.getNamePostfix(), "**", OODUtil.formatJavaName(viewInst.getSpace(), true));
                 allRoot.setPackageName(packageName);
                 allRoot.setClassName(className);
                 log.debug("start create [" + className + "]");

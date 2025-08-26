@@ -20,7 +20,7 @@ import net.ooder.esd.dsm.gen.BaseAggCallabel;
 import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.EsbUtil;
 
 
@@ -62,11 +62,11 @@ public class GenRepositoryViewJava extends BaseAggCallabel {
 
         if (fullClassName.indexOf(".") > -1) {
             simClassName = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
-            simClassName = XUIUtil.formatJavaName(simClassName, true);
+            simClassName = OODUtil.formatJavaName(simClassName, true);
             String packageName = fullClassName.substring(0, fullClassName.lastIndexOf("."));
             this.fullClassName = packageName + "." + simClassName;//
         } else {
-            fullClassName = XUIUtil.formatJavaName(fullClassName, true);
+            fullClassName = OODUtil.formatJavaName(fullClassName, true);
             simClassName = fullClassName;
         }
 

@@ -17,7 +17,7 @@ import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;
 import net.ooder.esd.bean.grid.GridColItemBean;
 import net.ooder.esd.manager.editor.CustomMenuAction;
-import net.ooder.esd.tool.XUITypeMapping;
+import net.ooder.esd.tool.OODTypeMapping;
 import net.ooder.annotation.Disabled;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -91,7 +91,7 @@ public class TableFieldInfo<M extends WidgetBean, N extends ComboBoxBean> implem
 
         this.enums = dbcol.getEnums();
         this.enumClass = dbcol.getEnumClass();
-        ComponentType componentType = XUITypeMapping.getComponentType(dbcol);
+        ComponentType componentType = OODTypeMapping.getComponentType(dbcol);
         try {
             this.returnType = Class.forName(TypeMapping.getMappedType(dbcol));
         } catch (ClassNotFoundException e) {
@@ -102,7 +102,7 @@ public class TableFieldInfo<M extends WidgetBean, N extends ComboBoxBean> implem
         if (hidden || uid) {
             fieldBean.setComponentType(ComponentType.HIDDENINPUT);
         } else {
-            this.type = XUITypeMapping.getType(dbcol);
+            this.type = OODTypeMapping.getType(dbcol);
             fieldBean.setRequired(!dbcol.isCanNull());
             this.caption = desc;
             this.height = "30";

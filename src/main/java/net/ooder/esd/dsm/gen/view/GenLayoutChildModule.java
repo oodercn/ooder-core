@@ -18,7 +18,7 @@ import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.server.context.MinServerActionContextImpl;
 import net.ooder.server.httpproxy.core.HttpRequest;
 import net.ooder.annotation.UserSpace;
@@ -42,11 +42,11 @@ public class GenLayoutChildModule implements Callable<CustomModuleBean> {
         this.childComponent = childComponent;
         this.parentClassName = moduleComponent.getClassName();
         this.layoutViewBean = layoutViewBean;
-        String simClass = XUIUtil.formatJavaName(moduleComponent.getCurrComponent().getAlias(), true);
+        String simClass = OODUtil.formatJavaName(moduleComponent.getCurrComponent().getAlias(), true);
         if (!parentClassName.endsWith("." + simClass)) {
             this.parentClassName = parentClassName.toLowerCase() + "." + simClass;
         }
-        String childSimClass = XUIUtil.formatJavaName(childComponent.getAlias(), true);
+        String childSimClass = OODUtil.formatJavaName(childComponent.getAlias(), true);
 
         childRealPath = layoutViewBean.getXpath();
         if (!childRealPath.toLowerCase().endsWith("." + childSimClass.toLowerCase())) {
@@ -69,7 +69,7 @@ public class GenLayoutChildModule implements Callable<CustomModuleBean> {
     @Override
     public CustomModuleBean call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
-        String cSimClass = XUIUtil.formatJavaName(childComponent.getAlias(), true);
+        String cSimClass = OODUtil.formatJavaName(childComponent.getAlias(), true);
         String cPackageName = parentClassName.toLowerCase();
         String cEuClassName = cPackageName + "." + cSimClass;
         String projectName = moduleComponent.getProjectName();
@@ -90,7 +90,7 @@ public class GenLayoutChildModule implements Callable<CustomModuleBean> {
                     cdsmProperties.setDomainId(dsmProperties.getDomainId());
                 }
                 cdsmProperties.setRealPath(childRealPath);
-                cmoduleProperties.setMethodName(XUIUtil.getGetMethodName(childComponent.getAlias()));
+                cmoduleProperties.setMethodName(OODUtil.getGetMethodName(childComponent.getAlias()));
                 cmoduleProperties.setDsmProperties(cdsmProperties);
                 cmoduleComponent.setProperties(cmoduleProperties);
                 cmoduleComponent.setClassName(cEuClassName);

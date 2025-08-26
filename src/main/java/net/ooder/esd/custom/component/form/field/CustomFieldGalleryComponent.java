@@ -32,7 +32,7 @@ import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.GalleryComponent;
 import net.ooder.esd.tool.properties.*;
 import net.ooder.esd.tool.properties.item.GalleryItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.esd.util.json.APICallSerialize;
 
 import net.ooder.jds.core.esb.EsbUtil;
@@ -55,7 +55,7 @@ public class CustomFieldGalleryComponent extends GalleryComponent {
 
 
     public CustomFieldGalleryComponent(EUModule euModule, FieldFormConfig<CustomGalleryFieldBean, ?> field, String target, Object value, Map valueMap) {
-        super(XUIUtil.formatJavaName(field.getFieldname(), false));
+        super(OODUtil.formatJavaName(field.getFieldname(), false));
         CustomGalleryFieldBean fieldBean = field.getWidgetConfig();
         CustomListBean customListBean = fieldBean.getCustomListBean();
         Component component = fieldBean.getComponent();

@@ -23,7 +23,7 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.AggregationManager;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
-import net.ooder.esd.tool.XUITypeMapping;
+import net.ooder.esd.tool.OODTypeMapping;
 import net.ooder.esd.tool.properties.Header;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -101,7 +101,7 @@ public class FieldGridConfig implements ESDFieldConfig {
             } else if (header.getEnumClass() != null) {
                 clazz = header.getEnumClass();
             } else {
-                clazz = XUITypeMapping.genType(inputType);
+                clazz = OODTypeMapping.genType(inputType);
             }
             simpleClassName = clazz.getSimpleName();
             this.className = clazz.getName();

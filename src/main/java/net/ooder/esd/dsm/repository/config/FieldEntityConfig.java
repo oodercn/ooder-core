@@ -9,7 +9,7 @@ import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.bean.CustomRefBean;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.dsm.BuildFactory;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -57,7 +57,7 @@ public class FieldEntityConfig implements CustomBean {
             enumClass = info.getReturnType().getName();
         }
         this.componentType = info.getComponentType();
-        this.fieldname = XUIUtil.formatJavaName(info.getName(), false);
+        this.fieldname = OODUtil.formatJavaName(info.getName(), false);
         this.value = info.getValue();
         this.caption = info.getCaption() == null ? info.getName() : info.getCaption();
         this.uid = info.isUid();

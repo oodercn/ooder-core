@@ -47,7 +47,7 @@ public class APIComponentNode implements Comparable<APIComponentNode> {
 
     public String key;
 
-    public String cls = "xui.APICaller";
+    public String cls = "ood.APICaller";
 
     public String imageClass = "spafot spa-icon-c-";
 
@@ -227,7 +227,7 @@ public class APIComponentNode implements Comparable<APIComponentNode> {
         this.id = config.getClassName();
         this.caption = config.getName() + "[" + config.getUrl() + "]";
         this.cls = config.getClassName();
-        this.key = "xui.api.group";
+        this.key = "ood.api.group";
         this.alias = config.getClassName();
         this.path = config.getUrl();
         this.draggable = false;

@@ -14,7 +14,7 @@ import net.ooder.esd.bean.field.InputBean;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.custom.component.form.field.combo.CustomComboInputComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
-import net.ooder.esd.tool.XUITypeMapping;
+import net.ooder.esd.tool.OODTypeMapping;
 import net.ooder.esd.tool.component.ComboInputComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ModuleProperties;
@@ -149,7 +149,7 @@ public class ComboInputFieldBean<M extends ComboInputComponent> implements Combo
             }
         }
         if (inputType.equals(AnnotationUtil.getDefaultValue(ComboInputAnnotation.class, "inputType"))) {
-            inputType = XUITypeMapping.getType(esdField.getReturnType());
+            inputType = OODTypeMapping.getType(esdField.getReturnType());
         }
     }
 

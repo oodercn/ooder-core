@@ -17,7 +17,7 @@ import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.Properties;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.web.util.AnnotationUtil;
 import ognl.Ognl;
 import ognl.OgnlException;
@@ -57,7 +57,7 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
         String projectName = parentModuleComponent.getProjectName();
         String packageName = parentModuleClassName.substring(0, parentModuleClassName.lastIndexOf(".")).toLowerCase();
         String moduleName = parentModuleClassName.substring(parentModuleClassName.lastIndexOf(".") + 1).toLowerCase();
-        String simClass = XUIUtil.formatJavaName(component.getAlias(), true);
+        String simClass = OODUtil.formatJavaName(component.getAlias(), true);
         Properties properties = component.getProperties();
         if (euClassName == null) {
             try {
@@ -83,7 +83,7 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
             DSMProperties dsmProperties = new DSMProperties();
             dsmProperties.setSourceClassName(parentModuleComponent.getClassName());
             ModuleProperties moduleProperties = new ModuleProperties();
-            moduleProperties.setMethodName(XUIUtil.getGetMethodName(component.getAlias()));
+            moduleProperties.setMethodName(OODUtil.getGetMethodName(component.getAlias()));
             moduleProperties.setDsmProperties(dsmProperties);
             DSMProperties parentDsmProperties = parentModuleProperties.getDsmProperties();
             if (parentDsmProperties != null) {
@@ -172,8 +172,8 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
             DSMProperties dsmProperties = moduleComponent.getProperties().getDsmProperties();
             if (dsmProperties != null && dsmProperties.getRealPath() != null) {
                 realPath = dsmProperties.getRealPath();
-                String fieldName = XUIUtil.formatJavaName(component.getAlias(), false).toLowerCase();
-                if (!XUIUtil.formatJavaName(realPath, false).endsWith("." + fieldName)) {
+                String fieldName = OODUtil.formatJavaName(component.getAlias(), false).toLowerCase();
+                if (!OODUtil.formatJavaName(realPath, false).endsWith("." + fieldName)) {
                     realPath = realPath + "." + component.getAlias();
                 }
             }

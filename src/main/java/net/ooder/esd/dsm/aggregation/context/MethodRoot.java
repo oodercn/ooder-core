@@ -17,7 +17,7 @@ import net.ooder.esd.bean.field.combo.CustomModuleRefFieldBean;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.web.ConstructorBean;
 import net.ooder.web.RequestMappingBean;
 import net.ooder.web.RequestMethodBean;
@@ -69,7 +69,7 @@ public class MethodRoot {
 
         if (parentModuleComponent != null) {
             String parentModuleClassName = parentModuleComponent.getClassName();
-            String simClass = XUIUtil.formatJavaName(component.getAlias(), true);
+            String simClass = OODUtil.formatJavaName(component.getAlias(), true);
             if (euClassName == null) {
                 euClassName = parentModuleClassName.toLowerCase() + "." + simClass;
             } else if (!parentModuleClassName.equals(euClassName) && moduleBean.getSourceClassName() == null) {
@@ -81,8 +81,8 @@ public class MethodRoot {
             if (moduleBean.getMethodConfig() != null) {
                 euClassName = moduleBean.getMethodConfig().getEUClassName();
             } else {
-                String moduleName = moduleBean.getAlias() != null ? moduleBean.getAlias() : XUIUtil.formatJavaName(moduleBean.getMethodName(), false);
-                euClassName = XUIUtil.formatJavaName(moduleName, true);
+                String moduleName = moduleBean.getAlias() != null ? moduleBean.getAlias() : OODUtil.formatJavaName(moduleBean.getMethodName(), false);
+                euClassName = OODUtil.formatJavaName(moduleName, true);
             }
         }
 
@@ -92,7 +92,7 @@ public class MethodRoot {
             packageName = euClassName.substring(0, euClassName.lastIndexOf("."));
             simClass = euClassName.substring(euClassName.lastIndexOf(".") + 1);//.toLowerCase();
         }
-        simClass = XUIUtil.formatJavaName(simClass, true);
+        simClass = OODUtil.formatJavaName(simClass, true);
         euClassName = packageName + "." + simClass;
         if (dataBean == null) {
             if (moduleComponent != null && moduleComponent.getMethodAPIBean() != null) {

@@ -25,7 +25,7 @@ import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.GroupComponent;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.ConstructorBean;
 import net.ooder.annotation.AnnotationType;
@@ -221,7 +221,7 @@ public class GroupItemBean<T extends FieldItemConfig> extends LayoutListItem imp
         }
 
         this.euClassName = methodConfig.getEUClassName();
-        this.name = XUIUtil.formatJavaName(methodConfig.getMethodName(), true);
+        this.name = OODUtil.formatJavaName(methodConfig.getMethodName(), true);
         Class[] paramClass = methodConfig.getMethod().getParameterTypes();
         if (paramClass.length > 0) {
             this.fristClass = paramClass[0];

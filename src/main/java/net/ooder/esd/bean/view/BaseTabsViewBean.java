@@ -29,7 +29,7 @@ import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.util.EnumsUtil;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -99,11 +99,11 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
 
     @Override
     public ComponentBean findComByAlias(String alias) {
-        alias = XUIUtil.formatJavaName(alias, false);
+        alias = OODUtil.formatJavaName(alias, false);
         if (alias != null) {
             alias = alias.toLowerCase();
         }
-        if (XUIUtil.formatJavaName(this.getId(), false).equals(alias)) {
+        if (OODUtil.formatJavaName(this.getId(), false).equals(alias)) {
             return this;
         } else {
             List<CustomModuleBean> moduleBeans = this.getModuleBeans();
@@ -156,11 +156,11 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
 
     @Override
     public ComponentBean findComByPath(String path) {
-        path = XUIUtil.formatJavaName(path, false);
+        path = OODUtil.formatJavaName(path, false);
         if (path != null) {
             path = path.toLowerCase();
         }
-        if (XUIUtil.formatJavaName(this.getXpath(), false).equals(path)) {
+        if (OODUtil.formatJavaName(this.getXpath(), false).equals(path)) {
             return this;
         } else {
             List<CustomModuleBean> moduleBeans = this.getModuleBeans();

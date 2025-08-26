@@ -19,7 +19,7 @@ import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.esd.tool.properties.item.TabListItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.server.context.MinServerActionContextImpl;
 import net.ooder.server.httpproxy.core.HttpRequest;
 import net.ooder.web.RequestParamBean;
@@ -47,11 +47,11 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
         this.childComponent = childComponent;
         this.parentClassName = moduleComponent.getClassName();
         this.tabsViewBean = tabsViewBean;
-        String simClass = XUIUtil.formatJavaName(moduleComponent.getAlias(), true);
+        String simClass = OODUtil.formatJavaName(moduleComponent.getAlias(), true);
         if (!parentClassName.endsWith("." + simClass)) {
             this.parentClassName = parentClassName.toLowerCase() + "." + simClass;
         }
-        String childSimClass = XUIUtil.formatJavaName(childComponent.getAlias(), true);
+        String childSimClass = OODUtil.formatJavaName(childComponent.getAlias(), true);
 
         childRealPath = tabsViewBean.getXpath();
         if (!childRealPath.toLowerCase().endsWith("." + childSimClass.toLowerCase())) {
@@ -73,7 +73,7 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
     @Override
     public CustomModuleBean call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
-        String cSimClass = XUIUtil.formatJavaName(childComponent.getAlias(), true);
+        String cSimClass = OODUtil.formatJavaName(childComponent.getAlias(), true);
         String cPackageName = parentClassName.toLowerCase();
         String cEuClassName = cPackageName + "." + cSimClass;
         String projectName = moduleComponent.getProjectName();
@@ -94,7 +94,7 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
                     cdsmProperties.setDomainId(dsmProperties.getDomainId());
                 }
                 cdsmProperties.setRealPath(childRealPath);
-                cmoduleProperties.setMethodName(XUIUtil.getGetMethodName(childComponent.getAlias()));
+                cmoduleProperties.setMethodName(OODUtil.getGetMethodName(childComponent.getAlias()));
                 cmoduleProperties.setDsmProperties(cdsmProperties);
                 cmoduleComponent.setProperties(cmoduleProperties);
                 cmoduleComponent.setClassName(cEuClassName);

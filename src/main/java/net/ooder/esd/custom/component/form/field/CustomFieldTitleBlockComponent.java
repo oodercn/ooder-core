@@ -32,7 +32,7 @@ import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.TitleBlockComponent;
 import net.ooder.esd.tool.properties.*;
 import net.ooder.esd.tool.properties.item.TitleBlockItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.esd.util.json.APICallSerialize;
 
 import net.ooder.jds.core.esb.EsbUtil;
@@ -55,7 +55,7 @@ public class CustomFieldTitleBlockComponent extends TitleBlockComponent {
 
 
     public CustomFieldTitleBlockComponent(EUModule euModule, FieldFormConfig<CustomTitleBlockFieldBean, ?> field, String target, Object value, Map valueMap) {
-        super(XUIUtil.formatJavaName(field.getFieldname(), false));
+        super(OODUtil.formatJavaName(field.getFieldname(), false));
         CustomTitleBlockFieldBean fieldBean = field.getWidgetConfig();
         CustomListBean customListBean = fieldBean.getCustomListBean();
         CustomTitleBlockViewBean titleBlockViewBean = (CustomTitleBlockViewBean) field.getMethodConfig().getView();

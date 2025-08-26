@@ -19,7 +19,7 @@ import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.web.ConstructorBean;
 import net.ooder.web.RequestMappingBean;
 import net.ooder.web.RequestMethodBean;
@@ -86,8 +86,8 @@ public class ActionRoot {
             }
 
 
-            String moduleName = moduleBean.getAlias() != null ? moduleBean.getAlias() : XUIUtil.formatJavaName(moduleBean.getMethodName(), false);
-            moduleName = XUIUtil.formatJavaName(moduleName, false);
+            String moduleName = moduleBean.getAlias() != null ? moduleBean.getAlias() : OODUtil.formatJavaName(moduleBean.getMethodName(), false);
+            moduleName = OODUtil.formatJavaName(moduleName, false);
             requestMethodBean = new RequestMethodBean(moduleName, moduleComponent.getClassName(), paramBeans);
             requestMapping = new RequestMappingBean(moduleName, moduleName);
         } else {
@@ -99,7 +99,7 @@ public class ActionRoot {
                     moduleName = listItem.getType().name();
                 }
             }
-            moduleName = XUIUtil.formatJavaName(moduleName, false);
+            moduleName = OODUtil.formatJavaName(moduleName, false);
 
             Class[] bindClassList = listItem.getBindClass();
             if (bindClassList!=null && bindClassList.length>0){

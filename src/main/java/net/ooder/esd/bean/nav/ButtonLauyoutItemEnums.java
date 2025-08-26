@@ -4,7 +4,7 @@ public enum ButtonLauyoutItemEnums implements IButtonLayoutItem {
 
     startWork("起草", "spafont spa-icon-action1"),
 
-    waitedwork("待办", "xui-icon-number1"),
+    waitedwork("待办", "ood-icon-number1"),
 
     index("首页", "spafont spa-icon-links"),
 

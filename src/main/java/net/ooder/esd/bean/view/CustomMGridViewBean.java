@@ -26,7 +26,7 @@ import net.ooder.esd.dsm.aggregation.FieldAggConfig;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldGridConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
-import net.ooder.esd.tool.XUITypeMapping;
+import net.ooder.esd.tool.OODTypeMapping;
 import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.*;
@@ -237,7 +237,7 @@ public class CustomMGridViewBean extends CustomViewBean<FieldGridConfig, UIItem,
             }
         }
 
-        //  this.name = XUIUtil.formatJavaName(gridComponent.getAlias(), false);
+        //  this.name = OODUtil.formatJavaName(gridComponent.getAlias(), false);
         GridProperties gridProperties = gridComponent.getProperties();
         this.init(gridProperties);
         List<Header> headerList = gridProperties.getHeader();
@@ -669,9 +669,9 @@ public class CustomMGridViewBean extends CustomViewBean<FieldGridConfig, UIItem,
                     inputType = ComboInputType.input;
                 }
                 if (clazz == null) {
-                    clazz = XUITypeMapping.genType(inputType);
+                    clazz = OODTypeMapping.genType(inputType);
                 }
-                ComponentType componentType = XUITypeMapping.getComponentType(clazz);
+                ComponentType componentType = OODTypeMapping.getComponentType(clazz);
                 aggConfig = aggEntityConfig.createField(fieldName, clazz, componentType);
             }
         }

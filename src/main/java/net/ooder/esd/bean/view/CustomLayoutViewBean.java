@@ -32,7 +32,7 @@ import net.ooder.esd.tool.properties.LayoutProperties;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.ESDEnumsUtil;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.RemoteConnectionManager;
 import net.ooder.web.RequestParamBean;
@@ -142,11 +142,11 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
 
     @Override
     public ComponentBean findComByAlias(String alias) {
-        alias = XUIUtil.formatJavaName(alias, false);
+        alias = OODUtil.formatJavaName(alias, false);
         if (alias != null) {
             alias = alias.toLowerCase();
         }
-        if (XUIUtil.formatJavaName(this.getId(), false).equals(alias)) {
+        if (OODUtil.formatJavaName(this.getId(), false).equals(alias)) {
             return this;
         } else {
             List<CustomModuleBean> moduleBeans = this.getModuleBeans();
@@ -425,7 +425,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
 
     @Override
     public ComponentBean findComByPath(String path) {
-        path = XUIUtil.formatJavaName(path, false);
+        path = OODUtil.formatJavaName(path, false);
         if (path != null) {
             path = path.toLowerCase();
         }

@@ -2,7 +2,7 @@ package net.ooder.esd.manager;
 
 import net.ooder.esd.engine.EUModule;
 
-public class XUIModuleFile implements Comparable<XUIModuleFile> {
+public class OODModuleFile implements Comparable<OODModuleFile> {
 
     String name;
     String id;
@@ -17,7 +17,7 @@ public class XUIModuleFile implements Comparable<XUIModuleFile> {
     Boolean sub;
     public Boolean iniFold;
 
-    public XUIModuleFile(EUModule module) {
+    public OODModuleFile(EUModule module) {
         this.name = module.getName() + ".cls";
         this.sub = true;
         this.iniFold = true;
@@ -125,7 +125,7 @@ public class XUIModuleFile implements Comparable<XUIModuleFile> {
     }
 
     @Override
-    public int compareTo(XUIModuleFile o) {
+    public int compareTo(OODModuleFile o) {
         if (className != null && o.getClassName() != null) {
             return className.compareTo(o.getClassName());
         } else if (caption != null && o.getCaption() != null) {

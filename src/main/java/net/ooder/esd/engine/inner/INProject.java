@@ -69,7 +69,7 @@ public class INProject {
     @JSONField(serialize = false)
     private Folder rootfolder;
     public String projectName;
-    public String xuiConfig;
+    public String oodConfig;
     public String path;
     public ProjectDefAccess defAccess;
 
@@ -307,11 +307,11 @@ public class INProject {
 
 
     public String getXuiConfig() {
-        return xuiConfig;
+        return oodConfig;
     }
 
-    public void setXuiConfig(String xuiConfig) {
-        this.xuiConfig = xuiConfig;
+    public void setXuiConfig(String oodConfig) {
+        this.oodConfig = oodConfig;
     }
 
     public String getPath() {

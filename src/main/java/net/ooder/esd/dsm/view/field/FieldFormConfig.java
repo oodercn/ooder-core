@@ -35,12 +35,12 @@ import net.ooder.esd.dsm.aggregation.context.MethodRoot;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.util.json.FormFieldComboDeserializer;
 import net.ooder.esd.util.json.FormFieldDeserializer;
-import net.ooder.esd.tool.XUITypeMapping;
+import net.ooder.esd.tool.OODTypeMapping;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.Properties;
 import net.ooder.esd.tool.properties.form.ComboInputProperties;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.server.httpproxy.core.HttpRequest;
 import net.ooder.web.ConstructorBean;
@@ -152,7 +152,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
         if (comName == null || comName.equals("")) {
             comName = component.getAlias();
         }
-        this.fieldname = XUIUtil.formatJavaName(comName, false);
+        this.fieldname = OODUtil.formatJavaName(comName, false);
         this.id = fieldname;
         this.methodName = fieldname;
         this.componentType = ComponentType.fromType(component.getKey());
@@ -397,9 +397,9 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
             dbFieldBean.setDbFieldName(this.getFieldname().toLowerCase());
             ColType colType = ColType.VARCHAR2;
             if (this.componentType.equals(ComponentType.COMBOINPUT)) {
-                colType = XUITypeMapping.guessInputDBType(this.getComboConfig().getInputType());
+                colType = OODTypeMapping.guessInputDBType(this.getComboConfig().getInputType());
             } else {
-                colType = XUITypeMapping.guessComponentDBType(this.getComponentType());
+                colType = OODTypeMapping.guessComponentDBType(this.getComponentType());
             }
             dbFieldBean.setDbType(colType);
             if (this.getFieldBean().getRequired() != null && this.getFieldBean().getRequired()) {
@@ -628,7 +628,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
                         }
                     }
 
-                    Class clazz = XUITypeMapping.guessResultType(componentType);
+                    Class clazz = OODTypeMapping.guessResultType(componentType);
                     if (aggInnerConfig == null) {
                         aggInnerConfig = aggEntityConfig.createField(fieldname, clazz, componentType);
                     }
@@ -636,7 +636,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
             }
 
             if (aggInnerConfig == null) {
-                aggInnerConfig = new FieldAggConfig(fieldname, XUITypeMapping.guessResultType(componentType), componentType, domainId, entityClassName, 0);
+                aggInnerConfig = new FieldAggConfig(fieldname, OODTypeMapping.guessResultType(componentType), componentType, domainId, entityClassName, 0);
             }
         } catch (JDSException e) {
             e.printStackTrace();
@@ -813,7 +813,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
             }
             ApiClassConfig apiClassConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(serviceClassName);
             if (apiClassConfig != null) {
-                methodConfig = apiClassConfig.getMethodByName(methodName == null ? fieldname : XUIUtil.getGetMethodName(methodName));
+                methodConfig = apiClassConfig.getMethodByName(methodName == null ? fieldname : OODUtil.getGetMethodName(methodName));
                 if (methodConfig == null) {
                     methodConfig = apiClassConfig.findEditorMethod();
                 }
@@ -822,7 +822,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
             if (methodConfig == null) {
                 AggEntityConfig aggEntityConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(serviceClassName, false);
                 if (aggEntityConfig != null) {
-                    methodConfig = aggEntityConfig.getMethodByName(methodName == null ? fieldname : XUIUtil.getGetMethodName(methodName));
+                    methodConfig = aggEntityConfig.getMethodByName(methodName == null ? fieldname : OODUtil.getGetMethodName(methodName));
                 }
             }
 
@@ -830,14 +830,14 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
             if (methodConfig == null) {
                 ApiClassConfig sourceApi = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(this.getViewClassName());
                 if (sourceApi != null) {
-                    methodConfig = sourceApi.getMethodByName(methodName == null ? fieldname : XUIUtil.getGetMethodName(methodName));
+                    methodConfig = sourceApi.getMethodByName(methodName == null ? fieldname : OODUtil.getGetMethodName(methodName));
                 }
             }
 
             if (methodConfig == null) {
                 AggEntityConfig aggEntityConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(this.getViewClassName(), false);
                 if (aggEntityConfig != null) {
-                    methodConfig = aggEntityConfig.getMethodByName(methodName == null ? fieldname : XUIUtil.getGetMethodName(methodName));
+                    methodConfig = aggEntityConfig.getMethodByName(methodName == null ? fieldname : OODUtil.getGetMethodName(methodName));
                 }
             }
 
@@ -900,7 +900,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
 
     @JSONField(serialize = false)
     public String getMethodInfo() {
-        String metaInfo = this.getAggConfig().getSimpleClassName() + " " + XUIUtil.getGetMethodName(this.getAggConfig().getFieldname()) + "()";
+        String metaInfo = this.getAggConfig().getSimpleClassName() + " " + OODUtil.getGetMethodName(this.getAggConfig().getFieldname()) + "()";
         if (getServiceMethodConfig() != null) {
             metaInfo = this.getServiceMethodConfig().getSourceMetaInfo();
         } else if (this.getMethodConfig() != null && this.getMethodConfig().isModule()) {

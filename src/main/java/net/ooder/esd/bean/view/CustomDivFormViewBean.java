@@ -12,7 +12,7 @@ import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.DivComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
@@ -39,7 +39,7 @@ public class CustomDivFormViewBean extends BaseFormViewBean {
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         initMenuBar();
         DivComponent currComponent = (DivComponent) moduleComponent.getCurrComponent();
-        this.name = XUIUtil.formatJavaName(currComponent.getAlias(), false);
+        this.name = OODUtil.formatJavaName(currComponent.getAlias(), false);
         if (moduleBean != null) {
             moduleBean.updateComponent(currComponent);
         }

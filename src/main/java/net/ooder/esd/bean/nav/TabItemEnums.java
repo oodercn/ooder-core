@@ -4,7 +4,7 @@ package net.ooder.esd.bean.nav;
 import net.ooder.esd.annotation.field.TabItem;
 
 public enum TabItemEnums implements TabItem {
-    a("page1", "xui-icon-xui", false, false, false, null),
+    a("page1", "ood-icon-ood", false, false, false, null),
     b("page2", "dsmfont dsm-huitiaojilu",  false, false, false, null),
     c("page3", "iotfont iotmenling",  false, false, false, null),
     d("page4", "dsmfont dsm-shujuyuan",  false, false, false,null);

@@ -16,7 +16,7 @@ import net.ooder.esd.bean.field.SearchFieldBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;
 import net.ooder.esd.bean.grid.GridColItemBean;
-import net.ooder.esd.tool.XUITypeMapping;
+import net.ooder.esd.tool.OODTypeMapping;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -127,7 +127,7 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
                 if (inputAnnotation != null) {
                     inputType = inputAnnotation.inputType();
                 } else {
-                    inputType = XUITypeMapping.getType(getReturnType());
+                    inputType = OODTypeMapping.getType(getReturnType());
                 }
                 for (Annotation annotation : this.getAllAnnotation()) {
                     if (!(annotation.annotationType().equals(ComboInputAnnotation.class))) {
@@ -274,10 +274,10 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
 
         if (genType != null) {
             this.simpleClassName = AnnotationUtil.toType(this.getGenericType()).toString();
-            this.componentType = XUITypeMapping.getComponentType(this.getReturnType(), this.getGenericType());
+            this.componentType = OODTypeMapping.getComponentType(this.getReturnType(), this.getGenericType());
         } else {
             this.simpleClassName = AnnotationUtil.toType(this.getReturnType()).toString();
-            this.componentType = XUITypeMapping.getComponentType(this.getReturnType(), this.getReturnType());
+            this.componentType = OODTypeMapping.getComponentType(this.getReturnType(), this.getReturnType());
         }
 
 

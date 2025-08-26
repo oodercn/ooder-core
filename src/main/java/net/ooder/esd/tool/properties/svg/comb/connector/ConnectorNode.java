@@ -8,7 +8,7 @@ import net.ooder.esd.tool.properties.svg.comb.BGText;
 public class ConnectorNode extends SVGConnectorComponent {
     ConnectorProperties properties;
     String alias;
-    String key = "xui.svg.connector";
+    String key = "ood.svg.connector";
 
 
     public ConnectorNode() {

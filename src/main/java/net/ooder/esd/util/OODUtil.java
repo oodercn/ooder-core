@@ -5,8 +5,8 @@ import net.ooder.esd.bean.field.CustomBlockFieldBean;
 
 import java.util.*;
 
-public class XUIUtil {
-    static String[] skipChars = new String[]{"get", "xuiui"};
+public class OODUtil {
+    static String[] skipChars = new String[]{"get", "oodui"};
 
     static Map<String, String> aliasMap = new HashMap<>();
 

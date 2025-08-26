@@ -63,7 +63,7 @@ public class UserConfig extends DivComponent {
         logoProperties.setTabindex(4);
         logoProperties.setPosition("static");
         logoProperties.setCaption("");
-        logoProperties.setImageClass("xui-icon-sort-checked");
+        logoProperties.setImageClass("ood-icon-sort-checked");
         logoProperties.setFontColor("#FFFFFF");
         return logoLabelCom;
     }

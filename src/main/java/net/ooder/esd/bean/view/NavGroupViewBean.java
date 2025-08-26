@@ -33,7 +33,7 @@ import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.Properties;
 import net.ooder.esd.tool.properties.item.GalleryItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.util.EnumsUtil;
@@ -297,7 +297,7 @@ public class NavGroupViewBean extends NavBaseViewBean<GroupItemBean, GalleryItem
 
     @Override
     public ComponentBean findComByPath(String path) {
-        path = XUIUtil.formatJavaName(path, false);
+        path = OODUtil.formatJavaName(path, false);
         if (path != null) {
             path = path.toLowerCase();
         }

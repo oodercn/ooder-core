@@ -31,7 +31,7 @@ import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ContentBlockComponent;
 import net.ooder.esd.tool.properties.*;
 import net.ooder.esd.tool.properties.item.ContentBlockItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.esd.util.json.APICallSerialize;
 
 import net.ooder.jds.core.esb.EsbUtil;
@@ -54,7 +54,7 @@ public class CustomFieldContentBlockComponent extends ContentBlockComponent {
 
 
     public CustomFieldContentBlockComponent(EUModule euModule, FieldFormConfig<CustomContentBlockFieldBean, ?> field, String target, Object value, Map valueMap) {
-        super(XUIUtil.formatJavaName(field.getFieldname(), false));
+        super(OODUtil.formatJavaName(field.getFieldname(), false));
         CustomContentBlockFieldBean fieldBean = field.getWidgetConfig();
         CustomListBean customListBean = fieldBean.getCustomListBean();
         CustomContentBlockViewBean contentBlockViewBean = (CustomContentBlockViewBean) field.getMethodConfig().getView();

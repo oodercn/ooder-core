@@ -19,7 +19,7 @@ import net.ooder.esd.dsm.view.ViewInst;
 import net.ooder.esd.dsm.view.context.DicViewRoot;
 import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -97,7 +97,7 @@ public class GenViewDicJava extends BaseAggCallabel {
                 bindClassName = clazzList[0].getName();
             }
             if (bindClassName == null) {
-                bindClassName = packageName + "." + XUIUtil.formatJavaName(name + item.getId(), true);
+                bindClassName = packageName + "." + OODUtil.formatJavaName(name + item.getId(), true);
             }
             try {
                 try {

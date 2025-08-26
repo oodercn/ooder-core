@@ -15,7 +15,7 @@ import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.SVGPaperComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.svg.SVGPaperProperties;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
@@ -51,7 +51,7 @@ public class CustomSVGPaperViewBean extends BaseFormViewBean {
         updateBaseModule(moduleComponent);
         initMenuBar();
         SVGPaperComponent currComponent = (SVGPaperComponent) moduleComponent.getCurrComponent();
-        this.name = XUIUtil.formatJavaName(currComponent.getAlias(), false);
+        this.name = OODUtil.formatJavaName(currComponent.getAlias(), false);
         if (containerBean == null) {
             containerBean = new ContainerBean(currComponent);
         } else {

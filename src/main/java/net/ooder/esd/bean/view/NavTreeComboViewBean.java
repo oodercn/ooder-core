@@ -12,7 +12,7 @@ import net.ooder.esd.bean.*;
 import net.ooder.esd.tool.component.LayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
@@ -97,12 +97,12 @@ public class NavTreeComboViewBean extends NavComboBaseViewBean<TreeListItem> {
     }
 
     public ComponentBean findComByPath(String path) {
-        path = XUIUtil.formatJavaName(path, false);
+        path = OODUtil.formatJavaName(path, false);
         ComponentBean componentBean = null;
         if (path != null) {
             path = path.toLowerCase();
         }
-        if (XUIUtil.formatJavaName(this.getXpath(), false).equals(path)) {
+        if (OODUtil.formatJavaName(this.getXpath(), false).equals(path)) {
             componentBean = this;
         } else {
             componentBean = this.tabsViewBean.findComByPath(path);
@@ -115,13 +115,13 @@ public class NavTreeComboViewBean extends NavComboBaseViewBean<TreeListItem> {
 
 
     public ComponentBean findComByAlias(String alias) {
-        String path = XUIUtil.formatJavaName(alias, false).toLowerCase();
-        path = XUIUtil.formatJavaName(path, false);
+        String path = OODUtil.formatJavaName(alias, false).toLowerCase();
+        path = OODUtil.formatJavaName(path, false);
         ComponentBean componentBean = null;
         if (path != null) {
             path = path.toLowerCase();
         }
-        if (XUIUtil.formatJavaName(this.getXpath(), false).equals(path)) {
+        if (OODUtil.formatJavaName(this.getXpath(), false).equals(path)) {
             componentBean = this;
         } else {
             componentBean = this.tabsViewBean.findComByAlias(path);

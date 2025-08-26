@@ -12,7 +12,7 @@ import net.ooder.web.APIConfig;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XUISyncFile implements Comparable<XUISyncFile> {
+public class OODSyncFile implements Comparable<OODSyncFile> {
 
     String name;
     String id;
@@ -23,10 +23,10 @@ public class XUISyncFile implements Comparable<XUISyncFile> {
     String projectName;
     String caption;
     String path;
-    List<XUIModuleFile> sub = new ArrayList<XUIModuleFile>();
+    List<OODModuleFile> sub = new ArrayList<OODModuleFile>();
     public Boolean iniFold;
 
-    public XUISyncFile(Folder folder, ProjectVersion version) {
+    public OODSyncFile(Folder folder, ProjectVersion version) {
         iniFold = true;
         this.name = folder.getDescrition() == null ? folder.getName() : folder.getDescrition();
         this.location = folder.getPath();
@@ -159,16 +159,16 @@ public class XUISyncFile implements Comparable<XUISyncFile> {
         this.imageClass = imageClass;
     }
 
-    public List<XUIModuleFile> getSub() {
+    public List<OODModuleFile> getSub() {
         return sub;
     }
 
-    public void setSub(List<XUIModuleFile> sub) {
+    public void setSub(List<OODModuleFile> sub) {
         this.sub = sub;
     }
 
     @Override
-    public int compareTo(XUISyncFile o) {
+    public int compareTo(OODSyncFile o) {
         if (className != null && o.getClassName() != null) {
             return className.compareTo(o.getClassName());
         } else if (caption != null && o.getCaption() != null) {

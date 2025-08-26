@@ -27,7 +27,7 @@ import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.esd.tool.properties.Action;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -183,8 +183,8 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         this.domainId = methodInfo.getDomainId();
         this.sourceMethodName = methodInfo.getMethodName();
         this.methodName = methodInfo.getMethodName();
-        this.alias = XUIUtil.formatJavaName(methodName, true);
-        this.id = XUIUtil.formatJavaName(methodName, true);
+        this.alias = OODUtil.formatJavaName(methodName, true);
+        this.id = OODUtil.formatJavaName(methodName, true);
         ;
     }
 
@@ -216,14 +216,14 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
             this.sourceMethodName = methodConfig.getMethodName();
             this.methodName = methodConfig.getMethodName();
             this.euClassName = methodConfig.getEUClassName();
-            this.alias = XUIUtil.formatJavaName(methodName, true);
-            this.id = XUIUtil.formatJavaName(methodName, true);
+            this.alias = OODUtil.formatJavaName(methodName, true);
+            this.id = OODUtil.formatJavaName(methodName, true);
         }
     }
 
 
     public void updateComponent(Component component) {
-        this.id = XUIUtil.formatJavaName(component.getAlias(), true);
+        this.id = OODUtil.formatJavaName(component.getAlias(), true);
         this.name = id;
         this.methodName = id;
         this.target = component.getTarget();
@@ -233,7 +233,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
 
         this.packageName = parentModuleComponent.getClassName().substring(0, parentModuleComponent.getClassName().lastIndexOf("."));
         if (euClassName == null) {
-            this.euClassName = packageName + "." + XUIUtil.formatJavaName(component.getAlias(), true);
+            this.euClassName = packageName + "." + OODUtil.formatJavaName(component.getAlias(), true);
         }
         if (caption == null) {
             this.caption = component.getProperties().getDesc() == null ? component.getAlias() : component.getProperties().getDesc();
@@ -282,7 +282,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         }
 
         if (alias != null) {
-            this.id = XUIUtil.formatJavaName(alias, true);
+            this.id = OODUtil.formatJavaName(alias, true);
             this.name = id;
             this.methodName = id;
         }

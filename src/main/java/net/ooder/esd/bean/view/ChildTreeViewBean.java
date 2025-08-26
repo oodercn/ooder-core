@@ -24,7 +24,7 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.view.field.FieldTreeConfig;
 import net.ooder.esd.tool.properties.item.CmdItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.esd.util.json.*;
 import net.ooder.web.ConstructorBean;
 import net.ooder.web.RequestParamBean;
@@ -231,7 +231,7 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
 
         if (methodConfig.getViewClass() != null && !TreeListItem.class.isAssignableFrom(methodConfig.getViewClass().getCtClass())) {
             RequestParamBean requestParamBean = new RequestParamBean();
-            String paramName = XUIUtil.formatJavaName(methodConfig.getViewClass().getName(), false);
+            String paramName = OODUtil.formatJavaName(methodConfig.getViewClass().getName(), false);
             requestParamBean.setParamName(paramName);
             requestParamBean.setParamClassName(methodConfig.getViewClassName());
             requestParamBean.setMethodName(methodConfig.getMethodName());

@@ -10,8 +10,8 @@ public class XPathBean implements CustomBean {
 
     String path;
 
-    public void update(XPathBean xuiBean) {
-        this.path = xuiBean.getPath();
+    public void update(XPathBean oodBean) {
+        this.path = oodBean.getPath();
 
     }
 

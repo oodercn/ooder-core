@@ -41,7 +41,7 @@ import net.ooder.esd.engine.MySpace;
 import net.ooder.esd.engine.ProjectCacheManager;
 import net.ooder.esd.engine.inner.INProject;
 import net.ooder.esd.tool.properties.item.TabListItem;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.server.JDSServer;
 import net.ooder.vfs.FileInfo;
 import net.ooder.vfs.Folder;
@@ -882,7 +882,7 @@ public class RepositoryManager {
         List<Callable<List<JavaSrcBean>>> dicTasks = new ArrayList<>();
         List<JavaSrcBean> rootBeans = new ArrayList<>();
         for (TabListItem subItem : items) {
-            List<Callable<List<JavaSrcBean>>> genJavaTasks = genDicJavaTask(repositoryInst, subItem, moduleName + "." + XUIUtil.formatJavaName(subItem.getId(), false), XUIUtil.formatJavaName(subItem.getId(), true), chrome);
+            List<Callable<List<JavaSrcBean>>> genJavaTasks = genDicJavaTask(repositoryInst, subItem, moduleName + "." + OODUtil.formatJavaName(subItem.getId(), false), OODUtil.formatJavaName(subItem.getId(), true), chrome);
             dicTasks.addAll(genJavaTasks);
         }
         List<JavaSrcBean> javaSrcBeans = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), dicTasks);
@@ -916,7 +916,7 @@ public class RepositoryManager {
                     if (treeListItems != null && treeListItems.size() > 0) {
                         GenDicJava genDicJava = new GenDicJava(repositoryInst, treeListItems, moduleName, className);
                         dicTasks.add(genDicJava);
-                        List<Callable<List<JavaSrcBean>>> genJavaTasks = genDicJavaTask(repositoryInst, subItem, moduleName + "." + XUIUtil.formatJavaName(subItem.getId(), false), XUIUtil.formatJavaName(subItem.getId(), true), chrome);
+                        List<Callable<List<JavaSrcBean>>> genJavaTasks = genDicJavaTask(repositoryInst, subItem, moduleName + "." + OODUtil.formatJavaName(subItem.getId(), false), OODUtil.formatJavaName(subItem.getId(), true), chrome);
                         dicTasks.addAll(genJavaTasks);
                     }
                 }

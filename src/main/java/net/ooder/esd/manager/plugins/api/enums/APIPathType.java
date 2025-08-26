@@ -9,11 +9,11 @@ public enum APIPathType {
 
     RAD("RAD", "/RAD/", "编辑器", APIType.system, "fa fa-cubes"),
 
-    admin("admin", "/admin/", "管理控制台", APIType.system, "xui-uicmd-restore"),
+    admin("admin", "/admin/", "管理控制台", APIType.system, "ood-uicmd-restore"),
 
-    log("log", "/log/", "日志处理", APIType.system, "xui-icon-print"),
+    log("log", "/log/", "日志处理", APIType.system, "ood-icon-print"),
 
-    vfs("vfs", "/api/vfs/", "分布式存储", APIType.system, "xui-icon-menu"),
+    vfs("vfs", "/api/vfs/", "分布式存储", APIType.system, "ood-icon-menu"),
 
     org("org", "/api/org/", "组织机构", APIType.system, "fa fa-cubes"),
 
@@ -21,7 +21,7 @@ public enum APIPathType {
 
     bpm("bpm", "/jds/bpm/", "流程应用", APIType.system, "fa fa-cubes"),
 
-    db("db", "/fdt/", "数据库接口", APIType.userdef, "xui-uicmd-max"),
+    db("db", "/fdt/", "数据库接口", APIType.userdef, "ood-uicmd-max"),
 
     dsm("dsm", "/dsm/", "DSM建模", APIType.userdef, "spafont spa-icon-conf"),
 
@@ -29,7 +29,7 @@ public enum APIPathType {
 
     orgclient("orgclient", "/system/org/", "组织机构接口", APIType.userdef, "fa fa-cubes"),
 
-    fdt("fdt", "/jds/fdt/", "电子表单", APIType.system, "xui-uicmd-max");
+    fdt("fdt", "/jds/fdt/", "电子表单", APIType.system, "ood-uicmd-max");
 
 
     private final String pattern;

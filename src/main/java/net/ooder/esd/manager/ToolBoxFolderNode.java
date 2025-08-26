@@ -21,7 +21,7 @@ public class ToolBoxFolderNode {
 
     public String key;
 
-    public String cls = "xui.Module";
+    public String cls = "ood.Module";
 
     public String imageClass = "spafont spa-icon-c-grid";
 
@@ -33,7 +33,7 @@ public class ToolBoxFolderNode {
     public ToolBoxFolderNode(Folder folder, boolean isGroup, boolean hasFile) {
         this.id = folder.getPath();
         this.path = folder.getPath();
-        this.key = "xui.Class";
+        this.key = "ood.Class";
         this.group = isGroup;
         this.draggable = false;
         this.caption = folder.getDescrition() == null ? folder.getName() : folder.getDescrition();

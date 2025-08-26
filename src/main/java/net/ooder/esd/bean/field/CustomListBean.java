@@ -24,7 +24,7 @@ import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.java.JavaSrcBean;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.server.httpproxy.core.AbstractHandler;
 import net.ooder.server.httpproxy.core.HttpRequest;
@@ -74,7 +74,7 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
                 if (moduleComponent.getProperties().getDsmProperties() != null && moduleComponent.getProperties().getDsmProperties().getDomainId() != null) {
                     domainInst = DSMFactory.getInstance().getDomainInstById(moduleComponent.getProperties().getDsmProperties().getDomainId());
                 }
-                String simClass = XUIUtil.formatJavaName(component.getAlias(), true);
+                String simClass = OODUtil.formatJavaName(component.getAlias(), true);
                 String packageName = moduleComponent.getClassName().toLowerCase();
                 String module = packageName.substring(0, packageName.lastIndexOf("."));
                 if (domainInst != null && domainInst.getEuPackage() != null) {

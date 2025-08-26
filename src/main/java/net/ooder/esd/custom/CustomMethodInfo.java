@@ -14,7 +14,7 @@ import net.ooder.esd.bean.CustomRefBean;
 import net.ooder.esd.bean.field.CustomFieldBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.util.DSMAnnotationUtil;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 import net.ooder.web.util.MethodUtil;
@@ -202,7 +202,7 @@ public class CustomMethodInfo<M extends ComponentBean, N extends ComboBoxBean> e
             boolean isModule = AnnotationUtil.getAllAnnotations(innerMethod, ModuleAnnotation.class, true) == null ? false : true;
 
             if (isModule) {
-                this.methodInfo = MethodUtil.toMethodStr(innerMethod, this.getViewType(), XUIUtil.formatJavaName(methodName, true), false, null).toString();
+                this.methodInfo = MethodUtil.toMethodStr(innerMethod, this.getViewType(), OODUtil.formatJavaName(methodName, true), false, null).toString();
             } else {
                 this.methodInfo = MethodUtil.toMethodStr(innerMethod, this.getViewType(), "", false, null).toString();
             }

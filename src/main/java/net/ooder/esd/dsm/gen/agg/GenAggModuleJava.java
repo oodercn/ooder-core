@@ -15,7 +15,7 @@ import net.ooder.esd.dsm.gen.BaseAggCallabel;
 import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.annotation.AggregationType;
 
 import java.io.File;
@@ -54,7 +54,7 @@ public class GenAggModuleJava extends BaseAggCallabel {
                 if (javatemp.getPackagePostfix() != null && !javatemp.getPackagePostfix().equals("")) {
                     packageName = packageName + "." + javatemp.getPackagePostfix();
                 }
-                String className = StringUtility.replace(javatemp.getNamePostfix(), "**", XUIUtil.formatJavaName( domainInst.getEuPackage() , true));
+                String className = StringUtility.replace(javatemp.getNamePostfix(), "**", OODUtil.formatJavaName( domainInst.getEuPackage() , true));
                 allRoot.setPackageName(packageName);
                 allRoot.setClassName(className);
                 File file = javaGen.createJava(javatemp, allRoot, chrome);

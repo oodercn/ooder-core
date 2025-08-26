@@ -38,7 +38,7 @@ import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.server.context.MinServerActionContextImpl;
 import net.ooder.server.httpproxy.core.HttpRequest;
 import net.ooder.util.EnumsUtil;
@@ -338,7 +338,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
             if (getViewClassName() != null) {
                 simClass = this.getViewClassName().substring(this.getViewClassName().lastIndexOf(".") + 1);
             }
-            this.name = XUIUtil.formatJavaName(treeViewComponent.getAlias(), false);
+            this.name = OODUtil.formatJavaName(treeViewComponent.getAlias(), false);
 
             TreeViewProperties treeViewProperties = treeViewComponent.getProperties();
             this.initProperties(treeViewProperties);

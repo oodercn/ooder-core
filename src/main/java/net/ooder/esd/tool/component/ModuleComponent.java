@@ -43,7 +43,7 @@ import net.ooder.esd.tool.properties.list.AbsListProperties;
 import net.ooder.esd.tool.properties.list.ListDataProperties;
 import net.ooder.esd.tool.properties.list.ListFieldProperties;
 import net.ooder.esd.tool.properties.list.TreeListProperties;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.esd.util.json.ComponentsMapDeserializer;
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.jds.core.esb.task.ExcuteObj;
@@ -164,7 +164,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         if (components == null) {
             components = new HashMap<String, Component>();
         }
-        String moduleName = XUIUtil.formatJavaName(currComponent.getAlias(), true);
+        String moduleName = OODUtil.formatJavaName(currComponent.getAlias(), true);
         BlockComponent blockComponent = new BlockComponent(Dock.fill, moduleName + DefaultTopBoxfix);
         blockComponent.getProperties().setBorderType(BorderType.none);
         blockComponent.addChildren(currComponent);
@@ -721,8 +721,8 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             for (Component childcomponent : allComponent) {
                 String alias = childcomponent.getAlias();
                 if (alias != null) {
-                    alias = (XUIUtil.formatJavaName(alias, true)).toLowerCase();
-                    fieldName = (XUIUtil.formatJavaName(fieldName, true)).toLowerCase();
+                    alias = (OODUtil.formatJavaName(alias, true)).toLowerCase();
+                    fieldName = (OODUtil.formatJavaName(fieldName, true)).toLowerCase();
                     if (fieldName.equals(alias)) {
                         componentList.add(childcomponent);
                     }
@@ -1004,7 +1004,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             }
             if (moduleName == null && this.getCurrComponent() != null) {
                 moduleName = this.getCurrComponent().getAlias();
-                moduleName = XUIUtil.formatJavaName(moduleName, true);
+                moduleName = OODUtil.formatJavaName(moduleName, true);
             }
             component = this.components.get(moduleName + DefaultTopBoxfix);
             if (component == null) {

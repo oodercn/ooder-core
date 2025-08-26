@@ -7,7 +7,7 @@ import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.util.json.EMSerializer;
-import net.ooder.esd.tool.XUITypeMapping;
+import net.ooder.esd.tool.OODTypeMapping;
 import net.ooder.esd.tool.properties.Header;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
@@ -55,7 +55,7 @@ public class GridColItemBean implements CustomBean {
             if (colInfo.getComponentType().equals(ComponentType.COMBOINPUT) && colInfo.getComboConfig() != null) {
                 inputType = colInfo.getComboConfig().getInputType();
             } else {
-                inputType = XUITypeMapping.getType(returnType);
+                inputType = OODTypeMapping.getType(returnType);
             }
             this.width = colInfo.getWidth();
             if (inputType.equals(ComboInputType.auto)) {

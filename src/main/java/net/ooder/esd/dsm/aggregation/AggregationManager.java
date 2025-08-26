@@ -43,7 +43,7 @@ import net.ooder.esd.engine.config.dsm.DSMProjectConfig;
 import net.ooder.esd.engine.enums.PackagePathType;
 import net.ooder.esd.engine.enums.PackageType;
 import net.ooder.esd.engine.inner.INProject;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.server.JDSServer;
 import net.ooder.server.context.MinServerActionContextImpl;
 import net.ooder.vfs.FileInfo;
@@ -1188,7 +1188,7 @@ public class AggregationManager {
                 if (javatemp.getPackagePostfix() != null && !javatemp.getPackagePostfix().equals("")) {
                     packageName = packageName + "." + javatemp.getPackagePostfix();
                 }
-                String className = StringUtility.replace(javatemp.getNamePostfix(), "**", XUIUtil.formatJavaName(domainInst.getEuPackage(), true));
+                String className = StringUtility.replace(javatemp.getNamePostfix(), "**", OODUtil.formatJavaName(domainInst.getEuPackage(), true));
                 allRoot.setPackageName(packageName);
                 allRoot.setClassName(className);
                 File file = javaGen.createJava(javatemp, allRoot, chrome);

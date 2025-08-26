@@ -39,7 +39,7 @@ import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.util.DSMAnnotationUtil;
-import net.ooder.esd.util.XUIUtil;
+import net.ooder.esd.util.OODUtil;
 import net.ooder.esd.util.json.CustomDataDeserializer;
 import net.ooder.esd.util.json.CustomViewDeserializer;
 import net.ooder.web.APIConfigFactory;
@@ -260,7 +260,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
         this.methodName = method.getName();
         String urlName = name;
         if (customMethodInfo.isModule()) {
-            urlName = XUIUtil.formatJavaName(customMethodInfo.getName(), true);
+            urlName = OODUtil.formatJavaName(customMethodInfo.getName(), true);
         } else {
             urlName = methodName;
         }
@@ -292,7 +292,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
         this.methodName = method.getName();
         String urlName = name;
         if (customMethodInfo.isModule()) {
-            urlName = XUIUtil.formatJavaName(customMethodInfo.getName(), true);
+            urlName = OODUtil.formatJavaName(customMethodInfo.getName(), true);
         } else {
             urlName = methodName;
         }
@@ -323,7 +323,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
 
         String urlName = name;
         if (customMethodInfo.isModule()) {
-            urlName = XUIUtil.formatJavaName(customMethodInfo.getName(), true);
+            urlName = OODUtil.formatJavaName(customMethodInfo.getName(), true);
         } else {
             urlName = methodName;
         }
@@ -788,7 +788,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
                 className = this.getViewClass().getCtClass().getSimpleName();
             }
             if (isProxy) {
-                className = XUIUtil.formatJavaName(fieldName, true);
+                className = OODUtil.formatJavaName(fieldName, true);
             }
         } else {
             className = clazz.getSimpleName();
@@ -813,7 +813,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
         String className = null;
         if (this.getUrl() != null) {
             className = this.getUrl().substring(this.getUrl().lastIndexOf("/") + 1);
-            className = XUIUtil.formatJavaName(className, true);
+            className = OODUtil.formatJavaName(className, true);
         }
 
         if (this.getPackageName() != null && !this.getPackageName().equals("")) {
