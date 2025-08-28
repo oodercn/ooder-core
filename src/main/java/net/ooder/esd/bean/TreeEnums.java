@@ -10,8 +10,8 @@ import net.ooder.esd.util.json.BindClassArrDeserializer;
 
 public enum TreeEnums implements TreeItem, IconEnumstype {
 
-    node1("node1", ""),
-    node2("node2", "", TreeNode3Enums.class);
+    node1("node1", "fas fa-folder"),
+    node2("node2", "fas fa-folder-open", TreeNode3Enums.class);
 
     private String id;
     private String type;

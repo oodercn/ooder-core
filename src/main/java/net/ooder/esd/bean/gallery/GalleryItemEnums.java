@@ -5,14 +5,10 @@ import net.ooder.annotation.IconEnumstype;
 
 public enum GalleryItemEnums implements IGalleryItem, IconEnumstype {
 
-    a("item1", "fa fa-lg fa-close"),
-
-    b("item2", "ood-icon-number1"),
-
-    c("item3", "ood-icon-number2"),
-
-    d("item4", "ood-icon-number3");
-
+    a("item1", "fas fa-times"),
+    b("item2", "fas fa-list-ol"),
+    c("item3", "fas fa-list-ol"),
+    d("item4", "fas fa-list-ol");
 
     private String type;
     private String name;

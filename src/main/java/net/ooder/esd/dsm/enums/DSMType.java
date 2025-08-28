@@ -4,13 +4,13 @@ package net.ooder.esd.dsm.enums;
 import net.ooder.annotation.IconEnumstype;
 
 public enum DSMType implements IconEnumstype {
-    ALL("模版库", "spafont spa-icon-module", "spafont spa-icon-c-webapi", "java.agg.AggEditor"),
-    REPOSITORY("仓储库", "iconfont iconchucun", "spafont spa-icon-json-file", "java.repository.JavaEditor"),
-    AGGREGATION("领域聚合", "spafont spa-icon-c-buttonview", "spafont spa-icon-c-webapi", "java.agg.AggEditor"),
-    VIEW("视图工厂", "spafont spa-icon-c-grid", "spafont spa-icon-designview", "java.view.JavaViewEditor"),
-    CUSTOMDOMAIN("通用域", "ood-icon-upload", "spafont spa-icon-c-webapi", "java.agg.AggEditor"),
-    SUPPORTDOMAIN("支撑域", "bpmfont bpmworkflow", "spafont spa-icon-c-webapi", "java.agg.AggEditor"),
-    USERDOMAIN("用户域", "spafont spa-icon-module", "spafont spa-icon-c-webapi", "java.agg.AggEditor");
+    ALL("模版库", "fas fa-layer-group", "fas fa-code-branch", "java.agg.AggEditor"),
+    REPOSITORY("仓储库", "fas fa-database", "fas fa-file-code", "java.repository.JavaEditor"),
+    AGGREGATION("领域聚合", "fas fa-project-diagram", "fas fa-code-branch", "java.agg.AggEditor"),
+    VIEW("视图工厂", "fas fa-table", "fas fa-eye", "java.view.JavaViewEditor"),
+    CUSTOMDOMAIN("通用域", "fas fa-cloud-upload-alt", "fas fa-code-branch", "java.agg.AggEditor"),
+    SUPPORTDOMAIN("支撑域", "fas fa-sitemap", "fas fa-code-branch", "java.agg.AggEditor"),
+    USERDOMAIN("用户域", "fas fa-layer-group", "fas fa-code-branch", "java.agg.AggEditor");
 
     private final String name;
     private final String imageClass;

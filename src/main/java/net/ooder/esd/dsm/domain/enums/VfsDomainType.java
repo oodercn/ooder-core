@@ -4,10 +4,10 @@ package net.ooder.esd.dsm.domain.enums;
 import net.ooder.annotation.IconEnumstype;
 
 public enum VfsDomainType implements IconEnumstype {
-    file("文件", "spafont spa-icon-c-buttonviews"),
-    folder("文件夹", "spafont spa-icon-shukongjian"),
-    component("组件", "spafont spa-icon-c-grid"),
-    all("所有", "spafont spa-icon-empty");
+    file("文件", "fas fa-file"),
+    folder("文件夹", "fas fa-folder"),
+    component("组件", "fas fa-puzzle-piece"),
+    all("所有", "fas fa-layer-group");
 
 
     private final String name;
