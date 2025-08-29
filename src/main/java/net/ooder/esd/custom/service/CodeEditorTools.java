@@ -25,7 +25,8 @@ public class CodeEditorTools {
     )
     @RequestMapping(method = RequestMethod.POST, value = "searchreplaceAction")
     @ComboInputAnnotation(inputType = ComboInputType.button)
-    @CustomAnnotation(index = 2, caption = "查找/替换", tips = "查找/替换", imageClass = "spafont spa-icon-searchreplace")
+    // 修改查找/替换图标
+       @CustomAnnotation(index = 4, caption = "调整缩进", tips = "调整缩进", imageClass = "fa-indent")
     public @ResponseBody
     ResultModel<Boolean> searchreplaceAction(String content, String path) {
         ResultModel<Boolean> result = new ResultModel<Boolean>();
@@ -36,10 +37,8 @@ public class CodeEditorTools {
     @MethodChinaName(cname = "")
     @RequestMapping(method = RequestMethod.POST, value = "jumptoAction")
     @ComboInputAnnotation(inputType = ComboInputType.button)
-    @CustomAnnotation(index = 3, caption = "跳到行", tips = "跳到行", imageClass = "spafont spa-icon-jumpto")
-    @APIEventAnnotation(
-            bindAction = {@CustomAction(name = "jumptoAction",method = "call", type = ActionTypeEnum.other, target = "callback", args = {"{page.content.showJumpToWnd()}", "undefined", "undefined", "{args[2]}"}, _return = false)}
-    )
+    // 修改跳到行图标
+    @CustomAnnotation(index = 3, caption = "跳到行", tips = "跳到行", imageClass = "fa-arrow-right-to-line")
     public @ResponseBody
     ResultModel<Boolean> jumptoAction(String content, String path) {
         ResultModel<Boolean> result = new ResultModel<Boolean>();
@@ -50,10 +49,8 @@ public class CodeEditorTools {
     @MethodChinaName(cname = "")
     @RequestMapping(method = RequestMethod.POST, value = "reindentAction")
     @ComboInputAnnotation(inputType = ComboInputType.button)
-    @CustomAnnotation(index = 4, caption = "调整缩进", tips = "调整缩进", imageClass = "spafont spa-icon-indent")
-    @APIEventAnnotation(
-            bindAction = {@CustomAction(name = "reindentAction",method = "call", type = ActionTypeEnum.other, target = "callback", args = {"{page.content.reindent()}"},  _return = false)}
-    )
+    // 修改调整缩进图标
+    @CustomAnnotation(index = 4, caption = "调整缩进", tips = "调整缩进", imageClass = "fa-indent")
     public @ResponseBody
     ResultModel<Boolean> reindentAction(String content, String path) {
         ResultModel<Boolean> result = new ResultModel<Boolean>();
