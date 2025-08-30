@@ -4,11 +4,11 @@ package net.ooder.esd.dsm.enums;
 import net.ooder.annotation.IconEnumstype;
 
 public enum DSMRefType implements IconEnumstype {
-    call("调用", "fas fa-arrow-right"),
-    source("源调用", "fas fa-arrow-up-right"),
-    dic("弹出字典", "fas fa-book"),
-    ref("引用", "fas fa-link"),
-    enums("枚举字典", "fas fa-list-ul");
+    call("调用", "fa-solid fa-arrow-right"),
+    source("源调用", "fa-solid fa-arrow-up-right"),
+    dic("弹出字典", "fa-solid fa-book"),
+    ref("引用", "fa-solid fa-link"),
+    enums("枚举字典", "fa-solid fa-list-ul");
 
     private final String imageClass;
     private final String name;

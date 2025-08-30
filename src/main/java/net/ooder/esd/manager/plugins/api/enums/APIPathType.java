@@ -7,29 +7,29 @@ import java.util.List;
 
 public enum APIPathType {
 
-    RAD("RAD", "/RAD/", "编辑器", APIType.system, "fas fa-cubes"),
+    RAD("RAD", "/RAD/", "编辑器", APIType.system, "fa-solid fa-cubes"),
 
-    admin("admin", "/admin/", "管理控制台", APIType.system, "fas fa-tools"),
+    admin("admin", "/admin/", "管理控制台", APIType.system, "fa-solid fa-tools"),
 
-    log("log", "/log/", "日志处理", APIType.system, "fas fa-file-alt"),
+    log("log", "/log/", "日志处理", APIType.system, "fa-solid fa-file-alt"),
 
-    vfs("vfs", "/api/vfs/", "分布式存储", APIType.system, "fas fa-database"),
+    vfs("vfs", "/api/vfs/", "分布式存储", APIType.system, "fa-solid fa-database"),
 
-    org("org", "/api/org/", "组织机构", APIType.system, "fas fa-cubes"),
+    org("org", "/api/org/", "组织机构", APIType.system, "fa-solid fa-cubes"),
 
-    app("app", "/jds/iot/", "IOT应用", APIType.system, "fas fa-cubes"),
+    app("app", "/jds/iot/", "IOT应用", APIType.system, "fa-solid fa-cubes"),
 
-    bpm("bpm", "/jds/bpm/", "流程应用", APIType.system, "fas fa-cubes"),
+    bpm("bpm", "/jds/bpm/", "流程应用", APIType.system, "fa-solid fa-cubes"),
 
-    db("db", "/fdt/", "数据库接口", APIType.userdef, "fas fa-database"),
+    db("db", "/fdt/", "数据库接口", APIType.userdef, "fa-solid fa-database"),
 
-    dsm("dsm", "/dsm/", "DSM建模", APIType.userdef, "fas fa-cogs"),
+    dsm("dsm", "/dsm/", "DSM建模", APIType.userdef, "fa-solid fa-cogs"),
 
-    bpmclient("bpmclient", "/bpm/", "工作流接口", APIType.userdef, "fas fa-cubes"),
+    bpmclient("bpmclient", "/bpm/", "工作流接口", APIType.userdef, "fa-solid fa-cubes"),
 
-    orgclient("orgclient", "/system/org/", "组织机构接口", APIType.userdef, "fas fa-cubes"),
+    orgclient("orgclient", "/system/org/", "组织机构接口", APIType.userdef, "fa-solid fa-cubes"),
 
-    fdt("fdt", "/jds/fdt/", "电子表单", APIType.system, "fas fa-database");
+    fdt("fdt", "/jds/fdt/", "电子表单", APIType.system, "fa-solid fa-database");
 
 
     private final String pattern;

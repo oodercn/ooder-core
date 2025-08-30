@@ -6,10 +6,10 @@ import net.ooder.esd.annotation.ui.IconColorEnum;
 import net.ooder.esd.annotation.ui.ItemColorEnum;
 
 public enum ButtomViewsItemEnums implements ButtonViewsItem {
-    a("page1", "fas fa-th-large", false, false, false, Void.class),
-    b("page2", "fas fa-history", false, false, false, Void.class),
-    c("page3", "fas fa-bell", false, false, false, Void.class),
-    d("page4", "fas fa-database", false, false, false, Void.class);
+    a("page1", "fa-solid fa-th-large", false, false, false, Void.class),
+    b("page2", "fa-solid fa-history", false, false, false, Void.class),
+    c("page3", "fa-solid fa-bell", false, false, false, Void.class),
+    d("page4", "fa-solid fa-database", false, false, false, Void.class);
 
     private String name;
     private String imageClass;

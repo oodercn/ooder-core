@@ -4,9 +4,9 @@ package net.ooder.esd.dsm.enums;
 import net.ooder.annotation.Enumstype;
 
 public enum DSMNETTempType implements Enumstype {
-    custom("数据库应用", "fas fa-database"),
-    weixin("小程序", "fas fa-mobile-alt"),
-    process("流程模块", "fas fa-sitemap");
+    custom("数据库应用", "fa-solid fa-database"),
+    weixin("小程序", "fa-solid fa-mobile-alt"),
+    process("流程模块", "fa-solid fa-sitemap");
 
 
     private final String name;

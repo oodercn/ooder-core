@@ -44,7 +44,7 @@ public class IndexMainBarComponent extends DivComponent {
         logoProperties.setLeft("10em");
         logoProperties.setHeight("2.2em");
         logoProperties.setIconFontSize("2em");
-        logoProperties.setImageClass("fas fa-sign-in-alt");
+        logoProperties.setImageClass("fa-solid fa-sign-in-alt");
         return logoLabelCom;
     }
 
@@ -65,19 +65,19 @@ public class IndexMainBarComponent extends DivComponent {
         GalleryItem searchItem = new GalleryItem();
         searchItem.setCaption("查询");
         searchItem.setId("search");
-        searchItem.setImageClass("fas fa-search");
+        searchItem.setImageClass("fa-solid fa-search");
 
         GalleryItem taskItem = new GalleryItem();
         taskItem.setCaption("任务");
         taskItem.setId("task");
-        taskItem.setImageClass("fas fa-file-alt");
+        taskItem.setImageClass("fa-solid fa-file-alt");
         taskItem.setFlagText("1");
 
 
         GalleryItem msgItem = new GalleryItem();
         msgItem.setCaption("消息");
         msgItem.setId("msg");
-        msgItem.setImageClass("fas fa-bell");
+        msgItem.setImageClass("fa-solid fa-bell");
         msgItem.setFlagText("8");
         itemList.add(searchItem);
         itemList.add(taskItem);
@@ -159,7 +159,7 @@ public class IndexMainBarComponent extends DivComponent {
             logoProperties.setTabindex(4);
             logoProperties.setPosition("static");
             logoProperties.setCaption("");
-            logoProperties.setImageClass("fas fa-sort-amount-down");
+            logoProperties.setImageClass("fa-solid fa-sort-amount-down");
             logoProperties.setFontColor("#FFFFFF");
             return logoLabelCom;
         }

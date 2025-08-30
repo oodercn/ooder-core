@@ -6,10 +6,10 @@ import net.ooder.esd.bean.gallery.IOpiniontem;
 
 public enum OpinionItemEnums implements IOpiniontem, IconEnumstype {
 
-    a("item1", "fas fa-times"),
-    b("item2", "fas fa-list-ol"),
-    c("item3", "fas fa-list-ol"),
-    d("item4", "fas fa-list-ol");
+    a("item1", "fa-solid fa-times"),
+    b("item2", "fa-solid fa-list-ol"),
+    c("item3", "fa-solid fa-list-ol"),
+    d("item4", "fa-solid fa-list-ol");
 
     private String id;
     private String type;

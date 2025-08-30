@@ -7,15 +7,15 @@ import net.ooder.esd.annotation.ui.IconColorEnum;
 import net.ooder.annotation.UserSpace;
 
 public enum PackageType implements IconEnumstype {
-    admin("本地服务", "esdadmin", UserSpace.SYS, "fas fa-server", IconColorEnum.BABYBLUE),
-    custom("通用服务", "bpm", UserSpace.VIEW, "fas fa-sitemap", IconColorEnum.DARKBLUE),
-    dsm("DSM建模", "DSMdsm", UserSpace.SYS, "fas fa-cogs", IconColorEnum.CYAN),
-    sys("系统服务", "sys", UserSpace.SYS, "fas fa-server", IconColorEnum.CYAN),
-    tool("应用工具", "esdadmin", UserSpace.SYS, "fas fa-tools", IconColorEnum.PINK),
-    esd("工具插件", "esdadmin", UserSpace.SYS, "fas fa-puzzle-piece", IconColorEnum.BABYBLUE),
-    cluster("集群服务", "cluster", UserSpace.SYS, "fas fa-network-wired", IconColorEnum.GREEN),
-    userdef("自定义服务", null, UserSpace.VIEW, "fas fa-cogs", IconColorEnum.YELLOW),
-    view("视图", null, UserSpace.VIEW, "fas fa-eye", IconColorEnum.CYAN);
+    admin("本地服务", "esdadmin", UserSpace.SYS, "fa-solid fa-server", IconColorEnum.BABYBLUE),
+    custom("通用服务", "bpm", UserSpace.VIEW, "fa-solid fa-sitemap", IconColorEnum.DARKBLUE),
+    dsm("DSM建模", "DSMdsm", UserSpace.SYS, "fa-solid fa-cogs", IconColorEnum.CYAN),
+    sys("系统服务", "sys", UserSpace.SYS, "fa-solid fa-server", IconColorEnum.CYAN),
+    tool("应用工具", "esdadmin", UserSpace.SYS, "fa-solid fa-tools", IconColorEnum.PINK),
+    esd("工具插件", "esdadmin", UserSpace.SYS, "fa-solid fa-puzzle-piece", IconColorEnum.BABYBLUE),
+    cluster("集群服务", "cluster", UserSpace.SYS, "fa-solid fa-network-wired", IconColorEnum.GREEN),
+    userdef("自定义服务", null, UserSpace.VIEW, "fa-solid fa-cogs", IconColorEnum.YELLOW),
+    view("视图", null, UserSpace.VIEW, "fa-solid fa-eye", IconColorEnum.CYAN);
     
     private String name;
     public UserSpace catType;

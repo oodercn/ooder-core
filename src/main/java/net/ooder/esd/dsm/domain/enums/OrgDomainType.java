@@ -4,11 +4,11 @@ package net.ooder.esd.dsm.domain.enums;
 import net.ooder.annotation.IconEnumstype;
 
 public enum OrgDomainType implements IconEnumstype {
-    DEPARMENT("组织机构", "fas fa-building"),
-    ROLE("角色", "fas fa-user-tag"),
-    PERSON("成员", "fas fa-user"),
-    RIGHT("权限", "fas fa-key"),
-    ALL("所有", "fas fa-layer-group");
+    DEPARMENT("组织机构", "fa-solid fa-building"),
+    ROLE("角色", "fa-solid fa-user-tag"),
+    PERSON("成员", "fa-solid fa-user"),
+    RIGHT("权限", "fa-solid fa-key"),
+    ALL("所有", "fa-solid fa-layer-group");
 
     private final String name;
     private final String imageClass;

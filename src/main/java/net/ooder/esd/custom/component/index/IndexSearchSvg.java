@@ -56,7 +56,7 @@ public class IndexSearchSvg extends SVGPaperComponent {
         inputProperties.setLabelPos(LabelPos.none);
         inputProperties.setLabelCaption("查询");
         inputProperties.setType(ComboInputType.none);
-        inputProperties.setCommandBtn("fas fa-search");
+        inputProperties.setCommandBtn("fa-solid fa-search");
 
         return comboInputComponent;
     }

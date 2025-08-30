@@ -31,7 +31,7 @@ public class APIPackage implements Comparable<APIPackage> {
         this.path = apiPaths.getPath();
         this.systemId = apiPaths.getSystemId();
         this.desc = apiPaths.getDesc();
-        this.imageClass = "fas fa-cubes";
+        this.imageClass = "fa-solid fa-cubes";
         if (path.endsWith("/")) {
             packageName = packageName.substring(0, packageName.length() - 1);
         }

@@ -37,7 +37,7 @@ public class EUPackage implements Comparable<EUPackage> {
 
     String desc;
 
-    String imageClass = "fas fa-archive";
+    String imageClass = "fa-solid fa-archive";
 
 
     @JSONField(serialize = false)

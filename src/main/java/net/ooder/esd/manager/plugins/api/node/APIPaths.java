@@ -34,7 +34,7 @@ public class APIPaths implements Comparable<APIPaths> {
         this.name = projectVersion.getProject().getProjectName();
         this.path = projectVersion.getProject().getProjectName() + ":/";
         this.systemId = projectVersion.getVersionName();
-        this.imageClass = "fas fa-institution";
+        this.imageClass = "fa-solid fa-institution";
         this.desc = projectVersion.getDesc();
     }
 
@@ -43,7 +43,7 @@ public class APIPaths implements Comparable<APIPaths> {
         this.name = server.getName();
         this.path = server.getId() + ":/";
         this.systemId = server.getId();
-        this.imageClass = "fas fa-institution";
+        this.imageClass = "fa-solid fa-institution";
         this.desc = server.getDesc();
     }
 
@@ -60,7 +60,7 @@ public class APIPaths implements Comparable<APIPaths> {
         if (apiConfig.getImageClass() != null && !apiConfig.getImageClass().equals("")) {
             this.imageClass = apiConfig.getImageClass();
         } else {
-            this.imageClass = "fas fa-code-branch";
+            this.imageClass = "fa-solid fa-code-branch";
         }
         this.desc = this.path + "(" + apiConfig.getDesc() + ")";
         this.source = apiConfig;
@@ -72,7 +72,7 @@ public class APIPaths implements Comparable<APIPaths> {
     public APIPaths(String systemId, APICallerProperties apiCallerProperties) {
         this.name = apiCallerProperties.getName();
         this.path = apiCallerProperties.getQueryURL();
-        this.imageClass = "fas fa-code";
+        this.imageClass = "fa-solid fa-code";
         if (!path.startsWith(systemId)) {
             path = systemId + ":" + path;
         }
@@ -86,7 +86,7 @@ public class APIPaths implements Comparable<APIPaths> {
         this.path = path;
         this.systemId = systemId;
         this.desc = desc;
-        this.imageClass = "fas fa-cubes";
+        this.imageClass = "fa-solid fa-cubes";
     }
 
 

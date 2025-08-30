@@ -8,10 +8,10 @@ import net.ooder.esd.bean.gallery.ITitleBlockItem;
 
 public enum TitleBlockItemEnum implements ITitleBlockItem, IconEnumstype {
 
-    item1("item1", "fas fa-align-left", "&gt;&gt; 更多", "1", "信息报送"),
-    item2("item2", "fas fa-tasks", "&gt;&gt; 更多", "21", "日常审批"),
-    item3("item3", "fas fa-calendar-alt", "&gt;&gt; 更多", "7", "会议通知"),
-    item4("item4", "fas fa-clock", "&gt;&gt; 更多", "0", "请销假");
+    item1("item1", "fa-solid fa-align-left", "&gt;&gt; 更多", "1", "信息报送"),
+    item2("item2", "fa-solid fa-tasks", "&gt;&gt; 更多", "21", "日常审批"),
+    item3("item3", "fa-solid fa-calendar-alt", "&gt;&gt; 更多", "7", "会议通知"),
+    item4("item4", "fa-solid fa-clock", "&gt;&gt; 更多", "0", "请销假");
 
 
     private String type;

@@ -25,7 +25,7 @@ public class UIModuleNode {
 
     public String cls;
 
-    public String imageClass = "spafot spa-icon-c-";
+    public String imageClass = "fa-solid fa-code";
 
     public String caption;
 

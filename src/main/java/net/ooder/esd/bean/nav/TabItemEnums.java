@@ -4,10 +4,10 @@ package net.ooder.esd.bean.nav;
 import net.ooder.esd.annotation.field.TabItem;
 
 public enum TabItemEnums implements TabItem {
-    a("page1", "fas fa-th-large", false, false, false, null),
-    b("page2", "fas fa-history", false, false, false, null),
-    c("page3", "fas fa-bell", false, false, false, null),
-    d("page4", "fas fa-database", false, false, false, null);
+    a("page1", "fa-solid fa-th-large", false, false, false, null),
+    b("page2", "fa-solid fa-history", false, false, false, null),
+    c("page3", "fa-solid fa-bell", false, false, false, null),
+    d("page4", "fa-solid fa-database", false, false, false, null);
 
     private String name;
     private String imageClass;

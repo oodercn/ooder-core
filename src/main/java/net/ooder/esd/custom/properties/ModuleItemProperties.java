@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class ModuleItemProperties extends GalleryNavItem {
 
-    String defaultImageClass = "fas fa-hashtag";
+    String defaultImageClass = "fa-solid fa-hashtag";
 
 
     public ModuleItemProperties(Enum enumType) {

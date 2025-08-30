@@ -4,14 +4,14 @@ package net.ooder.esd.dsm.domain.enums;
 import net.ooder.annotation.IconEnumstype;
 
 public enum BpmDomainType implements IconEnumstype {
-    ROUTE("流转域", "fas fa-exchange-alt"),
-    WORKLIST("查询域", "fas fa-search"),
-    FORM("表单域", "fas fa-file-alt"),
-    ADMIN("管理域", "fas fa-cogs"),
-    STATISTICS("统计域", "fas fa-chart-line"),
-    BPMRIGHT("权限域", "fas fa-key"),
-    CUSTOM("通用输入域", "fas fa-keyboard"),
-    EVENT("事件", "fas fa-bell");
+    ROUTE("流转域", "fa-solid fa-exchange-alt"),
+    WORKLIST("查询域", "fa-solid fa-search"),
+    FORM("表单域", "fa-solid fa-file-alt"),
+    ADMIN("管理域", "fa-solid fa-cogs"),
+    STATISTICS("统计域", "fa-solid fa-chart-line"),
+    BPMRIGHT("权限域", "fa-solid fa-key"),
+    CUSTOM("通用输入域", "fa-solid fa-keyboard"),
+    EVENT("事件", "fa-solid fa-bell");
 
     private final String name;
     private final String imageClass;
