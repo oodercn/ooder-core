@@ -5,22 +5,22 @@ import net.ooder.annotation.Enumstype;
 import net.ooder.esd.dsm.enums.DSMType;
 
 public enum DomainType implements Enumstype {
-    AGGREGATIONROOT("聚合根", "spafont spa-icon-shukongjian", DSMType.AGGREGATION),
-    AGGREGATIONSET("聚合集合", "spafont spa-icon-c-grid", DSMType.AGGREGATION),
-    VIEW("视图", "spafont spa-icon-c-grid", DSMType.AGGREGATION),
-    AGGREGATIONENTITY("聚合实体", "spafont spa-icon-function", DSMType.AGGREGATION),
+    AGGREGATIONROOT("聚合根", "fas fa-project-diagram", DSMType.AGGREGATION),
+    AGGREGATIONSET("聚合集合", "fas fa-layer-group", DSMType.AGGREGATION),
+    VIEW("视图", "fas fa-eye", DSMType.AGGREGATION),
+    AGGREGATIONENTITY("聚合实体", "fas fa-object-group", DSMType.AGGREGATION),
 
-    BPM("流程", "spafont spa-icon-shukongjian", DSMType.CUSTOMDOMAIN),
-    MSG("消息", "spafont spa-icon-c-grid", DSMType.CUSTOMDOMAIN),
-    NAV("应用菜单", "spafont spa-icon-c-grid", DSMType.CUSTOMDOMAIN),
-    VFS("文件应用", "spafont spa-icon-c-grid", DSMType.CUSTOMDOMAIN),
-    ORG("组织权限", "spafont spa-icon-function", DSMType.CUSTOMDOMAIN),
+    BPM("流程", "fas fa-sitemap", DSMType.CUSTOMDOMAIN),
+    MSG("消息", "fas fa-comment-alt", DSMType.CUSTOMDOMAIN),
+    NAV("应用菜单", "fas fa-bars", DSMType.CUSTOMDOMAIN),
+    VFS("文件应用", "fas fa-folder", DSMType.CUSTOMDOMAIN),
+    ORG("组织权限", "fas fa-users", DSMType.CUSTOMDOMAIN),
 
-    VO("实体对象", "spafont spa-icon-c-webapi", DSMType.REPOSITORY),
-    DO("库表映射", "spafont spa-icon-paste", DSMType.REPOSITORY),
-    REPOSITORY("仓储接口", "spafont spa-icon-c-webapi", DSMType.REPOSITORY),
-    REPOSITORYIMPL("仓储实现", "spafont spa-icon-tools", DSMType.REPOSITORY),
-    ALL("所有", "spafont spa-icon-empty", DSMType.REPOSITORY);
+    VO("实体对象", "fas fa-code-branch", DSMType.REPOSITORY),
+    DO("库表映射", "fas fa-database", DSMType.REPOSITORY),
+    REPOSITORY("仓储接口", "fas fa-warehouse", DSMType.REPOSITORY),
+    REPOSITORYIMPL("仓储实现", "fas fa-tools", DSMType.REPOSITORY),
+    ALL("所有", "fas fa-check-circle", DSMType.REPOSITORY);
     private final String name;
     private final String imageClass;
     private final DSMType dsmType;

@@ -135,7 +135,7 @@ public class APIComponentNode implements Comparable<APIComponentNode> {
     }
 
     public APIComponentNode(ProjectVersion version, String pattern, PackageType type) {
-        this.imageClass = "fa fa-cubes";
+        this.imageClass = "fas fa-cubes";
         this.id = version.getVersionName();
         this.caption = version.getDesc() == null ? version.getVersionName() : version.getDesc();
         try {
@@ -175,7 +175,7 @@ public class APIComponentNode implements Comparable<APIComponentNode> {
         List<APICallerComponent> apis = component.findComponents(ComponentType.APICALLER, pattern);
         this.caption = component.getDesc();
         this.id = component.getClassName();
-        this.imageClass = "spafont spa-icon-page";
+        this.imageClass = "fas fa-file-code";
         for (APICallerComponent api : apis) {
             addSub(new APIComponentNode(api));
         }
@@ -183,7 +183,7 @@ public class APIComponentNode implements Comparable<APIComponentNode> {
 
     public APIComponentNode(ServerNode serverNode) {
         this.id = serverNode.getId();
-        this.imageClass = "fa fa-bank";
+        this.imageClass = "fas fa-bank";
         this.caption = serverNode.getName();
         this.alias = serverNode.getName();
         this.path = serverNode.getUrl();

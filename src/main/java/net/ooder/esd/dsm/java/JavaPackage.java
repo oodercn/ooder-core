@@ -31,7 +31,7 @@ public class JavaPackage {
     DSMInst dsmInst;
 
     DSMType dsmType;
-    String imageClass = "spafont spa-icon-c-iconslist";
+    String imageClass = "fas fa-code-branch";
     String projectVersionName;
 
     @JSONField(serialize = false)

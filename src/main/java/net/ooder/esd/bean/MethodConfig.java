@@ -62,7 +62,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
 
     private static final Log logger = LogFactory.getLog(JDSConstants.CONFIG_KEY, MethodConfig.class);
 
-    public static String DefaultImageClass = "spafont spa-icon-c-webapi";
+    public static String DefaultImageClass = "fas fa-code";
 
     String imageClass = DefaultImageClass;
 

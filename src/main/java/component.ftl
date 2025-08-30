@@ -1,5 +1,5 @@
 
-xui.Class('${className}', 'xui.Module',{
+ood.Class('${className}', 'ood.Module',{
  Instance:{
         initialize : function(){ },
         Dependencies:${dependencies},
@@ -12,15 +12,15 @@ xui.Class('${className}', 'xui.Module',{
                 append=function(child){
                     children.push(child.get(0));
                 };
-                xui.checkFunction(host.functions);
-                xui.checkEvents(host.events);
+                ood.checkFunction(host.functions);
+                ood.checkEvents(host.events);
 
                 getEUPropertis=function(){
                  var euProperties= ${childrenJson};
                  return euProperties;
                 } ;
-                xui.merge(properties, this.properties);
-                children= xui.intModuleProperties(getEUPropertis(),host);
+                ood.merge(properties, this.properties);
+                children= ood.intModuleProperties(getEUPropertis(),host);
                return children;
 
             },

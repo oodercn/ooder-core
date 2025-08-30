@@ -27,7 +27,7 @@ public class CustomHelpComponent extends ComboInputComponent {
         comboInputProperties.setLeft("3.5em");
         comboInputProperties.setTop("2em");
         comboInputProperties.setLabelSize("4em");
-        comboInputProperties.setImageClass("ood-icon-code");
+        comboInputProperties.setImageClass("fas fa-code");
         this.setProperties(comboInputProperties);
         initEvent(euModule, field);
         this.addAction( new Action(CustomFormAction.RELOAD,FieldEventEnum.onChange));

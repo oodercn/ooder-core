@@ -410,7 +410,7 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
             comboInputProperties.setLeft("3.5em");
             comboInputProperties.setTop("2em");
             comboInputProperties.setLabelSize("4em");
-            comboInputProperties.setImageClass("ood-icon-code");
+            comboInputProperties.setImageClass("fas fa-code");
             helpBar.addAction(new Action(CustomFormAction.RELOAD, FieldEventEnum.onChange));
             currComponent.getParent().addChildren(helpBar);
         }

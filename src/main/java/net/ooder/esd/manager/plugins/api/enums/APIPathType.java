@@ -7,29 +7,29 @@ import java.util.List;
 
 public enum APIPathType {
 
-    RAD("RAD", "/RAD/", "编辑器", APIType.system, "fa fa-cubes"),
+    RAD("RAD", "/RAD/", "编辑器", APIType.system, "fas fa-cubes"),
 
-    admin("admin", "/admin/", "管理控制台", APIType.system, "ood-uicmd-restore"),
+    admin("admin", "/admin/", "管理控制台", APIType.system, "fas fa-tools"),
 
-    log("log", "/log/", "日志处理", APIType.system, "ood-icon-print"),
+    log("log", "/log/", "日志处理", APIType.system, "fas fa-file-alt"),
 
-    vfs("vfs", "/api/vfs/", "分布式存储", APIType.system, "ood-icon-menu"),
+    vfs("vfs", "/api/vfs/", "分布式存储", APIType.system, "fas fa-database"),
 
-    org("org", "/api/org/", "组织机构", APIType.system, "fa fa-cubes"),
+    org("org", "/api/org/", "组织机构", APIType.system, "fas fa-cubes"),
 
-    app("app", "/jds/iot/", "IOT应用", APIType.system, "fa fa-cubes"),
+    app("app", "/jds/iot/", "IOT应用", APIType.system, "fas fa-cubes"),
 
-    bpm("bpm", "/jds/bpm/", "流程应用", APIType.system, "fa fa-cubes"),
+    bpm("bpm", "/jds/bpm/", "流程应用", APIType.system, "fas fa-cubes"),
 
-    db("db", "/fdt/", "数据库接口", APIType.userdef, "ood-uicmd-max"),
+    db("db", "/fdt/", "数据库接口", APIType.userdef, "fas fa-database"),
 
-    dsm("dsm", "/dsm/", "DSM建模", APIType.userdef, "spafont spa-icon-conf"),
+    dsm("dsm", "/dsm/", "DSM建模", APIType.userdef, "fas fa-cogs"),
 
-    bpmclient("bpmclient", "/bpm/", "工作流接口", APIType.userdef, "fa fa-cubes"),
+    bpmclient("bpmclient", "/bpm/", "工作流接口", APIType.userdef, "fas fa-cubes"),
 
-    orgclient("orgclient", "/system/org/", "组织机构接口", APIType.userdef, "fa fa-cubes"),
+    orgclient("orgclient", "/system/org/", "组织机构接口", APIType.userdef, "fas fa-cubes"),
 
-    fdt("fdt", "/jds/fdt/", "电子表单", APIType.system, "ood-uicmd-max");
+    fdt("fdt", "/jds/fdt/", "电子表单", APIType.system, "fas fa-database");
 
 
     private final String pattern;

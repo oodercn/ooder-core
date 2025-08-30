@@ -37,7 +37,7 @@ public class EUPackage implements Comparable<EUPackage> {
 
     String desc;
 
-    String imageClass = "spafont spa-icon-package";
+    String imageClass = "fas fa-archive";
 
 
     @JSONField(serialize = false)

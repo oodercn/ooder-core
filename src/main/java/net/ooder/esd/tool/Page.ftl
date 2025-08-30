@@ -1,4 +1,4 @@
-xui.Class('${className}', 'xui.Module',{
+ood.Class('${className}', 'ood.Module',{
    Instance:{
 
         Dependencies:[],
@@ -12,8 +12,8 @@ xui.Class('${className}', 'xui.Module',{
    var host=this, children=[], properties={},
    addChild=function(item,child){
                if (item.children){
-                       xui.each(item.children, function(citem){
-                          var cchild= xui.create(citem.key)
+                       ood.each(item.children, function(citem){
+                          var cchild= ood.create(citem.key)
                           .setHost(host,citem.host)
                           .setAlias(citem.alias)
                           .setEvents(citem.events)
@@ -29,8 +29,8 @@ xui.Class('${className}', 'xui.Module',{
            return child;
        },
        intProperties=function(properties){
-                xui.each(properties, function(item){
-                var child= xui.create(item.key)
+                ood.each(properties, function(item){
+                var child= ood.create(item.key)
                 .setHost(host,item.host)
                 .setAlias(item.alias)
                  .setEvents(item.events)
@@ -45,7 +45,7 @@ xui.Class('${className}', 'xui.Module',{
                 };
 
 
-            xui.merge(properties, this.properties);
+            ood.merge(properties, this.properties);
 
 
             intProperties(${panel.genChildrenJSON()});
@@ -62,7 +62,7 @@ xui.Class('${className}', 'xui.Module',{
         // 属性影响本模块的部分
         propSetAction : function(prop){
         },
-        // 本模块中所有xui dom节点的定制CSS style
+        // 本模块中所有ood dom节点的定制CSS style
         customStyle:{}
     },
     // 制定义模块的默认属性和事件声明

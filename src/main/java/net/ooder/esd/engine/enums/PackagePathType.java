@@ -27,9 +27,9 @@ public enum PackagePathType implements IconEnumstype {
     RAD("RAD", "/RAD/", "编辑器", PackageType.admin, "fas fa-cubes"),
     RADDB("RADDB", "/RAD/db/", "数据库插件", PackageType.esd, "fas fa-database"),
     RADServer("RADServer", "/RAD/server/", "服务器插件", PackageType.esd, "fas fa-server"),
-    RADResource("RADResource", "/RAD/resource/", "资源管理", PackageType.esd, CustomImageType.opt.getImageClass()),
+    RADResource("RADResource", "/RAD/resource/", "资源管理", PackageType.esd, "fas fa-box-open"),
     RADProject("RADProject", "/RAD/project/", "编辑器工程插件", PackageType.esd, "fas fa-project-diagram"),
-    RADOrg("RADOrg", "/RAD/org/", "协同插件", PackageType.esd, CustomImageType.land.getImageClass()),
+    RADOrg("RADOrg", "/RAD/org/", "协同插件", PackageType.esd, "fas fa-users")
     esd("esd", "/esd/", "编辑器插件", PackageType.esd, "fas fa-puzzle-piece"),
     systemnav("systemnav", "/system/nav/", "导航菜单", PackageType.sys, "fas fa-bars"),
     action("action", "/action/", "系统菜单", PackageType.sys, "fas fa-css3-alt"),
