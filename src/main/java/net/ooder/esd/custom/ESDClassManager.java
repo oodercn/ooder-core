@@ -202,7 +202,7 @@ public class ESDClassManager {
         List<Future<ESDClass>> domainFutures = null;
         try {
             RemoteConnectionManager.initConnection(taskName, esdTasks.size());
-            ExecutorService executorService = RemoteConnectionManager.getStaticConntction(taskName);
+            ExecutorService executorService = RemoteConnectionManager.getConntctionService(taskName);
             domainFutures = executorService.invokeAll(esdTasks);
             for (Future<ESDClass> resultFuture : domainFutures) {
                 try {

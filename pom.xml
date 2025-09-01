@@ -25,19 +25,19 @@
         <dependency>
             <groupId>net.ooder</groupId>
             <artifactId>ooder-server</artifactId>
-            <version>1.0</version>
+            <version>1.0.1</version>
         </dependency>
 
         <dependency>
             <groupId>net.ooder</groupId>
             <artifactId>ooder-vfs-web</artifactId>
-            <version>1.0</version>
+            <version>1.0.1</version>
         </dependency>
 
         <dependency>
             <groupId>net.ooder</groupId>
             <artifactId>ooder-database</artifactId>
-            <version>1.0</version>
+            <version>1.0.1</version>
         </dependency>
 
 

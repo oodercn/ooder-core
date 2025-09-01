@@ -33,6 +33,7 @@ import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 
@@ -92,7 +93,8 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
                 }
             }
             try {
-                List<Future<CustomModuleBean>> futures = RemoteConnectionManager.getStaticConntction(this.getXpath()).invokeAll(tasks);
+                ExecutorService service=   RemoteConnectionManager.getConntctionService(this.getXpath());
+                List<Future<CustomModuleBean>> futures = service.invokeAll(tasks);
                 for (Future<CustomModuleBean> resultFuture : futures) {
                     try {
                         CustomModuleBean cModuleBean = resultFuture.get();
@@ -109,12 +111,13 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
                         e.printStackTrace();
                     }
                 }
+                service.shutdown();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
 
-            RemoteConnectionManager.getStaticConntction(this.getXpath()).shutdown();
+
             this.setTabItems(tabItems);
             buttonViewsProperties.setItems(tabItems);
         }

@@ -51,6 +51,7 @@ import java.net.MalformedURLException;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 ;
@@ -316,14 +317,14 @@ public class DSMFactory {
     }
 
     public void compile() {
-
         List<Callable<INProject>> domainTasks = new ArrayList<>();
         for (INProject project : projectCacheManager.getProjectList(ProjectDefAccess.Public)) {
             domainTasks.add(new CompileProject(project));
         }
         List<Future<INProject>> projectFutures = null;
         try {
-            projectFutures = RemoteConnectionManager.getStaticConntction(ESDFacrory.ESDKEY).invokeAll(domainTasks);
+            ExecutorService executorService = RemoteConnectionManager.getConntctionService(ESDFacrory.ESDKEY);
+            projectFutures = executorService.invokeAll(domainTasks);
             for (Future<INProject> resultFuture : projectFutures) {
                 try {
                     INProject result = resultFuture.get();
@@ -333,7 +334,7 @@ public class DSMFactory {
                     e.printStackTrace();
                 }
             }
-            RemoteConnectionManager.getStaticConntction(ESDFacrory.ESDKEY).shutdown();
+            executorService.shutdownNow();
         } catch (Exception e) {
             e.printStackTrace();
         }

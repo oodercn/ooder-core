@@ -825,6 +825,8 @@ public class AggregationManager {
     public List<String> syncDelAggTableTasks(String taskId, Set<String> esdClassNameSet, String projectName, boolean clear) {
         List<String> srcBeans = new ArrayList<>();
         try {
+
+            ExecutorService executorService = RemoteConnectionManager.getConntctionService(taskId);
             if (taskId == null) {
                 taskId = DSMFactory.DefaultDsmName;
             }
@@ -852,7 +854,6 @@ public class AggregationManager {
                     start = end;
                 }
                 RemoteConnectionManager.initConnection(taskId, esdClassNameSet.size() / pageSize + 1);
-                ExecutorService executorService = RemoteConnectionManager.getStaticConntction(taskId);
                 List<Future<List<String>>> futures = executorService.invokeAll(delAggTablTasks);
                 for (Future<List<String>> resultFuture : futures) {
                     try {
@@ -863,7 +864,7 @@ public class AggregationManager {
                 }
             }
 
-            RemoteConnectionManager.getStaticConntction(taskId).shutdownNow();
+            executorService.shutdownNow();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1568,8 +1569,9 @@ public class AggregationManager {
     }
 
     public void updateAggEntityTask(List<SaveAggEntityConfigTask<AggEntityConfig>> tasks) throws InterruptedException {
+        ExecutorService executorService = RemoteConnectionManager.getConntctionService("AggEntityConfig");
 
-        List<Future<AggEntityConfig>> futures = RemoteConnectionManager.getStaticConntction("AggEntityConfig").invokeAll(tasks);
+        List<Future<AggEntityConfig>> futures = executorService.invokeAll(tasks);
         for (Future<AggEntityConfig> future : futures) {
             try {
                 future.get();
@@ -1577,13 +1579,15 @@ public class AggregationManager {
                 e.printStackTrace();
             }
         }
-        RemoteConnectionManager.getStaticConntction("AggEntityConfig").shutdown();
+        executorService.shutdownNow();
         this.aggEntityConfigTasks.clear();
     }
 
     public void updateApiEntityTask(List<SaveApiEntityConfigTask<ApiClassConfig>> tasks) throws InterruptedException {
+        ExecutorService executorService = RemoteConnectionManager.getConntctionService("ApiClassConfig");
+
         RemoteConnectionManager.initConnection("ApiClassConfig", tasks.size());
-        List<Future<ApiClassConfig>> futures = RemoteConnectionManager.getStaticConntction("ApiClassConfig").invokeAll(tasks);
+        List<Future<ApiClassConfig>> futures = executorService.invokeAll(tasks);
         for (Future<ApiClassConfig> future : futures) {
             try {
                 future.get();
@@ -1591,7 +1595,7 @@ public class AggregationManager {
                 e.printStackTrace();
             }
         }
-        RemoteConnectionManager.getStaticConntction("ApiClassConfig").shutdownNow();
+        executorService.shutdownNow();
         this.apiConfigTasks.clear();
     }
 

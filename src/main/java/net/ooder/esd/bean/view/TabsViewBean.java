@@ -29,6 +29,7 @@ import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 @AnnotationType(clazz = TabsAnnotation.class)
@@ -117,7 +118,8 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
             }
             List<Future<CustomModuleBean>> futures = null;
             try {
-                futures = RemoteConnectionManager.getStaticConntction(this.getXpath()).invokeAll(tasks);
+                ExecutorService service=   RemoteConnectionManager.getConntctionService(this.getXpath());
+                futures = service.invokeAll(tasks);
                 for (Future<CustomModuleBean> resultFuture : futures) {
                     try {
                         CustomModuleBean cModuleBean = resultFuture.get();
@@ -129,10 +131,11 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
                         e.printStackTrace();
                     }
                 }
+                service.shutdownNow();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            RemoteConnectionManager.getStaticConntction(this.getXpath()).shutdownNow();
+
         }
 
         this.setModuleBeans(navModuleBeans);

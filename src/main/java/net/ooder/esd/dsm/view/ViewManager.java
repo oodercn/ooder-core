@@ -71,10 +71,7 @@ import ognl.OgnlRuntime;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class ViewManager {
 
@@ -211,20 +208,22 @@ public class ViewManager {
 
     public void updateViewEntityConfig(ViewEntityConfig esdClassConfig, boolean sync) throws JDSException {
         String uKey = esdClassConfig.getClassName() + "[" + esdClassConfig.getDomainId() + "]";
+        ExecutorService executorService = RemoteConnectionManager.getConntctionService(uKey);
+
         viewClassConfigMap.put(uKey, esdClassConfig);
         SaveEntityConfigTask task = new SaveEntityConfigTask(esdClassConfig);
         if (sync) {
-            RemoteConnectionManager.getStaticConntction(uKey).submit(task);
+            executorService.submit(task);
         } else {
             try {
-                RemoteConnectionManager.getStaticConntction(uKey).submit(task).get();
+                executorService.submit(task).get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
         }
-
+        executorService.shutdownNow();
     }
 
     public void clearViewEntityConfig(String viewInstId) throws JDSException {

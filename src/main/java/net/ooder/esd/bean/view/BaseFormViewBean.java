@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 public abstract class BaseFormViewBean<M extends Component> extends CustomViewBean<FieldFormConfig, UIItem, M> implements ComponentBean<M> {
@@ -218,7 +219,9 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
 
             try {
                 String taskIds = this.getXpath() + "[" + System.currentTimeMillis() + "]";
-                List<Future<FieldFormConfig>> futures = RemoteConnectionManager.getStaticConntction(taskIds).invokeAll(tasks);
+                ExecutorService service=   RemoteConnectionManager.getConntctionService(taskIds);
+
+                List<Future<FieldFormConfig>> futures = service.invokeAll(tasks);
                 for (Future<FieldFormConfig> resultFuture : futures) {
                     FieldFormConfig config = null;
                     try {
@@ -230,7 +233,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                         fieldFormConfigs.add(config);
                     }
                 }
-                RemoteConnectionManager.getStaticConntction(taskIds).shutdownNow();
+                service.shutdownNow();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

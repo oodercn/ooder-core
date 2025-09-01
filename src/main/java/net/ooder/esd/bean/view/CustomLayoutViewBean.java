@@ -41,6 +41,7 @@ import net.ooder.web.util.AnnotationUtil;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 @AnnotationType(clazz = LayoutAnnotation.class)
@@ -99,7 +100,8 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
             }
             List<Future<CustomModuleBean>> futures = null;
             try {
-                futures = RemoteConnectionManager.getStaticConntction(this.getXpath()).invokeAll(tasks);
+                ExecutorService service=   RemoteConnectionManager.getConntctionService(this.getXpath());
+                futures = service.invokeAll(tasks);
                 for (Future<CustomModuleBean> resultFuture : futures) {
                     try {
                         CustomModuleBean cModuleBean = resultFuture.get();
@@ -112,10 +114,11 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
                         e.printStackTrace();
                     }
                 }
+                service.shutdownNow();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            RemoteConnectionManager.getStaticConntction(this.getXpath()).shutdownNow();
+
         }
 
         this.setModuleBeans(navModuleBeans);
