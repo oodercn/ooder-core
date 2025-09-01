@@ -852,7 +852,7 @@ public class AggregationManager {
                     start = end;
                 }
                 RemoteConnectionManager.initConnection(taskId, esdClassNameSet.size() / pageSize + 1);
-                ExecutorService executorService = RemoteConnectionManager.getConntctionService(taskId);
+                ExecutorService executorService = RemoteConnectionManager.getStaticConntction(taskId);
                 List<Future<List<String>>> futures = executorService.invokeAll(delAggTablTasks);
                 for (Future<List<String>> resultFuture : futures) {
                     try {
@@ -863,7 +863,7 @@ public class AggregationManager {
                 }
             }
 
-            RemoteConnectionManager.getConntctionService(taskId).shutdownNow();
+            RemoteConnectionManager.getStaticConntction(taskId).shutdownNow();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1569,7 +1569,7 @@ public class AggregationManager {
 
     public void updateAggEntityTask(List<SaveAggEntityConfigTask<AggEntityConfig>> tasks) throws InterruptedException {
 
-        List<Future<AggEntityConfig>> futures = RemoteConnectionManager.getConntctionService("AggEntityConfig").invokeAll(tasks);
+        List<Future<AggEntityConfig>> futures = RemoteConnectionManager.getStaticConntction("AggEntityConfig").invokeAll(tasks);
         for (Future<AggEntityConfig> future : futures) {
             try {
                 future.get();
@@ -1577,13 +1577,13 @@ public class AggregationManager {
                 e.printStackTrace();
             }
         }
-        RemoteConnectionManager.getConntctionService("AggEntityConfig").shutdown();
+        RemoteConnectionManager.getStaticConntction("AggEntityConfig").shutdown();
         this.aggEntityConfigTasks.clear();
     }
 
     public void updateApiEntityTask(List<SaveApiEntityConfigTask<ApiClassConfig>> tasks) throws InterruptedException {
         RemoteConnectionManager.initConnection("ApiClassConfig", tasks.size());
-        List<Future<ApiClassConfig>> futures = RemoteConnectionManager.getConntctionService("ApiClassConfig").invokeAll(tasks);
+        List<Future<ApiClassConfig>> futures = RemoteConnectionManager.getStaticConntction("ApiClassConfig").invokeAll(tasks);
         for (Future<ApiClassConfig> future : futures) {
             try {
                 future.get();
@@ -1591,6 +1591,7 @@ public class AggregationManager {
                 e.printStackTrace();
             }
         }
+        RemoteConnectionManager.getStaticConntction("ApiClassConfig").shutdownNow();
         this.apiConfigTasks.clear();
     }
 

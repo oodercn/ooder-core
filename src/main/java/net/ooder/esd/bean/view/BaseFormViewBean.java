@@ -218,7 +218,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
 
             try {
                 String taskIds = this.getXpath() + "[" + System.currentTimeMillis() + "]";
-                List<Future<FieldFormConfig>> futures = RemoteConnectionManager.getConntctionService(taskIds).invokeAll(tasks);
+                List<Future<FieldFormConfig>> futures = RemoteConnectionManager.getStaticConntction(taskIds).invokeAll(tasks);
                 for (Future<FieldFormConfig> resultFuture : futures) {
                     FieldFormConfig config = null;
                     try {
@@ -230,7 +230,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                         fieldFormConfigs.add(config);
                     }
                 }
-                RemoteConnectionManager.getConntctionService(taskIds).shutdownNow();
+                RemoteConnectionManager.getStaticConntction(taskIds).shutdownNow();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

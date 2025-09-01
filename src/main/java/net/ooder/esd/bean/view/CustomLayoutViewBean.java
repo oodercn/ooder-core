@@ -99,7 +99,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
             }
             List<Future<CustomModuleBean>> futures = null;
             try {
-                futures = RemoteConnectionManager.getConntctionService(this.getXpath()).invokeAll(tasks);
+                futures = RemoteConnectionManager.getStaticConntction(this.getXpath()).invokeAll(tasks);
                 for (Future<CustomModuleBean> resultFuture : futures) {
                     try {
                         CustomModuleBean cModuleBean = resultFuture.get();
@@ -115,7 +115,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            RemoteConnectionManager.getConntctionService(this.getXpath()).shutdown();
+            RemoteConnectionManager.getStaticConntction(this.getXpath()).shutdownNow();
         }
 
         this.setModuleBeans(navModuleBeans);

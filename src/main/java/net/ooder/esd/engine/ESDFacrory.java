@@ -163,7 +163,7 @@ public class ESDFacrory {
             }
 
         }
-
+        RemoteConnectionManager.getConntctionService("CacheResource").shutdownNow();
 
         logger.info("loadFromCache  times=" + (System.currentTimeMillis() - time));
     }

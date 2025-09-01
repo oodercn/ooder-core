@@ -92,7 +92,7 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
                 }
             }
             try {
-                List<Future<CustomModuleBean>> futures = RemoteConnectionManager.getConntctionService(this.getXpath()).invokeAll(tasks);
+                List<Future<CustomModuleBean>> futures = RemoteConnectionManager.getStaticConntction(this.getXpath()).invokeAll(tasks);
                 for (Future<CustomModuleBean> resultFuture : futures) {
                     try {
                         CustomModuleBean cModuleBean = resultFuture.get();
@@ -114,7 +114,7 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
             }
 
 
-            RemoteConnectionManager.getConntctionService(this.getXpath()).shutdown();
+            RemoteConnectionManager.getStaticConntction(this.getXpath()).shutdown();
             this.setTabItems(tabItems);
             buttonViewsProperties.setItems(tabItems);
         }

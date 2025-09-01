@@ -117,7 +117,7 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
             }
             List<Future<CustomModuleBean>> futures = null;
             try {
-                futures = RemoteConnectionManager.getConntctionService(this.getXpath()).invokeAll(tasks);
+                futures = RemoteConnectionManager.getStaticConntction(this.getXpath()).invokeAll(tasks);
                 for (Future<CustomModuleBean> resultFuture : futures) {
                     try {
                         CustomModuleBean cModuleBean = resultFuture.get();
@@ -132,7 +132,7 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            RemoteConnectionManager.getConntctionService(this.getXpath()).shutdown();
+            RemoteConnectionManager.getStaticConntction(this.getXpath()).shutdownNow();
         }
 
         this.setModuleBeans(navModuleBeans);

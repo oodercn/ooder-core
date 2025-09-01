@@ -323,7 +323,7 @@ public class DSMFactory {
         }
         List<Future<INProject>> projectFutures = null;
         try {
-            projectFutures = RemoteConnectionManager.getConntctionService(ESDFacrory.ESDKEY).invokeAll(domainTasks);
+            projectFutures = RemoteConnectionManager.getStaticConntction(ESDFacrory.ESDKEY).invokeAll(domainTasks);
             for (Future<INProject> resultFuture : projectFutures) {
                 try {
                     INProject result = resultFuture.get();
@@ -333,7 +333,7 @@ public class DSMFactory {
                     e.printStackTrace();
                 }
             }
-            RemoteConnectionManager.getConntctionService(ESDFacrory.ESDKEY).shutdown();
+            RemoteConnectionManager.getStaticConntction(ESDFacrory.ESDKEY).shutdown();
         } catch (Exception e) {
             e.printStackTrace();
         }
