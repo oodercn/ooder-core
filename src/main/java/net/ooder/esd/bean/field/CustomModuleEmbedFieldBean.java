@@ -10,10 +10,12 @@ import net.ooder.esd.annotation.field.ModuleEmbedFieldAnnotation;
 import net.ooder.esd.bean.ComponentBean;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ModulePlaceHolder;
 import net.ooder.esd.custom.component.form.field.CustomFieldModuleComponent;
 import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.TimerComponent;
 import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.annotation.AnnotationType;
@@ -26,7 +28,7 @@ import java.util.*;
         componentType = ComponentType.MODLUEPLACEHOLDER
 )
 @AnnotationType(clazz = ModuleEmbedFieldAnnotation.class)
-public class CustomModuleEmbedFieldBean implements ComponentBean {
+public class CustomModuleEmbedFieldBean  implements FieldComponentBean<ModuleComponent> {
     String src;
 
     String xpath;
@@ -240,5 +242,15 @@ public class CustomModuleEmbedFieldBean implements ComponentBean {
 
     public String toAnnotationStr() {
         return AnnotationUtil.toAnnotationStr(this);
+    }
+
+    @Override
+    public List<JavaSrcBean> getJavaSrcBeans() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent moduleComponent, ModuleComponent component) {
+        return new ArrayList<>();
     }
 }

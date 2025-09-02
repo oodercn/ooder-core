@@ -8,8 +8,11 @@ import net.ooder.esd.annotation.field.ColorPickerAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.bean.ComponentBean;
+import net.ooder.esd.bean.field.FieldBaseBean;
+import net.ooder.esd.bean.field.FieldComponentBean;
 import net.ooder.esd.custom.component.form.field.CustomColorPickerComponent;
-import net.ooder.esd.tool.component.ColorPickerComponent;
+import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.Properties;
 import net.ooder.esd.tool.properties.form.ColorPickerProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -23,7 +26,7 @@ import java.util.*;
         componentType = ComponentType.COLORPICKER
 )
 @AnnotationType(clazz = ColorPickerAnnotation.class)
-public class ColorPickerFieldBean implements ComponentBean {
+public class ColorPickerFieldBean  extends FieldBaseBean<ColorPickerComponent> {
 
     String id;
 
@@ -163,5 +166,10 @@ public class ColorPickerFieldBean implements ComponentBean {
     @Override
     public ComponentType getComponentType() {
         return ComponentType.COLORPICKER;
+    }
+
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent moduleComponent, ColorPickerComponent component) {
+        return new ArrayList<>();
     }
 }

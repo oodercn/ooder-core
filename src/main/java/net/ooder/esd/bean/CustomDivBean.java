@@ -1,19 +1,15 @@
 package net.ooder.esd.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
-import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.DivAnnotation;
 import net.ooder.esd.annotation.Widget;
 import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.OverflowType;
-import net.ooder.esd.tool.component.APICallerComponent;
 import net.ooder.esd.tool.component.Component;
-import net.ooder.esd.tool.component.DivComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.DivProperties;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -21,7 +17,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-@CustomClass(viewType = CustomViewType.COMPONENT,clazz =DivComponent.class, componentType = ComponentType.DIV)
+
+//@CustomClass(viewType = CustomViewType.COMPONENT,clazz =DivComponent.class, componentType = ComponentType.DIV)
 @AnnotationType(clazz = DivAnnotation.class)
 public class CustomDivBean implements ComponentBean {
     public String iframeAutoLoad;

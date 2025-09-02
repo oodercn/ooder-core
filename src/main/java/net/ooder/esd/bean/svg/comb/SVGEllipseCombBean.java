@@ -15,10 +15,10 @@ import net.ooder.web.util.AnnotationUtil;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Set;
-@CustomClass(clazz = CustomSVGEllipseCombComponent.class,
-        viewType = CustomViewType.COMPONENT,
-        componentType = ComponentType.SVGELLIPSECOMB
-)
+//@CustomClass(clazz = CustomSVGEllipseCombComponent.class,
+//        viewType = CustomViewType.COMPONENT,
+//        componentType = ComponentType.SVGELLIPSECOMB
+//)
 @AnnotationType(clazz = SVGEllipseCombAnnotation.class)
 public class SVGEllipseCombBean extends SVGEllipseBean {
 

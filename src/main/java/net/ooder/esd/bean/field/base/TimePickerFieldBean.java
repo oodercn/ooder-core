@@ -8,8 +8,14 @@ import net.ooder.esd.annotation.field.TimePickerAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.bean.ComponentBean;
+import net.ooder.esd.bean.field.FieldBaseBean;
+import net.ooder.esd.bean.field.FieldComponentBean;
 import net.ooder.esd.custom.component.form.field.CustomTimePickerComponent;
+import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.ButtonComponent;
 import net.ooder.esd.tool.component.ComboInputComponent;
+import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.SVGPathComponent;
 import net.ooder.esd.tool.properties.form.ComboInputProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.annotation.AnnotationType;
@@ -22,7 +28,7 @@ import java.util.*;
         componentType = ComponentType.TIMEPICKER
 )
 @AnnotationType(clazz = TimePickerAnnotation.class)
-public class TimePickerFieldBean<T extends ComboInputProperties> implements ComponentBean {
+public class TimePickerFieldBean<T extends ComboInputProperties>  extends FieldBaseBean<ComboInputComponent> {
 
     String id;
 
@@ -113,5 +119,11 @@ public class TimePickerFieldBean<T extends ComboInputProperties> implements Comp
     @Override
     public ComponentType getComponentType() {
         return ComponentType.TIMEPICKER;
+    }
+
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent moduleComponent, ComboInputComponent component) {
+
+        return new ArrayList<>();
     }
 }

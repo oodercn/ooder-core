@@ -7,7 +7,13 @@ import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.SliderAnnotation;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.ComponentBean;
+import net.ooder.esd.bean.field.FieldBaseBean;
+import net.ooder.esd.bean.field.FieldComponentBean;
 import net.ooder.esd.custom.component.form.field.CustomSliderComponent;
+import net.ooder.esd.custom.component.form.field.CustomTimePickerComponent;
+import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.ComboInputComponent;
+import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.SliderComponent;
 import net.ooder.esd.tool.properties.form.SliderProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -21,7 +27,7 @@ import java.util.*;
         componentType = ComponentType.SLIDER
 )
 @AnnotationType(clazz = SliderAnnotation.class)
-public class SliderFieldBean implements ComponentBean {
+public class SliderFieldBean    extends FieldBaseBean<CustomSliderComponent> {
 
     String id;
 
@@ -252,5 +258,10 @@ public class SliderFieldBean implements ComponentBean {
     @Override
     public ComponentType getComponentType() {
         return ComponentType.SLIDER;
+    }
+
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent moduleComponent, CustomSliderComponent component) {
+        return new ArrayList<>();
     }
 }

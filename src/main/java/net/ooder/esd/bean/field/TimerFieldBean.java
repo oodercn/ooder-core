@@ -8,7 +8,11 @@ import net.ooder.esd.annotation.field.TimerAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.bean.ComponentBean;
+import net.ooder.esd.custom.component.form.field.CustomSliderComponent;
 import net.ooder.esd.custom.component.form.field.CustomTimerComponent;
+import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.ColorPickerComponent;
+import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.TimerComponent;
 import net.ooder.esd.tool.properties.TimerProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -22,7 +26,7 @@ import java.util.*;
         componentType = ComponentType.TIMER
 )
 @AnnotationType(clazz = TimerAnnotation.class)
-public class TimerFieldBean<T extends TimerProperties> implements ComponentBean {
+public class TimerFieldBean<T extends TimerProperties>    extends FieldBaseBean<TimerComponent> {
     Boolean autoStart;
     Integer integer;
     Integer Interval;
@@ -114,5 +118,10 @@ public class TimerFieldBean<T extends TimerProperties> implements ComponentBean 
     @Override
     public ComponentType getComponentType() {
         return ComponentType.TIMEPICKER;
+    }
+
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent moduleComponent, TimerComponent component) {
+        return new ArrayList<>();
     }
 }

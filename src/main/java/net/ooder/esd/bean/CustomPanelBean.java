@@ -2,18 +2,16 @@ package net.ooder.esd.bean;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.BtnAnnotation;
-import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.PanelAnnotation;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.nav.BtnBean;
 import net.ooder.esd.tool.component.Component;
-import net.ooder.esd.tool.component.DivComponent;
 import net.ooder.esd.tool.component.PanelComponent;
 import net.ooder.esd.tool.properties.PanelProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -21,7 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-@CustomClass(viewType = CustomViewType.COMPONENT,clazz =PanelComponent.class, componentType = ComponentType.PANEL)
+
+//@CustomClass(viewType = CustomViewType.COMPONENT,clazz =PanelComponent.class, componentType = ComponentType.PANEL)
 @AnnotationType(clazz = PanelAnnotation.class)
 public class CustomPanelBean implements CustomBean {
 

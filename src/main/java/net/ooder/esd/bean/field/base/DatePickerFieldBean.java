@@ -2,27 +2,31 @@ package net.ooder.esd.bean.field.base;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.DatePickerAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
-import net.ooder.esd.bean.ComponentBean;
+import net.ooder.esd.bean.field.FieldBaseBean;
 import net.ooder.esd.custom.component.form.field.CustomDatePickerComponent;
+import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ComboInputComponent;
+import net.ooder.esd.tool.component.DatePickerComponent;
+import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.form.ComboInputProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+
 @CustomClass(clazz = CustomDatePickerComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.DATEPICKER
 )
 @AnnotationType(clazz = DatePickerAnnotation.class)
-public class DatePickerFieldBean implements ComponentBean {
+public class DatePickerFieldBean extends FieldBaseBean<DatePickerComponent> {
 
     String id;
 
@@ -55,13 +59,14 @@ public class DatePickerFieldBean implements ComponentBean {
     public DatePickerFieldBean() {
 
     }
+
     public DatePickerFieldBean(ComboInputComponent component) {
-        this.xpath=component.getPath();
+        this.xpath = component.getPath();
         this.update((ComboInputProperties) component.getProperties());
 
     }
 
-  public   void update(ComboInputProperties properties) {
+    public void update(ComboInputProperties properties) {
         Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
     }
@@ -73,11 +78,13 @@ public class DatePickerFieldBean implements ComponentBean {
         annotationBeans.add(this);
         return annotationBeans;
     }
+
     @Override
     @JSONField(serialize = false)
     public Set<Class> getOtherClass() {
         return new HashSet<>();
     }
+
     public String getId() {
         return id;
     }
@@ -167,5 +174,10 @@ public class DatePickerFieldBean implements ComponentBean {
     @Override
     public ComponentType getComponentType() {
         return ComponentType.DATEPICKER;
+    }
+
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent moduleComponent, DatePickerComponent component) {
+        return new ArrayList<>();
     }
 }

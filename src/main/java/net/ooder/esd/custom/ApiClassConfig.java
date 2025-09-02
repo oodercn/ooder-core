@@ -1,26 +1,16 @@
 package net.ooder.esd.custom;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import javassist.NotFoundException;
 import net.ooder.common.JDSConstants;
 import net.ooder.common.JDSException;
 import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
-import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ModuleAnnotation;
+import net.ooder.esd.annotation.event.*;
 import net.ooder.esd.annotation.field.APIEventAnnotation;
-import net.ooder.esd.annotation.event.CustomEvent;
-import net.ooder.esd.annotation.event.CustomFieldEvent;
-import net.ooder.esd.annotation.event.CustomFormEvent;
-import net.ooder.esd.annotation.event.CustomHotKeyEvent;
-import net.ooder.esd.annotation.event.CustomMFormEvent;
-import net.ooder.esd.annotation.event.CustomContentBlockEvent;
-import net.ooder.esd.annotation.event.CustomGalleryEvent;
-import net.ooder.esd.annotation.event.CustomTitleBlockEvent;
-import net.ooder.esd.annotation.event.CustomGridEvent;
-import net.ooder.esd.annotation.event.CustomMGridEvent;
-import net.ooder.esd.annotation.event.CustomTabsEvent;
-import net.ooder.esd.annotation.event.CustomTreeEvent;
 import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.tool.component.APICallerComponent;
@@ -30,7 +20,6 @@ import net.ooder.web.APIConfigFactory;
 import net.ooder.web.RequestMethodBean;
 import net.ooder.web.RequestParamBean;
 import net.ooder.web.util.AnnotationUtil;
-import javassist.NotFoundException;
 
 import java.util.*;
 
@@ -167,7 +156,10 @@ public class ApiClassConfig {
     public List<MethodConfig> getAllMethods() {
         List<MethodConfig> methodAPIBeanList = new ArrayList<>();
         List<String> methodInfos = new ArrayList<>();
-        allMethodMap.forEach((k, v) -> {
+        Map<String, MethodConfig> methodConfigMap = new HashMap<>();
+        methodConfigMap.putAll(allMethodMap);
+
+        methodConfigMap.forEach((k, v) -> {
             if (!methodInfos.contains(v.getMetaInfo())) {
                 methodAPIBeanList.add(v);
                 methodInfos.add(v.getMetaInfo());
