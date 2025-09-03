@@ -1,5 +1,6 @@
 package net.ooder.esd.manager.plugins.api;
 
+import javassist.NotFoundException;
 import net.ooder.cluster.ServerNode;
 import net.ooder.common.JDSConstants;
 import net.ooder.common.JDSException;
@@ -10,17 +11,17 @@ import net.ooder.common.util.StringUtility;
 import net.ooder.esb.config.manager.EsbBeanFactory;
 import net.ooder.esb.config.manager.ServiceBean;
 import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.annotation.ui.CustomMenuItem;
+import net.ooder.esd.engine.ESDFacrory;
+import net.ooder.esd.engine.MySpace;
 import net.ooder.esd.engine.ProjectCacheManager;
+import net.ooder.esd.engine.inner.INProject;
+import net.ooder.esd.engine.inner.INProjectVersion;
 import net.ooder.esd.manager.plugins.api.enums.APIPathType;
 import net.ooder.esd.manager.plugins.api.enums.APIType;
 import net.ooder.esd.manager.plugins.api.node.APIPaths;
 import net.ooder.esd.manager.plugins.api.node.APIServer;
 import net.ooder.esd.manager.plugins.api.node.OODAPIConfig;
-import net.ooder.esd.engine.MySpace;
-import net.ooder.esd.engine.inner.INProject;
-import net.ooder.esd.engine.inner.INProjectVersion;
 import net.ooder.esd.tool.component.APICallerComponent;
 import net.ooder.esd.tool.properties.APICallerProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -32,7 +33,6 @@ import net.ooder.web.APIConfig;
 import net.ooder.web.APIConfigFactory;
 import net.ooder.web.RequestMethodBean;
 import net.ooder.web.util.SpringPlugs;
-import javassist.NotFoundException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -684,23 +684,20 @@ public class APIFactory {
             WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(httpServletRequest.getServletContext());
             SpringPlugs springPlugs = webApplicationContext.getBean(SpringPlugs.class);
             classSet = springPlugs.scannerPackages(basePackages);
-        } else {
-            Set<Map.Entry<String, Class<?>>> allClass = EsbBeanFactory.getInstance().getAllClass().entrySet();
-            for (Map.Entry<String, Class<?>> clazzEntry : allClass) {
-                Class clazz = clazzEntry.getValue();
-                if (clazz != null) {
-                    for (String basePackage : basePackages) {
-                        if (clazz.getName().startsWith(basePackage)) {
-                            classSet.add(clazz);
-                            continue;
-                        }
-                    }
-
-                }
-            }
-
         }
+        Set<Map.Entry<String, Class<?>>> allClass = EsbBeanFactory.getInstance().getAllClass().entrySet();
+        for (Map.Entry<String, Class<?>> clazzEntry : allClass) {
+            Class clazz = clazzEntry.getValue();
+            if (clazz != null) {
+                for (String basePackage : basePackages) {
+                    if (clazz.getName().startsWith(basePackage)) {
+                        classSet.add(clazz);
+                        continue;
+                    }
+                }
 
+            }
+        }
         return classSet;
     }
 

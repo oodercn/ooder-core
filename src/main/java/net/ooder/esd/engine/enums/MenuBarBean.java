@@ -2,6 +2,7 @@ package net.ooder.esd.engine.enums;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import javassist.NotFoundException;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.common.JDSException;
@@ -22,7 +23,6 @@ import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.APIConfig;
 import net.ooder.web.APIConfigFactory;
 import net.ooder.web.util.AnnotationUtil;
-import javassist.NotFoundException;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -33,7 +33,7 @@ public class MenuBarBean<T extends Enum> implements CustomBean, Comparable<MenuB
     @JSONField(deserializeUsing = CaseEnumsSerializer.class)
     CustomMenuType menuType;
 
-    Class serviceClass=MenuActionService.class;
+    Class serviceClass = MenuActionService.class;
 
     String caption;
 
@@ -165,8 +165,11 @@ public class MenuBarBean<T extends Enum> implements CustomBean, Comparable<MenuB
     }
 
     public void addMenuClass(Class menuClass) {
-        if (!Arrays.asList(menuClasses).contains(menuClass)) {
-            menuClasses[menuClasses.length] = menuClass;
+        List<Class> menuClassList = new ArrayList<>();
+        menuClassList.addAll(Arrays.asList(menuClasses));
+        if (!menuClassList.contains(menuClass)) {
+            menuClassList.add(menuClass);
+            menuClasses = menuClassList.toArray(new Class[]{});
         }
     }
 
@@ -499,7 +502,7 @@ public class MenuBarBean<T extends Enum> implements CustomBean, Comparable<MenuB
     }
 
     public Class getServiceClass() {
-        if (serviceClass==null ||serviceClass.equals(Void.class)) {
+        if (serviceClass == null || serviceClass.equals(Void.class)) {
             this.serviceClass = MenuActionService.class;
         }
         return serviceClass;
