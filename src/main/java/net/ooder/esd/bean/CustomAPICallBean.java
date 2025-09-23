@@ -9,6 +9,10 @@ import net.ooder.common.EventKey;
 import net.ooder.esd.annotation.*;
 import net.ooder.esd.annotation.event.*;
 import net.ooder.esd.annotation.field.APIEventAnnotation;
+import net.ooder.esd.annotation.menu.CustomFormMenu;
+import net.ooder.esd.annotation.menu.CustomGalleryMenu;
+import net.ooder.esd.annotation.menu.GridMenu;
+import net.ooder.esd.annotation.menu.TreeMenu;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.field.FieldComponentBean;
 import net.ooder.esd.custom.CustomMethodInfo;
@@ -96,6 +100,15 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
     public LinkedHashSet<APIEventBean> customAPIEvent = new LinkedHashSet<>();
 
     public LinkedHashSet<CustomMenuItem> bindMenu = new LinkedHashSet<>();
+
+
+    public LinkedHashSet<GridMenu> bindGridMenu = new LinkedHashSet<>();
+
+    public LinkedHashSet<TreeMenu> bindTreeMenu = new LinkedHashSet<>();
+
+    public LinkedHashSet<CustomGalleryMenu> bindGalleryMenu = new LinkedHashSet<>();
+
+    public LinkedHashSet<CustomFormMenu> bindFormMenu = new LinkedHashSet<>();
 
     public LinkedHashSet<CustomGridEvent> bindGridEvent = new LinkedHashSet<>();
 
@@ -228,6 +241,16 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
                 this.getBindMenu().add(item);
             }
 
+            for (TreeMenu item : apiEventAnnotation.bindTreeMenu()) {
+                this.getBindTreeMenu().add(item);
+            }
+            for (CustomFormMenu item : apiEventAnnotation.bindFormMenu()) {
+                this.getBindFormMenu().add(item);
+            }
+
+            for (GridMenu item : apiEventAnnotation.bindGridMenu()) {
+                this.getBindGridMenu().add(item);
+            }
             for (RequestPathAnnotation requestData : apiEventAnnotation.customRequestData()) {
                 apiCallerProperties.addRequestData(new UrlPathData(requestData));
             }
@@ -565,28 +588,28 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
 
         if (beforeData != null) {
             for (CustomBeforData beforDataEvent : beforeData) {
-                if (beforDataEvent!=null) {
+                if (beforDataEvent != null) {
                     apiEvents.add(new APIEventBean(beforDataEvent));
                 }
             }
         }
         if (beforeInvoke != null) {
             for (CustomBeforInvoke beforInvokeEvent : beforeInvoke) {
-                if (beforInvokeEvent!=null) {
+                if (beforInvokeEvent != null) {
                     apiEvents.add(new APIEventBean(beforInvokeEvent));
                 }
             }
         }
         if (callback != null) {
             for (CustomCallBack callBackEvent : callback) {
-                if (callBackEvent!=null) {
+                if (callBackEvent != null) {
                     apiEvents.add(new APIEventBean(callBackEvent));
                 }
             }
         }
         if (onError != null) {
             for (CustomOnError onErrorEvent : onError) {
-                if (onErrorEvent!=null) {
+                if (onErrorEvent != null) {
                     apiEvents.add(new APIEventBean(onErrorEvent));
                 }
             }
@@ -594,14 +617,14 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
 
         if (onData != null) {
             for (CustomOnData onDataEvent : onData) {
-                if (onDataEvent!=null) {
+                if (onDataEvent != null) {
                     apiEvents.add(new APIEventBean(onDataEvent));
                 }
             }
         }
         if (onExecuteSuccess != null) {
             for (CustomOnExecueSuccess onExecuteSuccessEvent : onExecuteSuccess) {
-                if (onExecuteSuccessEvent!=null){
+                if (onExecuteSuccessEvent != null) {
                     apiEvents.add(new APIEventBean(onExecuteSuccessEvent));
                 }
             }
@@ -610,7 +633,7 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
 
         if (onExecuteError != null) {
             for (CustomOnExecueError onExecueErrorEvent : onExecuteError) {
-                if (onExecueErrorEvent!=null) {
+                if (onExecueErrorEvent != null) {
                     apiEvents.add(new APIEventBean(onExecueErrorEvent));
                 }
             }
@@ -628,37 +651,37 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
     public APICallerProperties getApiCallerProperties() {
 
         for (ResponsePathBean responsePathBean : this.getResponseDataTarget()) {
-            if (responsePathBean!=null){
+            if (responsePathBean != null) {
                 apiCallerProperties.addResponseData(new UrlPathData(responsePathBean));
             }
 
         }
 
         for (ResponsePathEnum responsePathBean : this.getCustomResponseData()) {
-            if (responsePathBean!=null) {
+            if (responsePathBean != null) {
                 apiCallerProperties.addResponseData(responsePathBean);
             }
         }
 
         for (RequestPathBean requestPathBean : this.getRequestDataSource()) {
-            if (requestPathBean!=null) {
+            if (requestPathBean != null) {
                 apiCallerProperties.addRequestData(new UrlPathData(requestPathBean));
             }
         }
 
         for (RequestPathEnum requestPathBean : this.getCustomRequestData()) {
-            if (requestPathBean!=null) {
+            if (requestPathBean != null) {
                 apiCallerProperties.addRequestData(requestPathBean);
             }
         }
 
         for (CallBackPathEnum callBackPathBean : this.getCustomResponseCallback()) {
-            if (callBackPathBean!=null) {
+            if (callBackPathBean != null) {
                 apiCallerProperties.addResponseCallBack(callBackPathBean);
             }
         }
         for (CallBackPathBean callBackPathBean : this.getResponseCallback()) {
-            if (callBackPathBean!=null) {
+            if (callBackPathBean != null) {
                 apiCallerProperties.addResponseCallBack(new UrlPathData(callBackPathBean));
             }
         }
@@ -1046,6 +1069,45 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
         this.bindMGridEvent = bindMGridEvent;
     }
 
+    public LinkedHashSet<APIEventBean> getExtAPIEvent() {
+        return extAPIEvent;
+    }
+
+    public void setExtAPIEvent(LinkedHashSet<APIEventBean> extAPIEvent) {
+        this.extAPIEvent = extAPIEvent;
+    }
+
+    public LinkedHashSet<GridMenu> getBindGridMenu() {
+        return bindGridMenu;
+    }
+
+    public void setBindGridMenu(LinkedHashSet<GridMenu> bindGridMenu) {
+        this.bindGridMenu = bindGridMenu;
+    }
+
+    public LinkedHashSet<TreeMenu> getBindTreeMenu() {
+        return bindTreeMenu;
+    }
+
+    public void setBindTreeMenu(LinkedHashSet<TreeMenu> bindTreeMenu) {
+        this.bindTreeMenu = bindTreeMenu;
+    }
+
+    public LinkedHashSet<CustomGalleryMenu> getBindGalleryMenu() {
+        return bindGalleryMenu;
+    }
+
+    public void setBindGalleryMenu(LinkedHashSet<CustomGalleryMenu> bindGalleryMenu) {
+        this.bindGalleryMenu = bindGalleryMenu;
+    }
+
+    public LinkedHashSet<CustomFormMenu> getBindFormMenu() {
+        return bindFormMenu;
+    }
+
+    public void setBindFormMenu(LinkedHashSet<CustomFormMenu> bindFormMenu) {
+        this.bindFormMenu = bindFormMenu;
+    }
 
     public LinkedHashSet<CustomCallBack> getAfterInvoke() {
         return afterInvoke;

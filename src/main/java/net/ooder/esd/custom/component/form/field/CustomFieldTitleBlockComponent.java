@@ -225,7 +225,7 @@ public class CustomFieldTitleBlockComponent extends TitleBlockComponent {
             Set<CustomMenuItem> customItems = new HashSet<>();
 
             for (CustomMenuItem item : items) {
-                if (!item.equals(CustomMenuItem.INDEX) && item.equals(CustomMenuItem.INDEXS)) {
+                if (!item.equals(CustomMenuItem.INDEX) && !item.equals(CustomMenuItem.INDEXS)) {
                     customItems.add(item);
                 }
             }

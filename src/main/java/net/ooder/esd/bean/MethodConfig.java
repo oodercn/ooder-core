@@ -11,6 +11,10 @@ import net.ooder.common.util.StringUtility;
 import net.ooder.esd.annotation.*;
 import net.ooder.esd.annotation.event.*;
 import net.ooder.esd.annotation.field.ModuleRefFieldAnnotation;
+import net.ooder.esd.annotation.menu.CustomFormMenu;
+import net.ooder.esd.annotation.menu.CustomGalleryMenu;
+import net.ooder.esd.annotation.menu.GridMenu;
+import net.ooder.esd.annotation.menu.TreeMenu;
 import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.view.DynLoadAnnotation;
@@ -117,6 +121,14 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
     Set<String> javaTempIds = new LinkedHashSet<>();
 
     Set<CustomMenuItem> bindMenus = new LinkedHashSet<>();
+
+    Set<CustomFormMenu> formMenus = new LinkedHashSet<>();
+
+    Set<CustomGalleryMenu> galleryMenus = new LinkedHashSet<>();
+
+    Set<TreeMenu> treeMenus = new LinkedHashSet<>();
+
+    Set<GridMenu> gridMenus = new LinkedHashSet<>();
 
     LinkedHashSet<RequestParamBean> paramSet = new LinkedHashSet<>();
 
@@ -451,19 +463,44 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
     void initMenuItems(Set<CustomMenuItem> bindMenuItems) {
         for (CustomMenuItem menuItem : bindMenuItems) {
             bindMenus.add(menuItem);
-            this.caption = menuItem.getName();
+            caption = menuItem.getName();
             requestBody = menuItem.getRequestBody();
-
-            if (this.getParamSet().size() == 1) {
-                Class clazz = this.getParamSet().iterator().next().getParamClass();
-                if (!MethodUtil.checkType(clazz.getSimpleName()) && !clazz.equals(String.class)) {
-                    requestBody = true;
-                }
-            }
         }
         this.getApi().getBindMenu().addAll(bindMenuItems);
     }
 
+    void initFormMenus(Set<CustomFormMenu> bindMenuItems) {
+        for (CustomFormMenu menuItem : bindMenuItems) {
+            formMenus.add(menuItem);
+            this.caption = menuItem.getName();
+        }
+        this.getApi().getBindFormMenu().addAll(bindMenuItems);
+    }
+
+    void initTreeMenus(Set<TreeMenu> bindMenuItems) {
+        for (TreeMenu menuItem : bindMenuItems) {
+            treeMenus.add(menuItem);
+            this.caption = menuItem.getName();
+        }
+        this.getApi().getBindTreeMenu().addAll(bindMenuItems);
+    }
+
+
+    void initGridMenus(Set<GridMenu> bindMenuItems) {
+        for (GridMenu menuItem : bindMenuItems) {
+            gridMenus.add(menuItem);
+            this.caption = menuItem.getName();
+        }
+        this.getApi().getBindGridMenu().addAll(bindMenuItems);
+    }
+
+    void initGalleryMenus(Set<CustomGalleryMenu> bindMenuItems) {
+        for (CustomGalleryMenu menuItem : bindMenuItems) {
+            galleryMenus.add(menuItem);
+            this.caption = menuItem.getName();
+        }
+        this.getApi().getBindGalleryMenu().addAll(bindMenuItems);
+    }
 
     void initView(Method method) throws JDSException {
         this.method = method;
@@ -482,6 +519,35 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
             if (items != null) {
                 this.initMenuItems(items);
             }
+
+            Set<CustomFormMenu> formMenus = this.getApi().getBindFormMenu();
+            if (formMenus != null) {
+                this.initFormMenus(formMenus);
+            }
+
+            Set<GridMenu> gridMenus = this.getApi().getBindGridMenu();
+            if (gridMenus != null) {
+                this.initGridMenus(gridMenus);
+            }
+
+            Set<CustomGalleryMenu> galleryMenus = this.getApi().getBindGalleryMenu();
+            if (galleryMenus != null) {
+                this.initGalleryMenus(galleryMenus);
+            }
+
+            Set<TreeMenu> treeMenus = this.getApi().getBindTreeMenu();
+            if (treeMenus != null) {
+                this.initTreeMenus(treeMenus);
+            }
+
+
+            if (this.getParamSet().size() == 1) {
+                Class clazz = this.getParamSet().iterator().next().getParamClass();
+                if (!MethodUtil.checkType(clazz.getSimpleName()) && !clazz.equals(String.class)) {
+                    requestBody = true;
+                }
+            }
+
         }
 
         if (layoutItem == null) {
