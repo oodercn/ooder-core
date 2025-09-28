@@ -187,7 +187,7 @@ public class AggServiceRoot implements JavaRoot {
             Set<String> javaTempIds = dsmBean.getJavaTempIds();
             for (String javaTempId : javaTempIds) {
                 JavaTemp javaTemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaTempId);
-                if (javaTemp != null && javaTemp.getAggregationType().equals(AggregationType.ROOT)) {
+                if (javaTemp != null && javaTemp.getAggregationType().equals(AggregationType.MODULE)) {
                     for (String basePackage : basePackages) {
                         if (javaTemp.getPackagePostfix() == null || javaTemp.getPackagePostfix().equals("..")) {
                             this.imports.add(basePackage + ".*");

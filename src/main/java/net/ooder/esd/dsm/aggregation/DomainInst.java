@@ -101,16 +101,11 @@ public class DomainInst extends DSMInst implements Comparable<DomainInst> {
     }
 
     @JSONField(serialize = false)
-    public List<ESDClass> getAggRoots() {
-        List<ESDClass> roots = this.getEntityList(AggregationType.ROOT, true);
+    public List<ESDClass> getAggModules() {
+        List<ESDClass> roots = this.getEntityList(AggregationType.MODULE, true);
         return roots;
     }
 
-    @JSONField(serialize = false)
-    public List<ESDClass> getAggMaps() {
-        List<ESDClass> roots = this.getEntityList(AggregationType.MAP, true);
-        return roots;
-    }
 
 
     @JSONField(serialize = false)
@@ -119,11 +114,6 @@ public class DomainInst extends DSMInst implements Comparable<DomainInst> {
         return roots;
     }
 
-    @JSONField(serialize = false)
-    public List<ESDClass> getAggSet() {
-        List<ESDClass> roots = this.getEntityList(AggregationType.SET, true);
-        return roots;
-    }
 
     @JSONField(serialize = false)
     public List<ESDClass> getAggDomains() {
@@ -243,7 +233,7 @@ public class DomainInst extends DSMInst implements Comparable<DomainInst> {
 
     @JSONField(serialize = false)
     public ESDClass getDAOService(String tableName) {
-        List<ESDClass> daoServiceClasses = this.getEntityList(AggregationType.TABLE, false);
+        List<ESDClass> daoServiceClasses = this.getEntityList(AggregationType.REPOSITORY, false);
         for (ESDClass esdClass : daoServiceClasses) {
             try {
                 if (esdClass.getEntityClass() != null) {

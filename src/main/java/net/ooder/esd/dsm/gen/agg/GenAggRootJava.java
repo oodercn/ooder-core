@@ -51,7 +51,7 @@ public class GenAggRootJava extends BaseAggCallabel {
         allTemps.addAll(esdClassConfig.getJavaTempIds());
         for (String javaTempId : allTemps) {
             JavaTemp javatemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaTempId);
-            if (javatemp != null && !javatemp.getRangeType().equals(RangeType.MODULEVIEW) && javatemp.getAggregationType().equals(AggregationType.ROOT)) {
+            if (javatemp != null && !javatemp.getRangeType().equals(RangeType.MODULEVIEW) && javatemp.getAggregationType().equals(AggregationType.MODULE)) {
                 AggServiceRoot root = new AggServiceRoot(domainInst, esdClassConfig, dsmRefs);
                 String basePath = domainInst.getPackageName() + "." + esdClassConfig.getESDClass().getEntityClass().getName().toLowerCase();
                 root.setBasepath(basePath);

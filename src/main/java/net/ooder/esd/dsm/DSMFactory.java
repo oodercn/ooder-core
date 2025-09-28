@@ -466,7 +466,7 @@ public class DSMFactory {
 
     public void reBuildTableView(RepositoryInst repositoryInst, UserSpace userSpace, ChromeProxy chrome) throws JDSException {
         DomainInst domainInst = DSMFactory.getInstance().getDefaultDomain(repositoryInst.getProjectVersionName(), userSpace);
-        List<ESDClass> tableList = domainInst.getEntityList(AggregationType.TABLE, false);
+        List<ESDClass> tableList = domainInst.getEntityList(AggregationType.REPOSITORY, false);
         List<Callable<List<JavaSrcBean>>> tasks = viewManager.genESDClassTask(domainInst, tableList, chrome);
         BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), tasks);
         ViewInst viewInst = domainInst.getViewInst();
@@ -476,7 +476,7 @@ public class DSMFactory {
 
     public void genRepository(RepositoryInst repositoryInst, UserSpace userSpace, ChromeProxy chrome) throws JDSException {
         DomainInst domainInst = DSMFactory.getInstance().getDefaultDomain(repositoryInst.getProjectVersionName(), userSpace);
-        List<ESDClass> tableList = domainInst.getEntityList(AggregationType.TABLE, false);
+        List<ESDClass> tableList = domainInst.getEntityList(AggregationType.REPOSITORY, false);
         List<Callable<List<JavaSrcBean>>> tasks = viewManager.genESDClassTask(domainInst, tableList, chrome);
         BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), tasks);
         ViewInst viewInst = domainInst.getViewInst();
@@ -508,7 +508,7 @@ public class DSMFactory {
     private ViewInst buildRepositoryTable(DomainInst domainInst, ChromeProxy chrome, boolean compile) throws JDSException {
         ViewInst viewInst = domainInst.getViewInst();
         try {
-            List<ESDClass> tableList = domainInst.getEntityList(AggregationType.TABLE, false);
+            List<ESDClass> tableList = domainInst.getEntityList(AggregationType.REPOSITORY, false);
             List<Callable<List<JavaSrcBean>>> tasks = viewManager.genESDClassTask(domainInst, tableList, chrome);
             BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), tasks);
             if (compile) {

@@ -490,7 +490,7 @@ public class ESDClassManager {
             }
             if (entityClass != null) {
                 switch (entityClass.type()) {
-                    case ROOT:
+                    case MODULE:
                         aggRootClassNames.add(entityClass.rootClass().getName());
                         break;
                     case MENU:

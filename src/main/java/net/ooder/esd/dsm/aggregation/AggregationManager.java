@@ -636,7 +636,7 @@ public class AggregationManager {
         srcBeans.addAll(javaSrcBeans);
         for (String esdClassName : esdClassNames) {
             try {
-                List<JavaSrcBean> moduleBeans = this.buildAggModule(domainInst, AggregationType.TABLE, esdClassName, chrome);
+                List<JavaSrcBean> moduleBeans = this.buildAggModule(domainInst, AggregationType.REPOSITORY, esdClassName, chrome);
                 srcBeans.addAll(moduleBeans);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -1138,7 +1138,7 @@ public class AggregationManager {
             aggEntityConfigs.add(entityConfig);
         }
 
-        List<ESDClass> rootClassList = domainInst.getAggRoots();
+        List<ESDClass> rootClassList = domainInst.getAggModules();
         for (ESDClass esdClass : rootClassList) {
             AggEntityConfig entityConfig = this.getAggEntityConfig(esdClass.getClassName(), false);
             buildTasks.add(new GenAggRootJava(domainInst, entityConfig, temps, chrome));
@@ -1237,7 +1237,7 @@ public class AggregationManager {
         List<Callable<List<JavaSrcBean>>> buildTasks = new ArrayList<>();
         DomainInst domainInst = (DomainInst) aggViewRoot.getDsmBean();
 
-        GenAggCustomJava genAggViewJava = new GenAggCustomJava(aggViewRoot, viewBean, domainInst.getJavaTempIds(), AggregationType.MAP, moduleName, className, chrome);
+        GenAggCustomJava genAggViewJava = new GenAggCustomJava(aggViewRoot, viewBean, domainInst.getJavaTempIds(), AggregationType.NAVIGATION, moduleName, className, chrome);
         buildTasks.add(genAggViewJava);
         return buildTasks;
     }
@@ -1366,7 +1366,7 @@ public class AggregationManager {
         List<FieldModuleConfig> methodAPIBeans = esdClassConfig.getModuleMethods();
         for (String javaTempId : allTemps) {
             JavaTemp javatemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaTempId);
-            if (javatemp != null && !javatemp.getRangeType().equals(RangeType.MODULEVIEW) && javatemp.getAggregationType().equals(AggregationType.SET)) {
+            if (javatemp != null && !javatemp.getRangeType().equals(RangeType.MODULEVIEW)) {
                 for (FieldModuleConfig fieldModuleConfig : methodAPIBeans) {
                     buildTasks.add(new GenAggChildMethodJava(domainInst, moduleName, fieldModuleConfig.getMethodConfig(), javatemp, chrome));
                 }
