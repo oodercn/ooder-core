@@ -1701,6 +1701,10 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
                 isModule = true;
             }
         }
+
+
+
+
         if (this.getMethod() != null) {
             ModuleAnnotation annotation = AnnotationUtil.getMethodAnnotation(this.getMethod(), ModuleAnnotation.class);
             if (annotation != null) {

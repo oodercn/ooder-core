@@ -2,26 +2,20 @@ package net.ooder.esd.bean.gallery;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
-import net.ooder.esd.annotation.ui.FontColorEnum;
 import net.ooder.esd.annotation.GalleryItemAnnotation;
-import net.ooder.esd.annotation.ui.IconColorEnum;
-import net.ooder.esd.annotation.ui.ItemColorEnum;
 import net.ooder.esd.annotation.event.CustomFormEvent;
-import net.ooder.esd.annotation.ui.BorderType;
-import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.bean.view.CustomGalleryViewBean;
-import net.ooder.esd.bean.view.CustomOpinionViewBean;
+import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.RightContextMenuBean;
 import net.ooder.esd.bean.bar.ContextMenuBar;
+import net.ooder.esd.bean.view.CustomGalleryViewBean;
 import net.ooder.esd.dsm.view.field.FieldItemConfig;
 import net.ooder.esd.tool.properties.item.GalleryItem;
-import net.ooder.esd.tool.properties.item.OpinionItem;
 import net.ooder.esd.util.json.EnumsSerializer;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.ConstructorBean;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.reflect.Constructor;
@@ -126,11 +120,6 @@ public class GalleryItemBean<T extends FieldItemConfig> implements ContextMenuBa
         this.init(galleryItem);
     }
 
-    public GalleryItemBean(OpinionItem galleryItem, CustomOpinionViewBean opinionViewBean) {
-        this.galleryViewBean = galleryViewBean;
-        this.galleryItem = galleryItem;
-        this.init(galleryItem);
-    }
 
     private void init(GalleryItem galleryItem) {
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(galleryItem), Map.class), this, false, false);

@@ -1,17 +1,24 @@
 package net.ooder.esd.bean.data;
 
 
-import net.ooder.annotation.CustomBean;
+import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.annotation.CustomClass;
+import net.ooder.esd.annotation.ui.CustomViewType;
+import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.ResponsePathTypeEnum;
 import net.ooder.esd.annotation.view.NavFoldingTabsViewAnnotation;
-import net.ooder.esd.annotation.view.TabsViewAnnotation;
+import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.custom.ESDClass;
-import net.ooder.esd.dsm.view.ViewEntityConfig;
-import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.custom.component.nav.FullNavFoldingTabsComponent;
 import net.ooder.web.util.AnnotationUtil;
 
+@CustomClass(clazz = FullNavFoldingTabsComponent.class,
+        viewType = CustomViewType.FRAME,
+        moduleType = ModuleViewType.NAVFOLDINGTABSCONFIG
+)
 @AnnotationType(clazz = NavFoldingTabsViewAnnotation.class)
-public class NavFoldingTabsDataBean implements CustomBean {
+public class NavFoldingTabsDataBean extends CustomDataBean {
+    ModuleViewType moduleViewType = ModuleViewType.NAVBUTTONLAYOUTCONFIG;
 
     String expression;
 
@@ -23,30 +30,48 @@ public class NavFoldingTabsDataBean implements CustomBean {
 
     String className;
 
+    String dataUrl;
+
+    Boolean cache = false;
 
     public NavFoldingTabsDataBean() {
 
     }
 
-    public NavFoldingTabsDataBean(ESDClass esdClass) {
-        TabsViewAnnotation annotation = AnnotationUtil.getClassAnnotation(esdClass.getCtClass(), TabsViewAnnotation.class);
-        if (annotation != null) {
-            fillData(annotation);
+    public NavFoldingTabsDataBean(MethodConfig methodAPIBean) {
+        super(methodAPIBean);
+        ESDClass esdClass = methodAPIBean.getViewClass();
+        if (esdClass != null) {
+            NavFoldingTabsViewAnnotation annotation = AnnotationUtil.getClassAnnotation(esdClass.getCtClass(), NavFoldingTabsViewAnnotation.class);
+            if (annotation != null) {
+                if (cache == null) {
+                    cache = annotation.cache();
+                }
+                if (dataUrl == null || dataUrl.equals("")) {
+                    dataUrl = annotation.dataUrl();
+                }
+
+            }
         }
+
     }
 
-    public NavFoldingTabsDataBean(TabsViewAnnotation annotation) {
-        fillData(annotation);
-    }
 
-    public NavFoldingTabsDataBean fillData(TabsViewAnnotation annotation) {
+    public NavFoldingTabsDataBean fillData(NavFoldingTabsViewAnnotation annotation) {
         return AnnotationUtil.fillBean(annotation, this);
     }
 
-    public NavFoldingTabsDataBean(ViewEntityConfig esdClassConfig) {
-        this.className = esdClassConfig.getClassName();
 
+    public void setModuleViewType(ModuleViewType moduleViewType) {
+        this.moduleViewType = moduleViewType;
+    }
 
+    public String getEditorPath() {
+        return editorPath;
+    }
+
+    public void setEditorPath(String editorPath) {
+        this.editorPath = editorPath;
     }
 
     public String getSaveUrl() {
@@ -73,26 +98,74 @@ public class NavFoldingTabsDataBean implements CustomBean {
         this.className = className;
     }
 
-
+    @Override
     public String getExpression() {
         return expression;
     }
 
+    @Override
     public void setExpression(String expression) {
         this.expression = expression;
     }
 
-    public String getEditorPath() {
-        return editorPath;
+
+    @Override
+    public String getDomainId() {
+        return domainId;
     }
 
-    public void setEditorPath(String editorPath) {
-        this.editorPath = editorPath;
+    @Override
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
     }
 
+    @Override
+    public String getDataUrl() {
+        return dataUrl;
+    }
+
+    public void setDataUrl(String dataUrl) {
+        this.dataUrl = dataUrl;
+    }
+
+    @Override
+    public Boolean getCache() {
+        return cache;
+    }
+
+    public void setCache(Boolean cache) {
+        this.cache = cache;
+    }
+
+    @Override
+    public String getSourceClassName() {
+        return sourceClassName;
+    }
+
+    @Override
+    public void setSourceClassName(String sourceClassName) {
+        this.sourceClassName = sourceClassName;
+    }
+
+    @Override
+    public String getMethodName() {
+        return methodName;
+    }
+
+    @Override
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
 
     public String toAnnotationStr() {
         return AnnotationUtil.toAnnotationStr(this);
     }
+
+
+    @Override
+    public ModuleViewType getModuleViewType() {
+        return moduleViewType;
+    }
+
 
 }

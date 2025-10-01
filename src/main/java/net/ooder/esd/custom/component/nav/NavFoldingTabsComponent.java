@@ -10,8 +10,8 @@ import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomFoldingTabsFieldBean;
-import net.ooder.esd.bean.view.NavFoldingTabsViewBean;
 import net.ooder.esd.bean.nav.TabItemBean;
+import net.ooder.esd.bean.view.NavFoldingTabsViewBean;
 import net.ooder.esd.custom.properties.NavFoldingTabsProperties;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.EUModule;
@@ -24,40 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 public class NavFoldingTabsComponent extends FoldingTabsComponent {
-//    public NavFoldingTabsComponent(EUModule module, MethodConfig methodConfig, Map<String, ?> valueMap) throws JDSException {
-//        super();
-//
-//        this.setProperties(new NavFoldingTabsProperties(methodConfig, valueMap));
-//        List<FieldModuleConfig> fieldModuleConfigList = methodConfig.getView().getNavItems();
-//
-//        for (FieldModuleConfig moduleInfo : fieldModuleConfigList) {
-//            EUModule childModule = moduleInfo.getModule(valueMap);
-//
-//            if (childModule.getComponent().getModuleViewType().equals(ModuleViewType.DYNConfig)) {
-//                Component component = childModule.getComponent().getTopComponentBox();
-//                if (this.getModuleComponent().findComponentByAlias(component.getAlias()) == null) {
-//                    this.addChildren(component);
-//                }
-//                List<Component> apiComponents = childModule.getComponent().findComponents(ComponentType.APICaller, null);
-//                for (Component apiComponent : apiComponents) {
-//                    if (this.getModuleComponent().findComponentByAlias(component.getAlias()) == null) {
-//                        childModule.getComponent().addChildren(apiComponent);
-//                    }
-//                }
-//
-//            } else {
-//
-//                ModuleComponent moduleComponent = new ModuleComponent();
-//                moduleComponent.setClassName(moduleInfo.getMethodConfig().getEUClassName());
-//                moduleComponent.setAlias(moduleInfo.getMethodConfig().getName());
-//                moduleComponent.setAlias(moduleInfo.getMethodConfig().getMethodName());
-//                moduleComponent.getModuleVar().putAll(moduleInfo.getMethodConfig().getTagVar());
-//                this.addChildren(moduleComponent);
-//            }
-//        }
-//        this.setAlias(methodConfig.getName() );
-//    }
-
     public NavFoldingTabsComponent(EUModule euModule, FieldFormConfig<CustomFoldingTabsFieldBean, ?> field, String target, Object value, Map<String, Object> valueMap) {
         super();
         try {
@@ -90,15 +56,16 @@ public class NavFoldingTabsComponent extends FoldingTabsComponent {
 
     void init(NavFoldingTabsViewBean tabsViewBean, Map<String, Object> valueMap) throws JDSException {
         this.setProperties(new NavFoldingTabsProperties(tabsViewBean, valueMap));
-        if (tabsViewBean.getAutoSave()!=null && tabsViewBean.getAutoSave()) {
-            Action saveAction = new Action(CustomPageAction.AUTOSAVE,TabsEventEnum.beforePageClose);
-            this.addAction(saveAction,false);
+        if (tabsViewBean.getAutoSave() != null && tabsViewBean.getAutoSave()) {
+            Action saveAction = new Action(CustomPageAction.AUTOSAVE, TabsEventEnum.beforePageClose);
+            this.addAction(saveAction, false);
         }
+
 
         List<TabItemBean> childTabViewBeans = tabsViewBean.getItemBeans();
         for (TabItemBean childTabViewBean : childTabViewBeans) {
-            List<MethodConfig> methodConfigList = childTabViewBean.getMethodConfigList();
-            for(MethodConfig methodConfig:methodConfigList ){
+            MethodConfig methodConfig = childTabViewBean.getMethodConfig();
+            if (methodConfig != null) {
                 ModuleViewType moduleViewType = methodConfig.getView().getModuleViewType();
                 if (moduleViewType.equals(ModuleViewType.DYNCONFIG)) {
                     EUModule childModule = methodConfig.getModule(valueMap, getModuleComponent().getProjectName());
@@ -115,23 +82,23 @@ public class NavFoldingTabsComponent extends FoldingTabsComponent {
                 }
             }
 
-
         }
+
     }
 
     public void init(EUModule module, MethodConfig methodConfig, Map<String, ?> valueMap) throws JDSException {
         NavFoldingTabsViewBean tabsViewBean = (NavFoldingTabsViewBean) methodConfig.getView();
         NavFoldingTabsProperties viewsProperties = new NavFoldingTabsProperties(tabsViewBean, valueMap);
         this.setProperties(viewsProperties);
-        if (tabsViewBean.getAutoSave()!=null && tabsViewBean.getAutoSave()) {
-            Action saveAction = new Action(CustomPageAction.AUTOSAVE,TabsEventEnum.beforePageClose);
+        if (tabsViewBean.getAutoSave() != null && tabsViewBean.getAutoSave()) {
+            Action saveAction = new Action(CustomPageAction.AUTOSAVE, TabsEventEnum.beforePageClose);
             this.addAction(saveAction);
         }
 
         List<TabItemBean> childTabViewBeans = tabsViewBean.getItemBeans();
         for (TabItemBean childTabViewBean : childTabViewBeans) {
-            List<MethodConfig> methodConfigList = childTabViewBean.getMethodConfigList();
-            for(MethodConfig childMethodConfig:methodConfigList){
+            MethodConfig childMethodConfig = childTabViewBean.getMethodConfig();
+            if (childMethodConfig != null) {
                 ModuleViewType moduleViewType = childMethodConfig.getView().getModuleViewType();
                 if (moduleViewType.equals(ModuleViewType.DYNCONFIG)) {
                     EUModule childModule = childMethodConfig.getModule(valueMap, getModuleComponent().getProjectName());
@@ -152,7 +119,7 @@ public class NavFoldingTabsComponent extends FoldingTabsComponent {
         }
 
 
-        Action showAction = new Action(CustomLoadClassAction.tabShow,TabsEventEnum.onItemSelected);
+        Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onItemSelected);
         showAction.updateArgs(this.getAlias(), 4);
         if (tabsViewBean != null && tabsViewBean.getAutoReload()) {
             if (!this.getEvents().containsKey(TabsEventEnum.onItemSelected)) {
@@ -162,7 +129,7 @@ public class NavFoldingTabsComponent extends FoldingTabsComponent {
         } else {
             if (!this.getEvents().containsKey(TabsEventEnum.onIniPanelView)) {
                 showAction.setEventKey(TabsEventEnum.onIniPanelView);
-                this.addAction( showAction);
+                this.addAction(showAction);
             }
         }
 

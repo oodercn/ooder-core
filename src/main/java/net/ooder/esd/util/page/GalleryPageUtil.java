@@ -26,13 +26,13 @@ import java.util.*;
 
 public class GalleryPageUtil {
 
-    public static <T extends GalleryItem, K> TreeListResultModel<List<T>> getTabList(Set<K> objs, Class<T> clazz, boolean autoSelect) {
+    public static <T extends GalleryItem, K> TreeListResultModel<List<T>> getGalleryList(Set<K> objs, Class<T> clazz, boolean autoSelect) {
         List<K> result = new ArrayList<K>();
         result.addAll(objs);
-        return getTabList(result, clazz, autoSelect);
+        return getGalleryList(result, clazz, autoSelect);
     }
 
-    public static <T extends GalleryItem, K> TreeListResultModel<List<T>> getTabList(List<K> objs, Class<T> clazz, boolean autoSelect) {
+    public static <T extends GalleryItem, K> TreeListResultModel<List<T>> getGalleryList(List<K> objs, Class<T> clazz, boolean autoSelect) {
         TreeListResultModel<List<T>> userStatusInfo = new TreeListResultModel<List<T>>();
         List<T> pageResult = new ArrayList<T>();
         for (K obj : objs)
@@ -60,6 +60,8 @@ public class GalleryPageUtil {
         userStatusInfo.setData(pageResult);
         return userStatusInfo;
     }
+
+
 
 
     static GalleryItemBean getGalleryItem(CustomGalleryViewBean viewBean, Class sourceClazz, Object obj) {

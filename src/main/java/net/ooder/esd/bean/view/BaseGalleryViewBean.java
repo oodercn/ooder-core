@@ -6,6 +6,7 @@ import net.ooder.esd.annotation.*;
 import net.ooder.esd.annotation.event.CustomEvent;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.bean.*;
+import net.ooder.esd.bean.gallery.GalleryItemBean;
 import net.ooder.esd.bean.grid.PageBarBean;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldGalleryConfig;
@@ -34,6 +35,8 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
     RightContextMenuBean contextMenuBean;
     PageBarBean pageBar;
     EnumsClassBean enumsClassBean;
+
+    List<GalleryItemBean> galleryItemBeans = new ArrayList<>();
 
     public BaseGalleryViewBean() {
         super();
@@ -96,7 +99,7 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
 
         RightContextMenu contextMenu = AnnotationUtil.getClassAnnotation(clazz, RightContextMenu.class);
         if (contextMenu != null) {
-            contextMenuBean = new RightContextMenuBean(this.getId(),contextMenu);
+            contextMenuBean = new RightContextMenuBean(this.getId(), contextMenu);
         }
 
     }
@@ -160,6 +163,10 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
         return annotationBeans;
     }
 
+    public void initViewClass(Class clazz) {
+        super.initViewClass(clazz);
+
+    }
 
     @Override
     public ToolBarMenuBean getToolBar() {
@@ -270,7 +277,7 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
 
     public RightContextMenuBean genContextMenuBean() {
         if (contextMenuBean == null) {
-            contextMenuBean = new RightContextMenuBean(this.id==null?this.getMethodName():this.id);
+            contextMenuBean = new RightContextMenuBean(this.id == null ? this.getMethodName() : this.id);
             AnnotationUtil.fillDefaultValue(RightContextMenu.class, contextMenuBean);
         }
         return contextMenuBean;

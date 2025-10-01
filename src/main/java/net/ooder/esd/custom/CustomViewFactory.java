@@ -8,6 +8,7 @@ import net.ooder.common.logging.ChromeProxy;
 import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
 import net.ooder.common.logging.LogSetpLog;
+import net.ooder.config.UserBean;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.ModuleAnnotation;
@@ -17,6 +18,7 @@ import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.custom.component.CustomDynLoadView;
 import net.ooder.esd.custom.component.CustomModuleComponent;
 import net.ooder.esd.custom.component.grid.CustomGridComponent;
+import net.ooder.esd.custom.component.index.UserConfig;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.DomainInst;
@@ -300,6 +302,9 @@ public class CustomViewFactory {
     public EUModule buildView(MethodConfig methodAPIBean, String projectName, Map<String, ?> valueMap, boolean dynBuild) throws JDSException {
         EUModule module = null;
         try {
+            if (projectName==null){
+                projectName = DSMFactory.getInstance().getDefaultProjectName();
+            }
             module = buildView(methodAPIBean, null, projectName, valueMap, dynBuild);
         } catch (Exception e) {
             e.printStackTrace();
@@ -312,6 +317,9 @@ public class CustomViewFactory {
     public EUModule buildView(MethodConfig methodAPIBean, Class customClass, String projectName, Map<String, ?> valueMap, boolean dynBuild) throws JDSException {
         EUModule module = null;
         try {
+            if (projectName==null){
+                 projectName = DSMFactory.getInstance().getDefaultProjectName();
+            }
             ProjectVersion version = ESDFacrory.getAdminESDClient().getProjectVersionByName(projectName);
             module = version.createCustomModule(methodAPIBean.getEUClassName());
             module = createModuleComponent(methodAPIBean, customClass, module, valueMap, dynBuild);

@@ -55,7 +55,7 @@ public class CustomGalleryViewBean extends BaseGalleryViewBean<CustomGalleryMenu
     String flagClass;
     String flagStyle;
     SelModeType selMode;
-    List<GalleryItemBean> galleryItemBeans;
+
 
 
     public List<CustomGalleryMenu> toolBarMenu = new ArrayList<>();
