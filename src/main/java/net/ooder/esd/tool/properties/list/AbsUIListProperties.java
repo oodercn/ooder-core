@@ -29,12 +29,21 @@ public class AbsUIListProperties<T extends AbsUIProperties> extends ContainerUIP
         if (items == null) {
             items = new ArrayList<T>();
         }
+        T ooitem = null;
         for (T oitem : items) {
             if (item.getId().equals(oitem.getId())) {
-                return items;
+                ooitem = oitem;
             }
         }
-        items.add(item);
+        if (ooitem != null) {
+            int k = items.indexOf(ooitem);
+            items.remove(ooitem);
+            items.add(k, item);
+        } else {
+            items.add(item);
+        }
+
+
         return items;
     }
 

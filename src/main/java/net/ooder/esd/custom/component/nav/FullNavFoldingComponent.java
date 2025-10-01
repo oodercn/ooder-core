@@ -54,7 +54,7 @@ public class FullNavFoldingComponent extends CustomModuleComponent<NavFoldingTre
         contentComponent.addChildren(tabContentComponent);
 
         layoutComponent.addChildren(contentComponent);
-        NavFoldingComponent tabcomponent = new NavFoldingComponent(viewBean, tabContentComponent, valueMap);
+        NavFoldingTabComponent tabcomponent = new NavFoldingTabComponent(viewBean, tabContentComponent, valueMap);
 
 
         tabcomponent.setTarget(PosType.before.name());

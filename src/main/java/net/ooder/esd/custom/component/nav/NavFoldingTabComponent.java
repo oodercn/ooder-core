@@ -20,9 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class NavFoldingComponent extends FoldingTabsComponent {
+public class NavFoldingTabComponent extends FoldingTabsComponent {
 
-    public NavFoldingComponent(NavFoldingComboViewBean viewBean, TabsComponent tabsComponent, Map<String, ?> valueMap) throws JDSException {
+    public NavFoldingTabComponent(NavFoldingComboViewBean viewBean, TabsComponent tabsComponent, Map<String, ?> valueMap) throws JDSException {
         this.setProperties( new NavFoldingTabsProperties(viewBean, valueMap));
         List<FieldModuleConfig> fieldModuleConfigList = viewBean.getNavItems();
 
@@ -125,10 +125,8 @@ public class NavFoldingComponent extends FoldingTabsComponent {
     }
 
 
-    public NavFoldingComponent(EUModule euModule, MethodConfig methodConfig, Map<String, ?> valueMap) throws JDSException {
+    public NavFoldingTabComponent(EUModule euModule, MethodConfig methodConfig, Map<String, ?> valueMap) throws JDSException {
         super();
-
-
     }
 
 

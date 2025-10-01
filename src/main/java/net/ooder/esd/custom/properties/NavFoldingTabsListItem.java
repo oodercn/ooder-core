@@ -6,6 +6,7 @@ import net.ooder.context.JDSActionContext;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
+import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.web.RequestParamBean;
 
 import java.util.*;
@@ -15,6 +16,10 @@ public class NavFoldingTabsListItem extends NavTabListItem {
 
     public NavFoldingTabsListItem() {
         super();
+    }
+
+    public NavFoldingTabsListItem(TabListItem listItem) {
+        super(listItem);
     }
 
     public NavFoldingTabsListItem(TabItemBean childTabViewBean, Map<String, ?> valueMap) {
@@ -27,6 +32,7 @@ public class NavFoldingTabsListItem extends NavTabListItem {
         if (childTabViewBean.getIndex() != null && childTabViewBean.getIndex() != -1) {
             this.tabindex = childTabViewBean.getIndex();
         }
+
         this.id = childTabViewBean.getId();
         if (tagVar == null) {
             this.tagVar = new HashMap<>();
@@ -36,15 +42,14 @@ public class NavFoldingTabsListItem extends NavTabListItem {
         }
         List<RequestParamBean> requestParamBeans = new ArrayList<>();
         MethodConfig childMethod = childTabViewBean.getMethodConfig();
-
-        if (childTabViewBean.getConstructorBean() != null) {
-            requestParamBeans = childTabViewBean.getConstructorBean().getParamList();
-        } else if (childMethod != null) {
+        if (childMethod != null) {
             requestParamBeans = Arrays.asList((RequestParamBean[]) (childMethod.getParamSet().toArray(new RequestParamBean[]{})));
             this.euClassName = childMethod.getEUClassName();
             if (!childMethod.getImageClass().equals(MethodConfig.DefaultImageClass)) {
                 this.imageClass = childMethod.getImageClass();
             }
+        } else if (childTabViewBean.getConstructorBean() != null) {
+            requestParamBeans = childTabViewBean.getConstructorBean().getParamList();
         }
 
         if (requestParamBeans.size() > 0) {

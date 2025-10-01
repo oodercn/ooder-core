@@ -3,6 +3,7 @@ package net.ooder.esd.custom.properties;
 
 import net.ooder.esd.annotation.ui.BorderType;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.bean.view.NavFoldingComboViewBean;
 import net.ooder.esd.bean.view.NavFoldingTabsViewBean;
 import net.ooder.esd.bean.view.TabsViewBean;
@@ -19,14 +20,36 @@ public class NavFoldingTabsProperties extends NavTabsProperties<NavFoldingTabsLi
 
     }
 
-    public NavFoldingTabsProperties(NavFoldingComboViewBean navTabsViewBean, Map<String, ?> valueMap) {
-        init(navTabsViewBean, valueMap);
-    }
+
     public NavFoldingTabsProperties(NavFoldingTabsViewBean navTabsViewBean, Map<String, ?> valueMap) {
         init(navTabsViewBean, valueMap);
     }
 
+    public NavFoldingTabsProperties(NavFoldingComboViewBean navTabsViewBean, Map<String, ?> valueMap) {
+        init(navTabsViewBean, valueMap);
+    }
+
     void init(NavFoldingTabsViewBean navTabsViewBean, Map<String, ?> valueMap) {
+
+        List<TabItemBean> childTabViewBeans = navTabsViewBean.getItemBeans();
+
+        for (TabItemBean itemInfo : childTabViewBeans) {
+            NavFoldingTabsListItem navItemProperties = new NavFoldingTabsListItem(itemInfo, valueMap);
+            Map<String, Object> tagMap = new HashMap<>();
+            Set<RequestParamBean> paramBeans = navTabsViewBean.getParamSet();
+            for (RequestParamBean paramBean : paramBeans) {
+                if (!Arrays.asList(DSMFactory.SkipParams).contains(paramBean.getParamName())) {
+                    Object obj = valueMap.get(paramBean.getParamName());
+                    if (obj != null && !obj.equals("")) {
+                        tagMap.put(paramBean.getParamName(), obj);
+                    }
+                }
+            }
+
+            navItemProperties.getTagVar().putAll(tagMap);
+            this.addItem(navItemProperties);
+        }
+
         List<FieldModuleConfig> moduleList = navTabsViewBean.getNavItems();
         this.setBorderType(BorderType.none);
         for (FieldModuleConfig itemInfo : moduleList) {
@@ -60,11 +83,10 @@ public class NavFoldingTabsProperties extends NavTabsProperties<NavFoldingTabsLi
     }
 
 
-
     void init(NavFoldingComboViewBean navTabsViewBean, Map<String, ?> valueMap) {
-        List<FieldModuleConfig> moduleList = navTabsViewBean.getNavItems();
+        List<NavTabListItem> childTabViewBeans = navTabsViewBean.getTabItems();
         this.setBorderType(BorderType.none);
-        for (FieldModuleConfig itemInfo : moduleList) {
+        for (NavTabListItem itemInfo : childTabViewBeans) {
             NavFoldingTabsListItem navItemProperties = new NavFoldingTabsListItem(itemInfo);
             Map<String, Object> tagMap = new HashMap<>();
             Set<RequestParamBean> paramBeans = navTabsViewBean.getParamSet();
