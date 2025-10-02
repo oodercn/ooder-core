@@ -6,6 +6,7 @@ import net.ooder.esd.annotation.event.CustomTabsEvent;
 import net.ooder.esd.annotation.menu.CustomFormMenu;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.data.CustomDataBean;
 import net.ooder.esd.bean.view.CustomButtonViewsViewBean;
 import net.ooder.esd.custom.component.CustomModuleComponent;
 import net.ooder.esd.engine.EUModule;
@@ -43,12 +44,17 @@ public class FullButtonViewsComponent extends CustomModuleComponent<ButtonViewsC
 
         for (CustomTabsEvent eventType : customFormEvents) {
             for (CustomAction actionType : eventType.getActions(false)) {
-                currComponent.addAction( new Action(actionType,eventType.getEventEnum()));
+                currComponent.addAction(new Action(actionType, eventType.getEventEnum()));
             }
         }
         List<CustomFormMenu> customFormMenus = view.getCustomMenu();
         if (customFormMenus != null && customFormMenus.size() > 0) {
             this.getMenuBar(view.getMenuBar()).addMenu(customFormMenus.toArray(new CustomMenu[]{}));
+        }
+
+        CustomDataBean dataBean = view.getMethodConfig().getDataBean();
+        if (dataBean != null && dataBean.getCs() != null) {
+            currComponent.setCS(dataBean.getCs());
         }
 
 

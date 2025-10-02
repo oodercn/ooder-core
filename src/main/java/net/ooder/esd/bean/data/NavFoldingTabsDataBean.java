@@ -8,7 +8,6 @@ import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.ResponsePathTypeEnum;
 import net.ooder.esd.annotation.view.NavFoldingTabsViewAnnotation;
 import net.ooder.esd.bean.MethodConfig;
-import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.custom.component.nav.FullNavFoldingTabsComponent;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -26,13 +25,15 @@ public class NavFoldingTabsDataBean extends CustomDataBean {
 
     String saveUrl;
 
-    ResponsePathTypeEnum itemType;
+    ResponsePathTypeEnum itemType = ResponsePathTypeEnum.TABS;
 
     String className;
 
-    String  reSetUrl;
+    String reSetUrl;
 
     String dataUrl;
+
+    Boolean autoSave = false;
 
     Boolean cache = false;
 
@@ -42,25 +43,40 @@ public class NavFoldingTabsDataBean extends CustomDataBean {
 
     public NavFoldingTabsDataBean(MethodConfig methodAPIBean) {
         super(methodAPIBean);
-        ESDClass esdClass = methodAPIBean.getViewClass();
-        if (esdClass != null) {
-            NavFoldingTabsViewAnnotation annotation = AnnotationUtil.getClassAnnotation(esdClass.getCtClass(), NavFoldingTabsViewAnnotation.class);
-            if (annotation != null) {
-                if (cache == null) {
-                    cache = annotation.cache();
-                }
-                if (dataUrl == null || dataUrl.equals("")) {
-                    dataUrl = annotation.dataUrl();
-                }
-
-            }
+        NavFoldingTabsViewAnnotation annotation = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), NavFoldingTabsViewAnnotation.class);
+        if (annotation == null) {
+            AnnotationUtil.fillDefaultValue(NavFoldingTabsViewAnnotation.class, this);
+        } else {
+            AnnotationUtil.fillBean(annotation, this);
         }
 
+        if (annotation != null) {
+            if (saveUrl == null || saveUrl.equals("")) {
+                saveUrl = annotation.saveUrl();
+            }
+
+            if (dataUrl == null || dataUrl.equals("")) {
+                dataUrl = annotation.dataUrl();
+            }
+
+            if (reSetUrl == null || reSetUrl.equals("")) {
+                reSetUrl = annotation.reSetUrl();
+            }
+            autoSave = annotation.autoSave();
+        }
     }
 
 
     public NavFoldingTabsDataBean fillData(NavFoldingTabsViewAnnotation annotation) {
         return AnnotationUtil.fillBean(annotation, this);
+    }
+
+    public Boolean getAutoSave() {
+        return autoSave;
+    }
+
+    public void setAutoSave(Boolean autoSave) {
+        this.autoSave = autoSave;
     }
 
     public String getReSetUrl() {

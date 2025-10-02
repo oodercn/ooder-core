@@ -1530,26 +1530,31 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
     @JSONField(serialize = false)
     public ModuleViewType getModuleViewType() {
         boolean isDYN = false;
+
         Method method = this.getMethod();
         ModuleViewType moduleViewType = this.getModuleBean().getModuleViewType();
+        if (this.view!=null && view.getModuleViewType()!=null){
+            view.getModuleViewType();
+        }
+
         ModuleViewType[] skipViewType = new ModuleViewType[]{ModuleViewType.NONE, ModuleViewType.DYNCONFIG, ModuleViewType.LAYOUTCONFIG};
         if (moduleViewType == null || Arrays.asList(skipViewType).contains(moduleViewType)) {
 
-            if (this.view != null) {
-                ModuleViewType[] types = ModuleViewType.values();
-                for (ModuleViewType type : types) {
-                    Class beanClass = null;
-                    try {
-                        beanClass = ClassUtility.loadClass(type.getBeanClassName());
-                        if (beanClass.isAssignableFrom(view.getClass())) {
-                            moduleViewType = type;
-                        }
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            }
+//            if (this.view != null) {
+//                ModuleViewType[] types = ModuleViewType.values();
+//                for (ModuleViewType type : types) {
+//                    Class beanClass = null;
+//                    try {
+//                        beanClass = ClassUtility.loadClass(type.getBeanClassName());
+//                        if (beanClass.isAssignableFrom(view.getClass())) {
+//                            moduleViewType = type;
+//                        }
+//                    } catch (ClassNotFoundException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//            }
 
             if (moduleViewType == null || Arrays.asList(skipViewType).contains(moduleViewType)) {
                 if (method != null) {

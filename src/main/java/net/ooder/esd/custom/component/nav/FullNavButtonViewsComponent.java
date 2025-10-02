@@ -2,17 +2,13 @@ package net.ooder.esd.custom.component.nav;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
-import net.ooder.esd.annotation.CustomClass;
-import net.ooder.esd.annotation.ui.CustomMenuItem;
-import net.ooder.esd.annotation.ui.CustomViewType;
-import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.action.CustomFormAction;
-import net.ooder.esd.annotation.event.CustomFormEvent;
 import net.ooder.esd.annotation.action.CustomLoadClassAction;
+import net.ooder.esd.annotation.event.CustomFormEvent;
+import net.ooder.esd.annotation.event.TabsEventEnum;
+import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ui.RequestPathTypeEnum;
 import net.ooder.esd.annotation.ui.ResponsePathTypeEnum;
-import net.ooder.esd.annotation.event.TabsEventEnum;
-import net.ooder.esd.annotation.view.ButtonViewsViewAnnotation;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.data.ButtonViewsDataBean;
 import net.ooder.esd.bean.view.CustomButtonViewsViewBean;
@@ -26,6 +22,7 @@ import net.ooder.esd.tool.properties.UrlPathData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 public class FullNavButtonViewsComponent extends CustomModuleComponent<NavButtonViewsComponent> {
 
 
@@ -46,7 +43,7 @@ public class FullNavButtonViewsComponent extends CustomModuleComponent<NavButton
             NavButtonViewsComponent currComponent = new NavButtonViewsComponent(euModule, methodConfig, valueMap);
             this.addChildLayoutNav(currComponent);
             this.setCurrComponent(currComponent);
-            Action showAction = new Action(CustomLoadClassAction.tabShow,TabsEventEnum.onItemSelected);
+            Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onItemSelected);
             showAction.updateArgs(currComponent.getAlias(), 4);
             ButtonViewsDataBean dataBean = (ButtonViewsDataBean) methodConfig.getDataBean();
             CustomButtonViewsViewBean viewBean = (CustomButtonViewsViewBean) methodConfig.getView();
@@ -54,8 +51,13 @@ public class FullNavButtonViewsComponent extends CustomModuleComponent<NavButton
                 currComponent.addAction(showAction);
             } else {
                 showAction.setEventKey(TabsEventEnum.onIniPanelView);
-                currComponent.addAction( showAction);
+                currComponent.addAction(showAction);
             }
+
+            if (dataBean != null && dataBean.getCs() != null) {
+                currComponent.setCS(dataBean.getCs());
+            }
+
 
             this.fillAction(viewBean);
             this.fillViewAction(dataBean);
@@ -94,6 +96,7 @@ public class FullNavButtonViewsComponent extends CustomModuleComponent<NavButton
 
 
     }
+
 
     //数据对象
     @JSONField(serialize = false)
