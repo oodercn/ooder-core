@@ -30,6 +30,8 @@ public class NavFoldingTabsDataBean extends CustomDataBean {
 
     String className;
 
+    String  reSetUrl;
+
     String dataUrl;
 
     Boolean cache = false;
@@ -61,6 +63,13 @@ public class NavFoldingTabsDataBean extends CustomDataBean {
         return AnnotationUtil.fillBean(annotation, this);
     }
 
+    public String getReSetUrl() {
+        return reSetUrl;
+    }
+
+    public void setReSetUrl(String reSetUrl) {
+        this.reSetUrl = reSetUrl;
+    }
 
     public void setModuleViewType(ModuleViewType moduleViewType) {
         this.moduleViewType = moduleViewType;
