@@ -1,5 +1,6 @@
 package net.ooder.esd.custom.component.nav;
 
+import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
 import net.ooder.esd.annotation.event.CustomTreeEvent;
@@ -28,6 +29,7 @@ public class FullNavTreeComponent<M extends LayoutComponent> extends CustomNavTr
         this.fillPopTreeAction(bean);
         this.addChildNav(bean);
         this.fillMenuAction(bean.getTreeViewBean(), getTreeComponent());
+
     }
 
 

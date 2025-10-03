@@ -1,7 +1,9 @@
 package net.ooder.esd.custom.component.nav;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.common.JDSException;
+import net.ooder.esd.annotation.ButtonViewsAnnotation;
 import net.ooder.esd.annotation.action.CustomFormAction;
 import net.ooder.esd.annotation.action.CustomLoadClassAction;
 import net.ooder.esd.annotation.event.CustomFormEvent;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@AnnotationType(clazz = ButtonViewsAnnotation.class)
 public class FullNavButtonViewsComponent extends CustomModuleComponent<NavButtonViewsComponent> {
 
 
@@ -53,12 +56,9 @@ public class FullNavButtonViewsComponent extends CustomModuleComponent<NavButton
                 showAction.setEventKey(TabsEventEnum.onIniPanelView);
                 currComponent.addAction(showAction);
             }
-
             if (dataBean != null && dataBean.getCs() != null) {
                 currComponent.setCS(dataBean.getCs());
             }
-
-
             this.fillAction(viewBean);
             this.fillViewAction(dataBean);
             this.addChildren(this.genAPIComponent(methodConfig));

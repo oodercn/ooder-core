@@ -46,7 +46,6 @@ public class NavButtonViewsComponent extends ButtonViewsComponent {
             if (method != null) {
                 ModuleViewType moduleViewType = method.getView().getModuleViewType();
                 if (moduleViewType.equals(ModuleViewType.DYNCONFIG)) {
-                  //  EUModule childModule = method.getModule(valueMap, module.getProjectVersion().getProjectName());
                     Component component = childModule.getComponent().getTopComponentBox();
                     if (this.getModuleComponent().findComponentByAlias(component.getAlias()) == null) {
                         this.addChildren(component);
@@ -59,17 +58,6 @@ public class NavButtonViewsComponent extends ButtonViewsComponent {
                     }
                 }
             }
-
-
-//            else if (method != null && method.isModule()) {
-//                ModuleComponent moduleComponent = new ModuleComponent();
-//                moduleComponent.setClassName(method.getEUClassName());
-//                moduleComponent.setAlias(method.getName());
-//                moduleComponent.setTarget(moduleInfo.getFieldname());
-//                moduleComponent.getProperties().setDock(Dock.fill);
-//                moduleComponent.getModuleVar().putAll(method.getTagVar());
-//                //this.addChildren(moduleComponent);
-//            }
         }
 
         Action showAction = new Action(CustomLoadClassAction.tabShow,TabsEventEnum.onItemSelected);

@@ -3,24 +3,23 @@ package net.ooder.esd.custom.component;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.CustomClass;
-import net.ooder.esd.annotation.ui.CustomViewType;
-import net.ooder.esd.annotation.ui.ModuleViewType;
-import net.ooder.esd.annotation.view.LayoutViewAnnotation;
 import net.ooder.esd.annotation.ui.*;
+import net.ooder.esd.annotation.view.LayoutViewAnnotation;
 import net.ooder.esd.bean.CustomLayoutItemBean;
-import net.ooder.esd.bean.view.CustomLayoutViewBean;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.view.CustomLayoutViewBean;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.engine.EUModule;
-import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.LayoutComponent;
+import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.LayoutProperties;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
 
 import java.util.List;
 import java.util.Map;
+
 @CustomClass(clazz = LayoutViewAnnotation.class, viewType = CustomViewType.LISTMODULE, moduleType = ModuleViewType.LAYOUTCONFIG)
 public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutComponent> {
 
@@ -34,10 +33,10 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
         CustomLayoutViewBean viewBean = (CustomLayoutViewBean) methodConfig.getView();
         LayoutComponent layoutComponent = this.getLayoutComponent(viewBean);
 
-        try {
 
+        try {
             if (methodConfig.getViewClass() != null) {
-                AggEntityConfig aggEntityConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(methodConfig.getViewClass().getClassName(),false);
+                AggEntityConfig aggEntityConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(methodConfig.getViewClass().getClassName(), false);
                 List<MethodConfig> methodConfigs = aggEntityConfig.getAllMethods();
                 for (MethodConfig moduleConfig : methodConfigs) {
                     if (moduleConfig.getLayoutItem() != null) {
@@ -54,6 +53,7 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                 e.printStackTrace();
                             }
                         } else {
+
                             EUModule mainModule = moduleConfig.getModule(valueMap, module.getPackageName());
                             ModuleComponent moduleComponent = new ModuleComponent();
                             moduleComponent.setClassName(mainModule.getClassName());
@@ -73,8 +73,8 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
         } catch (JDSException e) {
             e.printStackTrace();
         }
-
-        this.addChildren(layoutComponent);
+        this.addChildLayoutNav(layoutComponent);
+        super.fillAction(viewBean);
 
     }
 

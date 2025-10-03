@@ -1,52 +1,51 @@
 package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
+import net.ooder.annotation.CustomBean;
+import net.ooder.annotation.ESDEntity;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.common.util.StringUtility;
 import net.ooder.context.JDSActionContext;
 import net.ooder.context.JDSContext;
-import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.*;
 import net.ooder.esd.annotation.event.CustomTreeEvent;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.menu.TreeMenu;
 import net.ooder.esd.annotation.menu.TreeRowMenu;
+import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
+import net.ooder.esd.annotation.ui.PosType;
+import net.ooder.esd.annotation.ui.SelModeType;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.bar.ContextMenuBar;
 import net.ooder.esd.bean.bar.ToolsBar;
-import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.annotation.ui.PosType;
-import net.ooder.esd.annotation.ui.SelModeType;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.custom.ESDField;
+import net.ooder.esd.dsm.BuildFactory;
+import net.ooder.esd.dsm.DSMFactory;
+import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldTreeConfig;
-import net.ooder.esd.util.json.DefaultTreeItem;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.LayoutComponent;
-import net.ooder.esd.tool.component.TreeViewComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.TreeViewComponent;
 import net.ooder.esd.tool.properties.TreeViewProperties;
 import net.ooder.esd.tool.properties.item.CmdItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.ESDEnumsUtil;
-import net.ooder.esd.dsm.BuildFactory;
-import net.ooder.esd.dsm.DSMFactory;
-import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.util.OODUtil;
+import net.ooder.esd.util.json.DefaultTreeItem;
 import net.ooder.server.context.MinServerActionContextImpl;
-import net.ooder.server.httpproxy.core.HttpRequest;
 import net.ooder.util.EnumsUtil;
 import net.ooder.web.ConstructorBean;
 import net.ooder.web.RemoteConnectionManager;
 import net.ooder.web.RequestParamBean;
-import net.ooder.annotation.AnnotationType;
-import net.ooder.annotation.ESDEntity;
 import net.ooder.web.util.AnnotationUtil;
 import ognl.OgnlContext;
 
@@ -289,7 +288,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
             bottombarMenu = bottomBar.getEnumItems();
         }
         if (this.toolBar != null) {
-            toolBarMenu = bottomBar.getEnumItems();
+            toolBarMenu = toolBar.getEnumItems();
         }
         if (this.menuBar != null) {
             customMenu = menuBar.getEnumItems();
@@ -891,7 +890,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
             this.clazz = clazz;
             JDSContext context = JDSActionContext.getActionContext();
 
-            this.autoruncontext = new MinServerActionContextImpl(context.getHttpRequest(),context.getOgnlContext());
+            this.autoruncontext = new MinServerActionContextImpl(context.getHttpRequest(), context.getOgnlContext());
             autoruncontext.getParamMap().putAll(context.getPagectx());
             autoruncontext.getParamMap().putAll(context.getContext());
 

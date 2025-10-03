@@ -2,7 +2,6 @@ package net.ooder.esd.bean.view;
 
 
 import com.alibaba.fastjson.JSON;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.CaselessStringKeyHashMap;
 import net.ooder.common.util.ClassUtility;
@@ -13,7 +12,6 @@ import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.nav.TabItemBean;
-import net.ooder.esd.tool.component.ModulePlaceHolder;
 import net.ooder.esd.custom.properties.ButtonViewsListItem;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
@@ -24,6 +22,7 @@ import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.ButtonViewsComponent;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.ModulePlaceHolder;
 import net.ooder.esd.tool.properties.ButtonViewsProperties;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -37,7 +36,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 
-@AnnotationType(clazz = ButtonViewsAnnotation.class)
 public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent, ButtonViewsListItem> {
 
     ModuleViewType moduleViewType = ModuleViewType.NAVBUTTONVIEWSCONFIG;
@@ -93,7 +91,7 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
                 }
             }
             try {
-                ExecutorService service=   RemoteConnectionManager.getConntctionService(this.getXpath());
+                ExecutorService service = RemoteConnectionManager.getConntctionService(this.getXpath());
                 List<Future<CustomModuleBean>> futures = service.invokeAll(tasks);
                 for (Future<CustomModuleBean> resultFuture : futures) {
                     try {
@@ -115,8 +113,6 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-
 
             this.setTabItems(tabItems);
             buttonViewsProperties.setItems(tabItems);

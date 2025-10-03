@@ -5,27 +5,22 @@ import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.BottomBarMenu;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
+import net.ooder.esd.annotation.event.*;
 import net.ooder.esd.annotation.menu.CustomMenuType;
-import net.ooder.esd.annotation.ui.CustomMenuItem;
-import net.ooder.esd.annotation.ui.PanelType;
+import net.ooder.esd.annotation.ui.*;
+import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.bar.ContextMenuBar;
 import net.ooder.esd.bean.bar.DynBar;
 import net.ooder.esd.bean.bar.ToolsBar;
-import net.ooder.esd.annotation.event.*;
-import net.ooder.esd.annotation.ui.BorderType;
-import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.annotation.ui.Dock;
-import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.view.CustomModuleBean;
-import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.dsm.view.field.ESDFieldConfig;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
+import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.manager.editor.PluginsFactory;
 import net.ooder.esd.tool.component.*;
-import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.DialogProperties;
 import net.ooder.esd.tool.properties.item.UIItem;
@@ -221,7 +216,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
     }
 
     protected void fillToolBar(ToolsBar view, Component currComponent) throws JDSException {
-        ComponentType[] bindTypes = (ComponentType[]) view.getBindTypes().toArray(new ComponentType[]{});
+        ComponentType[] bindTypes = view.getBindTypes().toArray(new ComponentType[]{});
         ToolBarMenuBean toolBarBean = view.getToolBar();
         if (toolBarBean != null) {
             Class<DynBar>[] serviceObjs = toolBarBean.getMenuClasses();
@@ -230,7 +225,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                 for (Class obj : serviceObjs) {
                     if (obj != null && !obj.equals(Void.class)) {
                         CustomToolsBar bar = PluginsFactory.getInstance().initMenuClass(obj, CustomToolsBar.class);
-                        if (customToolsBar == null) {
+                        if (bar != null) {
                             this.customToolsBar = bar;
                             List<APICallerComponent> components = customToolsBar.getApis();
                             this.addApi(components);
@@ -239,7 +234,9 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                         }
                     }
                 }
-                if (customToolsBar != null && customToolsBar.getProperties().getGroup() != null && customToolsBar.getProperties().getGroup().getSub() != null && customToolsBar.getProperties().getGroup().getSub().size() > 0) {
+                TreeListItem group = customToolsBar.getProperties().getGroup();
+                if (group != null && group.getSub() != null && group.getSub().size() > 0) {
+                    customToolsBar.getProperties().addChild(group);
                     customToolsBar.getProperties().setDock(Dock.top);
                     if (currComponent.getParent() != null) {
                         currComponent.getParent().addChildren(customToolsBar);
@@ -343,6 +340,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                     }
                     this.addChildren(divComponent);
                     divComponent.addChildren(mainComponent);
+
 
             }
         }

@@ -4,15 +4,13 @@ import com.alibaba.fastjson.JSON;
 import net.ooder.annotation.Enumstype;
 import net.ooder.annotation.IconEnumstype;
 import net.ooder.common.util.StringUtility;
-
-
-import net.ooder.esd.bean.nav.ButtonViewsItem;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.TreeListItem;
+import net.ooder.esd.bean.nav.ButtonViewsItem;
 import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.dsm.view.field.FieldItemConfig;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
-import net.ooder.esd.bean.TreeListItem;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.RequestParamBean;
 import net.sf.cglib.beans.BeanMap;
@@ -33,6 +31,7 @@ public class ButtonViewsListItem extends TreeListItem<ButtonViewsListItem> {
         hidden = info.getColHidden();
         imageClass = info.getImageClass();
     }
+
     public ButtonViewsListItem(ButtonViewsListItem listItem) {
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(listItem), Map.class), this, false, false);
     }
@@ -106,22 +105,21 @@ public class ButtonViewsListItem extends TreeListItem<ButtonViewsListItem> {
 
         MethodConfig childMethod = childTabViewBean.getMethodConfig();
         RequestParamBean[] requestParamBeanArr = new RequestParamBean[]{};
-        if (childTabViewBean.getConstructorBean() != null) {
-            List<RequestParamBean> requestParamBeans = childTabViewBean.getConstructorBean().getParamList();
-            requestParamBeanArr = requestParamBeans.toArray(new RequestParamBean[]{});
-        } else if (childMethod != null) {
+        if (childMethod != null) {
             requestParamBeanArr = (RequestParamBean[]) childMethod.getParamSet().toArray(new RequestParamBean[]{});
             this.euClassName = childMethod.getEUClassName();
             if (!childMethod.getImageClass().equals(MethodConfig.DefaultImageClass)) {
                 this.imageClass = childMethod.getImageClass();
             }
+        } else if (childTabViewBean.getConstructorBean() != null) {
+            List<RequestParamBean> requestParamBeans = childTabViewBean.getConstructorBean().getParamList();
+            requestParamBeanArr = requestParamBeans.toArray(new RequestParamBean[]{});
+
         }
         this.fillParams(requestParamBeanArr, valueMap);
 
 
     }
-
-
 
 
     public ButtonViewsListItem(FieldModuleConfig itemConfig) {
