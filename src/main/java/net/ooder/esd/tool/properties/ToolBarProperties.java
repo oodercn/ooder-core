@@ -27,7 +27,6 @@ public class ToolBarProperties extends BarProperties<TreeListItem> {
     public String iconFontSize;
 
 
-
     Boolean autoIconColor = true;
 
     Boolean autoItemColor = false;
@@ -54,7 +53,7 @@ public class ToolBarProperties extends BarProperties<TreeListItem> {
         this.handler = toolBarBean.getHandler();
         this.formField = toolBarBean.getFormField();
         this.disabled = toolBarBean.getDisabled();
-
+        this.dock = toolBarBean.getDock();
         this.autoFontColor = toolBarBean.getAutoFontColor();
         this.autoIconColor = toolBarBean.getAutoIconColor();
         this.autoItemColor = toolBarBean.getAutoItemColor();
@@ -78,6 +77,7 @@ public class ToolBarProperties extends BarProperties<TreeListItem> {
         this.id = menuBarBean.getId();
         this.fristGroupId = group.getId();
         this.handler = menuBarBean.getHandler();
+        this.dock = menuBarBean.getDock();
 
         this.autoFontColor = menuBarBean.getAutoFontColor();
         this.autoIconColor = menuBarBean.getAutoIconColor();
@@ -181,7 +181,6 @@ public class ToolBarProperties extends BarProperties<TreeListItem> {
 
         return group;
     }
-
 
 
     public Boolean getAutoIconColor() {

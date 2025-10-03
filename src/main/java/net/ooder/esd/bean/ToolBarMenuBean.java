@@ -8,10 +8,7 @@ import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.CustomMenu;
 import net.ooder.esd.annotation.field.ToolBarMenu;
-import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.annotation.ui.CustomViewType;
-import net.ooder.esd.annotation.ui.HAlignType;
-import net.ooder.esd.annotation.ui.VAlignType;
+import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.field.CustomListBean;
 import net.ooder.esd.bean.field.FieldBaseBean;
 import net.ooder.esd.custom.ESDField;
@@ -68,6 +65,8 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
     public Boolean dynLoad;
 
     public String iconFontSize;
+
+    public Dock dock;
 
 
     Boolean autoIconColor = false;
@@ -183,12 +182,12 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
         this.bindService = annotation.bindService();
         this.disabled = annotation.disabled();
         this.iconFontSize = annotation.iconFontSize();
+        this.dock = annotation.dock();
 
 
         this.autoFontColor = annotation.autoFontColor();
         this.autoIconColor = annotation.autoIconColor();
         this.autoItemColor = annotation.autoItemColor();
-
 
 
     }
@@ -429,6 +428,16 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
     public void setIconFontSize(String iconFontSize) {
         this.iconFontSize = iconFontSize;
     }
+
+
+    public Dock getDock() {
+        return dock;
+    }
+
+    public void setDock(Dock dock) {
+        this.dock = dock;
+    }
+
 
     public String toAnnotationStr() {
         return AnnotationUtil.toAnnotationStr(this);

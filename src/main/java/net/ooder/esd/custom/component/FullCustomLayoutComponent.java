@@ -69,12 +69,13 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                 }
             }
 
-
+            this.addChildLayoutNav(layoutComponent);
+            super.fillAction(viewBean);
+            this.fillToolBar(viewBean,layoutComponent);
         } catch (JDSException e) {
             e.printStackTrace();
         }
-        this.addChildLayoutNav(layoutComponent);
-        super.fillAction(viewBean);
+
 
     }
 

@@ -2,18 +2,16 @@ package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
+import net.ooder.annotation.CustomBean;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.CaselessStringKeyHashMap;
 import net.ooder.common.util.ClassUtility;
-import net.ooder.annotation.CustomBean;
-import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.LayoutAnnotation;
 import net.ooder.esd.annotation.LayoutItemAnnotation;
-import net.ooder.esd.annotation.ui.BorderType;
-import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.annotation.ui.LayoutType;
-import net.ooder.esd.annotation.ui.PosType;
+import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.*;
+import net.ooder.esd.bean.bar.ToolsBar;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.dsm.BuildFactory;
@@ -36,7 +34,6 @@ import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.RemoteConnectionManager;
 import net.ooder.web.RequestParamBean;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.util.*;
@@ -45,7 +42,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 @AnnotationType(clazz = LayoutAnnotation.class)
-public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, LayoutListItem, LayoutComponent> {
+public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, LayoutListItem, LayoutComponent> implements ToolsBar {
     ModuleViewType moduleViewType = ModuleViewType.LAYOUTCONFIG;
     String top;
     BorderType borderType;
@@ -100,7 +97,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
             }
             List<Future<CustomModuleBean>> futures = null;
             try {
-                ExecutorService service=   RemoteConnectionManager.getConntctionService(this.getXpath());
+                ExecutorService service = RemoteConnectionManager.getConntctionService(this.getXpath());
                 futures = service.invokeAll(tasks);
                 for (Future<CustomModuleBean> resultFuture : futures) {
                     try {
@@ -632,4 +629,5 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
     public ComponentType getComponentType() {
         return ComponentType.LAYOUT;
     }
+
 }
