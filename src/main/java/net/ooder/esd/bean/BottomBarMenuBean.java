@@ -74,12 +74,6 @@ public class BottomBarMenuBean<T extends Enum> implements CustomBean {
 
     String alias;
 
-    List<String> iconColors;
-
-    List<String> itemColors;
-
-    List<String> fontColors;
-
     Boolean autoIconColor;
 
     Boolean autoItemColor;
@@ -165,29 +159,6 @@ public class BottomBarMenuBean<T extends Enum> implements CustomBean {
         this.alias = alias;
     }
 
-    public List<String> getIconColors() {
-        return iconColors;
-    }
-
-    public void setIconColors(List<String> iconColors) {
-        this.iconColors = iconColors;
-    }
-
-    public List<String> getItemColors() {
-        return itemColors;
-    }
-
-    public void setItemColors(List<String> itemColors) {
-        this.itemColors = itemColors;
-    }
-
-    public List<String> getFontColors() {
-        return fontColors;
-    }
-
-    public void setFontColors(List<String> fontColors) {
-        this.fontColors = fontColors;
-    }
 
     public Boolean getAutoIconColor() {
         return autoIconColor;

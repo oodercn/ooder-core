@@ -31,12 +31,6 @@ public class MenuBarProperties extends ListFieldProperties {
     public String iconFontSize;
 
 
-    @JSONField(serialize = false)
-    List<String> iconColors;
-    @JSONField(serialize = false)
-    List<String> itemColors;
-    @JSONField(serialize = false)
-    List<String> fontColors;
 
     Boolean autoIconColor = true;
 
@@ -63,9 +57,7 @@ public class MenuBarProperties extends ListFieldProperties {
         this.parentID = menuBarBean.getParentId();
         this.index = menuBarBean.getIndex();
         this.autoShowTime = menuBarBean.getAutoShowTime();
-        this.iconColors = menuBarBean.getIconColors();
-        this.itemColors = menuBarBean.getItemColors();
-        this.fontColors = menuBarBean.getFontColors();
+
         this.autoFontColor = menuBarBean.getAutoFontColor();
         this.autoIconColor = menuBarBean.getAutoIconColor();
         this.autoItemColor = menuBarBean.getAutoItemColor();
@@ -80,9 +72,7 @@ public class MenuBarProperties extends ListFieldProperties {
         this.setDockOrder(1);
         this.setAutoShowTime(0);
         TabsViewBean tabsViewBean = indexViewBean.getTabsViewBean();
-        this.iconColors = tabsViewBean.getIconColors();
-        this.itemColors = tabsViewBean.getItemColors();
-        this.fontColors = tabsViewBean.getFontColors();
+
         this.autoFontColor = tabsViewBean.getAutoFontColor();
         this.autoIconColor = tabsViewBean.getAutoIconColor();
         this.autoItemColor = tabsViewBean.getAutoItemColor();
@@ -95,29 +85,7 @@ public class MenuBarProperties extends ListFieldProperties {
         }
     }
 
-    public List<String> getIconColors() {
-        return iconColors;
-    }
 
-    public void setIconColors(List<String> iconColors) {
-        this.iconColors = iconColors;
-    }
-
-    public List<String> getItemColors() {
-        return itemColors;
-    }
-
-    public void setItemColors(List<String> itemColors) {
-        this.itemColors = itemColors;
-    }
-
-    public List<String> getFontColors() {
-        return fontColors;
-    }
-
-    public void setFontColors(List<String> fontColors) {
-        this.fontColors = fontColors;
-    }
 
     public Boolean getAutoIconColor() {
         return autoIconColor;

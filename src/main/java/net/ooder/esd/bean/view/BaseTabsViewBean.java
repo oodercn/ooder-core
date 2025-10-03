@@ -73,9 +73,6 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
     @JSONField(serializeUsing = EMSerializer.class)
     String sideBarSize;
 
-    List<String> iconColors;
-    List<String> fontColors;
-    List<String> itemColors;
     Boolean autoIconColor;
     Boolean autoItemColor;
     Boolean autoFontColor;
@@ -605,7 +602,7 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
     public TabItemBean getChildTabBean(TabItem tabItem) {
         List<TabItemBean> childTabViewBeans = this.getItemBeans();
         for (TabItemBean childTabViewBean : childTabViewBeans) {
-            if (childTabViewBean.getTabItem() != null && childTabViewBean.getTabItem().equals(tabItem)) {
+            if (childTabViewBean.getTabItem() != null && childTabViewBean.getTabItem().getType().equals(tabItem.getType())) {
                 return childTabViewBean;
 
             }
@@ -823,29 +820,6 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
         this.sideBarSize = sideBarSize;
     }
 
-    public List<String> getIconColors() {
-        return iconColors;
-    }
-
-    public void setIconColors(List<String> iconColors) {
-        this.iconColors = iconColors;
-    }
-
-    public List<String> getFontColors() {
-        return fontColors;
-    }
-
-    public void setFontColors(List<String> fontColors) {
-        this.fontColors = fontColors;
-    }
-
-    public List<String> getItemColors() {
-        return itemColors;
-    }
-
-    public void setItemColors(List<String> itemColors) {
-        this.itemColors = itemColors;
-    }
 
     public Boolean getAutoIconColor() {
         return autoIconColor;

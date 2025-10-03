@@ -3,20 +3,20 @@ package net.ooder.esd.custom.component.form.field;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.util.TypeUtils;
 import net.ooder.context.JDSActionContext;
-import net.ooder.esd.annotation.ui.PositionType;
 import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.bean.view.CustomSVGPaperViewBean;
+import net.ooder.esd.annotation.ui.PositionType;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomSVGPaperFieldBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;
+import net.ooder.esd.bean.view.CustomSVGPaperViewBean;
 import net.ooder.esd.custom.CustomViewConfigFactory;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.SVGPaperComponent;
 import net.ooder.esd.tool.properties.svg.SVGPaperProperties;
-import net.ooder.server.httpproxy.core.AbstractHandler;
+import ognl.OgnlException;
 
 import java.lang.reflect.Constructor;
 import java.util.*;
@@ -69,15 +69,21 @@ public class CustomFieldSVGPaperComponent extends SVGPaperComponent {
         for (FieldFormConfig fieldInfo : fieldList) {
 
             Class fieldClass = fieldInfo.getEsdField().getReturnType();
-            Object handle = JDSActionContext.getActionContext().getHandle();
             Component svgComponent = null;
             Object value = null;
-            if (handle != null && (handle instanceof AbstractHandler)
-                    && fieldInfo.getMethodConfig() != null
+            if (fieldInfo.getMethodConfig() != null
                     && fieldInfo.getMethodConfig().getRequestMethodBean() != null
                     && fieldInfo.getMethodConfig().getApi() == null) {
-                AbstractHandler abstractHandler = (AbstractHandler) handle;
-                value = abstractHandler.invokMethod(fieldInfo.getMethodConfig().getRequestMethodBean());
+
+                if (fieldInfo.getMethodConfig() != null && fieldInfo.getMethodConfig().getRequestMethodBean() != null && fieldInfo.getMethodConfig().getApi() == null) {
+                    try {
+                        value = fieldInfo.getMethodConfig().getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (OgnlException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
             if (value != null && (value.getClass().isArray() || Collection.class.isAssignableFrom(value.getClass()))) {

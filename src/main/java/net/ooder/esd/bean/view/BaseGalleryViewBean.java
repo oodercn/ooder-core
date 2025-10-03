@@ -25,10 +25,7 @@ import java.util.Set;
 
 public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends CustomEvent> extends CustomViewBean<FieldGalleryConfig, TabListItem, GalleryComponent> implements ComponentBean<GalleryComponent> {
 
-    List<String> moreColors;
-    List<String> iconColors;
-    List<String> fontColors;
-    List<String> itemColors;
+
     Boolean autoIconColor;
     Boolean autoItemColor;
     Boolean autoFontColor;
@@ -65,7 +62,7 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
 
 
     protected void initBaseGrid(Class clazz) {
-        List<M> toolBarMenu = getCustomMenu();
+        List<M> toolBarMenu = getToolBarMenu();
         List<M> bottombarMenu = getBottombarMenu();
         List<M> customMenu = getCustomMenu();
         if (this.getEnumClass() == null && clazz != null && clazz.isEnum()) {
@@ -215,37 +212,6 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
 
     public abstract Set<E> getEvent();
 
-    public List<String> getMoreColors() {
-        return moreColors;
-    }
-
-    public void setMoreColors(List<String> moreColors) {
-        this.moreColors = moreColors;
-    }
-
-    public List<String> getIconColors() {
-        return iconColors;
-    }
-
-    public void setIconColors(List<String> iconColors) {
-        this.iconColors = iconColors;
-    }
-
-    public List<String> getFontColors() {
-        return fontColors;
-    }
-
-    public void setFontColors(List<String> fontColors) {
-        this.fontColors = fontColors;
-    }
-
-    public List<String> getItemColors() {
-        return itemColors;
-    }
-
-    public void setItemColors(List<String> itemColors) {
-        this.itemColors = itemColors;
-    }
 
     public Boolean getAutoIconColor() {
         return autoIconColor;

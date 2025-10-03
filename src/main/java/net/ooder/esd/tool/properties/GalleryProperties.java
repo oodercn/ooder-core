@@ -31,10 +31,6 @@ public class GalleryProperties extends AbsListProperties<GalleryItem> {
     public Integer rows;
     public String iconFontSize;
 
-
-    List<String> iconColors;
-    List<String> fontColors;
-    List<String> itemColors;
     Boolean autoIconColor;
     Boolean autoItemColor;
     Boolean autoFontColor;
@@ -212,29 +208,6 @@ public class GalleryProperties extends AbsListProperties<GalleryItem> {
         this.iconFontSize = iconFontSize;
     }
 
-    public List<String> getIconColors() {
-        return iconColors;
-    }
-
-    public void setIconColors(List<String> iconColors) {
-        this.iconColors = iconColors;
-    }
-
-    public List<String> getFontColors() {
-        return fontColors;
-    }
-
-    public void setFontColors(List<String> fontColors) {
-        this.fontColors = fontColors;
-    }
-
-    public List<String> getItemColors() {
-        return itemColors;
-    }
-
-    public void setItemColors(List<String> itemColors) {
-        this.itemColors = itemColors;
-    }
 
     public Boolean getAutoIconColor() {
         return autoIconColor;

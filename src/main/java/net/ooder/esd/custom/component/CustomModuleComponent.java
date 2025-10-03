@@ -219,9 +219,9 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
         ComponentType[] bindTypes = view.getBindTypes().toArray(new ComponentType[]{});
         ToolBarMenuBean toolBarBean = view.getToolBar();
         if (toolBarBean != null) {
+            customToolsBar = new CustomToolsBar(toolBarBean);
             Class<DynBar>[] serviceObjs = toolBarBean.getMenuClasses();
             if (serviceObjs != null) {
-                customToolsBar = new CustomToolsBar(toolBarBean.getGroupId());
                 for (Class obj : serviceObjs) {
                     if (obj != null && !obj.equals(Void.class)) {
                         CustomToolsBar bar = PluginsFactory.getInstance().initMenuClass(obj, CustomToolsBar.class);
@@ -236,8 +236,6 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                 }
                 TreeListItem group = customToolsBar.getProperties().getGroup();
                 if (group != null && group.getSub() != null && group.getSub().size() > 0) {
-                    customToolsBar.getProperties().addItem(group);
-                    customToolsBar.getProperties().setDock(Dock.top);
                     if (currComponent.getParent() != null) {
                         currComponent.getParent().addChildren(customToolsBar);
                     } else {

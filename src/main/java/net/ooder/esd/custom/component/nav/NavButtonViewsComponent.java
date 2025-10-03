@@ -2,11 +2,11 @@ package net.ooder.esd.custom.component.nav;
 
 
 import net.ooder.common.JDSException;
-import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.action.CustomLoadClassAction;
 import net.ooder.esd.annotation.event.ActionTypeEnum;
 import net.ooder.esd.annotation.event.TabsEventEnum;
 import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomButtonViewsFieldBean;
 import net.ooder.esd.bean.view.CustomButtonViewsViewBean;
@@ -40,10 +40,11 @@ public class NavButtonViewsComponent extends ButtonViewsComponent {
         ButtonViewsProperties viewsProperties = new ButtonViewsProperties(methodConfig, valueMap);
         this.setProperties(viewsProperties);
         this.setAlias(methodConfig.getName());
+
         for (FieldModuleConfig moduleInfo : moduleConfigList) {
             MethodConfig method = moduleInfo.getMethodConfig();
             EUModule childModule = method.getModule(valueMap, module.getProjectVersion().getProjectName());
-            if (method != null) {
+            if (method != null && method.getView() != null) {
                 ModuleViewType moduleViewType = method.getView().getModuleViewType();
                 if (moduleViewType.equals(ModuleViewType.DYNCONFIG)) {
                     Component component = childModule.getComponent().getTopComponentBox();
@@ -60,13 +61,13 @@ public class NavButtonViewsComponent extends ButtonViewsComponent {
             }
         }
 
-        Action showAction = new Action(CustomLoadClassAction.tabShow,TabsEventEnum.onItemSelected);
+        Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onItemSelected);
         showAction.updateArgs(this.getAlias(), 4);
         if (viewBean != null && viewBean.getAutoReload() != null && viewBean.getAutoReload()) {
             this.addAction(showAction);
         } else {
             showAction.setEventKey(TabsEventEnum.onIniPanelView);
-            this.addAction( showAction);
+            this.addAction(showAction);
         }
 
 

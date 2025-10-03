@@ -27,6 +27,14 @@ public class ToolBarProperties extends BarProperties<TreeListItem> {
     public String iconFontSize;
 
 
+
+    Boolean autoIconColor = true;
+
+    Boolean autoItemColor = false;
+
+    Boolean autoFontColor = false;
+
+
     public ToolBarProperties() {
         super();
     }
@@ -46,6 +54,10 @@ public class ToolBarProperties extends BarProperties<TreeListItem> {
         this.handler = toolBarBean.getHandler();
         this.formField = toolBarBean.getFormField();
         this.disabled = toolBarBean.getDisabled();
+
+        this.autoFontColor = toolBarBean.getAutoFontColor();
+        this.autoIconColor = toolBarBean.getAutoIconColor();
+        this.autoItemColor = toolBarBean.getAutoItemColor();
         this.lazy = toolBarBean.getLazy();
         this.dynLoad = toolBarBean.getDynLoad();
         this.iconFontSize = toolBarBean.getIconFontSize();
@@ -64,6 +76,16 @@ public class ToolBarProperties extends BarProperties<TreeListItem> {
     public ToolBarProperties(MenuBarBean menuBarBean) {
         super();
         this.id = menuBarBean.getId();
+        this.fristGroupId = group.getId();
+        this.handler = menuBarBean.getHandler();
+
+        this.autoFontColor = menuBarBean.getAutoFontColor();
+        this.autoIconColor = menuBarBean.getAutoIconColor();
+        this.autoItemColor = menuBarBean.getAutoItemColor();
+        this.lazy = menuBarBean.getLazy();
+        this.dynLoad = menuBarBean.getDynLoad();
+        this.sethAlign(menuBarBean.gethAlign());
+        this.setvAlign(menuBarBean.getvAlign());
         group = new TreeListItem(menuBarBean.getId() + "Root", menuBarBean.getCaption());
         this.addItem(group);
         this.fristGroupId = group.getId();
@@ -161,4 +183,28 @@ public class ToolBarProperties extends BarProperties<TreeListItem> {
     }
 
 
+
+    public Boolean getAutoIconColor() {
+        return autoIconColor;
+    }
+
+    public void setAutoIconColor(Boolean autoIconColor) {
+        this.autoIconColor = autoIconColor;
+    }
+
+    public Boolean getAutoItemColor() {
+        return autoItemColor;
+    }
+
+    public void setAutoItemColor(Boolean autoItemColor) {
+        this.autoItemColor = autoItemColor;
+    }
+
+    public Boolean getAutoFontColor() {
+        return autoFontColor;
+    }
+
+    public void setAutoFontColor(Boolean autoFontColor) {
+        this.autoFontColor = autoFontColor;
+    }
 }

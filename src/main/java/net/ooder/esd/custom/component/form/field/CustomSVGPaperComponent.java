@@ -13,8 +13,10 @@ import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.SVGPaperComponent;
+import net.ooder.esd.tool.properties.item.UIItem;
 import net.ooder.esd.tool.properties.svg.SVGPaperProperties;
 import net.ooder.server.httpproxy.core.AbstractHandler;
+import ognl.OgnlException;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -72,11 +74,17 @@ public class CustomSVGPaperComponent extends SVGPaperComponent {
             Component inputComponent = null;
             Class fieldClass = fieldInfo.getEsdField().getReturnType();
             if (Component.class.isAssignableFrom(fieldClass)) {
-                Object handle = JDSActionContext.getActionContext().getHandle();
-                if (handle != null && handle instanceof AbstractHandler) {
-                    AbstractHandler abstractHandler = (AbstractHandler) handle;
-                    inputComponent = (Component) abstractHandler.invokMethod(fieldInfo.getMethodConfig().getRequestMethodBean());
+
+                if (fieldInfo.getMethodConfig() != null ) {
+                    try {
+                        inputComponent = (Component)  fieldInfo.getMethodConfig().getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (OgnlException e) {
+                        e.printStackTrace();
+                    }
                 }
+
             } else {
                 ComponentType componentType = fieldInfo.getComponentType();
                 if (fieldInfo.getComboConfig() != null && (fieldInfo.getWidgetConfig() instanceof ComboInputFieldBean) && !componentType.equals(ComponentType.MODULE)) {

@@ -19,6 +19,7 @@ import net.ooder.esd.tool.component.BlockComponent;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.properties.BlockProperties;
 import net.ooder.server.httpproxy.core.AbstractHandler;
+import ognl.OgnlException;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -99,11 +100,19 @@ public class CustomFieldBlockComponent extends BlockComponent {
 
             // Class fieldClass = fieldInfo.getEsdField().getReturnType();
             if (fieldInfo.getEsdField() != null && Component.class.isAssignableFrom(fieldInfo.getEsdField().getReturnType())) {
-                Object handle = JDSActionContext.getActionContext().getHandle();
-                if (handle != null && handle instanceof AbstractHandler) {
-                    AbstractHandler abstractHandler = (AbstractHandler) handle;
-                    inputComponent = (Component) abstractHandler.invokMethod(fieldInfo.getMethodConfig().getRequestMethodBean());
+
+
+                if (fieldInfo.getMethodConfig() != null && fieldInfo.getMethodConfig().getRequestMethodBean() != null ) {
+                    try {
+                        inputComponent = (Component)  fieldInfo.getMethodConfig().getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (OgnlException e) {
+                        e.printStackTrace();
+                    }
                 }
+
+
             } else {
                 ComponentType componentType = fieldInfo.getComponentType();
                 if (fieldInfo.getWidgetConfig() != null && fieldInfo.getWidgetConfig().getComponentType() != null) {

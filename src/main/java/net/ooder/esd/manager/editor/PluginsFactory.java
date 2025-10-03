@@ -8,17 +8,17 @@ import net.ooder.esb.config.manager.EsbBeanFactory;
 import net.ooder.esb.util.EsbFactory;
 import net.ooder.esd.annotation.BottomBarMenu;
 import net.ooder.esd.annotation.MenuBarMenu;
+import net.ooder.esd.annotation.event.CustomFieldEvent;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.menu.CustomMenuType;
-import net.ooder.esd.annotation.ui.ResponsePathTypeEnum;
-import net.ooder.esd.bean.bar.DynBar;
-import net.ooder.esd.bean.bar.MenuDynBar;
-import net.ooder.esd.bean.bar.PopDynBar;
-import net.ooder.esd.annotation.event.CustomFieldEvent;
 import net.ooder.esd.annotation.ui.CustomImageType;
+import net.ooder.esd.annotation.ui.ResponsePathTypeEnum;
 import net.ooder.esd.bean.BottomBarMenuBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.ToolBarMenuBean;
+import net.ooder.esd.bean.bar.DynBar;
+import net.ooder.esd.bean.bar.MenuDynBar;
+import net.ooder.esd.bean.bar.PopDynBar;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.CustomMethodInfo;
 import net.ooder.esd.custom.ESDClass;
@@ -211,9 +211,13 @@ public class PluginsFactory {
                         for (CustomMethodInfo field : esdMethods) {
                             CustomMethodInfo methodField = field;
                             if (methodField.isSplit()) {
-                                if (viewBar == null || viewBar instanceof PopDynBar) {
+//                                if (viewBar == null || viewBar instanceof PopDynBar) {
+//                                    viewBar.addSplit(methodField.getId());
+//                                }
+                                if (viewBar != null && viewBar instanceof PopDynBar) {
                                     viewBar.addSplit(methodField.getId());
                                 }
+
                             } else {
                                 RequestMethodBean methodBean = apiConfig.getMethodByName(methodField.getInnerMethod().getName());
                                 if (methodBean != null) {
@@ -375,7 +379,8 @@ public class PluginsFactory {
                             for (CustomMethodInfo field : esdMethods) {
                                 CustomMethodInfo methodField = field;
                                 if (methodField.isSplit()) {
-                                    if (viewBar == null || viewBar instanceof PopDynBar) {
+
+                                    if (viewBar != null && viewBar instanceof PopDynBar) {
                                         viewBar.addSplit(methodField.getId());
                                     }
                                 } else {
@@ -493,7 +498,7 @@ public class PluginsFactory {
                             for (CustomMethodInfo field : esdMethods) {
                                 CustomMethodInfo methodField = field;
                                 if (methodField.isSplit()) {
-                                    if (viewBar == null || viewBar instanceof PopDynBar) {
+                                    if (viewBar != null&& viewBar instanceof PopDynBar) {
                                         viewBar.addSplit(methodField.getId());
                                     }
                                 } else {

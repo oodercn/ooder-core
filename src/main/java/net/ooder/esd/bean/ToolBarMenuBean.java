@@ -2,6 +2,7 @@ package net.ooder.esd.bean;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import javassist.NotFoundException;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomClass;
@@ -23,7 +24,6 @@ import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.APIConfig;
 import net.ooder.web.APIConfigFactory;
 import net.ooder.web.util.AnnotationUtil;
-import javassist.NotFoundException;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -70,14 +70,7 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
     public String iconFontSize;
 
 
-    @JSONField(serialize = false)
-    List<String> iconColors;
-    @JSONField(serialize = false)
-    List<String> itemColors;
-    @JSONField(serialize = false)
-    List<String> fontColors;
-
-    Boolean autoIconColor = true;
+    Boolean autoIconColor = false;
 
     Boolean autoItemColor = false;
 
@@ -115,8 +108,6 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
 
             }
         }
-
-
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(toolBarProperties), Map.class), this, false, false);
     }
 
@@ -194,6 +185,12 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
         this.iconFontSize = annotation.iconFontSize();
 
 
+        this.autoFontColor = annotation.autoFontColor();
+        this.autoIconColor = annotation.autoIconColor();
+        this.autoItemColor = annotation.autoItemColor();
+
+
+
     }
 
 
@@ -251,29 +248,6 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
         this.alias = alias;
     }
 
-    public List<String> getIconColors() {
-        return iconColors;
-    }
-
-    public void setIconColors(List<String> iconColors) {
-        this.iconColors = iconColors;
-    }
-
-    public List<String> getItemColors() {
-        return itemColors;
-    }
-
-    public void setItemColors(List<String> itemColors) {
-        this.itemColors = itemColors;
-    }
-
-    public List<String> getFontColors() {
-        return fontColors;
-    }
-
-    public void setFontColors(List<String> fontColors) {
-        this.fontColors = fontColors;
-    }
 
     public Boolean getAutoIconColor() {
         return autoIconColor;

@@ -3,10 +3,11 @@ package net.ooder.esd.bean.field;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
+import net.ooder.annotation.CustomBean;
 import net.ooder.common.JDSException;
 import net.ooder.config.ListResultModel;
 import net.ooder.context.JDSActionContext;
-import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomListAnnotation;
 import net.ooder.esd.annotation.event.CustomFieldEvent;
 import net.ooder.esd.annotation.ui.ComponentType;
@@ -15,20 +16,17 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.ESDField;
+import net.ooder.esd.dsm.DSMFactory;
+import net.ooder.esd.dsm.aggregation.DomainInst;
+import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.CS;
 import net.ooder.esd.tool.properties.item.UIItem;
 import net.ooder.esd.tool.properties.list.AbsListProperties;
 import net.ooder.esd.util.ESDEnumsUtil;
-import net.ooder.esd.dsm.DSMFactory;
-import net.ooder.esd.dsm.aggregation.DomainInst;
-import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.server.httpproxy.core.AbstractHandler;
-import net.ooder.server.httpproxy.core.HttpRequest;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -136,19 +134,15 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
             try {
                 ApiClassConfig config = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(bindClass.getName());
                 MethodConfig methodConfig = config.getFieldEvent(CustomFieldEvent.LOADCS);
-                if (methodConfig != null) {
-                    Object handle = JDSActionContext.getActionContext().getHandle();
-                    if (handle != null && handle instanceof AbstractHandler) {
-                        AbstractHandler abstractHandler = (AbstractHandler) handle;
-                        cs = (CS) abstractHandler.invokMethod(methodConfig.getRequestMethodBean());
-                    }
+                if (methodConfig != null && methodConfig.getDataBean().getCs() != null) {
+                    cs = methodConfig.getDataBean().getCs();
                 }
                 if (bindClass.isEnum()) {
                     items = ESDEnumsUtil.getItems(bindClass, filter);
                 } else if (dynLoad != null && !dynLoad) {
                     MethodConfig loadChildMethod = config.getFieldEvent(CustomFieldEvent.LOADITEMS);
                     if (loadChildMethod != null && UIItem.class.isAssignableFrom(loadChildMethod.getInnerReturnType())) {
-                        Object object = loadChildMethod.getRequestMethodBean().invok( JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
+                        Object object = loadChildMethod.getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
                         if (object instanceof ListResultModel) {
                             ListResultModel<List<UIItem>> resultModel = (ListResultModel) object;
                             String json = JSONArray.toJSONString(resultModel.get());

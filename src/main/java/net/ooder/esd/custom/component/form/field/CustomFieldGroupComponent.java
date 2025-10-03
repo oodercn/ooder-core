@@ -8,21 +8,21 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomGroupFieldBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;
+import net.ooder.esd.bean.view.CustomGroupFormViewBean;
 import net.ooder.esd.custom.ApiClassConfig;
+import net.ooder.esd.custom.CustomViewConfigFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.ProjectVersion;
-import net.ooder.esd.bean.view.CustomGroupFormViewBean;
-import net.ooder.esd.custom.CustomViewConfigFactory;
-import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.GroupComponent;
+import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ContainerProperties;
 import net.ooder.esd.tool.properties.GroupProperties;
 import net.ooder.esd.tool.properties.ModuleProperties;
-import net.ooder.server.httpproxy.core.AbstractHandler;
+import ognl.OgnlException;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -138,11 +138,16 @@ public class CustomFieldGroupComponent extends GroupComponent {
         for (FieldFormConfig fieldInfo : fieldList) {
             Component inputComponent = null;
             if (fieldInfo.getEsdField() != null && Component.class.isAssignableFrom(fieldInfo.getEsdField().getReturnType())) {
-                Object handle = JDSActionContext.getActionContext().getHandle();
-                if (handle != null && handle instanceof AbstractHandler) {
-                    AbstractHandler abstractHandler = (AbstractHandler) handle;
-                    inputComponent = (Component) abstractHandler.invokMethod(fieldInfo.getMethodConfig().getRequestMethodBean());
+                if (fieldInfo.getMethodConfig() != null && fieldInfo.getMethodConfig().getRequestMethodBean() != null) {
+                    try {
+                        inputComponent = (Component) fieldInfo.getMethodConfig().getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (OgnlException e) {
+                        e.printStackTrace();
+                    }
                 }
+
             } else {
                 ComponentType componentType = fieldInfo.getComponentType();
                 if (fieldInfo.getWidgetConfig() != null && fieldInfo.getWidgetConfig().getComponentType() != null) {

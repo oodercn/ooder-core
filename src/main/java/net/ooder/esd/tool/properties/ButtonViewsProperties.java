@@ -39,7 +39,7 @@ public class ButtonViewsProperties extends TabsProperties<ButtonViewsListItem> {
 
     public ButtonViewsProperties(MethodConfig methodConfig, Map valueMap) {
         CustomButtonViewsViewBean tabsViewBean = (CustomButtonViewsViewBean) methodConfig.getView();
-        List<FieldModuleConfig> moduleList = tabsViewBean.getNavItems();
+
         this.setBorderType(BorderType.none);
         this.name = methodConfig.getName();
         this.caption = methodConfig.getCaption();
@@ -53,15 +53,6 @@ public class ButtonViewsProperties extends TabsProperties<ButtonViewsListItem> {
                    tagMap.put(paramBean.getParamName(), obj);
                }
             }
-        }
-
-        for (FieldModuleConfig itemInfo : moduleList) {
-            ButtonViewsListItem navItemProperties = new ButtonViewsListItem(itemInfo);
-            navItemProperties.getTagVar().putAll(itemInfo.getTagVar());
-            if (methodConfig.getModuleBean().isDynLoad()) {
-                navItemProperties.getTagVar().putAll(tagMap);
-            }
-            this.addItem(navItemProperties);
         }
 
         if (tabsViewBean != null) {
@@ -106,6 +97,12 @@ public class ButtonViewsProperties extends TabsProperties<ButtonViewsListItem> {
             this.setItems(items);
         }
 
+        List<FieldModuleConfig> moduleList = tabsViewBean.getNavItems();
+        for (FieldModuleConfig itemInfo : moduleList) {
+            ButtonViewsListItem navItemProperties = new ButtonViewsListItem(itemInfo);
+            navItemProperties.getTagVar().putAll(itemInfo.getTagVar());
+            this.addItem(navItemProperties);
+        }
 
         if (this.getItems().size() > 0) {
             this.setValue(this.getItems().get(0).getId());

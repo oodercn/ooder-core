@@ -30,9 +30,7 @@ public class StatusButtonsProperties extends AbsListProperties<CmdItem> {
     @JSONField(deserializeUsing = CaseEnumsSerializer.class)
     CustomMenuType menuType;
     public TagCmdsAlign tagCmdsAlign;
-    List<String> iconColors;
-    List<String> fontColors;
-    List<String> itemColors;
+
     Boolean autoIconColor;
     Boolean autoItemColor;
     Boolean autoFontColor;
@@ -63,9 +61,7 @@ public class StatusButtonsProperties extends AbsListProperties<CmdItem> {
         this.itemType = bean.getItemType();
         this.connected = bean.getConnected();
         this.tagCmdsAlign = bean.getTagCmdsAlign();
-        this.iconColors = bean.getIconColors();
-        this.fontColors = bean.getFontColors();
-        this.itemColors = bean.getIconColors();
+
         this.autoFontColor = bean.getAutoFontColor();
         this.autoIconColor = bean.getAutoIconColor();
         this.autoItemColor = bean.getAutoItemColor();
@@ -87,9 +83,7 @@ public class StatusButtonsProperties extends AbsListProperties<CmdItem> {
         this.itemType = bean.getItemType();
         this.connected = bean.getConnected();
         this.tagCmdsAlign = bean.getTagCmdsAlign();
-        this.iconColors = bean.getIconColors();
-        this.fontColors = bean.getFontColors();
-        this.itemColors = bean.getIconColors();
+
         this.autoFontColor = bean.getAutoFontColor();
         this.autoIconColor = bean.getAutoIconColor();
         this.autoItemColor = bean.getAutoItemColor();
@@ -115,29 +109,6 @@ public class StatusButtonsProperties extends AbsListProperties<CmdItem> {
         this.showCaption = showCaption;
     }
 
-    public List<String> getIconColors() {
-        return iconColors;
-    }
-
-    public void setIconColors(List<String> iconColors) {
-        this.iconColors = iconColors;
-    }
-
-    public List<String> getFontColors() {
-        return fontColors;
-    }
-
-    public void setFontColors(List<String> fontColors) {
-        this.fontColors = fontColors;
-    }
-
-    public List<String> getItemColors() {
-        return itemColors;
-    }
-
-    public void setItemColors(List<String> itemColors) {
-        this.itemColors = itemColors;
-    }
 
     public Boolean getAutoIconColor() {
         return autoIconColor;

@@ -46,9 +46,6 @@ public class TabsProperties<T extends TabListItem> extends AbsUIListProperties<T
     public SideBarStatusType sideBarStatus;
     Class<? extends Enum> enumClass;
 
-    List<String> iconColors;
-    List<String> fontColors;
-    List<String> itemColors;
     Boolean autoIconColor;
     Boolean autoItemColor;
     Boolean autoFontColor;
@@ -93,30 +90,6 @@ public class TabsProperties<T extends TabListItem> extends AbsUIListProperties<T
             }
         }
         return fristId;
-    }
-
-    public List<String> getIconColors() {
-        return iconColors;
-    }
-
-    public void setIconColors(List<String> iconColors) {
-        this.iconColors = iconColors;
-    }
-
-    public List<String> getFontColors() {
-        return fontColors;
-    }
-
-    public void setFontColors(List<String> fontColors) {
-        this.fontColors = fontColors;
-    }
-
-    public List<String> getItemColors() {
-        return itemColors;
-    }
-
-    public void setItemColors(List<String> itemColors) {
-        this.itemColors = itemColors;
     }
 
     public Boolean getAutoIconColor() {

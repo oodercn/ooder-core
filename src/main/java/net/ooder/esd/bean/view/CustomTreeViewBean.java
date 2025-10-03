@@ -112,9 +112,6 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
 
     Set<TreeMenu> rowMenu;
 
-    List<String> iconColors;
-    List<String> fontColors;
-    List<String> itemColors;
     Boolean autoIconColor;
     Boolean autoItemColor;
     Boolean autoFontColor;
@@ -171,9 +168,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
             this.patentId = parentItem.getId();
             this.domainId = parentItem.getDomainId();
             this.id = parentItem.getId() + "_" + clazz.getName();
-            this.iconColors = parentItem.getIconColors();
-            this.itemColors = parentItem.getItemColors();
-            this.fontColors = parentItem.getFontColors();
+
             this.autoFontColor = parentItem.getAutoFontColor();
             this.autoIconColor = parentItem.getAutoIconColor();
             this.autoItemColor = parentItem.getAutoItemColor();
@@ -196,9 +191,6 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                 this.id = parentItem.getId() + "_" + methodConfig.getMethodName();
             }
 
-            this.iconColors = parentItem.getIconColors();
-            this.itemColors = parentItem.getItemColors();
-            this.fontColors = parentItem.getFontColors();
             this.autoFontColor = parentItem.getAutoFontColor();
             this.autoIconColor = parentItem.getAutoIconColor();
             this.autoItemColor = parentItem.getAutoItemColor();
@@ -222,9 +214,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
             this.domainId = parentItem.getDomainId();
             this.id = parentItem.getId() + "_" + childClazz.getSimpleName();
 
-            this.iconColors = parentItem.getIconColors();
-            this.itemColors = parentItem.getItemColors();
-            this.fontColors = parentItem.getFontColors();
+
             this.autoFontColor = parentItem.getAutoFontColor();
             this.autoIconColor = parentItem.getAutoIconColor();
             this.autoItemColor = parentItem.getAutoItemColor();
@@ -1190,29 +1180,6 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
         this.items = items;
     }
 
-    public List<String> getIconColors() {
-        return iconColors;
-    }
-
-    public void setIconColors(List<String> iconColors) {
-        this.iconColors = iconColors;
-    }
-
-    public List<String> getFontColors() {
-        return fontColors;
-    }
-
-    public void setFontColors(List<String> fontColors) {
-        this.fontColors = fontColors;
-    }
-
-    public List<String> getItemColors() {
-        return itemColors;
-    }
-
-    public void setItemColors(List<String> itemColors) {
-        this.itemColors = itemColors;
-    }
 
     public Boolean getAutoIconColor() {
         return autoIconColor;

@@ -48,12 +48,6 @@ public class RightContextMenuBean implements CustomBean {
 
     public Set<ContextMenu> contextMenu = new HashSet<>();
 
-    @JSONField(serialize = false)
-    List<String> iconColors;
-    @JSONField(serialize = false)
-    List<String> itemColors;
-    @JSONField(serialize = false)
-    List<String> fontColors;
 
     Boolean autoIconColor = true;
 
@@ -100,29 +94,7 @@ public class RightContextMenuBean implements CustomBean {
         this.contextMenu = contextMenu;
     }
 
-    public List<String> getIconColors() {
-        return iconColors;
-    }
 
-    public void setIconColors(List<String> iconColors) {
-        this.iconColors = iconColors;
-    }
-
-    public List<String> getItemColors() {
-        return itemColors;
-    }
-
-    public void setItemColors(List<String> itemColors) {
-        this.itemColors = itemColors;
-    }
-
-    public List<String> getFontColors() {
-        return fontColors;
-    }
-
-    public void setFontColors(List<String> fontColors) {
-        this.fontColors = fontColors;
-    }
 
     public Boolean getAutoIconColor() {
         return autoIconColor;

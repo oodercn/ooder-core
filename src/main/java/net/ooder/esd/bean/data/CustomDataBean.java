@@ -14,15 +14,15 @@ import net.ooder.esd.bean.CustomData;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.custom.ApiClassConfig;
-import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.custom.CustomViewConfigFactory;
+import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.tool.properties.CS;
-import net.ooder.server.httpproxy.core.AbstractHandler;
 import net.ooder.web.RequestMappingBean;
 import net.ooder.web.util.AnnotationUtil;
+import ognl.OgnlException;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.lang.annotation.Annotation;
@@ -123,10 +123,14 @@ public abstract class CustomDataBean implements CustomData {
         if (cs == null) {
             MethodConfig methodConfig = this.getMethodEvent(CustomFieldEvent.LOADCS);
             if (methodConfig != null) {
-                Object handle = JDSActionContext.getActionContext().getHandle();
-                if (handle != null && handle instanceof AbstractHandler) {
-                    AbstractHandler abstractHandler = (AbstractHandler) handle;
-                    cs = (CS) abstractHandler.invokMethod(methodConfig.getRequestMethodBean());
+                if (methodConfig != null && CS.class.isAssignableFrom(methodConfig.getInnerReturnType())) {
+                    try {
+                        cs = (CS) methodConfig.getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (OgnlException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

@@ -9,14 +9,8 @@ import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.context.JDSActionContext;
-
-
 import net.ooder.esd.annotation.field.TabItem;
-import net.ooder.esd.annotation.ui.FontColorEnum;
-import net.ooder.esd.annotation.ui.IconColorEnum;
-import net.ooder.esd.annotation.ui.ItemColorEnum;
-import net.ooder.esd.annotation.ui.BorderType;
-import net.ooder.esd.annotation.ui.ComboInputType;
+import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
@@ -124,6 +118,7 @@ public class TabListItem<T extends Enum> extends UIItem<T> {
             if (bindClass.length == 0 && this.getEuClassName() != null && !this.getEuClassName().equals("")) {
                 EUModule module = null;
                 try {
+                    JDSActionContext.getActionContext().getContext().putAll(this.getTagVar());
                     module = ESDFacrory.getAdminESDClient().getModule(this.getEuClassName(), null);
                     if (module == null) {
                         module = CustomViewFactory.getInstance().getView(this.getEuClassName(), null);
@@ -134,7 +129,7 @@ public class TabListItem<T extends Enum> extends UIItem<T> {
                     }
                 } catch (Exception e) {
                     logger.error(e);
-                 //   e.printStackTrace();
+                    //   e.printStackTrace();
                 }
 
             }

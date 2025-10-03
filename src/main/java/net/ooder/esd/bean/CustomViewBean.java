@@ -3,6 +3,8 @@ package net.ooder.esd.bean;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.util.TypeUtils;
+import net.ooder.annotation.CustomBean;
+import net.ooder.annotation.UserSpace;
 import net.ooder.common.JDSConstants;
 import net.ooder.common.JDSException;
 import net.ooder.common.logging.Log;
@@ -10,13 +12,12 @@ import net.ooder.common.logging.LogFactory;
 import net.ooder.common.util.CaselessStringKeyHashMap;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.context.JDSActionContext;
-import net.ooder.annotation.CustomBean;
 import net.ooder.esb.config.formula.ModuleFormulaInst;
 import net.ooder.esd.annotation.*;
 import net.ooder.esd.annotation.event.CustomEvent;
-import net.ooder.esd.annotation.event.PopMenuEventEnum;
 import net.ooder.esd.annotation.event.CustomTabsEvent;
 import net.ooder.esd.annotation.event.CustomTreeEvent;
+import net.ooder.esd.annotation.event.PopMenuEventEnum;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomMenuItem;
@@ -35,26 +36,22 @@ import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.java.ViewJavaSrcBean;
 import net.ooder.esd.dsm.view.field.*;
-import net.ooder.esd.util.json.ComponentDeserializer;
-import net.ooder.esd.util.json.ComponentsDeserializer;
-import net.ooder.esd.util.json.EnumSetDeserializer;
-import net.ooder.esd.util.json.EsdFieldMapDeserializer;
 import net.ooder.esd.engine.enums.MenuBarBean;
-import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.DSMProperties;
-import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.esd.tool.properties.PopMenuProperties;
 import net.ooder.esd.tool.properties.item.CmdItem;
 import net.ooder.esd.tool.properties.item.UIItem;
 import net.ooder.esd.util.OODUtil;
-
+import net.ooder.esd.util.json.ComponentDeserializer;
+import net.ooder.esd.util.json.ComponentsDeserializer;
+import net.ooder.esd.util.json.EnumSetDeserializer;
+import net.ooder.esd.util.json.EsdFieldMapDeserializer;
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.server.httpproxy.core.HttpRequest;
 import net.ooder.web.RequestMethodBean;
 import net.ooder.web.RequestParamBean;
-import net.ooder.annotation.UserSpace;
 import net.ooder.web.util.AnnotationUtil;
 import ognl.OgnlContext;
 import ognl.OgnlException;
@@ -1344,6 +1341,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         if (allParamsMap == null) {
             allParamsMap = new HashMap<>();
         }
+
         Object service = getService(methodBean, allParamsMap, onglContext);
         if (service != null) {
             Map<String, String> paramsMap = methodBean.getParamsMap();
@@ -1359,6 +1357,8 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
                 Object value = null;
                 if (allParamsMap.get(key) != null) {
                     value = TypeUtils.cast(allParamsMap.get(key), iClass, null);
+                } else if (onglContext.get(key) != null) {
+                    value = TypeUtils.cast(onglContext.get(key), iClass, null);
                 }
                 objectTyps[k] = iClass;
                 objects[k] = value;
