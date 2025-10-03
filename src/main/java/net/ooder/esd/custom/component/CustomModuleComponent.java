@@ -236,7 +236,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                 }
                 TreeListItem group = customToolsBar.getProperties().getGroup();
                 if (group != null && group.getSub() != null && group.getSub().size() > 0) {
-                    customToolsBar.getProperties().addChild(group);
+                    customToolsBar.getProperties().addItem(group);
                     customToolsBar.getProperties().setDock(Dock.top);
                     if (currComponent.getParent() != null) {
                         currComponent.getParent().addChildren(customToolsBar);
