@@ -54,7 +54,10 @@ public class CustomModuleRefComponent extends ModuleComponent {
                 } else if (fieldMethodConfig.getEUClassName() != null) {
                     this.setClassName(fieldMethodConfig.getEUClassName());
                 }
+            } else {
+                this.setClassName(moduleRefFieldBean.getSrc());
             }
+
         } catch (JDSException e) {
             e.printStackTrace();
         }

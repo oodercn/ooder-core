@@ -1,22 +1,22 @@
 package net.ooder.esd.bean.field.combo;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomClass;
-import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.annotation.field.ModuleRefFieldAnnotation;
-import net.ooder.esd.bean.view.CustomModuleBean;
+import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.field.CustomModuleEmbedFieldBean;
 import net.ooder.esd.bean.field.FieldComponentBean;
+import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.custom.CustomMethodInfo;
 import net.ooder.esd.custom.ESDField;
-import net.ooder.esd.custom.component.form.field.CustomModuleInnerComponent;
+import net.ooder.esd.custom.component.form.field.CustomModuleRefComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
-import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.DSMProperties;
+import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ModuleProperties;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -24,7 +24,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-@CustomClass(clazz = CustomModuleInnerComponent.class,
+
+@CustomClass(clazz = CustomModuleRefComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.MODULE
 )

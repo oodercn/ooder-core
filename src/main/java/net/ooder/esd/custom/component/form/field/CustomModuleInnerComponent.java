@@ -14,9 +14,9 @@ import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.ProjectVersion;
-import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.BlockComponent;
 import net.ooder.esd.tool.component.Component;
+import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.BlockProperties;
 import net.ooder.esd.tool.properties.ContainerProperties;
 import net.ooder.esd.tool.properties.ModuleProperties;
@@ -64,6 +64,14 @@ public class CustomModuleInnerComponent extends BlockComponent {
                 } else if (fieldMethodConfig.getEUClassName() != null) {
                     newmodule = ESDFacrory.getAdminESDClient().getModule(fieldMethodConfig.getEUClassName(), projectName);
                 }
+            } else {
+                ModuleComponent moduleComponent = new ModuleComponent();
+                ModuleProperties moduleProperties = moduleComponent.getProperties();
+                properties.setComboType(ComponentType.MODULE);
+                moduleProperties.setName(field.getFieldname());
+                moduleComponent.setAlias(field.getFieldname());
+                moduleComponent.setClassName(moduleRefFieldBean.getSrc());
+                this.addChildren(moduleComponent);
             }
 
             if (newmodule != null) {

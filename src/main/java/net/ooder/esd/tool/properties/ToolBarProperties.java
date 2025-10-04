@@ -78,7 +78,6 @@ public class ToolBarProperties extends BarProperties<TreeListItem> {
         this.fristGroupId = group.getId();
         this.handler = menuBarBean.getHandler();
         this.dock = menuBarBean.getDock();
-
         this.autoFontColor = menuBarBean.getAutoFontColor();
         this.autoIconColor = menuBarBean.getAutoIconColor();
         this.autoItemColor = menuBarBean.getAutoItemColor();

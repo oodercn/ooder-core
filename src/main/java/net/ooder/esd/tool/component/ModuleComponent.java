@@ -2132,6 +2132,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         return moduleBean;
     }
 
+
     public void setModuleBean(CustomModuleBean moduleBean) {
         this.moduleBean = moduleBean;
     }
