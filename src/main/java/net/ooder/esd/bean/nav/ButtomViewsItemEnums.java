@@ -18,6 +18,10 @@ public enum ButtomViewsItemEnums implements ButtonViewsItem {
     private final boolean dynDestory;
     private final boolean dynLoad;
 
+    private final String caption;
+    private final String tips;
+
+
     public boolean closeBtn;
     public boolean popBtn;
     public boolean activeLast;
@@ -35,6 +39,8 @@ public enum ButtomViewsItemEnums implements ButtonViewsItem {
         this.closeBtn = closeBtn;
         this.popBtn = popBtn;
         this.activeLast = activeLast;
+        this.caption = name;
+        this.tips = name;
 
     }
 
@@ -46,7 +52,8 @@ public enum ButtomViewsItemEnums implements ButtonViewsItem {
         this.iniFold = iniFold;
         this.dynLoad = dynLoad;
         this.dynDestory = dynDestory;
-
+        this.caption = name;
+        this.tips = name;
     }
 
     public void setName(String name) {
@@ -57,6 +64,15 @@ public enum ButtomViewsItemEnums implements ButtonViewsItem {
         this.imageClass = imageClass;
     }
 
+    @Override
+    public String getCaption() {
+        return caption;
+    }
+
+    @Override
+    public String getTips() {
+        return tips;
+    }
 
     @Override
     public String getType() {

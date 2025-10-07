@@ -13,6 +13,10 @@ public class DefaultTabItem implements TabItem {
     boolean dynDestory = true;
     boolean dynLoad = false;
 
+    String caption;
+
+    String tips;
+
     public DefaultTabItem() {
 
     }
@@ -29,6 +33,8 @@ public class DefaultTabItem implements TabItem {
             this.type = tabListItem.getType() != null ? tabListItem.getType().name() : tabListItem.getName();
             this.imageClass = tabListItem.getImageClass();
             this.bindClass = tabListItem.getBindClass();
+            this.caption=tabListItem.getCaption();
+            this.tips=tabListItem.getTips();
         }
 
 
@@ -37,6 +43,8 @@ public class DefaultTabItem implements TabItem {
     void init(TabItem tabItem) {
         this.type = tabItem.getType();
         this.name = tabItem.getName();
+        this.caption=tabItem.getCaption();
+        this.tips=tabItem.getTips();
         this.imageClass = tabItem.getImageClass();
         this.bindClass = tabItem.getBindClass();
         this.iniFold = tabItem.isIniFold();
@@ -51,6 +59,23 @@ public class DefaultTabItem implements TabItem {
 
     }
 
+    @Override
+    public String getCaption() {
+        return caption;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    @Override
+    public String getTips() {
+        return tips;
+    }
+
+    public void setTips(String tips) {
+        this.tips = tips;
+    }
 
     @Override
     public String getType() {

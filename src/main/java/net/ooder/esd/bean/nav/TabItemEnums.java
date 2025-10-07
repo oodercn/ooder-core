@@ -15,7 +15,8 @@ public enum TabItemEnums implements TabItem {
     private final boolean iniFold;
     private final boolean dynDestory;
     private final boolean dynLoad;
-
+    private final String caption;
+    private final String tips;
 
     TabItemEnums(String name, String imageClass, boolean iniFold, boolean dynLoad, boolean dynDestory, Class... bindClass) {
         this.name = name;
@@ -24,6 +25,8 @@ public enum TabItemEnums implements TabItem {
         this.iniFold = iniFold;
         this.dynLoad = dynLoad;
         this.dynDestory = dynDestory;
+        this.caption = name;
+        this.tips = name;
 
     }
 
@@ -35,6 +38,15 @@ public enum TabItemEnums implements TabItem {
         this.imageClass = imageClass;
     }
 
+    @Override
+    public String getCaption() {
+        return caption;
+    }
+
+    @Override
+    public String getTips() {
+        return tips;
+    }
 
     @Override
     public String getType() {
