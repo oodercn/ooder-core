@@ -40,7 +40,6 @@ public abstract class TreeDataBaseBean extends CustomDataBean {
 
     public TreeDataBaseBean(MethodConfig methodConfig) {
         super(methodConfig);
-        // this.dataUrl = methodConfig.getUrl();
         NavFoldingTreeViewAnnotation navFoldingTreeViewAnnotation = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), NavFoldingTreeViewAnnotation.class);
         PopTreeViewAnnotation popTreeViewAnnotation = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), PopTreeViewAnnotation.class);
         NavTreeViewAnnotation navTreeAnnotation = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), NavTreeViewAnnotation.class);
@@ -259,7 +258,6 @@ public abstract class TreeDataBaseBean extends CustomDataBean {
 
 
     public String toAnnotationStr() {
-
         return AnnotationUtil.toAnnotationStr(this);
     }
 

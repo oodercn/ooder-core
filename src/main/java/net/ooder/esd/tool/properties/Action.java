@@ -7,10 +7,7 @@ import net.ooder.common.util.StringUtility;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomCondition;
-import net.ooder.esd.annotation.event.APIEvent;
-import net.ooder.esd.annotation.event.ActionTypeEnum;
-import net.ooder.esd.annotation.event.MQTTEvent;
-import net.ooder.esd.annotation.event.ModuleEvent;
+import net.ooder.esd.annotation.event.*;
 import net.ooder.esd.util.json.ConditionCollectionCodec;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
@@ -26,6 +23,7 @@ public class Action<K extends EventKey> implements CustomBean {
     String desc;
     ActionTypeEnum type;
     String target;
+
 
     @JSONField(serialize = false)
     K eventKey;

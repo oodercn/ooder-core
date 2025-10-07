@@ -1,6 +1,7 @@
 package net.ooder.esd.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import javassist.NotFoundException;
 import net.ooder.annotation.*;
 import net.ooder.common.JDSConstants;
 import net.ooder.common.JDSException;
@@ -53,7 +54,6 @@ import net.ooder.web.RequestParamBean;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 import net.ooder.web.util.MethodUtil;
-import javassist.NotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.annotation.Annotation;
@@ -276,8 +276,6 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
         } else {
             urlName = methodName;
         }
-
-
         this.fieldName = customMethodInfo.getFieldName();
         this.sourceClassName = viewConfig.getSourceClassName();
         this.index = customMethodInfo.getIndex();
@@ -555,7 +553,6 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
             if (annotation != null) {
                 this.layoutItem = new CustomLayoutItemBean(annotation);
             }
-
         }
 
 
@@ -1533,7 +1530,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
 
         Method method = this.getMethod();
         ModuleViewType moduleViewType = this.getModuleBean().getModuleViewType();
-        if (this.view!=null && view.getModuleViewType()!=null){
+        if (this.view != null && view.getModuleViewType() != null) {
             view.getModuleViewType();
         }
 
@@ -1706,8 +1703,6 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
                 isModule = true;
             }
         }
-
-
 
 
         if (this.getMethod() != null) {

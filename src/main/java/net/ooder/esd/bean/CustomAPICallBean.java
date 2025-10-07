@@ -53,6 +53,7 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
 
     APICallerProperties apiCallerProperties;
 
+
     public Set<Action> bindAction = new LinkedHashSet<>();
     //准备调
     public LinkedHashSet<CustomBeforData> beforeData = new LinkedHashSet<>();
@@ -233,6 +234,7 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
             }
         }
 
+
         if (apiEventAnnotation != null) {
             if (apiEventAnnotation != null) {
                 this.fillData(apiEventAnnotation);
@@ -271,6 +273,8 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
             for (CallBackPathAnnotation responseCallback : apiEventAnnotation.responseCallback()) {
                 apiCallerProperties.addResponseCallBack(new UrlPathData(responseCallback));
             }
+
+
             apiCallerProperties.setAutoRun(apiEventAnnotation.autoRun());
             apiCallerProperties.setQueryAsync(apiEventAnnotation.queryAsync());
             apiCallerProperties.setIsAllform(apiEventAnnotation.isAllform());
@@ -654,7 +658,6 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
             if (responsePathBean != null) {
                 apiCallerProperties.addResponseData(new UrlPathData(responsePathBean));
             }
-
         }
 
         for (ResponsePathEnum responsePathBean : this.getCustomResponseData()) {

@@ -1,6 +1,7 @@
 package net.ooder.esd.custom.component;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import javassist.NotFoundException;
 import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.action.CustomAPIMethod;
@@ -13,13 +14,16 @@ import net.ooder.esd.annotation.event.TreeViewEventEnum;
 import net.ooder.esd.annotation.menu.ContextMenu;
 import net.ooder.esd.annotation.menu.TreeMenu;
 import net.ooder.esd.annotation.ui.*;
-import net.ooder.esd.bean.*;
+import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.RightContextMenuBean;
+import net.ooder.esd.bean.TreeListItem;
+import net.ooder.esd.bean.TreeRowCmdBean;
 import net.ooder.esd.bean.view.ChildTreeViewBean;
 import net.ooder.esd.bean.view.CustomTreeViewBean;
-import net.ooder.esd.custom.properties.CustomCmdBar;
-import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.custom.action.CustomAPICallAction;
 import net.ooder.esd.custom.action.ShowPageAction;
+import net.ooder.esd.custom.properties.CustomCmdBar;
+import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.manager.editor.PluginsFactory;
 import net.ooder.esd.tool.component.APICallerComponent;
@@ -31,7 +35,6 @@ import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Condition;
 import net.ooder.esd.tool.properties.UrlPathData;
 import net.ooder.esd.tool.properties.form.ComboInputProperties;
-import javassist.NotFoundException;
 
 import java.util.*;
 
@@ -68,6 +71,7 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
                 this.fillLazyLoadAction(viewBean);
                 super.fillToolBar(viewBean, currComponent);
                 this.fillHelpBar(viewBean, currComponent);
+                this.fillCustomAction(viewBean,currComponent);
             }
         } catch (JDSException e) {
             e.printStackTrace();
@@ -170,19 +174,19 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
     }
 
 
-    void fillDynLoad(ChildTreeViewBean childTreeViewBean, CustomTreeViewBean viewBean) {
+    void fillCustomAction(ChildTreeViewBean childTreeViewBean, CustomTreeViewBean viewBean) {
         if (childTreeViewBean.getLazyLoad() != null && childTreeViewBean.getLazyLoad()) {
             MethodConfig childMethod = viewBean.findMethodByEvent(CustomTreeEvent.RELOADCHILD, childTreeViewBean.getBindClass());
             if (childMethod != null) {
-                this.addAPIConfig(childMethod, childTreeViewBean.getGroupName());
+                this.addReloadChildAPI(childMethod, childTreeViewBean.getGroupName());
             }
         }
     }
 
-    void addAPIConfig(MethodConfig childMethod, String groupName) {
+
+    void addReloadChildAPI(MethodConfig childMethod, String groupName) {
         Condition condition = new Condition("{args[1].groupName}", SymbolType.equal, groupName);
         APICallerComponent reloadChild = new APICallerComponent(childMethod);
-        // String alias = StringUtility.replace(childMethod.getUrl(), "/", "_");
         reloadChild.setAlias(groupName);
         APICallerProperties reloadProperties = reloadChild.getProperties();
         UrlPathData requestCtxData = new UrlPathData(this.getCtxBaseComponent().getAlias(), RequestPathTypeEnum.FORM, "");
@@ -231,8 +235,6 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
         callAction.set_return(true);
         this.getCurrComponent().addAction(callAction);
         this.addChildren(reloadChild);
-
-
     }
 
 
@@ -248,13 +250,13 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
     void fillLazyLoadAction(CustomTreeViewBean customTreeViewBean) throws JDSException {
         Set<ChildTreeViewBean> childTreeViewBeans = customTreeViewBean.getChildTreeViewBeans();
         for (ChildTreeViewBean childTreeViewBean : childTreeViewBeans) {
-            fillDynLoad(childTreeViewBean, customTreeViewBean);
+            fillCustomAction(childTreeViewBean, customTreeViewBean);
         }
         for (CustomTreeViewBean childTree : customTreeViewBean.getAllChild()) {
             if (childTree.getLazyLoad() != null && childTree.getLazyLoad()) {
                 MethodConfig childMethod = customTreeViewBean.findMethodByEvent(CustomTreeEvent.RELOADCHILD, customTreeViewBean.getBindService());
                 if (childMethod != null) {
-                    this.addAPIConfig(childMethod, childMethod.getEUClassName());
+                    this.addReloadChildAPI(childMethod, childMethod.getEUClassName());
                 }
             }
         }
@@ -264,7 +266,7 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
             if (!childTreeViewBeans.isEmpty()) {
                 MethodConfig childMethod = customTreeViewBean.findMethodByEvent(CustomTreeEvent.RELOADCHILD, customTreeViewBean.getBindService());
                 if (childMethod != null) {
-                    this.addAPIConfig(childMethod, customTreeViewBean.getGroupName());
+                    this.addReloadChildAPI(childMethod, customTreeViewBean.getGroupName());
                 }
             } else {
                 MethodConfig methodBean = null;
@@ -333,6 +335,16 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
         }
     }
 
+    protected void fillCustomAction(CustomTreeViewBean view, Component currComponent) {
+        Map<TreeViewEventEnum, List<Action>> enumListMap = view.getCustomActions();
+        Set<TreeViewEventEnum> viewEventEnumSet = enumListMap.keySet();
+        for (TreeViewEventEnum eventEnum : viewEventEnumSet) {
+            List<Action> actions = enumListMap.get(eventEnum);
+            for (Action action : actions) {
+                currComponent.addAction(action);
+            }
+        }
+    }
 
     protected void fillTreeAction(CustomTreeViewBean view, Component currComponent) {
 
@@ -373,7 +385,7 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
         for (ChildTreeViewBean childTreeViewBean : childTreeViewBeans) {
             Set<CustomTreeEvent> childFormEvents = childTreeViewBean.getEvent();
             for (CustomTreeEvent eventType : childFormEvents) {
-                MethodConfig methodConfig = view.findMethodByEvent(CustomTreeEvent.RELOADCHILD, childTreeViewBean.getBindClass());
+                MethodConfig methodConfig = view.findMethodByEvent(eventType, childTreeViewBean.getBindClass());
                 if (methodConfig != null && methodConfig.getMethod() != null) {
                     Class serviceClass = methodConfig.getMethod().getDeclaringClass();
                     for (CustomAction actionType : eventType.getActions(false)) {
@@ -383,7 +395,6 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
                         currComponent.addAction(action);
                     }
                 }
-
             }
             Set<TreeMenu> childFormMenus = childTreeViewBean.getToolBarMenu();
             if (customFormMenus != null && customFormMenus.size() > 0) {
@@ -392,7 +403,6 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
                 }
             }
         }
-
         super.fillAction(view);
     }
 

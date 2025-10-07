@@ -11,6 +11,8 @@ import net.ooder.context.JDSActionContext;
 import net.ooder.context.JDSContext;
 import net.ooder.esd.annotation.*;
 import net.ooder.esd.annotation.event.CustomTreeEvent;
+import net.ooder.esd.annotation.event.TreeEvent;
+import net.ooder.esd.annotation.event.TreeViewEventEnum;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.menu.TreeMenu;
 import net.ooder.esd.annotation.menu.TreeRowMenu;
@@ -35,6 +37,7 @@ import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.LayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.TreeViewComponent;
+import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.TreeViewProperties;
 import net.ooder.esd.tool.properties.item.CmdItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
@@ -125,6 +128,8 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
     List<TreeMenu> contextMenu = new ArrayList<>();
 
     Set<CustomTreeEvent> event = new LinkedHashSet<>();
+
+    Map<TreeViewEventEnum, List<Action>> customActions = new HashMap<>();
 
     List<ChildTreeViewBean> childTreeBeans = new ArrayList<>();
 
@@ -759,6 +764,22 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
         }
     }
 
+    void addActions(TreeViewEventEnum eventEnum, List<Action> actions) {
+        List<Action> actionList = this.customActions.get(eventEnum);
+        if (actionList == null) {
+            actionList = new ArrayList<>();
+        }
+
+        for (Action ac : actions) {
+            if (actionList.contains(ac)) {
+                actionList.add(ac);
+            }
+        }
+
+        customActions.put(eventEnum, actionList);
+
+    }
+
 
     void init(Class<? extends TreeListItem> clazz) {
         this.name = clazz.getSimpleName();
@@ -776,6 +797,13 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
             fillData(treeViewAnnotation);
         } else {
             AnnotationUtil.fillDefaultValue(TreeAnnotation.class, this);
+        }
+
+
+        TreeEvent treeEvent = AnnotationUtil.getClassAnnotation(clazz, TreeEvent.class);
+        if (treeEvent != null) {
+            TreeEventBean treeEventBean = new TreeEventBean(treeEvent);
+           this.addActions((TreeViewEventEnum) treeEventBean.getEventKey(),treeEventBean.getActions());
         }
 
 
@@ -1171,6 +1199,14 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
         return paramList;
     }
 
+
+    public Map<TreeViewEventEnum, List<Action>> getCustomActions() {
+        return customActions;
+    }
+
+    public void setCustomActions(Map<TreeViewEventEnum, List<Action>> customActions) {
+        this.customActions = customActions;
+    }
 
     public List<TreeListItem> getItems() {
         return items;

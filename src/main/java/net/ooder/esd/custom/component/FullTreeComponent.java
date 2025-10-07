@@ -29,7 +29,6 @@ public class FullTreeComponent<M extends TreeViewComponent> extends CustomTreeCo
         this.fillViewAction(methodConfig);
         this.fillAction(customTreeViewBean);
         this.fillTreeAction(customTreeViewBean, currComponent);
-
         this.fillMenuAction(customTreeViewBean, currComponent);
         this.addChildren(genAPIComponent(customTreeViewBean).toArray(new APICallerComponent[]{}));
     }
