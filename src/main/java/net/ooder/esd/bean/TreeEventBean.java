@@ -55,6 +55,7 @@ public class TreeEventBean<T extends Action> extends Event<T, TreeViewEventEnum>
         this.eventId = eventKey.name() + "|" + eventKey.getEvent();
         addAction(event.actions());
         addAction(event.customActions());
+        addAction(event.localActions());
     }
 
     public void addAction(CustomTreeAction[] actionSet) {
