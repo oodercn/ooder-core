@@ -2,14 +2,17 @@ package net.ooder.esd.tool.properties;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
+import net.ooder.annotation.CustomBean;
 import net.ooder.common.EventKey;
 import net.ooder.common.util.StringUtility;
-import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomCondition;
-import net.ooder.esd.annotation.event.*;
+import net.ooder.esd.annotation.event.APIEvent;
+import net.ooder.esd.annotation.event.ActionTypeEnum;
+import net.ooder.esd.annotation.event.MQTTEvent;
+import net.ooder.esd.annotation.event.ModuleEvent;
 import net.ooder.esd.util.json.ConditionCollectionCodec;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.reflect.InvocationTargetException;
@@ -126,7 +129,6 @@ public class Action<K extends EventKey> implements CustomBean {
     }
 
     void initAction(CustomAction customAction, String target) {
-
         this.type = customAction.type();
         if (customAction.getClass().isEnum()) {
             this.enumClassName = customAction.getClass().getName();
