@@ -48,6 +48,7 @@ public class ButtonViewsListItem extends TreeListItem<ButtonViewsListItem> {
         if (enumType instanceof ButtonViewsItem) {
             ButtonViewsItem buttonViewsItem = (ButtonViewsItem) enumType;
             this.caption = buttonViewsItem.getName();
+            this.tips=buttonViewsItem.getName();
             this.imageClass = buttonViewsItem.getImageClass();
             this.closeBtn = buttonViewsItem.isCloseBtn();
             this.popBtn = buttonViewsItem.isPopBtn();
@@ -63,12 +64,18 @@ public class ButtonViewsListItem extends TreeListItem<ButtonViewsListItem> {
                 if (caption == null) {
                     this.caption = ((IconEnumstype) enumType).getName();
                 }
+                if (tips == null) {
+                    this.tips = ((IconEnumstype) enumType).getName();
+                }
+
                 this.imageClass = ((IconEnumstype) enumType).getImageClass();
             } else if (enumType instanceof Enumstype) {
                 if (id == null) {
                     this.id = ((Enumstype) enumType).getType();
                 }
-
+                if (tips == null) {
+                    this.tips = ((IconEnumstype) enumType).getName();
+                }
                 if (caption == null) {
                     this.caption = ((Enumstype) enumType).getName();
                 }
