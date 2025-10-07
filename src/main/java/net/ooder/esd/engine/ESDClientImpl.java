@@ -1193,11 +1193,19 @@ public class ESDClientImpl implements ESDClient {
 
 
     private boolean isAdmin() throws JDSException {
-
-
-        String adminId = JDSServer.getClusterClient().getSystem(this.getSystemCode()).getAdminId();
         boolean isAdmin = false;
-        if (this.getConnectInfo().getUserID().equals(adminId) || !JDSServer.getClusterClient().isLogin()) {
+
+        UserBean userBean = UserBean.getInstance();
+        if (this.getSystemCode() == null || this.getSystemCode().equals(userBean.getSystemCode())) {
+            return true;
+        }
+        SubSystem subSystem = JDSServer.getClusterClient().getSystem(this.getSystemCode());
+        if (subSystem != null) {
+            String adminId = JDSServer.getClusterClient().getSystem(this.getSystemCode()).getAdminId();
+            if (this.getConnectInfo().getUserID().equals(adminId) || !JDSServer.getClusterClient().isLogin()) {
+                isAdmin = true;
+            }
+        } else {
             isAdmin = true;
         }
         return isAdmin;
