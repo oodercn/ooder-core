@@ -10,7 +10,9 @@ import net.ooder.config.ListResultModel;
 import net.ooder.config.TreeListResultModel;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.ui.SelModeType;
-import net.ooder.esd.bean.*;
+import net.ooder.esd.bean.CustomViewBean;
+import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.bean.view.ChildTreeViewBean;
 import net.ooder.esd.bean.view.CustomTreeViewBean;
 import net.ooder.esd.bean.view.NavTreeComboViewBean;
@@ -206,7 +208,7 @@ public class TreePageUtil {
             List<Future<T>> futures = RemoteConnectionManager.getConntctionService(taskId).invokeAll(tasks);
             for (Future<T> resultFuture : futures) {
                 try {
-                    T item = resultFuture.get(50, TimeUnit.MILLISECONDS);
+                    T item = resultFuture.get(200, TimeUnit.MILLISECONDS);
                     if (item != null) {
                         if (item.getPattern() != null && !item.getPattern().equals("")
                                 // && (childTreeViewBean == null || (childTreeViewBean != null && (childTreeViewBean.getDeepSearch() != null && childTreeViewBean.getDeepSearch())))) {
