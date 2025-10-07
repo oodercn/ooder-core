@@ -3,8 +3,6 @@ package net.ooder.esd.bean;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomAction;
-import net.ooder.esd.annotation.action.CustomTreeAction;
-import net.ooder.esd.annotation.action.LocalTreeAction;
 import net.ooder.esd.annotation.event.CustomTreeEvent;
 import net.ooder.esd.annotation.event.TreeEvent;
 import net.ooder.esd.annotation.event.TreeViewEventEnum;
@@ -58,34 +56,6 @@ public class TreeEventBean<T extends Action> extends Event<T, TreeViewEventEnum>
         addAction(event.customActions());
         addAction(event.localActions());
     }
-
-//    public void addAction(CustomTreeAction[] actionSet) {
-//        if (actions == null) {
-//            if (actionSet.length > 0) {
-//                actions = new ArrayList<>();
-//                for (CustomTreeAction customAction : actionSet) {
-//                    if (!actions.contains(customAction)) {
-//                        Action action = new Action(customAction, eventKey);
-//                        actions.add((T) action);
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    public void addAction(LocalTreeAction[] actionSet) {
-//        if (actions == null) {
-//            if (actionSet.length > 0) {
-//                actions = new ArrayList<>();
-//                for (CustomAction customAction : actionSet) {
-//                    if (!actions.contains(customAction)) {
-//                        Action action = new Action(customAction, eventKey);
-//                        actions.add((T) action);
-//                    }
-//                }
-//            }
-//        }
-//    }
 
     public void addAction(CustomAction[] actionSet) {
         if (actions == null) {
