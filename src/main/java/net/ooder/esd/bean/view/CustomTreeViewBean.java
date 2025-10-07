@@ -769,7 +769,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
         }
 
         for (Action ac : actions) {
-            if (actionList.contains(ac)) {
+            if (!actionList.contains(ac)) {
                 actionList.add(ac);
             }
         }
@@ -778,7 +778,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
     }
 
 
-    void fillCustomAction(ChildTreeViewBean childTreeViewBean,  Component currComponent) {
+    void fillCustomAction(ChildTreeViewBean childTreeViewBean, Component currComponent) {
         String groupName = childTreeViewBean.getGroupName();
         Condition condition = new Condition("{args[1].groupName}", SymbolType.equal, groupName);
         Map<TreeViewEventEnum, List<Action>> enumListMap = childTreeViewBean.getCustomActions();
@@ -818,7 +818,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
         TreeEvent treeEvent = AnnotationUtil.getClassAnnotation(clazz, TreeEvent.class);
         if (treeEvent != null) {
             TreeEventBean treeEventBean = new TreeEventBean(treeEvent);
-           this.addActions((TreeViewEventEnum) treeEventBean.getEventKey(),treeEventBean.getActions());
+            this.addActions((TreeViewEventEnum) treeEventBean.getEventKey(), treeEventBean.getActions());
         }
 
 

@@ -596,13 +596,11 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
         }
 
         for (Action ac : actions) {
-            if (actionList.contains(ac)) {
+            if (!actionList.contains(ac)) {
                 actionList.add(ac);
             }
         }
-
         customActions.put(eventEnum, actionList);
-
     }
 
     public void setDynDestory(Boolean dynDestory) {
