@@ -51,7 +51,6 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
     @JSONField(serialize = false)
     CustomCmdBar cmdBar;
 
-
     public CustomTreeComponent() {
         super();
     }
@@ -71,7 +70,8 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
                 this.fillLazyLoadAction(viewBean);
                 super.fillToolBar(viewBean, currComponent);
                 this.fillHelpBar(viewBean, currComponent);
-                this.fillCustomAction(viewBean,currComponent);
+                this.fillCustomAction(viewBean, currComponent);
+
             }
         } catch (JDSException e) {
             e.printStackTrace();
@@ -174,13 +174,21 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
     }
 
 
-    void fillCustomAction(ChildTreeViewBean childTreeViewBean, CustomTreeViewBean viewBean) {
-        if (childTreeViewBean.getLazyLoad() != null && childTreeViewBean.getLazyLoad()) {
-            MethodConfig childMethod = viewBean.findMethodByEvent(CustomTreeEvent.RELOADCHILD, childTreeViewBean.getBindClass());
-            if (childMethod != null) {
-                this.addReloadChildAPI(childMethod, childTreeViewBean.getGroupName());
+    void fillChildCustomAction(ChildTreeViewBean childTreeViewBean,  Component currComponent) {
+        String groupName = childTreeViewBean.getGroupName();
+        Condition condition = new Condition("{args[1].groupName}", SymbolType.equal, groupName);
+        Map<TreeViewEventEnum, List<Action>> enumListMap = childTreeViewBean.getCustomActions();
+        Set<TreeViewEventEnum> viewEventEnumSet = enumListMap.keySet();
+        for (TreeViewEventEnum eventEnum : viewEventEnumSet) {
+            List<Action> actions = enumListMap.get(eventEnum);
+            for (Action action : actions) {
+                if (!action.getConditions().contains(condition)) {
+                    action.getConditions().add(condition);
+                }
+                currComponent.addAction(action);
             }
         }
+
     }
 
 
@@ -250,7 +258,12 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
     void fillLazyLoadAction(CustomTreeViewBean customTreeViewBean) throws JDSException {
         Set<ChildTreeViewBean> childTreeViewBeans = customTreeViewBean.getChildTreeViewBeans();
         for (ChildTreeViewBean childTreeViewBean : childTreeViewBeans) {
-            fillCustomAction(childTreeViewBean, customTreeViewBean);
+            if (childTreeViewBean.getLazyLoad() != null && childTreeViewBean.getLazyLoad()) {
+                MethodConfig childMethod = customTreeViewBean.findMethodByEvent(CustomTreeEvent.RELOADCHILD, childTreeViewBean.getBindClass());
+                if (childMethod != null) {
+                    this.addReloadChildAPI(childMethod, childTreeViewBean.getGroupName());
+                }
+            }
         }
         for (CustomTreeViewBean childTree : customTreeViewBean.getAllChild()) {
             if (childTree.getLazyLoad() != null && childTree.getLazyLoad()) {
@@ -347,7 +360,6 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
     }
 
     protected void fillTreeAction(CustomTreeViewBean view, Component currComponent) {
-
         Set<CustomTreeEvent> customFormEvents = view.getEvent();
         for (CustomTreeEvent eventType : customFormEvents) {
             for (CustomAction actionType : eventType.getActions(false)) {
@@ -383,6 +395,7 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
 
         Set<ChildTreeViewBean> childTreeViewBeans = view.getChildTreeViewBeans();
         for (ChildTreeViewBean childTreeViewBean : childTreeViewBeans) {
+            this.fillChildCustomAction(childTreeViewBean,currComponent);
             Set<CustomTreeEvent> childFormEvents = childTreeViewBean.getEvent();
             for (CustomTreeEvent eventType : childFormEvents) {
                 MethodConfig methodConfig = view.findMethodByEvent(eventType, childTreeViewBean.getBindClass());

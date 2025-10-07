@@ -16,10 +16,7 @@ import net.ooder.esd.annotation.event.TreeViewEventEnum;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.menu.TreeMenu;
 import net.ooder.esd.annotation.menu.TreeRowMenu;
-import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.annotation.ui.ModuleViewType;
-import net.ooder.esd.annotation.ui.PosType;
-import net.ooder.esd.annotation.ui.SelModeType;
+import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.bar.ContextMenuBar;
 import net.ooder.esd.bean.bar.ToolsBar;
@@ -38,6 +35,7 @@ import net.ooder.esd.tool.component.LayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.TreeViewComponent;
 import net.ooder.esd.tool.properties.Action;
+import net.ooder.esd.tool.properties.Condition;
 import net.ooder.esd.tool.properties.TreeViewProperties;
 import net.ooder.esd.tool.properties.item.CmdItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
@@ -775,8 +773,25 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                 actionList.add(ac);
             }
         }
-
         customActions.put(eventEnum, actionList);
+
+    }
+
+
+    void fillCustomAction(ChildTreeViewBean childTreeViewBean,  Component currComponent) {
+        String groupName = childTreeViewBean.getGroupName();
+        Condition condition = new Condition("{args[1].groupName}", SymbolType.equal, groupName);
+        Map<TreeViewEventEnum, List<Action>> enumListMap = childTreeViewBean.getCustomActions();
+        Set<TreeViewEventEnum> viewEventEnumSet = enumListMap.keySet();
+        for (TreeViewEventEnum eventEnum : viewEventEnumSet) {
+            List<Action> actions = enumListMap.get(eventEnum);
+            for (Action action : actions) {
+                if (!action.getConditions().contains(condition)) {
+                    action.getConditions().add(condition);
+                }
+                currComponent.addAction(action);
+            }
+        }
 
     }
 

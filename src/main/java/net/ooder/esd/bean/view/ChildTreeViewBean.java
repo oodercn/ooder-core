@@ -1,21 +1,28 @@
 package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
+import net.ooder.annotation.CustomBean;
+import net.ooder.annotation.ESDEntity;
 import net.ooder.common.JDSConstants;
 import net.ooder.common.JDSException;
 import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.common.util.StringUtility;
-import net.ooder.annotation.CustomBean;
-import net.ooder.esd.annotation.*;
+import net.ooder.esd.annotation.ChildTreeAnnotation;
+import net.ooder.esd.annotation.RightContextMenu;
+import net.ooder.esd.annotation.TreeItem;
+import net.ooder.esd.annotation.TreeRowCmd;
+import net.ooder.esd.annotation.event.CustomEvent;
+import net.ooder.esd.annotation.event.CustomTreeEvent;
+import net.ooder.esd.annotation.event.TreeEvent;
+import net.ooder.esd.annotation.event.TreeViewEventEnum;
+import net.ooder.esd.annotation.menu.TreeMenu;
+import net.ooder.esd.annotation.menu.TreeRowMenu;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.bar.ContextMenuBar;
-import net.ooder.esd.annotation.event.CustomEvent;
-import net.ooder.esd.annotation.event.CustomTreeEvent;
-import net.ooder.esd.annotation.menu.TreeMenu;
-import net.ooder.esd.annotation.menu.TreeRowMenu;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.custom.ESDClassManager;
@@ -23,13 +30,12 @@ import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.view.field.FieldTreeConfig;
+import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.item.CmdItem;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.esd.util.json.*;
 import net.ooder.web.ConstructorBean;
 import net.ooder.web.RequestParamBean;
-import net.ooder.annotation.AnnotationType;
-import net.ooder.annotation.ESDEntity;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.reflect.Constructor;
@@ -94,6 +100,10 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
     ToolBarMenuBean toolBarMenuBean;
 
     Class<? extends TreeItem> customItems;
+
+
+    Map<TreeViewEventEnum, List<Action>> customActions = new HashMap<>();
+
 
     String treeItemClassName;
     @JSONField(serializeUsing = EnumsSerializer.class, deserializeUsing = EnumsSerializer.class)
@@ -255,6 +265,14 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
             AnnotationUtil.fillDefaultValue(ChildTreeAnnotation.class, this);
         }
 
+
+        TreeEvent treeEvent = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), TreeEvent.class);
+        if (treeEvent != null) {
+            TreeEventBean treeEventBean = new TreeEventBean(treeEvent);
+            this.addActions((TreeViewEventEnum) treeEventBean.getEventKey(), treeEventBean.getActions());
+        }
+
+
         RightContextMenu annotation = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), RightContextMenu.class);
         if (annotation != null) {
             contextMenuBean = new RightContextMenuBean(this.getEnumName(), annotation);
@@ -374,6 +392,14 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
         } else {
             AnnotationUtil.fillDefaultValue(ChildTreeAnnotation.class, this);
         }
+
+
+        TreeEvent treeEvent = AnnotationUtil.getConstructorAnnotation(constructor, TreeEvent.class);
+        if (treeEvent != null) {
+            TreeEventBean treeEventBean = new TreeEventBean(treeEvent);
+            this.addActions((TreeViewEventEnum) treeEventBean.getEventKey(), treeEventBean.getActions());
+        }
+
 
         RightContextMenu annotation = AnnotationUtil.getConstructorAnnotation(constructor, RightContextMenu.class);
         if (annotation != null) {
@@ -563,6 +589,22 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
         return classSet;
     }
 
+    void addActions(TreeViewEventEnum eventEnum, List<Action> actions) {
+        List<Action> actionList = this.customActions.get(eventEnum);
+        if (actionList == null) {
+            actionList = new ArrayList<>();
+        }
+
+        for (Action ac : actions) {
+            if (actionList.contains(ac)) {
+                actionList.add(ac);
+            }
+        }
+
+        customActions.put(eventEnum, actionList);
+
+    }
+
     public void setDynDestory(Boolean dynDestory) {
         this.dynDestory = dynDestory;
     }
@@ -680,6 +722,13 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
         this.customMenu = customMenu;
     }
 
+    public Map<TreeViewEventEnum, List<Action>> getCustomActions() {
+        return customActions;
+    }
+
+    public void setCustomActions(Map<TreeViewEventEnum, List<Action>> customActions) {
+        this.customActions = customActions;
+    }
 
     public Boolean getLazyLoad() {
         if (lazyLoad == null && this.getTreeItem() != null) {
