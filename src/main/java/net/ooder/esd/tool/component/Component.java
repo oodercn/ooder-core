@@ -7,15 +7,15 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.EventKey;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.ViewGroupType;
-import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.custom.CustomViewFactory;
-import net.ooder.esd.util.json.ComponentsDeserializer;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.properties.AbsUIProperties;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Event;
 import net.ooder.esd.tool.properties.Properties;
+import net.ooder.esd.util.json.ComponentsDeserializer;
 import net.ooder.web.util.JSONGenUtil;
 import org.mvel2.templates.TemplateRuntime;
 
@@ -111,6 +111,12 @@ public class Component<T extends Properties, K extends EventKey> {
     }
 
     public Component addAction(Action<K> action, boolean par) {
+        return addAction(action, true, null);
+    }
+
+    ;
+
+    public Component addAction(Action<K> action, boolean par, String _return) {
         K eventKey = action.getEventKey();
         if (events == null) {
             events = new HashMap<K, Event>();
@@ -119,6 +125,10 @@ public class Component<T extends Properties, K extends EventKey> {
 
         if (event == null) {
             event = new Event(eventKey);
+        }
+
+        if (_return != null) {
+            event.setEventReturn(_return);
         }
 
         List<Action> actions = event.getActions();

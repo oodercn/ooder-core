@@ -61,7 +61,7 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
         for (APIEventBean apiEvent : events) {
             List<Action> actions = apiEvent.getActions();
             for (Action action : actions) {
-                this.addAction(action);
+                this.addAction(action, true, apiEvent.getEventReturn());
             }
         }
 
@@ -109,7 +109,7 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
             List<Action> actions = apiEventBean.getActions();
             for (Action action : actions) {
                 if (action != null) {
-                    this.addAction(action);
+                    this.addAction(action, true, apiEventBean.getEventReturn());
                 }
             }
         }
@@ -120,7 +120,7 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
             List<Action> actions = apiEventBean.getActions();
             for (Action action : actions) {
                 if (action != null) {
-                    this.addAction(action);
+                    this.addAction(action, true, apiEventBean.getEventReturn());
                 }
             }
         }

@@ -1,24 +1,20 @@
 package net.ooder.esd.bean;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomAction;
-import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.event.APIEvent;
 import net.ooder.esd.annotation.event.APIEventEnum;
-import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.annotation.ui.CustomViewType;
-import net.ooder.esd.tool.component.APICallerComponent;
-import net.ooder.esd.tool.component.AnimBinderComponent;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Event;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.util.ArrayList;
 
 
 @AnnotationType(clazz = APIEvent.class)
-public class APIEventBean<T extends Action> extends Event<T,APIEventEnum> implements CustomBean {
+public class APIEventBean<T extends Action> extends Event<T, APIEventEnum> implements CustomBean {
 
     String eventId;
 
@@ -30,6 +26,7 @@ public class APIEventBean<T extends Action> extends Event<T,APIEventEnum> implem
 
     APIEventEnum apiEventEnum;
 
+    @JSONField(serialize = false)
     APIEvent event;
 
     public APIEventBean(String domainId, String sourceClassName, String methodName) {
@@ -41,16 +38,21 @@ public class APIEventBean<T extends Action> extends Event<T,APIEventEnum> implem
     public APIEventBean() {
 
     }
+
     public APIEventBean(APIEvent event) {
-        this.event=event;
+        this.event = event;
         this.eventKey = event.event();
         this.desc = event.desc();
         this.apiEventEnum = event.event();
         this.eventId = apiEventEnum.name() + "|" + eventKey.getEvent();
+        if (!event._return()) {
+            this.eventReturn = "{false}";
+        }
         CustomAction[] actionSet = event.actions();
         addAction(actionSet);
 
     }
+
     public void addAction(CustomAction[] actionSet) {
         if (actions == null) {
             if (actionSet.length > 0) {
@@ -64,7 +66,6 @@ public class APIEventBean<T extends Action> extends Event<T,APIEventEnum> implem
             }
         }
     }
-
 
     public APIEvent getEvent() {
         return event;

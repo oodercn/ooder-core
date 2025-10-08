@@ -6,13 +6,13 @@ import net.ooder.common.EventKey;
 
 import java.util.List;
 
-public class Event<T extends Action,K extends EventKey> implements DSMEvent<T,K> {
+public class Event<T extends Action, K extends EventKey> implements DSMEvent<T, K> {
 
 
     public List<T> actions;
 
     @JSONField(name = "return")
-    public String EventReturn;
+    public String eventReturn;
 
     public String script;
 
@@ -48,11 +48,11 @@ public class Event<T extends Action,K extends EventKey> implements DSMEvent<T,K>
 
 
     public String getEventReturn() {
-        return EventReturn;
+        return eventReturn;
     }
 
     public void setEventReturn(String eventReturn) {
-        EventReturn = eventReturn;
+        this.eventReturn = eventReturn;
     }
 
     public String getScript() {
