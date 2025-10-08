@@ -1,13 +1,14 @@
 package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.JSON;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.CaselessStringKeyHashMap;
 import net.ooder.common.util.ClassUtility;
-import net.ooder.esd.annotation.ui.ModuleViewType;
-import net.ooder.esd.annotation.event.CustomTabsEvent;
 import net.ooder.esd.annotation.TabsAnnotation;
+import net.ooder.esd.annotation.event.CustomTabsEvent;
 import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.PosType;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.nav.TabItemBean;
@@ -18,13 +19,12 @@ import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.LayoutComponent;
-import net.ooder.esd.tool.component.TabsComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.TabsComponent;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.RemoteConnectionManager;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
@@ -118,7 +118,7 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
             }
             List<Future<CustomModuleBean>> futures = null;
             try {
-                ExecutorService service=   RemoteConnectionManager.getConntctionService(this.getXpath());
+                ExecutorService service = RemoteConnectionManager.getConntctionService(this.getXpath());
                 futures = service.invokeAll(tasks);
                 for (Future<CustomModuleBean> resultFuture : futures) {
                     try {
@@ -224,7 +224,6 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
         }
 
         this.initBaseTabViews(clazz);
-
         if (itemBeans == null || itemBeans.isEmpty()) {
             Class<? extends Enum> enumClass = this.getEnumClass();
             Class<? extends Enum> viewClass = null;

@@ -1,35 +1,35 @@
 package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.CustomBean;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.config.TreeListResultModel;
-import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.BottomBarMenu;
 import net.ooder.esd.annotation.EnumsClass;
 import net.ooder.esd.annotation.MenuBarMenu;
-import net.ooder.esd.annotation.event.CustomEvent;
+import net.ooder.esd.annotation.TabItemAnnotation;
+import net.ooder.esd.annotation.event.*;
 import net.ooder.esd.annotation.field.TabItem;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.menu.CustomFormMenu;
-import net.ooder.esd.annotation.event.CustomTabsEvent;
-import net.ooder.esd.annotation.TabItemAnnotation;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.nav.TabItemBean;
-import net.ooder.esd.custom.properties.NavTabListItem;
-import net.ooder.esd.util.json.EMSerializer;
-import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.custom.CustomViewFactory;
-import net.ooder.esd.engine.EUModule;
-import net.ooder.esd.engine.enums.MenuBarBean;
-import net.ooder.esd.tool.component.TabsComponent;
-import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.esd.tool.properties.item.TabListItem;
-import net.ooder.esd.util.ESDEnumsUtil;
+import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
+import net.ooder.esd.engine.ESDFacrory;
+import net.ooder.esd.engine.EUModule;
+import net.ooder.esd.engine.enums.MenuBarBean;
+import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.TabsComponent;
+import net.ooder.esd.tool.properties.Action;
+import net.ooder.esd.tool.properties.item.TabListItem;
+import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.esd.util.OODUtil;
+import net.ooder.esd.util.json.EMSerializer;
 import net.ooder.util.EnumsUtil;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -42,6 +42,8 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
     public List<CustomModuleBean> moduleBeans = new ArrayList<>();
 
     public List<TabItemBean> itemBeans = new ArrayList<>();
+
+    public  Map<TabsEventEnum, List<Action>> customActions = new HashMap<>();
 
     EnumsClassBean enumsClassBean;
     Boolean closeBtn;
@@ -88,11 +90,9 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
         super();
     }
 
-
     public BaseTabsViewBean(MethodConfig methodConfig) {
         super(methodConfig);
     }
-
 
     @Override
     public ComponentBean findComByAlias(String alias) {
@@ -149,6 +149,14 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
 
         }
         return null;
+    }
+
+    public Map<TabsEventEnum, List<Action>> getCustomActions() {
+        return customActions;
+    }
+
+    public void setCustomActions(Map<TabsEventEnum, List<Action>> customActions) {
+        this.customActions = customActions;
     }
 
     @Override
@@ -349,6 +357,14 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
             this.setEnumClass(enums.clazz());
             this.enumsClassBean = new EnumsClassBean(enums.clazz());
         }
+
+
+        TabsEvent tabsEvent = AnnotationUtil.getClassAnnotation(clazz, TabsEvent.class);
+        if (tabsEvent != null) {
+            TabsEventBean customTabsEvent= new TabsEventBean(tabsEvent);
+            this.addActions((TabsEventEnum) customTabsEvent.getEventKey(), customTabsEvent.getActions());
+        }
+
         Constructor[] constructors = clazz.getConstructors();
         for (Constructor constructor : constructors) {
             TabItemAnnotation tabItemAnnotation = AnnotationUtil.getConstructorAnnotation(constructor, TabItemAnnotation.class);
@@ -508,6 +524,19 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
             }
         }
         return null;
+    }
+    void addActions(TabsEventEnum eventEnum, List<Action> actions) {
+        List<Action> actionList = this.customActions.get(eventEnum);
+        if (actionList == null) {
+            actionList = new ArrayList<>();
+        }
+        for (Action ac : actions) {
+            if (!actionList.contains(ac)) {
+                actionList.add(ac);
+            }
+        }
+        customActions.put(eventEnum, actionList);
+
     }
 
 

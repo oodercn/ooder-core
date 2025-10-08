@@ -15,9 +15,9 @@ import net.ooder.esd.annotation.ui.SymbolType;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.data.TabsDataBean;
 import net.ooder.esd.bean.view.TabsViewBean;
-import net.ooder.esd.custom.component.CustomModuleComponent;
 import net.ooder.esd.custom.action.CustomAPICallAction;
 import net.ooder.esd.custom.action.ShowPageAction;
+import net.ooder.esd.custom.component.CustomModuleComponent;
 import net.ooder.esd.custom.properties.NavTabsComponent;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.APICallerComponent;
@@ -70,12 +70,23 @@ public class CustomTabComponent extends CustomModuleComponent<NavTabsComponent> 
         } catch (JDSException e) {
             e.printStackTrace();
         }
-
-
+        this.fillCustomAction(viewBean, currComponent);
     }
 
-    protected void fillTabsAction(TabsViewBean view, Component currComponent) {
 
+    protected void fillCustomAction(TabsViewBean view, Component currComponent) {
+        Map<TabsEventEnum, List<Action>> enumListMap = view.getCustomActions();
+        Set<TabsEventEnum> viewEventEnumSet = enumListMap.keySet();
+        for (TabsEventEnum eventEnum : viewEventEnumSet) {
+            List<Action> actions = enumListMap.get(eventEnum);
+            for (Action action : actions) {
+                currComponent.addAction(action);
+            }
+        }
+    }
+
+
+    protected void fillTabsAction(TabsViewBean view, Component currComponent) {
         Set<CustomTabsEvent> customFormEvents = view.getEvent();
         for (CustomTabsEvent eventType : customFormEvents) {
             for (CustomAction actionType : eventType.getActions(false)) {

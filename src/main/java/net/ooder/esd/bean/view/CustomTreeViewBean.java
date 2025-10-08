@@ -551,10 +551,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
         return treeListItems;
     }
 
-
     public void initProperties(TreeViewProperties properties) {
-
-
         this.formField = properties.getFormField();
         this.iniFold = properties.getIniFold();
         this.animCollapse = properties.getAnimCollapse();
