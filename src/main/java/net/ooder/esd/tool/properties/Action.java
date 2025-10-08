@@ -134,6 +134,7 @@ public class Action<K extends EventKey> implements CustomBean {
             method = "call";
             type = ActionTypeEnum.other;
             this.target = "callback";
+            this._return = customAction._return();
             String script = customAction.script();
             if (!script.startsWith("{") && !script.endsWith("}")) {
                 script = "{" + script + "}";

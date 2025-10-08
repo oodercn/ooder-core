@@ -613,6 +613,13 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
 
         List<APIEventBean> apiEvents = new ArrayList<>();
 
+        if (extAPIEvent != null) {
+            apiEvents.addAll(apiEvents);
+        }
+        if (customAPIEvent != null) {
+            apiEvents.addAll(customAPIEvent);
+        }
+
         if (beforeData != null) {
             for (CustomBeforData beforDataEvent : beforeData) {
                 if (beforDataEvent != null) {
