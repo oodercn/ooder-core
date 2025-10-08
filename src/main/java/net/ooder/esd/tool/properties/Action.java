@@ -129,43 +129,58 @@ public class Action<K extends EventKey> implements CustomBean {
     }
 
     void initAction(CustomAction customAction, String target) {
-        this.type = customAction.type();
-        if (customAction.getClass().isEnum()) {
-            this.enumClassName = customAction.getClass().getName();
-            this.enumValue = customAction.name();
-        }
 
+        if (customAction.script() != null && !customAction.script().equals("")) {
+            method = "call";
+            type = ActionTypeEnum.other;
+            this.target = "callback";
+            String script = customAction.script();
+            if (!script.startsWith("{") && !script.endsWith("}")) {
+                script = "{" + script + "}";
+            }
+            String[] argArr = new String[]{script, null, null};
+            args.addAll(Arrays.asList(argArr));
+            args.addAll(Arrays.asList(customAction.params()));
+        } else {
+            this.type = customAction.type();
+            if (customAction.getClass().isEnum()) {
+                this.enumClassName = customAction.getClass().getName();
+                this.enumValue = customAction.name();
+            }
 
-        this._return = customAction._return();
-        if (target != null && (!target.equals(customAction.target()))) {
-            this.target = target;
-            if (customAction.args() != null) {
-                this.args = Arrays.asList(customAction.args());
-                int k = 0;
-                for (String arg : this.args) {
-                    String newArg = StringUtility.replace(arg, "page." + customAction.target() + ".", "page." + target + ".");
-                    this.updateArgs(newArg, k);
+            this._return = customAction._return();
+            if (target != null && (!target.equals(customAction.target()))) {
+                this.target = target;
+                if (customAction.args() != null) {
+                    this.args = Arrays.asList(customAction.args());
+                    int k = 0;
+                    for (String arg : this.args) {
+                        String newArg = StringUtility.replace(arg, "page." + customAction.target() + ".", "page." + target + ".");
+                        this.updateArgs(newArg, k);
+                    }
+                }
+            } else {
+                this.target = customAction.target();
+                if (customAction.args() != null) {
+                    this.args = Arrays.asList(customAction.args());
                 }
             }
-        } else {
-            this.target = customAction.target();
-            if (customAction.args() != null) {
-                this.args = Arrays.asList(customAction.args());
+
+            this.method = customAction.method();
+            this.redirection = customAction.redirection();
+            if (target != null) {
+                this.id = target + "_" + type + "_" + method;
+            } else {
+                this.id = type + "_" + method;
             }
+
         }
 
-        this.method = customAction.method();
         if (customAction.conditions() != null) {
             conditions = new ArrayList<>();
             for (CustomCondition customCondition : customAction.conditions()) {
                 conditions.add(new Condition(customCondition));
             }
-        }
-        this.redirection = customAction.redirection();
-        if (target != null) {
-            this.id = target + "_" + type + "_" + method;
-        } else {
-            this.id = type + "_" + method;
         }
         this.desc = customAction.desc().equals("") ? eventKey + "(" + method + ")" : customAction.desc();
     }

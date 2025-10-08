@@ -1,31 +1,30 @@
 package net.ooder.esd.custom.component;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.EsbBeanAnnotation;
 import net.ooder.common.JDSConstants;
 import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
-import net.ooder.annotation.EsbBeanAnnotation;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
-import net.ooder.esd.annotation.menu.CustomMenuType;
-import net.ooder.esd.annotation.ui.CustomMenuItem;
-import net.ooder.esd.bean.bar.MenuDynBar;
 import net.ooder.esd.annotation.event.ActionTypeEnum;
 import net.ooder.esd.annotation.event.MenuEventEnum;
+import net.ooder.esd.annotation.menu.CustomMenuType;
 import net.ooder.esd.annotation.menu.GridMenu;
 import net.ooder.esd.annotation.ui.ComboInputType;
+import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ui.SymbolType;
 import net.ooder.esd.bean.TreeListItem;
+import net.ooder.esd.bean.bar.MenuDynBar;
 import net.ooder.esd.custom.action.CustomConditionAction;
 import net.ooder.esd.custom.action.ShowPageAction;
-import net.ooder.esd.util.json.APICallSerialize;
-import net.ooder.esd.util.json.CaseEnumsSerializer;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.APICallerComponent;
 import net.ooder.esd.tool.component.MenuBarComponent;
 import net.ooder.esd.tool.properties.*;
-
+import net.ooder.esd.util.json.APICallSerialize;
+import net.ooder.esd.util.json.CaseEnumsSerializer;
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.jds.core.esb.task.ExcuteObj;
 
@@ -206,10 +205,6 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
     }
 
 
-    public void addMenu(APICallerComponent component,CustomAction... action) {
-        this.addComponentMenu(component, null, new ArrayList<>());
-    }
-
     public void addMenu(APICallerComponent component) {
         this.addComponentMenu(component, null, new ArrayList<>());
     }
@@ -235,7 +230,6 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
             TreeListItem menuItem = itemMap.get(menuId);
             Set<CustomMenuItem> items = apiCallerProperties.getBindMenu();
             Set<CustomMenuItem> customItems = new HashSet<>();
-
             for (CustomMenuItem item : items) {
                 if (!item.equals(CustomMenuItem.INDEX) && item.equals(CustomMenuItem.INDEXS)) {
                     customItems.add(item);
@@ -250,17 +244,21 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                     this.apis.add(component);
                 }
             } else {
-
                 if (menuItem == null) {
                     menuItem = new TreeListItem(menuId, caption, imageClass, apiCallerProperties.getTips(), apiCallerProperties.getMenuType(), apiCallerProperties.getIconColor(), apiCallerProperties.getItemColor(), apiCallerProperties.getFontColor());
                     this.getProperties().addItem(menuItem);
                     itemMap.put(menuId, menuItem);
                 } else {
                     menuItem.setCaption(caption);
-                    menuItem.setTips(component.getProperties().getTips());
-//                    if (!caption.equals("")) {
-//                        menuItem.setCaption(caption);
-//                    }
+                    String tips = component.getProperties().getTips();
+                    if (tips == null || tips.equals("")) {
+                        if (caption != null && !caption.equals("")) {
+                            tips = caption;
+                        } else {
+                            tips = menuId;
+                        }
+                    }
+                    menuItem.setTips(tips);
                     if (expression != null && !expression.equals("")) {
                         menuItem.setExpression(expression);
                     }
@@ -286,6 +284,7 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                     conditionList.add(condition);
                     action.setConditions(conditionList);
                     action.set_return(false);
+                    action.setEventKey(MenuEventEnum.onMenuSelected);
                     this.addAction(action);
                 } else {
                     action.setDesc("打开" + component.getProperties().getDesc());
@@ -349,13 +348,13 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                 Set<Action> actions = component.getActions();
                 if (actions != null && actions.size() > 0) {
                     for (Action action : actions) {
-
                         action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
                         action.set_return(false);
                         if (this.parentId != null && !this.parentId.equals("")) {
                             Condition condition = new Condition("{args[2].id}", SymbolType.equal, menuId);
                             conditionList.add(condition);
                             action.setConditions(conditionList);
+                            action.setEventKey(MenuEventEnum.onMenuSelected);
                             this.addAction(action);
                         } else {
                             Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
@@ -382,6 +381,7 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                         Condition condition = new Condition("{args[2].id}", SymbolType.equal, menuId);
                         conditionList.add(condition);
                         action.setConditions(conditionList);
+                        action.setEventKey(MenuEventEnum.onMenuSelected);
                         this.addAction(action);
                     } else {
                         Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
