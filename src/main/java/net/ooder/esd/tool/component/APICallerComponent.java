@@ -20,7 +20,6 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
 
     public APICallerProperties properties;
 
-
     public Set<Action> actions;
 
     public APICallerComponent(String alias, APICallerProperties properties) {
@@ -68,7 +67,7 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
 
     public APICallerComponent(MethodConfig methodAPIBean) {
         super(ComponentType.APICALLER, methodAPIBean.getMethodName());
-
+       // methodAPIBean.getAPIConfig()
         if (methodAPIBean.getApi() != null) {
             this.properties = methodAPIBean.getApi().getApiCallerProperties().clone();
             init(methodAPIBean.getApi());
@@ -106,7 +105,7 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
         for (APIEventBean apiEventBean : eventBeanSet) {
             List<Action> actions = apiEventBean.getActions();
             for (Action action : actions) {
-                if (action!=null) {
+                if (action != null) {
                     this.addAction(action);
                 }
             }
@@ -116,7 +115,7 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
     void addEvent(Set<? extends APIEvent> events) {
         List<APIEventBean> eventBeans = new ArrayList<>();
         for (APIEvent apiEvent : events) {
-            if (apiEvent!=null){
+            if (apiEvent != null) {
                 eventBeans.add(new APIEventBean(apiEvent));
             }
         }
@@ -126,7 +125,7 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
 
     void addAction(Set<Action> actions) {
         for (Action action : actions) {
-            if (action!=null) {
+            if (action != null) {
                 this.addAction(action);
             }
         }

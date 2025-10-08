@@ -671,7 +671,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
 
 
     @JSONField(serialize = false)
-    public ApiClassConfig getViewClassConfig() {
+    public ApiClassConfig getAPIConfig() {
         ApiClassConfig sourceClassConfig = null;
         try {
             sourceClassConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(this.viewClassName);

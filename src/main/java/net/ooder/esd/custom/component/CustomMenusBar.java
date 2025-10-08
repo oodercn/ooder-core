@@ -75,7 +75,6 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
 
     public CustomMenusBar(EUModule euModule, MenuBarBean menuBarBean, String target, Object value) {
         super(menuBarBean.getId(), new MenuBarProperties(menuBarBean));
-
         this.id = menuBarBean.getId();
         this.parentId = menuBarBean.getParentId();
         this.index = menuBarBean.getIndex();
@@ -204,6 +203,11 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                 fillActions(type);
             }
         }
+    }
+
+
+    public void addMenu(APICallerComponent component,CustomAction... action) {
+        this.addComponentMenu(component, null, new ArrayList<>());
     }
 
     public void addMenu(APICallerComponent component) {
