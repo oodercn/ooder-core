@@ -226,7 +226,7 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
         this.init(requestMethodBean);
     }
 
-    void initCustomAction(Method method){
+    void initCustomAction(Method method) {
         Annotation[] annotations = method.getAnnotations();
         for (Annotation annotation : annotations) {
             Class enumType = annotation.annotationType();
