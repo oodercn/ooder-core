@@ -1641,7 +1641,6 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
     }
 
     public void setUrl(String url) {
-
         this.url = url;
     }
 
@@ -1704,7 +1703,6 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
             }
         }
 
-
         if (this.getMethod() != null) {
             ModuleAnnotation annotation = AnnotationUtil.getMethodAnnotation(this.getMethod(), ModuleAnnotation.class);
             if (annotation != null) {
@@ -1717,12 +1715,9 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
             }
         }
 
-
         if (this.getModuleBean().getModuleViewType() != null && !this.getModuleBean().getModuleViewType().equals(ModuleViewType.NONE)) {
             isModule = true;
         }
-
-
         return isModule;
     }
 
@@ -1731,9 +1726,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
         ESDClass sourceClass = null;
         try {
             if (sourceClassName != null && !sourceClassName.equals("")) {
-
                 sourceClass = BuildFactory.getInstance().getClassManager().getAggEntityByName(sourceClassName, false);
-
             }
         } catch (JDSException e) {
             e.printStackTrace();

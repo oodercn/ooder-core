@@ -53,6 +53,7 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
 
     APICallerProperties apiCallerProperties;
 
+    public Set<Action> customAction = new LinkedHashSet<>();
 
     public Set<Action> bindAction = new LinkedHashSet<>();
     //准备调
@@ -215,6 +216,7 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
     }
 
     public CustomAPICallBean(MethodConfig methodConfig) {
+
         this.apiCallerProperties = new APICallerProperties(methodConfig);
         this.initMethod(methodConfig.getMethod());
 
@@ -224,7 +226,32 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
         this.init(requestMethodBean);
     }
 
+    void initCustomAction(Method method){
+        Annotation[] annotations = method.getAnnotations();
+        for (Annotation annotation : annotations) {
+            Class enumType = annotation.annotationType();
+            Method[] methods = enumType.getMethods();
+            for (Method aMethod : methods) {
+                EventKey[] eventKeys = new EventKey[]{};
+                if (aMethod.getReturnType().isArray() && EventKey.class.isAssignableFrom(aMethod.getReturnType().getComponentType())) {
+                    eventKeys = (EventKey[]) aMethod.getDefaultValue();
+                }
+
+                for (EventKey eventKey : eventKeys) {
+                    if (aMethod.getReturnType().isArray() && CustomAction.class.isAssignableFrom(aMethod.getReturnType().getComponentType())) {
+                        CustomAction[] actions = (CustomAction[]) aMethod.getDefaultValue();
+                        for (CustomAction action : actions) {
+                            this.customAction.add(new Action(action, eventKey));
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
     void initMethod(Method method) {
+
         APIEventAnnotation apiEventAnnotation = AnnotationUtil.getMethodAnnotation(method, APIEventAnnotation.class);
         APIEvents apiEvents = AnnotationUtil.getMethodAnnotation(method, APIEvents.class);
         if (apiEvents != null) {
@@ -426,7 +453,6 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
                 actions.add(customAction);
             }
         }
-
         for (Action action : this.getBindAction()) {
             actions.add(action);
         }

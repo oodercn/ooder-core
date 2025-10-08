@@ -54,6 +54,9 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
         this.addEvent(apiCallBean.getAfterInvoke());
         this.addAction(apiCallBean.getAfterInvokAction());
 
+
+
+
         List<APIEventBean> events = apiCallBean.getAllEvent();
         for (APIEventBean apiEvent : events) {
             List<Action> actions = apiEvent.getActions();

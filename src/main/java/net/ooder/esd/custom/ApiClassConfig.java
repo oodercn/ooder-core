@@ -175,10 +175,7 @@ public class ApiClassConfig {
         for (String methodName : proxyMethods) {
             proxyMethodList.add(this.getMethodByName(methodName));
         }
-
         Arrays.sort(proxyMethodList.toArray());
-
-
         return proxyMethodList;
     }
 
