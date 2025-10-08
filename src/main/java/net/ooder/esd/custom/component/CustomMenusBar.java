@@ -149,7 +149,6 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
             }
 
             this.getProperties().addItem(menuItem);
-
             Map<MenuEventEnum, Event> event = ((CustomMenusBar) bars).getEvents();
             Set<Map.Entry<MenuEventEnum, Event>> entrySet = event.entrySet();
             for (Map.Entry<MenuEventEnum, Event> entry : entrySet) {
@@ -164,10 +163,7 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                 if (!apis.contains(apiCallerComponent)) {
                     this.apis.add(apiCallerComponent);
                 }
-
             }
-
-
         }
 
     }
@@ -392,8 +388,6 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                     }
 
                 }
-
-
             }
         }
         return component;

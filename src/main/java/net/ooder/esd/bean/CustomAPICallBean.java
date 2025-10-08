@@ -216,7 +216,6 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
     }
 
     public CustomAPICallBean(MethodConfig methodConfig) {
-
         this.apiCallerProperties = new APICallerProperties(methodConfig);
         this.initMethod(methodConfig.getMethod());
 
@@ -251,16 +250,14 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
     }
 
     void initMethod(Method method) {
-
+        initCustomAction(method);
         APIEventAnnotation apiEventAnnotation = AnnotationUtil.getMethodAnnotation(method, APIEventAnnotation.class);
-        APIEvents apiEvents = AnnotationUtil.getMethodAnnotation(method, APIEvents.class);
+        APIEvent[] apiEvents = AnnotationUtil.getMethodAnnotations(method, APIEvent.class);
         if (apiEvents != null) {
-            APIEvent[] apiEventArr = apiEvents.values();
-            for (APIEvent event : apiEventArr) {
+            for (APIEvent event : apiEvents) {
                 this.extAPIEvent.add(new APIEventBean(event));
             }
         }
-
 
         if (apiEventAnnotation != null) {
             if (apiEventAnnotation != null) {

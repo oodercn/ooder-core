@@ -35,7 +35,9 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
                 actions.add(customAction);
             }
         }
-
+        if (apiCallBean.getExtAPIEvent() != null) {
+            this.addExtEvent(apiCallBean.getExtAPIEvent());
+        }
 
         this.addEvent(apiCallBean.getBeforeData());
         this.addAction(apiCallBean.getBeforeDataAction());
@@ -55,8 +57,6 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
         this.addAction(apiCallBean.getAfterInvokAction());
 
 
-
-
         List<APIEventBean> events = apiCallBean.getAllEvent();
         for (APIEventBean apiEvent : events) {
             List<Action> actions = apiEvent.getActions();
@@ -70,7 +70,7 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
 
     public APICallerComponent(MethodConfig methodAPIBean) {
         super(ComponentType.APICALLER, methodAPIBean.getMethodName());
-       // methodAPIBean.getAPIConfig()
+        // methodAPIBean.getAPIConfig()
         if (methodAPIBean.getApi() != null) {
             this.properties = methodAPIBean.getApi().getApiCallerProperties().clone();
             init(methodAPIBean.getApi());
@@ -105,6 +105,17 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
 
 
     void addEvent(List<APIEventBean> eventBeanSet) {
+        for (APIEventBean apiEventBean : eventBeanSet) {
+            List<Action> actions = apiEventBean.getActions();
+            for (Action action : actions) {
+                if (action != null) {
+                    this.addAction(action);
+                }
+            }
+        }
+    }
+
+    void addExtEvent(Set<APIEventBean> eventBeanSet) {
         for (APIEventBean apiEventBean : eventBeanSet) {
             List<Action> actions = apiEventBean.getActions();
             for (Action action : actions) {
