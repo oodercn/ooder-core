@@ -51,7 +51,7 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
 
     public Boolean isAllform;
 
-    APICallerProperties apiCallerProperties;
+    public APICallerProperties apiCallerProperties;
 
     public Set<Action> customAction = new LinkedHashSet<>();
 
