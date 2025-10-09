@@ -343,17 +343,37 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                 if (paramsMap != null) {
                     menuItem.getTagVar().putAll(paramsMap);
                 }
-                Set<Action> actions = component.getActions();
-
 
                 if (!apis.contains(component)) {
                     this.apis.add(component);
-                }
+                    Set<Action> actions = component.getActions();
+                    if (actions != null && actions.size() > 0) {
+                        for (Action action : actions) {
+                            if (this.parentId != null && !this.parentId.equals("")) {
+                                Condition condition = new Condition("{args[2].id}", SymbolType.equal, menuId);
+                                conditionList.add(condition);
+                                action.setEventKey(MenuEventEnum.onMenuSelected);
+                            } else {
+                                Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
+                                conditionList.add(condition);
+                                action.setEventKey(MenuEventEnum.onMenuBtnClick);
+                            }
 
-                if (actions != null && actions.size() > 0) {
-                    for (Action action : actions) {
-                        action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
+                            action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
+                            action.set_return(false);
+                            action.setConditions(conditionList);
+                            this.addAction(action);
+                        }
+                    } else {
+                        Action action = new Action(MenuEventEnum.onMenuSelected);
+                        action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
+                        action.setType(ActionTypeEnum.control);
+                        action.setTarget(component.getAlias());
+                        action.setDesc(caption);
+                        action.setMethod("invoke");
+                        action.setRedirection("other:callback:call");
                         action.set_return(false);
+
                         if (this.parentId != null && !this.parentId.equals("")) {
                             Condition condition = new Condition("{args[2].id}", SymbolType.equal, menuId);
                             conditionList.add(condition);
@@ -367,32 +387,13 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                             action.setEventKey(MenuEventEnum.onMenuBtnClick);
                             this.addAction(action);
                         }
-                    }
-                } else {
-                    Action action = new Action(MenuEventEnum.onMenuSelected);
-                    action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
-                    action.setType(ActionTypeEnum.control);
-                    action.setTarget(component.getAlias());
-                    action.setDesc(caption);
-                    action.setMethod("invoke");
-                    action.setRedirection("other:callback:call");
-                    action.set_return(false);
 
-                    if (this.parentId != null && !this.parentId.equals("")) {
-                        Condition condition = new Condition("{args[2].id}", SymbolType.equal, menuId);
-                        conditionList.add(condition);
-                        action.setConditions(conditionList);
-                        action.setEventKey(MenuEventEnum.onMenuSelected);
-                        this.addAction(action);
-                    } else {
-                        Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
-                        conditionList.add(condition);
-                        action.setConditions(conditionList);
-                        action.setEventKey(MenuEventEnum.onMenuBtnClick);
-                        this.addAction(action);
                     }
+
 
                 }
+
+
             }
         }
         return component;
