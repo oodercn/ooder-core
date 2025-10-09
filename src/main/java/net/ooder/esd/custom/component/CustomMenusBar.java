@@ -344,6 +344,12 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                     menuItem.getTagVar().putAll(paramsMap);
                 }
                 Set<Action> actions = component.getActions();
+
+
+                if (!apis.contains(component)) {
+                    this.apis.add(component);
+                }
+
                 if (actions != null && actions.size() > 0) {
                     for (Action action : actions) {
                         action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
@@ -363,15 +369,11 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                         }
                     }
                 } else {
-                    if (!apis.contains(component)) {
-                        this.apis.add(component);
-                    }
                     Action action = new Action(MenuEventEnum.onMenuSelected);
                     action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
                     action.setType(ActionTypeEnum.control);
                     action.setTarget(component.getAlias());
                     action.setDesc(caption);
-
                     action.setMethod("invoke");
                     action.setRedirection("other:callback:call");
                     action.set_return(false);
