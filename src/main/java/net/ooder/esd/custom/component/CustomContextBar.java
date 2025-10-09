@@ -196,11 +196,10 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
 
                 Condition baseCondition = new Condition("{args[3]}", SymbolType.nonempty, "");
                 Action setParamsAction = new SetTagVarQueryDataAction(component.getAlias(), eventKey);
-                // setParamsAction.addCondition(baseCondition);
 
                 fieldComponent.addAction(setParamsAction);
                 SetCustomQueryDataAction dataAction = new SetCustomQueryDataAction(component.getAlias(), "pos", "{args[4]}", eventKey);
-                // dataAction.addCondition(baseCondition);
+
                 fieldComponent.addAction(dataAction);
 
                 Action callAction = new CustomAPICallAction(component, eventKey);
@@ -549,50 +548,50 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
                     }
                 }
 
-                Set<Action> actions = component.getActions();
-                if (actions != null && actions.size() > 0) {
-                    for (Action action : actions) {
-                        action.setEventKey(MenuEventEnum.onMenuSelected);
-                        List<Condition> conditions = new ArrayList<>();
+                if (!apis.contains(component)) {
+                    this.apis.add(component);
+                    Set<Action> actions = component.getActions();
+                    if (actions != null && actions.size() > 0) {
+                        for (Action action : actions) {
+                            action.setEventKey(MenuEventEnum.onMenuSelected);
+                            List<Condition> conditions = new ArrayList<>();
+                            Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
+                            conditions.add(condition);
+                            action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
+                            action.setConditions(conditions);
+                            action.set_return(false);
+                            this.addAction(action, false);
+                        }
+                    } else {
+                        Action setParamsAction = new Action(PopMenuEventEnum.onMenuSelected);
+                        setParamsAction.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".setQueryData()}", null, null, "{args[0].tagVar}", ""}));
+                        setParamsAction.setType(ActionTypeEnum.control);
+                        setParamsAction.setDesc("设置扩展参数");
+                        setParamsAction.setTarget(component.getAlias());
+                        setParamsAction.setMethod("setQueryData");
+                        setParamsAction.setRedirection("other:callback:call");
+                        setParamsAction.setId(component.getAlias() + "_" + "setQueryData");
+                        this.addAction(setParamsAction, false);
+
+                        Action action = new Action(PopMenuEventEnum.onMenuSelected);
+                        action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
+                        action.setType(ActionTypeEnum.control);
+                        action.setTarget(component.getAlias());
+                        action.setDesc(caption);
+                        action.setMethod("invoke");
+                        action.setRedirection("other:callback:call");
                         Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
+                        List<Condition> conditions = new ArrayList<>();
                         conditions.add(condition);
-                        action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
                         action.setConditions(conditions);
                         action.set_return(false);
-                        this.addAction(action);
+                        action.setId(component.getAlias() + "_" + "invoke");
+                        this.addAction(action, false);
                     }
-                    if (!apis.contains(component)) {
-                        APICallerComponent apiCallerComponent = (APICallerComponent) component.clone();
-                        apiCallerComponent.getActions().clear();
-                        this.apis.add(apiCallerComponent);
-                    }
-                } else {
-                    if (!apis.contains(component)) {
-                        this.apis.add(component);
-                    }
-                    Action setParamsAction = new Action(PopMenuEventEnum.onMenuSelected);
-                    setParamsAction.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".setQueryData()}", null, null, "{args[0].tagVar}", ""}));
-                    setParamsAction.setType(ActionTypeEnum.control);
-                    setParamsAction.setDesc("设置扩展参数");
-                    setParamsAction.setTarget(component.getAlias());
-                    setParamsAction.setMethod("setQueryData");
-                    setParamsAction.setRedirection("other:callback:call");
-                    this.addAction(setParamsAction, false);
 
-                    Action action = new Action(PopMenuEventEnum.onMenuSelected);
-                    action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
-                    action.setType(ActionTypeEnum.control);
-                    action.setTarget(component.getAlias());
-                    action.setDesc(caption);
-                    action.setMethod("invoke");
-                    action.setRedirection("other:callback:call");
-                    Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
-                    List<Condition> conditions = new ArrayList<>();
-                    conditions.add(condition);
-                    action.setConditions(conditions);
-                    action.set_return(false);
-                    this.addAction(action, false);
                 }
+
+
             }
         }
     }

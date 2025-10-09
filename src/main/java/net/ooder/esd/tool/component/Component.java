@@ -111,7 +111,7 @@ public class Component<T extends Properties, K extends EventKey> {
     }
 
     public Component addAction(Action<K> action, boolean par) {
-        return addAction(action, true, null);
+        return addAction(action, par, null);
     }
 
     ;
@@ -136,19 +136,22 @@ public class Component<T extends Properties, K extends EventKey> {
             actions = new ArrayList<Action>();
         }
         if (!actions.contains(action)) {
-            if (this.getModuleComponent() != null && par) {
+
+            if (par) {
                 String json = JSONObject.toJSONString(action, false);
                 Map context = JDSActionContext.getActionContext().getContext();
-                context.put(CustomViewFactory.CurrModuleKey, this.getModuleComponent().getEuModule());
+                if (this.getModuleComponent() != null) {
+                    context.put(CustomViewFactory.CurrModuleKey, this.getModuleComponent().getEuModule());
+                }
                 String objStr = (String) TemplateRuntime.eval(json, context);
                 action = JSONObject.parseObject(objStr, new TypeReference<Action<K>>() {
                 });
+                action.setEventKey(eventKey);
             }
+
             actions.add(action);
         }
-        if (action.getEventKey() != null) {
-            event.setEventKey(action.getEventKey());
-        }
+
 
         event.setActions(actions);
         events.put(eventKey, event);

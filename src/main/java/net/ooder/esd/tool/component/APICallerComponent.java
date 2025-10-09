@@ -31,9 +31,15 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
         Set<Action> customActions = apiCallBean.getBindAction();
         if (customActions.size() > 0) {
             actions = new HashSet<>();
+            int k =0;
+            if (this.getActions()!=null){
+                k = this.getActions().size();
+            }
             for (Action customAction : customActions) {
                 customAction.updateArgs("{page." + this.getAlias() + "}", 3);
+                customAction.setId(this.getAlias() + "_" + k);
                 actions.add(customAction);
+                k++;
             }
         }
         if (apiCallBean.getExtAPIEvent() != null) {
@@ -56,13 +62,17 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
         this.addAction(apiCallBean.getCallbackAction());
         this.addEvent(apiCallBean.getAfterInvoke());
         this.addAction(apiCallBean.getAfterInvokAction());
-
-
         List<APIEventBean> events = apiCallBean.getAllEvent();
         for (APIEventBean apiEvent : events) {
             List<Action> actions = apiEvent.getActions();
+            int k =0;
+            if (this.getActions()!=null){
+                k = this.getActions().size();
+            }
             for (Action action : actions) {
+                action.setId(this.getAlias() + "_" + k);
                 this.addAction(action, true, apiEvent.getEventReturn());
+                k++;
             }
         }
 

@@ -148,16 +148,14 @@ public class Action<K extends EventKey> implements CustomBean {
             String[] argArr = new String[]{script, null, null, null};
             args.addAll(Arrays.asList(argArr));
             args.addAll(params);
+            this.id = customAction.getClass().getSimpleName() + "_" + customAction.name() + "_" + method;
         } else {
+            this.id = type + "_" + method;
             this.type = customAction.type();
-            if (customAction.getClass().isEnum()) {
-                this.enumClassName = customAction.getClass().getName();
-                this.enumValue = customAction.name();
-            }
-
             this._return = customAction._return();
             if (target != null && (!target.equals(customAction.target()))) {
                 this.target = target;
+                this.id = target + "_" + this.id;
                 if (customAction.args() != null) {
                     this.args = Arrays.asList(customAction.args());
                     int k = 0;
@@ -175,13 +173,17 @@ public class Action<K extends EventKey> implements CustomBean {
 
             this.method = customAction.method();
             this.redirection = customAction.redirection();
+
+            if (customAction.getClass().isEnum()) {
+                this.enumClassName = customAction.getClass().getName();
+                this.enumValue = customAction.name();
+                this.id = enumClassName + "_" + enumValue + "_" + this.id;
+            } else {
+                this.id = customAction.getClass().getSimpleName() + "_" + this.id;
+            }
         }
 
-        if (target != null) {
-            this.id = target + "_" + type + "_" + method;
-        } else {
-            this.id = type + "_" + method;
-        }
+
         if (customAction.conditions() != null) {
             conditions = new ArrayList<>();
             for (CustomCondition customCondition : customAction.conditions()) {
