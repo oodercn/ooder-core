@@ -138,6 +138,22 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
     }
 
 
+    public List<GalleryItemBean> getGalleryItemBeans() {
+        return galleryItemBeans;
+    }
+
+    public void setGalleryItemBeans(List<GalleryItemBean> galleryItemBeans) {
+        this.galleryItemBeans = galleryItemBeans;
+    }
+
+    public Map<GalleryEventEnum, List<Action>> getCustomActions() {
+        return customActions;
+    }
+
+    public void setCustomActions(Map<GalleryEventEnum, List<Action>> customActions) {
+        this.customActions = customActions;
+    }
+
     @JSONField(serialize = false)
     public List<CustomBean> getAnnotationBeans() {
         List<M> toolBarMenu = getCustomMenu();

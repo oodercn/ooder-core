@@ -3,9 +3,9 @@ package net.ooder.esd.bean;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomAction;
-import net.ooder.esd.annotation.event.CustomGalleryEvent;
-import net.ooder.esd.annotation.event.GalleryEvent;
-import net.ooder.esd.annotation.event.GalleryEventEnum;
+import net.ooder.esd.annotation.event.CustomGridEvent;
+import net.ooder.esd.annotation.event.GridEvent;
+import net.ooder.esd.annotation.event.GridEventEnum;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Event;
 import net.ooder.web.util.AnnotationUtil;
@@ -13,8 +13,8 @@ import net.ooder.web.util.AnnotationUtil;
 import java.util.ArrayList;
 
 
-@AnnotationType(clazz = GalleryEvent.class)
-public class GalleryEventBean<T extends Action> extends Event<T, GalleryEventEnum> implements CustomBean {
+@AnnotationType(clazz = GridEvent.class)
+public class GridEventBean<T extends Action> extends Event<T, GridEventEnum> implements CustomBean {
 
     String eventId;
 
@@ -27,27 +27,27 @@ public class GalleryEventBean<T extends Action> extends Event<T, GalleryEventEnu
     String domainId;
 
 
-    public GalleryEventBean(String domainId, String sourceClassName, String methodName) {
+    public GridEventBean(String domainId, String sourceClassName, String methodName) {
         this.domainId = domainId;
         this.sourceClassName = sourceClassName;
         this.methodName = methodName;
     }
 
-    public GalleryEventBean() {
+    public GridEventBean() {
 
     }
 
-    public GalleryEventBean(CustomGalleryEvent galleryEventEnum) {
-        this.eventKey = galleryEventEnum.getEventEnum();
-        this.desc = galleryEventEnum.getName();
+    public GridEventBean(CustomGridEvent gridEventEnum) {
+        this.eventKey = gridEventEnum.getEventEnum();
+        this.desc = gridEventEnum.getName();
         this.eventId = eventKey.name() + "|" + eventKey.getEvent();
-        this.expression = galleryEventEnum.getExpression();
-        CustomAction[] actionSet = galleryEventEnum.getActions();
+        this.expression = gridEventEnum.getExpression();
+        CustomAction[] actionSet = gridEventEnum.getActions();
         addAction(actionSet);
 
     }
 
-    public GalleryEventBean(GalleryEvent event) {
+    public GridEventBean(GridEvent event) {
         this.eventKey = event.eventEnum();
         this.desc = event.desc();
         this.expression = event.expression();

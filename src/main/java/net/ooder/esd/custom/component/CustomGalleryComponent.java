@@ -13,8 +13,8 @@ import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.RightContextMenuBean;
 import net.ooder.esd.bean.data.CustomGalleryDataBean;
-import net.ooder.esd.bean.view.CustomGalleryViewBean;
 import net.ooder.esd.bean.grid.PageBarBean;
+import net.ooder.esd.bean.view.CustomGalleryViewBean;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.action.CustomAPICallAction;
 import net.ooder.esd.custom.action.ShowPageAction;
@@ -59,7 +59,7 @@ public class CustomGalleryComponent extends CustomModuleComponent<GalleryCompone
     RightContextMenuBean contextMenuBean;
 
 
-   // BlockComponent layoutComponent;
+    // BlockComponent layoutComponent;
 
     @JSONField(serialize = false)
     private PageBarComponent<PageBarProperties, PageEventEnum, Integer> pageBarComponent;
@@ -71,11 +71,11 @@ public class CustomGalleryComponent extends CustomModuleComponent<GalleryCompone
 
     public CustomGalleryComponent(EUModule module, MethodConfig methodConfig, Map<String, Object> valueMap) throws ClassNotFoundException {
         super(module, methodConfig, valueMap);
-       // this.layoutComponent = new BlockComponent(Dock.fill, methodConfig.getFieldName() + ComponentType.Block.name());
+        // this.layoutComponent = new BlockComponent(Dock.fill, methodConfig.getFieldName() + ComponentType.Block.name());
     }
 
     public void addChildNav(GalleryComponent currComponent) {
-       // layoutComponent.addChildren(currComponent);
+        // layoutComponent.addChildren(currComponent);
         super.addChildLayoutNav(currComponent);
         this.setCurrComponent(currComponent);
         try {
@@ -135,6 +135,7 @@ public class CustomGalleryComponent extends CustomModuleComponent<GalleryCompone
         }
         super.fillAction(viewBean);
         this.fillMenuAction(viewBean, currComponent);
+        this.fillCustomAction(viewBean, currComponent);
 
     }
 
@@ -148,8 +149,17 @@ public class CustomGalleryComponent extends CustomModuleComponent<GalleryCompone
         } catch (JDSException e) {
             e.printStackTrace();
         }
+    }
 
-
+    protected void fillCustomAction(CustomGalleryViewBean view, Component currComponent) {
+        Map<GalleryEventEnum, List<Action>> enumListMap = view.getCustomActions();
+        Set<GalleryEventEnum> viewEventEnumSet = enumListMap.keySet();
+        for (GalleryEventEnum eventEnum : viewEventEnumSet) {
+            List<Action> actions = enumListMap.get(eventEnum);
+            for (Action action : actions) {
+                currComponent.addAction(action);
+            }
+        }
     }
 
 
