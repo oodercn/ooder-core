@@ -371,6 +371,7 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                     action.setType(ActionTypeEnum.control);
                     action.setTarget(component.getAlias());
                     action.setDesc(caption);
+
                     action.setMethod("invoke");
                     action.setRedirection("other:callback:call");
                     action.set_return(false);
