@@ -34,7 +34,7 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
 
     List<GalleryItemBean> galleryItemBeans = new ArrayList<>();
 
-    Map<GalleryEventEnum, List<Action>> customActions = new HashMap<>();
+    public LinkedHashSet<GalleryEventBean> extAPIEvent = new LinkedHashSet<>();
 
     public BaseGalleryViewBean() {
         super();
@@ -74,7 +74,7 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
         GalleryEvent galleryEvent = AnnotationUtil.getClassAnnotation(clazz, GalleryEvent.class);
         if (galleryEvent != null) {
             GalleryEventBean galleryEventBean = new GalleryEventBean(galleryEvent);
-            this.addActions((GalleryEventEnum) galleryEventBean.getEventKey(), galleryEventBean.getActions());
+            extAPIEvent.add(galleryEventBean);
         }
 
 
@@ -111,20 +111,19 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
     }
 
 
-    void addActions(GalleryEventEnum eventEnum, List<Action> actions) {
-        List<Action> actionList = this.customActions.get(eventEnum);
-        if (actionList == null) {
-            actionList = new ArrayList<>();
-        }
-
-        for (Action ac : actions) {
-            if (!actionList.contains(ac)) {
-                actionList.add(ac);
-            }
-        }
-        customActions.put(eventEnum, actionList);
-
-    }
+//    void addActions(GalleryEventEnum eventEnum, List<Action> actions) {
+//        List<Action> actionList = this.customActions.get(eventEnum);
+//        if (actionList == null) {
+//            actionList = new ArrayList<>();
+//        }
+//        for (Action ac : actions) {
+//            if (!actionList.contains(ac)) {
+//                actionList.add(ac);
+//            }
+//        }
+//        customActions.put(eventEnum, actionList);
+//
+//    }
 
 
     @Override
@@ -146,12 +145,12 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
         this.galleryItemBeans = galleryItemBeans;
     }
 
-    public Map<GalleryEventEnum, List<Action>> getCustomActions() {
-        return customActions;
+    public LinkedHashSet<GalleryEventBean> getExtAPIEvent() {
+        return extAPIEvent;
     }
 
-    public void setCustomActions(Map<GalleryEventEnum, List<Action>> customActions) {
-        this.customActions = customActions;
+    public void setExtAPIEvent(LinkedHashSet<GalleryEventBean> extAPIEvent) {
+        this.extAPIEvent = extAPIEvent;
     }
 
     @JSONField(serialize = false)

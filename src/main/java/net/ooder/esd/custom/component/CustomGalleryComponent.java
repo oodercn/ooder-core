@@ -10,6 +10,7 @@ import net.ooder.esd.annotation.event.ModuleEventEnum;
 import net.ooder.esd.annotation.event.PageEventEnum;
 import net.ooder.esd.annotation.menu.CustomGalleryMenu;
 import net.ooder.esd.annotation.ui.*;
+import net.ooder.esd.bean.GalleryEventBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.RightContextMenuBean;
 import net.ooder.esd.bean.data.CustomGalleryDataBean;
@@ -152,12 +153,11 @@ public class CustomGalleryComponent extends CustomModuleComponent<GalleryCompone
     }
 
     protected void fillCustomAction(CustomGalleryViewBean view, Component currComponent) {
-        Map<GalleryEventEnum, List<Action>> enumListMap = view.getCustomActions();
-        Set<GalleryEventEnum> viewEventEnumSet = enumListMap.keySet();
-        for (GalleryEventEnum eventEnum : viewEventEnumSet) {
-            List<Action> actions = enumListMap.get(eventEnum);
+        Set<GalleryEventBean> extAPIEvent = view.getExtAPIEvent();
+        for (GalleryEventBean eventEnum : extAPIEvent) {
+            List<Action> actions = eventEnum.getActions();
             for (Action action : actions) {
-                currComponent.addAction(action);
+                currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
         }
     }

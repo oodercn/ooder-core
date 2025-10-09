@@ -52,6 +52,9 @@ public class GridEventBean<T extends Action> extends Event<T, GridEventEnum> imp
         this.desc = event.desc();
         this.expression = event.expression();
         this.eventId = eventKey.name() + "|" + eventKey.getEvent();
+        if (!event._return()) {
+            this.eventReturn = "{false}";
+        }
         addAction(event.actions());
         addAction(event.customActions());
     }

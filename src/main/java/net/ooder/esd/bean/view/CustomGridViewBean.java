@@ -1,21 +1,23 @@
 package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
+import net.ooder.annotation.CustomBean;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.StringUtility;
-import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.*;
 import net.ooder.esd.annotation.event.CustomGridEvent;
+import net.ooder.esd.annotation.event.GridEvent;
+import net.ooder.esd.annotation.event.GridEventEnum;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.menu.GridMenu;
+import net.ooder.esd.annotation.ui.ComboInputType;
+import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.ui.Dock;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.bar.ContextMenuBar;
 import net.ooder.esd.bean.bar.ToolsBar;
-import net.ooder.esd.annotation.event.GridEventEnum;
-import net.ooder.esd.annotation.ui.ComboInputType;
-import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.annotation.ui.Dock;
 import net.ooder.esd.bean.grid.ChildGridViewBean;
 import net.ooder.esd.bean.grid.GridRowCmdBean;
 import net.ooder.esd.bean.grid.PageBarBean;
@@ -28,10 +30,8 @@ import net.ooder.esd.dsm.view.field.FieldGridConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.OODTypeMapping;
 import net.ooder.esd.tool.component.*;
-import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.*;
 import net.ooder.esd.tool.properties.item.UIItem;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
@@ -101,6 +101,8 @@ public class CustomGridViewBean extends CustomViewBean<FieldGridConfig, UIItem, 
     RowHeadBean rowHead;
 
     Set<ChildGridViewBean> childBeans = new LinkedHashSet<>();
+
+    public LinkedHashSet<GridEventBean> extAPIEvent = new LinkedHashSet<>();
 
     public CustomGridViewBean() {
 
@@ -240,9 +242,17 @@ public class CustomGridViewBean extends CustomViewBean<FieldGridConfig, UIItem, 
             AnnotationUtil.fillDefaultValue(GridAnnotation.class, this);
         }
 
+        GridEvent gridEvent = AnnotationUtil.getClassAnnotation(clazz, GridEvent.class);
+        if (gridEvent != null) {
+            GridEventBean gridEventBean = new GridEventBean(gridEvent);
+            extAPIEvent.add(gridEventBean);
+
+        }
+
+
         RightContextMenu contextMenu = AnnotationUtil.getClassAnnotation(clazz, RightContextMenu.class);
         if (contextMenu != null) {
-            contextMenuBean = new RightContextMenuBean(this.getId(),contextMenu);
+            contextMenuBean = new RightContextMenuBean(this.getId(), contextMenu);
         }
 
         PageBar pageBarAnnotation = AnnotationUtil.getClassAnnotation(clazz, PageBar.class);
@@ -304,6 +314,14 @@ public class CustomGridViewBean extends CustomViewBean<FieldGridConfig, UIItem, 
 
     }
 
+    public LinkedHashSet<GridEventBean> getExtAPIEvent() {
+        return extAPIEvent;
+    }
+
+    public void setExtAPIEvent(LinkedHashSet<GridEventBean> extAPIEvent) {
+        this.extAPIEvent = extAPIEvent;
+    }
+
     @Override
     public ComponentType getComponentType() {
         return ComponentType.TREEGRID;
@@ -342,7 +360,7 @@ public class CustomGridViewBean extends CustomViewBean<FieldGridConfig, UIItem, 
             annotationBeans.add(menuBar);
         }
 
-        if (bottomBar != null ) {
+        if (bottomBar != null) {
             annotationBeans.add(bottomBar);
         }
 
@@ -350,7 +368,7 @@ public class CustomGridViewBean extends CustomViewBean<FieldGridConfig, UIItem, 
             annotationBeans.add(contextMenuBean);
         }
 
-        if (pageBar != null ) {
+        if (pageBar != null) {
             annotationBeans.add(pageBar);
         }
 
@@ -377,6 +395,7 @@ public class CustomGridViewBean extends CustomViewBean<FieldGridConfig, UIItem, 
     public void setDock(Dock dock) {
         this.dock = dock;
     }
+
 
     @Override
     @JSONField(serialize = false)

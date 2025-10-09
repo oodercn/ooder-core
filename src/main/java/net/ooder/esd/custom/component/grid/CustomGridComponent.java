@@ -4,22 +4,23 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
+import net.ooder.esd.annotation.action.CustomGridAction;
+import net.ooder.esd.annotation.event.CustomGridEvent;
+import net.ooder.esd.annotation.event.PageEventEnum;
+import net.ooder.esd.annotation.menu.GridMenu;
+import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ui.RequestPathTypeEnum;
 import net.ooder.esd.annotation.ui.ResponsePathTypeEnum;
-import net.ooder.esd.annotation.event.PageEventEnum;
-import net.ooder.esd.annotation.action.CustomGridAction;
-import net.ooder.esd.annotation.event.CustomGridEvent;
-import net.ooder.esd.annotation.menu.GridMenu;
-import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.bean.GridEventBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.data.CustomGridDataBean;
-import net.ooder.esd.bean.view.CustomGridViewBean;
 import net.ooder.esd.bean.grid.GridRowCmdBean;
 import net.ooder.esd.bean.grid.PageBarBean;
-import net.ooder.esd.custom.component.CustomModuleComponent;
+import net.ooder.esd.bean.view.CustomGridViewBean;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.action.ShowPageAction;
+import net.ooder.esd.custom.component.CustomModuleComponent;
 import net.ooder.esd.custom.properties.CustomCmdBar;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.*;
@@ -77,6 +78,24 @@ public class CustomGridComponent<M extends TreeGridComponent> extends CustomModu
     public CustomGridComponent(EUModule module, MethodConfig methodConfig, Map<String, Object> valueMap) {
         super(module, methodConfig, valueMap);
     }
+
+
+    //填充默认绑定动作
+    protected void fillMenuAction(CustomGridViewBean viewBean, Component currComponent) {
+        try {
+            if (viewBean != null) {
+                this.fillRowCmd(viewBean, currComponent);
+                super.fillContextAction(viewBean, currComponent);
+                super.fillToolBar(viewBean, currComponent);
+
+            }
+        } catch (JDSException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
     public void addChildNav(Component currComponent) {
         super.addChildLayoutNav(currComponent);
@@ -141,23 +160,23 @@ public class CustomGridComponent<M extends TreeGridComponent> extends CustomModu
         }
 
         super.fillAction(viewBean);
+
+        this.fillCustomAction(viewBean, currComponent);
     }
 
 
-    //填充默认绑定动作
-    protected void fillMenuAction(CustomGridViewBean viewBean, Component currComponent) {
-        try {
-            if (viewBean != null) {
-                this.fillRowCmd(viewBean, currComponent);
-                super.fillContextAction(viewBean, currComponent);
-                super.fillToolBar(viewBean, currComponent);
+    protected void fillCustomAction(CustomGridViewBean view, Component currComponent) {
+
+        Set<GridEventBean> extAPIEvent = view.getExtAPIEvent();
+        for (GridEventBean eventEnum : extAPIEvent) {
+            List<Action> actions = eventEnum.getActions();
+            for (Action action : actions) {
+                currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
-        } catch (JDSException e) {
-            e.printStackTrace();
         }
 
-
     }
+
 
     public void fillRowCmd(CustomGridViewBean viewBean, Component currComponent) {
         GridRowCmdBean rowCmdBean = viewBean.getRowCmdBean();
@@ -167,8 +186,6 @@ public class CustomGridComponent<M extends TreeGridComponent> extends CustomModu
             }
         }
     }
-
-
 
 
     public PageBarComponent getPageBarComponent() {
