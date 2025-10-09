@@ -553,7 +553,7 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
                     Set<Action> actions = component.getActions();
                     if (actions != null && actions.size() > 0) {
                         for (Action action : actions) {
-                            action.setEventKey(MenuEventEnum.onMenuSelected);
+                            action.setEventKey(PopMenuEventEnum.onMenuSelected);
                             List<Condition> conditions = new ArrayList<>();
                             Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                             conditions.add(condition);
