@@ -273,6 +273,8 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                 ShowPageAction action = new ShowPageAction(MenuEventEnum.onMenuSelected);
                 action.setTarget(className);
                 action.updateArgs("{args[1].tagVar}", 5);
+                action.updateArgs("{args[1]}", 6);
+                action.updateArgs("{args[0]}", 7);
 
                 if (this.parentId != null && !this.parentId.equals("")) {
                     action.setDesc("打开" + component.getProperties().getDesc());

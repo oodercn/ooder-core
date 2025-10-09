@@ -510,6 +510,8 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
                 conditions.add(condition);
                 action.setConditions(conditions);
                 action.updateArgs("{args[0].tagVar}", 5);
+                action.updateArgs("{args[0]}", 6);
+                action.updateArgs("{args[1]}", 7);
                 action.set_return(false);
                 this.addAction(action);
             }
