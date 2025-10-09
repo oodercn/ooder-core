@@ -447,16 +447,13 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
                     this.getProperties().addItem(menuItem);
                     itemMap.put(menuId, menuItem);
                 } else {
-
                     if (!type.expression().equals("")) {
                         menuItem.setExpression(type.expression());
                     }
                     if (!type.imageClass().equals("")) {
                         menuItem.setImageClass(type.imageClass());
                     }
-
                 }
-
                 fillActions(type);
             }
         }
@@ -551,8 +548,8 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
                         menuItem.setImageClass(imageClass);
                     }
                 }
-                Set<Action> actions = component.getActions();
 
+                Set<Action> actions = component.getActions();
                 if (actions != null && actions.size() > 0) {
                     for (Action action : actions) {
                         action.setEventKey(MenuEventEnum.onMenuSelected);
@@ -580,7 +577,7 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
                     setParamsAction.setTarget(component.getAlias());
                     setParamsAction.setMethod("setQueryData");
                     setParamsAction.setRedirection("other:callback:call");
-                    this.addAction(setParamsAction);
+                    this.addAction(setParamsAction, false);
 
                     Action action = new Action(PopMenuEventEnum.onMenuSelected);
                     action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
@@ -594,7 +591,7 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
                     conditions.add(condition);
                     action.setConditions(conditions);
                     action.set_return(false);
-                    this.addAction(action);
+                    this.addAction(action, false);
                 }
             }
         }

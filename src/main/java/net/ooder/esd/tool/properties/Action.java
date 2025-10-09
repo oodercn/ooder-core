@@ -129,7 +129,6 @@ public class Action<K extends EventKey> implements CustomBean {
     }
 
     void initAction(CustomAction customAction, String target) {
-
         if (customAction.script() != null && !customAction.script().equals("")) {
             method = "call";
             type = ActionTypeEnum.other;
@@ -140,14 +139,12 @@ public class Action<K extends EventKey> implements CustomBean {
                 script = "{" + script + "}";
             }
             List<String> params = new ArrayList<>();
-
             for (String param : customAction.params()) {
                 if (!param.startsWith("{") && !param.endsWith("}")) {
                     param = "{" + param + "}";
                 }
                 params.add(param);
             }
-
             String[] argArr = new String[]{script, null, null, null};
             args.addAll(Arrays.asList(argArr));
             args.addAll(params);
@@ -178,14 +175,13 @@ public class Action<K extends EventKey> implements CustomBean {
 
             this.method = customAction.method();
             this.redirection = customAction.redirection();
-            if (target != null) {
-                this.id = target + "_" + type + "_" + method;
-            } else {
-                this.id = type + "_" + method;
-            }
-
         }
 
+        if (target != null) {
+            this.id = target + "_" + type + "_" + method;
+        } else {
+            this.id = type + "_" + method;
+        }
         if (customAction.conditions() != null) {
             conditions = new ArrayList<>();
             for (CustomCondition customCondition : customAction.conditions()) {
