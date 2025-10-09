@@ -3,7 +3,8 @@ package net.ooder.esd.bean.view;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.*;
-import net.ooder.esd.annotation.event.CustomEvent;
+import net.ooder.esd.annotation.action.CustomGalleryAction;
+import net.ooder.esd.annotation.event.*;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.gallery.GalleryItemBean;
@@ -14,14 +15,12 @@ import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.GalleryComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.web.util.AnnotationUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends CustomEvent> extends CustomViewBean<FieldGalleryConfig, TabListItem, GalleryComponent> implements ComponentBean<GalleryComponent> {
 
@@ -34,6 +33,8 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
     EnumsClassBean enumsClassBean;
 
     List<GalleryItemBean> galleryItemBeans = new ArrayList<>();
+
+    Map<GalleryEventEnum, List<Action>> customActions = new HashMap<>();
 
     public BaseGalleryViewBean() {
         super();
@@ -69,6 +70,14 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
             this.setEnumClass(clazz);
         }
 
+
+        GalleryEvent galleryEvent = AnnotationUtil.getClassAnnotation(clazz, GalleryEvent.class);
+        if (galleryEvent != null) {
+            GalleryEventBean galleryEventBean = new GalleryEventBean(galleryEvent);
+            this.addActions((GalleryEventEnum) galleryEventBean.getEventKey(), galleryEventBean.getActions());
+        }
+
+
         EnumsClass enums = AnnotationUtil.getClassAnnotation(clazz, EnumsClass.class);
         if (enums != null && enums.clazz() != null) {
             this.setEnumClass(enums.clazz());
@@ -98,6 +107,22 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
         if (contextMenu != null) {
             contextMenuBean = new RightContextMenuBean(this.getId(), contextMenu);
         }
+
+    }
+
+
+    void addActions(GalleryEventEnum eventEnum, List<Action> actions) {
+        List<Action> actionList = this.customActions.get(eventEnum);
+        if (actionList == null) {
+            actionList = new ArrayList<>();
+        }
+
+        for (Action ac : actions) {
+            if (!actionList.contains(ac)) {
+                actionList.add(ac);
+            }
+        }
+        customActions.put(eventEnum, actionList);
 
     }
 
