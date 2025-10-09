@@ -32,6 +32,7 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
         if (customActions.size() > 0) {
             actions = new HashSet<>();
             for (Action customAction : customActions) {
+                customAction.updateArgs("{page." + this.getAlias() + "}", 3);
                 actions.add(customAction);
             }
         }

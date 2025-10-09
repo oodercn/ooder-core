@@ -1,6 +1,7 @@
 package net.ooder.esd.custom.component;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import javassist.NotFoundException;
 import net.ooder.annotation.EsbBeanAnnotation;
 import net.ooder.common.EventKey;
 import net.ooder.common.JDSConstants;
@@ -38,7 +39,6 @@ import net.ooder.esd.util.json.APICallSerialize;
 import net.ooder.esd.util.json.CaseEnumsSerializer;
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.jds.core.esb.task.ExcuteObj;
-import javassist.NotFoundException;
 
 import java.util.*;
 
@@ -536,7 +536,6 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
             } else {
                 String menuId = component.getAlias() + ComboInputType.button.name();
                 TreeListItem menuItem = itemMap.get(menuId);
-
                 if (menuItem == null) {
                     menuItem = createListItem(menuId, caption, imageClass);
                     this.getProperties().addItem(menuItem);
@@ -556,6 +555,7 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
 
                 if (actions != null && actions.size() > 0) {
                     for (Action action : actions) {
+                        action.setEventKey(MenuEventEnum.onMenuSelected);
                         List<Condition> conditions = new ArrayList<>();
                         Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                         conditions.add(condition);
@@ -564,8 +564,12 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
                         action.set_return(false);
                         this.addAction(action);
                     }
+                    if (!apis.contains(component)) {
+                        APICallerComponent apiCallerComponent = (APICallerComponent) component.clone();
+                        apiCallerComponent.getActions().clear();
+                        this.apis.add(apiCallerComponent);
+                    }
                 } else {
-
                     if (!apis.contains(component)) {
                         this.apis.add(component);
                     }

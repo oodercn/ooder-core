@@ -139,9 +139,18 @@ public class Action<K extends EventKey> implements CustomBean {
             if (!script.startsWith("{") && !script.endsWith("}")) {
                 script = "{" + script + "}";
             }
-            String[] argArr = new String[]{script, null, null};
+            List<String> params = new ArrayList<>();
+
+            for (String param : customAction.params()) {
+                if (!param.startsWith("{") && !param.endsWith("}")) {
+                    param = "{" + param + "}";
+                }
+                params.add(param);
+            }
+
+            String[] argArr = new String[]{script, null, null, null};
             args.addAll(Arrays.asList(argArr));
-            args.addAll(Arrays.asList(customAction.params()));
+            args.addAll(params);
         } else {
             this.type = customAction.type();
             if (customAction.getClass().isEnum()) {
