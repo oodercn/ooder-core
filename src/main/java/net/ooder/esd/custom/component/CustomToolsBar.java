@@ -72,6 +72,8 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
     public CustomToolsBar(ToolBarMenuBean toolBarBean) {
         super(toolBarBean.getAlias(), new ToolBarProperties(toolBarBean));
         this.id = toolBarBean.getId();
+        this.showCaption = toolBarBean.getShowCaption();
+        this.id = toolBarBean.getId();
     }
 
     public CustomToolsBar() {

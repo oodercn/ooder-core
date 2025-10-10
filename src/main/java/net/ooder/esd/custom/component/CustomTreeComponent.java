@@ -187,6 +187,7 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
                     APICallerComponent apiCallerComponent = (APICallerComponent) this.findComponentByAlias(methodConfig.getMethodName());
                     if (apiCallerComponent == null) {
                         apiCallerComponent = new APICallerComponent(methodConfig);
+                        this.addChildren(apiCallerComponent);
                     }
                     action.updateArgs("{page." + apiCallerComponent.getAlias() + "}", 3);
                 }
@@ -194,8 +195,6 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
             }
         }
     }
-
-
 
 
     void addReloadChildAPI(MethodConfig childMethod, String groupName) {

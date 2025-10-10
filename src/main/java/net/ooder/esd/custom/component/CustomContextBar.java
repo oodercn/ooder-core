@@ -537,13 +537,13 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
                     this.getProperties().addItem(menuItem);
                     itemMap.put(menuId, menuItem);
                 } else {
-                    if (!caption.equals("")) {
+                    if (caption != null && !caption.equals("")) {
                         menuItem.setCaption(caption);
                     }
                     if (expression != null && !expression.equals("")) {
                         menuItem.setExpression(expression);
                     }
-                    if (!imageClass.equals("")) {
+                    if (imageClass != null && !imageClass.equals("")) {
                         menuItem.setImageClass(imageClass);
                     }
                 }
