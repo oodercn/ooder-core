@@ -92,7 +92,6 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
 
         if (methodAPIBean.getMethod() != null) {
             this.properties.update(methodAPIBean);
-
         }
 
         if (methodAPIBean.getFieldBean() != null && methodAPIBean.getFieldBean().getInputType() != null) {

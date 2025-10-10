@@ -391,12 +391,22 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
             AnnotationUtil.fillDefaultValue(ChildTreeAnnotation.class, this);
         }
 
+       MethodConfig methodConfig= this.findMethod(CustomTreeEvent.TREENODEEDITOR);
+       if (methodConfig!=null){
+           TreeEvent treeEvent = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), TreeEvent.class);
+           if (treeEvent != null) {
+               TreeEventBean treeEventBean = new TreeEventBean(treeEvent);
+               this.extAPIEvent.add(treeEventBean);
+           }
+       } else{
+           TreeEvent treeEvent = AnnotationUtil.getConstructorAnnotation(constructor, TreeEvent.class);
+           if (treeEvent != null) {
+               TreeEventBean treeEventBean = new TreeEventBean(treeEvent);
+               this.extAPIEvent.add(treeEventBean);
+           }
+       }
 
-        TreeEvent treeEvent = AnnotationUtil.getConstructorAnnotation(constructor, TreeEvent.class);
-        if (treeEvent != null) {
-            TreeEventBean treeEventBean = new TreeEventBean(treeEvent);
-            this.extAPIEvent.add(treeEventBean);
-        }
+
 
 
         RightContextMenu annotation = AnnotationUtil.getConstructorAnnotation(constructor, RightContextMenu.class);

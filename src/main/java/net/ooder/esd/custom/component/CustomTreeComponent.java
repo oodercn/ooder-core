@@ -176,18 +176,26 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
         Condition condition = new Condition("{args[1].groupName}", SymbolType.equal, groupName);
         Set<TreeEventBean> extAPIEvent = childTreeViewBean.getExtAPIEvent();
         MethodConfig methodConfig = childTreeViewBean.findMethod(CustomTreeEvent.TREENODEEDITOR);
-        APICallerComponent apiCallerComponent = new APICallerComponent(methodConfig);
+
         for (TreeEventBean eventEnum : extAPIEvent) {
             List<Action> actions = eventEnum.getActions();
             for (Action action : actions) {
                 if (!action.getConditions().contains(condition)) {
                     action.getConditions().add(condition);
                 }
-                action.updateArgs("{page." + apiCallerComponent.getAlias() + "}", 3);
+                if (methodConfig != null) {
+                    APICallerComponent apiCallerComponent = (APICallerComponent) this.findComponentByAlias(methodConfig.getMethodName());
+                    if (apiCallerComponent == null) {
+                        apiCallerComponent = new APICallerComponent(methodConfig);
+                    }
+                    action.updateArgs("{page." + apiCallerComponent.getAlias() + "}", 3);
+                }
                 currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
         }
     }
+
+
 
 
     void addReloadChildAPI(MethodConfig childMethod, String groupName) {
@@ -439,7 +447,6 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
         }
 
     }
-
 
 
     public String getSaveRowPath() {
