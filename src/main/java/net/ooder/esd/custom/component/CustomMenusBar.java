@@ -359,7 +359,7 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                                 action.setEventKey(MenuEventEnum.onMenuBtnClick);
                             }
                             action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
-                            action.set_return(false);
+                            //action.set_return(false);
                             action.updateArgs("{page." + component.getAlias() + "}", 3);
                             action.setConditions(conditionList);
                             this.addAction(action);

@@ -68,7 +68,6 @@ public class CustomGalleryComponent extends CustomModuleComponent<GalleryCompone
 
     public CustomGalleryComponent(EUModule module, MethodConfig methodConfig, Map<String, Object> valueMap) throws ClassNotFoundException {
         super(module, methodConfig, valueMap);
-        // this.layoutComponent = new BlockComponent(Dock.fill, methodConfig.getFieldName() + ComponentType.Block.name());
     }
 
     public void addChildNav(GalleryComponent currComponent) {
@@ -152,7 +151,7 @@ public class CustomGalleryComponent extends CustomModuleComponent<GalleryCompone
         for (GalleryEventBean eventEnum : extAPIEvent) {
             List<Action> actions = eventEnum.getActions();
             for (Action action : actions) {
-                action.updateArgs("{page." + this.getAlias() + "}", 4);
+                action.updateArgs("{page." + this.getAlias() + "}", 3);
                 currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
         }
