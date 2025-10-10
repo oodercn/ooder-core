@@ -10,21 +10,21 @@ public class TreeBarComponent extends Component<TreeViewProperties<TreeListItem>
 
 
     public TreeBarComponent addAction(Action<TreeViewEventEnum> action) {
-        super.addAction( action);
+        super.addAction(action);
         return this;
     }
 
 
     public TreeBarComponent(String alias, TreeViewProperties<TreeListItem> properties) {
-        super(ComponentType.LAYOUT, alias);
+        super(ComponentType.TREEBAR, alias);
         this.setProperties(properties);
 
     }
 
 
     public TreeBarComponent() {
-        super(ComponentType.LAYOUT);
-        this.setProperties( new TreeViewProperties());
+        super(ComponentType.TREEBAR);
+        this.setProperties(new TreeViewProperties());
     }
 
 }

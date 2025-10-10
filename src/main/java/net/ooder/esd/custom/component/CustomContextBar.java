@@ -558,6 +558,7 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
                             Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                             conditions.add(condition);
                             action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
+                            action.updateArgs("{page." + component.getAlias() + "}", 3);
                             action.setConditions(conditions);
                             action.set_return(false);
                             this.addAction(action, false);

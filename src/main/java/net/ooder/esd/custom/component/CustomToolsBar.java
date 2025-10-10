@@ -323,6 +323,7 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                                 Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                                 conditions.add(condition);
                                 action.setConditions(conditions);
+                                action.updateArgs("{page." + component.getAlias() + "}", 3);
                                 this.addAction(action);
                             }
                         } else {
@@ -370,6 +371,7 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                             Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                             conditions.add(condition);
                             action.setConditions(conditions);
+                            action.updateArgs("{page." + component.getAlias() + "}", 3);
                             this.addAction(action);
                         }
                     } else {
