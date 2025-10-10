@@ -14,10 +14,7 @@ import net.ooder.esd.annotation.event.TreeViewEventEnum;
 import net.ooder.esd.annotation.menu.ContextMenu;
 import net.ooder.esd.annotation.menu.TreeMenu;
 import net.ooder.esd.annotation.ui.*;
-import net.ooder.esd.bean.MethodConfig;
-import net.ooder.esd.bean.RightContextMenuBean;
-import net.ooder.esd.bean.TreeListItem;
-import net.ooder.esd.bean.TreeRowCmdBean;
+import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.view.ChildTreeViewBean;
 import net.ooder.esd.bean.view.CustomTreeViewBean;
 import net.ooder.esd.custom.action.CustomAPICallAction;
@@ -174,21 +171,22 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
     }
 
 
-    void fillChildCustomAction(ChildTreeViewBean childTreeViewBean,  Component currComponent) {
+    void fillChildCustomAction(ChildTreeViewBean childTreeViewBean, Component currComponent) {
         String groupName = childTreeViewBean.getGroupName();
         Condition condition = new Condition("{args[1].groupName}", SymbolType.equal, groupName);
-        Map<TreeViewEventEnum, List<Action>> enumListMap = childTreeViewBean.getCustomActions();
-        Set<TreeViewEventEnum> viewEventEnumSet = enumListMap.keySet();
-        for (TreeViewEventEnum eventEnum : viewEventEnumSet) {
-            List<Action> actions = enumListMap.get(eventEnum);
+        Set<TreeEventBean> extAPIEvent = childTreeViewBean.getExtAPIEvent();
+        MethodConfig methodConfig = childTreeViewBean.findMethod(CustomTreeEvent.TREENODEEDITOR);
+        APICallerComponent apiCallerComponent = new APICallerComponent(methodConfig);
+        for (TreeEventBean eventEnum : extAPIEvent) {
+            List<Action> actions = eventEnum.getActions();
             for (Action action : actions) {
                 if (!action.getConditions().contains(condition)) {
                     action.getConditions().add(condition);
                 }
-                currComponent.addAction(action);
+                action.updateArgs("{page." + apiCallerComponent.getAlias() + "}", 3);
+                currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
         }
-
     }
 
 
@@ -348,16 +346,18 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
         }
     }
 
+
     protected void fillCustomAction(CustomTreeViewBean view, Component currComponent) {
-        Map<TreeViewEventEnum, List<Action>> enumListMap = view.getCustomActions();
-        Set<TreeViewEventEnum> viewEventEnumSet = enumListMap.keySet();
-        for (TreeViewEventEnum eventEnum : viewEventEnumSet) {
-            List<Action> actions = enumListMap.get(eventEnum);
+        Set<TreeEventBean> extAPIEvent = view.getExtAPIEvent();
+        for (TreeEventBean eventEnum : extAPIEvent) {
+            List<Action> actions = eventEnum.getActions();
             for (Action action : actions) {
-                currComponent.addAction(action);
+                action.updateArgs("{page." + this.getAlias() + "}", 3);
+                currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
         }
     }
+
 
     protected void fillTreeAction(CustomTreeViewBean view, Component currComponent) {
         Set<CustomTreeEvent> customFormEvents = view.getEvent();
@@ -395,7 +395,7 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
 
         Set<ChildTreeViewBean> childTreeViewBeans = view.getChildTreeViewBeans();
         for (ChildTreeViewBean childTreeViewBean : childTreeViewBeans) {
-            this.fillChildCustomAction(childTreeViewBean,currComponent);
+            this.fillChildCustomAction(childTreeViewBean, currComponent);
             Set<CustomTreeEvent> childFormEvents = childTreeViewBean.getEvent();
             for (CustomTreeEvent eventType : childFormEvents) {
                 MethodConfig methodConfig = view.findMethodByEvent(eventType, childTreeViewBean.getBindClass());
@@ -439,6 +439,8 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
         }
 
     }
+
+
 
     public String getSaveRowPath() {
         return saveRowPath;

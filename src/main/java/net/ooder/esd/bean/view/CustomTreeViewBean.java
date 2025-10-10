@@ -30,10 +30,7 @@ import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldTreeConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
-import net.ooder.esd.tool.component.Component;
-import net.ooder.esd.tool.component.LayoutComponent;
-import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.esd.tool.component.TreeViewComponent;
+import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Condition;
 import net.ooder.esd.tool.properties.TreeViewProperties;
@@ -127,7 +124,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
 
     Set<CustomTreeEvent> event = new LinkedHashSet<>();
 
-    Map<TreeViewEventEnum, List<Action>> customActions = new HashMap<>();
+    public LinkedHashSet<TreeEventBean> extAPIEvent = new LinkedHashSet<>();
 
     List<ChildTreeViewBean> childTreeBeans = new ArrayList<>();
 
@@ -759,39 +756,6 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
         }
     }
 
-    void addActions(TreeViewEventEnum eventEnum, List<Action> actions) {
-        List<Action> actionList = this.customActions.get(eventEnum);
-        if (actionList == null) {
-            actionList = new ArrayList<>();
-        }
-
-        for (Action ac : actions) {
-            if (!actionList.contains(ac)) {
-                actionList.add(ac);
-            }
-        }
-        customActions.put(eventEnum, actionList);
-
-    }
-
-
-    void fillCustomAction(ChildTreeViewBean childTreeViewBean, Component currComponent) {
-        String groupName = childTreeViewBean.getGroupName();
-        Condition condition = new Condition("{args[1].groupName}", SymbolType.equal, groupName);
-        Map<TreeViewEventEnum, List<Action>> enumListMap = childTreeViewBean.getCustomActions();
-        Set<TreeViewEventEnum> viewEventEnumSet = enumListMap.keySet();
-        for (TreeViewEventEnum eventEnum : viewEventEnumSet) {
-            List<Action> actions = enumListMap.get(eventEnum);
-            for (Action action : actions) {
-                if (!action.getConditions().contains(condition)) {
-                    action.getConditions().add(condition);
-                }
-                currComponent.addAction(action);
-            }
-        }
-
-    }
-
 
     void init(Class<? extends TreeListItem> clazz) {
         this.name = clazz.getSimpleName();
@@ -815,7 +779,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
         TreeEvent treeEvent = AnnotationUtil.getClassAnnotation(clazz, TreeEvent.class);
         if (treeEvent != null) {
             TreeEventBean treeEventBean = new TreeEventBean(treeEvent);
-            this.addActions((TreeViewEventEnum) treeEventBean.getEventKey(), treeEventBean.getActions());
+            this.extAPIEvent.add(treeEventBean);
         }
 
 
@@ -1211,13 +1175,12 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
         return paramList;
     }
 
-
-    public Map<TreeViewEventEnum, List<Action>> getCustomActions() {
-        return customActions;
+    public LinkedHashSet<TreeEventBean> getExtAPIEvent() {
+        return extAPIEvent;
     }
 
-    public void setCustomActions(Map<TreeViewEventEnum, List<Action>> customActions) {
-        this.customActions = customActions;
+    public void setExtAPIEvent(LinkedHashSet<TreeEventBean> extAPIEvent) {
+        this.extAPIEvent = extAPIEvent;
     }
 
     public List<TreeListItem> getItems() {

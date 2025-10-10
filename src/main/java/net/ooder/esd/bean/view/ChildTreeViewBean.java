@@ -17,7 +17,6 @@ import net.ooder.esd.annotation.TreeRowCmd;
 import net.ooder.esd.annotation.event.CustomEvent;
 import net.ooder.esd.annotation.event.CustomTreeEvent;
 import net.ooder.esd.annotation.event.TreeEvent;
-import net.ooder.esd.annotation.event.TreeViewEventEnum;
 import net.ooder.esd.annotation.menu.TreeMenu;
 import net.ooder.esd.annotation.menu.TreeRowMenu;
 import net.ooder.esd.annotation.ui.*;
@@ -30,7 +29,6 @@ import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.view.field.FieldTreeConfig;
-import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.item.CmdItem;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.esd.util.json.*;
@@ -101,8 +99,7 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
 
     Class<? extends TreeItem> customItems;
 
-
-    Map<TreeViewEventEnum, List<Action>> customActions = new HashMap<>();
+    LinkedHashSet<TreeEventBean> extAPIEvent = new LinkedHashSet<>();
 
 
     String treeItemClassName;
@@ -114,9 +111,10 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
     FontColorEnum fontColor;
 
     Boolean autoIconColor;
-    Boolean autoItemColor;
-    Boolean autoFontColor;
 
+    Boolean autoItemColor;
+
+    Boolean autoFontColor;
 
     Set<TreeMenu> toolBarMenu = new LinkedHashSet<>();
 
@@ -269,7 +267,7 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
         TreeEvent treeEvent = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), TreeEvent.class);
         if (treeEvent != null) {
             TreeEventBean treeEventBean = new TreeEventBean(treeEvent);
-            this.addActions((TreeViewEventEnum) treeEventBean.getEventKey(), treeEventBean.getActions());
+            this.extAPIEvent.add(treeEventBean);
         }
 
 
@@ -397,7 +395,7 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
         TreeEvent treeEvent = AnnotationUtil.getConstructorAnnotation(constructor, TreeEvent.class);
         if (treeEvent != null) {
             TreeEventBean treeEventBean = new TreeEventBean(treeEvent);
-            this.addActions((TreeViewEventEnum) treeEventBean.getEventKey(), treeEventBean.getActions());
+            this.extAPIEvent.add(treeEventBean);
         }
 
 
@@ -589,19 +587,6 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
         return classSet;
     }
 
-    void addActions(TreeViewEventEnum eventEnum, List<Action> actions) {
-        List<Action> actionList = this.customActions.get(eventEnum);
-        if (actionList == null) {
-            actionList = new ArrayList<>();
-        }
-
-        for (Action ac : actions) {
-            if (!actionList.contains(ac)) {
-                actionList.add(ac);
-            }
-        }
-        customActions.put(eventEnum, actionList);
-    }
 
     public void setDynDestory(Boolean dynDestory) {
         this.dynDestory = dynDestory;
@@ -720,12 +705,12 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
         this.customMenu = customMenu;
     }
 
-    public Map<TreeViewEventEnum, List<Action>> getCustomActions() {
-        return customActions;
+    public LinkedHashSet<TreeEventBean> getExtAPIEvent() {
+        return extAPIEvent;
     }
 
-    public void setCustomActions(Map<TreeViewEventEnum, List<Action>> customActions) {
-        this.customActions = customActions;
+    public void setExtAPIEvent(LinkedHashSet<TreeEventBean> extAPIEvent) {
+        this.extAPIEvent = extAPIEvent;
     }
 
     public Boolean getLazyLoad() {
@@ -1050,5 +1035,33 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
             return ((ChildTreeViewBean) obj).getId().equals(this.getId());
         }
         return super.equals(obj);
+    }
+
+
+    @JSONField(serialize = false)
+    public MethodConfig findMethod(CustomTreeEvent event) {
+        Set<Class> bindClassList = new HashSet<>();
+        if (getBindClass() != null && getBindClass().length > 0) {
+            bindClassList.addAll(Arrays.asList(getBindClass()));
+        }
+        if (getTreeItem() != null && getTreeItem().getBindClass().length > 0) {
+            bindClassList.addAll(Arrays.asList(getTreeItem().getBindClass()));
+        }
+        for (Class bindClass : bindClassList) {
+            if (!bindClass.equals(Void.class)) {
+                try {
+                    ApiClassConfig config = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(bindClass.getName());
+                    if (config != null) {
+                        MethodConfig methodConfig = config.getTreeEvent(event);
+                        if (methodConfig != null) {
+                            return methodConfig;
+                        }
+                    }
+                } catch (JDSException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 }

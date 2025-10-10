@@ -141,7 +141,7 @@ public class TreeItemTask<T extends TreeListItem> implements Callable<T> {
                     bindClassList.addAll(Arrays.asList(childTreeViewBean.getTreeItem().getBindClass()));
                 }
                 if (bindClassList.size() > 0) {
-                    start = System.currentTimeMillis();
+
                     MethodConfig editorMethod = findMethod(bindClassList, CustomTreeEvent.TREENODEEDITOR);
                     MethodConfig loadChildMethod = findMethod(bindClassList, CustomTreeEvent.RELOADCHILD);
                     t.setGroupName(childTreeViewBean.getGroupName());
