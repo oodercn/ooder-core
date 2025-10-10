@@ -43,7 +43,6 @@ public class GalleryEventBean<T extends Action> extends Event<T, GalleryEventEnu
         this.eventId = eventKey.name() + "|" + eventKey.getEvent();
         this.expression = galleryEventEnum.getExpression();
         CustomAction[] actionSet = galleryEventEnum.getActions();
-
         addAction(actionSet);
 
     }

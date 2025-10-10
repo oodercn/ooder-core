@@ -27,6 +27,7 @@ public class NavFoldingTabsComponent extends FoldingTabsComponent {
     public NavFoldingTabsComponent(EUModule euModule, FieldFormConfig<CustomFoldingTabsFieldBean, ?> field, String target, Object value, Map<String, Object> valueMap) {
         super();
         try {
+            this.setAlias(field.getMethodName());
             this.init(euModule, field.getMethodConfig(), valueMap);
         } catch (JDSException e) {
             e.printStackTrace();
@@ -36,6 +37,7 @@ public class NavFoldingTabsComponent extends FoldingTabsComponent {
     public NavFoldingTabsComponent(EUModule module, MethodConfig methodConfig, Map<String, ?> valueMap) {
         super();
         try {
+            this.setAlias(methodConfig.getMethodName());
             this.init(module, methodConfig, valueMap);
         } catch (JDSException e) {
             e.printStackTrace();
@@ -47,11 +49,12 @@ public class NavFoldingTabsComponent extends FoldingTabsComponent {
     public NavFoldingTabsComponent(NavFoldingTabsViewBean tabsViewBean, Map<String, Object> valueMap) {
         super();
         try {
+            this.setAlias(tabsViewBean.getMethodName());
             init(tabsViewBean, valueMap);
         } catch (JDSException e) {
             e.printStackTrace();
         }
-        this.setAlias(tabsViewBean.getMethodName());
+
     }
 
     void init(NavFoldingTabsViewBean tabsViewBean, Map<String, Object> valueMap) throws JDSException {

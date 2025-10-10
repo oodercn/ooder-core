@@ -14,6 +14,7 @@ import net.ooder.esd.annotation.ui.ResponsePathTypeEnum;
 import net.ooder.esd.annotation.ui.SymbolType;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.data.TabsDataBean;
+import net.ooder.esd.bean.view.TabsEventBean;
 import net.ooder.esd.bean.view.TabsViewBean;
 import net.ooder.esd.custom.action.CustomAPICallAction;
 import net.ooder.esd.custom.action.ShowPageAction;
@@ -75,12 +76,11 @@ public class CustomTabComponent extends CustomModuleComponent<NavTabsComponent> 
 
 
     protected void fillCustomAction(TabsViewBean view, Component currComponent) {
-        Map<TabsEventEnum, List<Action>> enumListMap = view.getCustomActions();
-        Set<TabsEventEnum> viewEventEnumSet = enumListMap.keySet();
-        for (TabsEventEnum eventEnum : viewEventEnumSet) {
-            List<Action> actions = enumListMap.get(eventEnum);
+        Set<TabsEventBean> extAPIEvent = view.getExtAPIEvent();
+        for (TabsEventBean eventEnum : extAPIEvent) {
+            List<Action> actions = eventEnum.getActions();
             for (Action action : actions) {
-                currComponent.addAction(action);
+                currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
         }
     }

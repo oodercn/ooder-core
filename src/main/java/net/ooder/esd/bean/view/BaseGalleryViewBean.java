@@ -10,6 +10,7 @@ import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.gallery.GalleryItemBean;
 import net.ooder.esd.bean.grid.PageBarBean;
 import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.dsm.view.field.FieldGalleryConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.Component;
@@ -22,7 +23,7 @@ import net.ooder.web.util.AnnotationUtil;
 
 import java.util.*;
 
-public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends CustomEvent> extends CustomViewBean<FieldGalleryConfig, TabListItem, GalleryComponent> implements ComponentBean<GalleryComponent> {
+public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends CustomEvent> extends CustomViewBean<FieldFormConfig, TabListItem, GalleryComponent> implements ComponentBean<GalleryComponent> {
 
 
     Boolean autoIconColor;

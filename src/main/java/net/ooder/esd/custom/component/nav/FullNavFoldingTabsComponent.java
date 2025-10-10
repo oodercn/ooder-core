@@ -3,10 +3,8 @@ package net.ooder.esd.custom.component.nav;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.action.CustomFormAction;
-import net.ooder.esd.annotation.action.CustomLoadClassAction;
 import net.ooder.esd.annotation.event.CustomFormEvent;
 import net.ooder.esd.annotation.event.ModuleEventEnum;
-import net.ooder.esd.annotation.event.TabsEventEnum;
 import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ui.RequestPathTypeEnum;
 import net.ooder.esd.annotation.ui.ResponsePathTypeEnum;
@@ -20,7 +18,6 @@ import net.ooder.esd.custom.component.CustomModuleComponent;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.APICallerComponent;
 import net.ooder.esd.tool.properties.APICallerProperties;
-import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Condition;
 import net.ooder.esd.tool.properties.UrlPathData;
 
@@ -48,8 +45,6 @@ public class FullNavFoldingTabsComponent extends CustomModuleComponent {
         NavFoldingTabsComponent tabcomponent = new NavFoldingTabsComponent(euModule, methodConfig, valueMap);
         this.addChildLayoutNav(tabcomponent);
         this.setCurrComponent(tabcomponent);
-        Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onItemSelected);
-        showAction.updateArgs(tabcomponent.getAlias(), 4);
         NavFoldingTabsViewBean viewBean = (NavFoldingTabsViewBean) methodConfig.getView();
         this.fillAction(viewBean);
         this.fillViewAction((NavFoldingTabsDataBean) methodConfig.getDataBean());

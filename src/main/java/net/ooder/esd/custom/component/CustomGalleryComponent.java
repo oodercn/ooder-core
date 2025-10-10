@@ -52,15 +52,11 @@ public class CustomGalleryComponent extends CustomModuleComponent<GalleryCompone
     @JSONField(serialize = false)
     public EUModule addModule;
 
-
     @JSONField(serialize = false)
     private String clickFlagPath;
 
-
     RightContextMenuBean contextMenuBean;
 
-
-    // BlockComponent layoutComponent;
 
     @JSONField(serialize = false)
     private PageBarComponent<PageBarProperties, PageEventEnum, Integer> pageBarComponent;
@@ -76,7 +72,6 @@ public class CustomGalleryComponent extends CustomModuleComponent<GalleryCompone
     }
 
     public void addChildNav(GalleryComponent currComponent) {
-        // layoutComponent.addChildren(currComponent);
         super.addChildLayoutNav(currComponent);
         this.setCurrComponent(currComponent);
         try {
@@ -157,6 +152,7 @@ public class CustomGalleryComponent extends CustomModuleComponent<GalleryCompone
         for (GalleryEventBean eventEnum : extAPIEvent) {
             List<Action> actions = eventEnum.getActions();
             for (Action action : actions) {
+                action.updateArgs("{page." + this.getAlias() + "}", 4);
                 currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
         }

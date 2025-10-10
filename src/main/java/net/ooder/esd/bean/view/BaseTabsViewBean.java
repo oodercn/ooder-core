@@ -43,7 +43,6 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
 
     public List<TabItemBean> itemBeans = new ArrayList<>();
 
-    public  Map<TabsEventEnum, List<Action>> customActions = new HashMap<>();
 
     EnumsClassBean enumsClassBean;
     Boolean closeBtn;
@@ -85,7 +84,7 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
     List<CustomFormMenu> bottombarMenu = new ArrayList<>();
     List<CustomFormMenu> customMenu = new ArrayList<>();
 
-
+    public LinkedHashSet<TabsEventBean> extAPIEvent = new LinkedHashSet<>();
     public BaseTabsViewBean() {
         super();
     }
@@ -151,13 +150,6 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
         return null;
     }
 
-    public Map<TabsEventEnum, List<Action>> getCustomActions() {
-        return customActions;
-    }
-
-    public void setCustomActions(Map<TabsEventEnum, List<Action>> customActions) {
-        this.customActions = customActions;
-    }
 
     @Override
     public ComponentBean findComByPath(String path) {
@@ -362,7 +354,7 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
         TabsEvent tabsEvent = AnnotationUtil.getClassAnnotation(clazz, TabsEvent.class);
         if (tabsEvent != null) {
             TabsEventBean customTabsEvent= new TabsEventBean(tabsEvent);
-            this.addActions((TabsEventEnum) customTabsEvent.getEventKey(), customTabsEvent.getActions());
+            this.extAPIEvent.add(customTabsEvent);
         }
 
         Constructor[] constructors = clazz.getConstructors();
@@ -525,20 +517,14 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
         }
         return null;
     }
-    void addActions(TabsEventEnum eventEnum, List<Action> actions) {
-        List<Action> actionList = this.customActions.get(eventEnum);
-        if (actionList == null) {
-            actionList = new ArrayList<>();
-        }
-        for (Action ac : actions) {
-            if (!actionList.contains(ac)) {
-                actionList.add(ac);
-            }
-        }
-        customActions.put(eventEnum, actionList);
 
+    public LinkedHashSet<TabsEventBean> getExtAPIEvent() {
+        return extAPIEvent;
     }
 
+    public void setExtAPIEvent(LinkedHashSet<TabsEventBean> extAPIEvent) {
+        this.extAPIEvent = extAPIEvent;
+    }
 
     @Override
     @JSONField(serialize = false)
