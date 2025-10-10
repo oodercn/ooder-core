@@ -96,7 +96,27 @@ public class UIItem<T extends Enum> extends DataProperties<T> {
     }
 
     public String getTips() {
+        if (tips == null || tips.equals("")) {
+            tips = this.getTitle();
+        }
+        if (tips == null || tips.equals("")) {
+            tips = this.getId();
+        }
         return tips;
+    }
+
+    public String getTitle() {
+        if (title == null || title.equals("")) {
+            title = this.getCaption();
+        }
+        if (title == null || title.equals("")) {
+            title = this.getDesc();
+        }
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setTips(String tips) {

@@ -418,6 +418,16 @@ public class APICallerProperties extends DataProperties {
     }
 
     public String getTips() {
+        if (tips == null || tips.equals("")) {
+            tips = this.getCaption();
+        }
+        if (tips == null || tips.equals("")) {
+            tips = this.getDesc();
+        }
+
+        if (tips == null || tips.equals("")) {
+            tips = this.getMethodName();
+        }
         return tips;
     }
 
