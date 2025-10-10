@@ -380,6 +380,9 @@ public class Action<K extends EventKey> implements CustomBean {
     }
 
 
+
+
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

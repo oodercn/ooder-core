@@ -31,6 +31,7 @@ import net.ooder.esd.engine.MySpace;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.APICallerComponent;
 import net.ooder.esd.tool.properties.APICallerProperties;
+import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.UrlPathData;
 import net.ooder.web.APIConfig;
 import net.ooder.web.APIConfigFactory;
@@ -231,6 +232,10 @@ public class PluginsFactory {
                                         APICallerComponent component = new APICallerComponent(methodAPIBean);
                                         if (!component.getAlias().startsWith(menuBean.getId())) {
                                             component.setAlias(menuBean.getId() + "_" + component.getAlias());
+                                            Set<Action> actions = component.getActions();
+                                            for (Action action : actions) {
+                                                action.updateArgs("{page.+" + component.getAlias() + "}", 3);
+                                            }
                                         }
                                         APICallerProperties properties = component.getProperties();
                                         properties.setImageClass(methodField.getImageClass());
@@ -407,6 +412,10 @@ public class PluginsFactory {
 
                                                 if (!component.getAlias().startsWith(menuBean.getId())) {
                                                     component.setAlias(menuBean.getId() + "_" + component.getAlias());
+                                                    Set<Action> actions = component.getActions();
+                                                    for (Action action : actions) {
+                                                        action.updateArgs("{page.+" + component.getAlias() + "}", 3);
+                                                    }
                                                 }
 
                                                 APICallerProperties properties = component.getProperties();
@@ -498,7 +507,7 @@ public class PluginsFactory {
                             for (CustomMethodInfo field : esdMethods) {
                                 CustomMethodInfo methodField = field;
                                 if (methodField.isSplit()) {
-                                    if (viewBar != null&& viewBar instanceof PopDynBar) {
+                                    if (viewBar != null && viewBar instanceof PopDynBar) {
                                         viewBar.addSplit(methodField.getId());
                                     }
                                 } else {
@@ -515,6 +524,10 @@ public class PluginsFactory {
 
                                             if (!component.getAlias().startsWith(menuBean.getAlias())) {
                                                 component.setAlias(menuBean.getAlias() + "_" + component.getAlias());
+                                                Set<Action> actions = component.getActions();
+                                                for (Action action : actions) {
+                                                    action.updateArgs("{page.+" + component.getAlias() + "}", 3);
+                                                }
                                             }
                                             APICallerProperties properties = component.getProperties();
                                             properties.setImageClass(methodField.getImageClass());

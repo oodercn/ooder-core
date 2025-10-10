@@ -135,23 +135,25 @@ public class Component<T extends Properties, K extends EventKey> {
         if (actions == null) {
             actions = new ArrayList<Action>();
         }
-        if (!actions.contains(action)) {
 
-            if (par) {
-                String json = JSONObject.toJSONString(action, false);
-                Map context = JDSActionContext.getActionContext().getContext();
-                if (this.getModuleComponent() != null) {
-                    context.put(CustomViewFactory.CurrModuleKey, this.getModuleComponent().getEuModule());
-                }
-                String objStr = (String) TemplateRuntime.eval(json, context);
-                action = JSONObject.parseObject(objStr, new TypeReference<Action<K>>() {
-                });
-                action.setEventKey(eventKey);
+        if (par) {
+            String json = JSONObject.toJSONString(action, false);
+            Map context = JDSActionContext.getActionContext().getContext();
+            if (this.getModuleComponent() != null) {
+                context.put(CustomViewFactory.CurrModuleKey, this.getModuleComponent().getEuModule());
             }
-
-            actions.add(action);
+            String objStr = (String) TemplateRuntime.eval(json, context);
+            action = JSONObject.parseObject(objStr, new TypeReference<Action<K>>() {
+            });
+            action.setEventKey(eventKey);
         }
 
+        if (!actions.contains(action)) {
+            actions.add(action);
+        } else {
+            //替换
+            actions.set(actions.indexOf(action), action);
+        }
 
         event.setActions(actions);
         events.put(eventKey, event);
