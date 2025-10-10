@@ -2,6 +2,7 @@ package net.ooder.esd.tool.component;
 
 import net.ooder.esd.annotation.event.APIEvent;
 import net.ooder.esd.annotation.event.APIEventEnum;
+import net.ooder.esd.annotation.event.ActionTypeEnum;
 import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.bean.APIEventBean;
@@ -9,12 +10,10 @@ import net.ooder.esd.bean.CustomAPICallBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.tool.properties.APICallerProperties;
 import net.ooder.esd.tool.properties.Action;
+import net.ooder.esd.tool.properties.Event;
 import net.ooder.web.RequestMethodBean;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class APICallerComponent extends Component<APICallerProperties, APIEventEnum> {
 
@@ -31,8 +30,8 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
         Set<Action> customActions = apiCallBean.getBindAction();
         if (customActions.size() > 0) {
             actions = new HashSet<>();
-            int k =0;
-            if (this.getActions()!=null){
+            int k = 0;
+            if (this.getActions() != null) {
                 k = this.getActions().size();
             }
             for (Action customAction : customActions) {
@@ -65,8 +64,8 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
         List<APIEventBean> events = apiCallBean.getAllEvent();
         for (APIEventBean apiEvent : events) {
             List<Action> actions = apiEvent.getActions();
-            int k =0;
-            if (this.getActions()!=null){
+            int k = 0;
+            if (this.getActions() != null) {
                 k = this.getActions().size();
             }
             for (Action action : actions) {
@@ -156,6 +155,44 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
 
     }
 
+    @Override
+    public Component addAction(Action<APIEventEnum> action) {
+        action = updateArgs(action, alias);
+        return super.addAction(action);
+    }
+
+    private Action updateArgs(Action action, String alias) {
+        if (action != null
+                && action.getType() != null && action.getType().equals(ActionTypeEnum.other)
+                && action.getMethod() != null && action.getMethod().equals("call")
+                && action.getArgs().size() > 3) {
+               action.updateArgs("{page." + alias + "}", 3);
+        }
+        return action;
+    }
+
+
+    @Override
+    public void setAlias(String alias) {
+        if (!alias.equals(this.alias)) {
+            List<Action> actionList = new ArrayList<>();
+            Map<APIEventEnum, Event> events = getEvents();
+            Set<APIEventEnum> keySet = events.keySet();
+            for (APIEventEnum key : keySet) {
+                Event<Action, APIEventEnum> event = events.get(key);
+                for (Action action : event.getActions()) {
+                    actionList.add(action);
+                }
+            }
+            if (this.getActions() != null) {
+                actionList.addAll(this.getActions());
+            }
+            for (Action action : actionList) {
+                updateArgs(action, alias);
+            }
+        }
+        super.setAlias(alias);
+    }
 
     @Override
     public boolean equals(Object obj) {
