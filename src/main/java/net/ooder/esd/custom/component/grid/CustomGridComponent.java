@@ -8,10 +8,7 @@ import net.ooder.esd.annotation.action.CustomGridAction;
 import net.ooder.esd.annotation.event.CustomGridEvent;
 import net.ooder.esd.annotation.event.PageEventEnum;
 import net.ooder.esd.annotation.menu.GridMenu;
-import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.annotation.ui.CustomMenuItem;
-import net.ooder.esd.annotation.ui.RequestPathTypeEnum;
-import net.ooder.esd.annotation.ui.ResponsePathTypeEnum;
+import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.GridEventBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.data.CustomGridDataBean;
@@ -22,12 +19,10 @@ import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.action.ShowPageAction;
 import net.ooder.esd.custom.component.CustomModuleComponent;
 import net.ooder.esd.custom.properties.CustomCmdBar;
+import net.ooder.esd.dsm.view.field.FieldGridConfig;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.*;
-import net.ooder.esd.tool.properties.APICallerProperties;
-import net.ooder.esd.tool.properties.Action;
-import net.ooder.esd.tool.properties.PageBarProperties;
-import net.ooder.esd.tool.properties.UrlPathData;
+import net.ooder.esd.tool.properties.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -174,11 +169,23 @@ public class CustomGridComponent<M extends TreeGridComponent> extends CustomModu
             }
         }
 
-        List<GridEventBean> fieldAPIEvents = view.getFieldAPIEvent();
-        for (GridEventBean eventEnum : fieldAPIEvents) {
-            List<Action> actions = eventEnum.getActions();
-            for (Action action : actions) {
-                currComponent.addAction(action, true, eventEnum.getEventReturn());
+        List<FieldGridConfig> fieldAPIEvents = view.getAllFields();
+        for (FieldGridConfig fieldGridConfig : fieldAPIEvents) {
+            Set<GridEventBean> gridEvents = fieldGridConfig.getGridEvents();
+            for (GridEventBean eventEnum : gridEvents) {
+                List<Action> actions = eventEnum.getActions();
+                for (Action action : actions) {
+                    String actionId = action.getId();
+                    if (!actionId.startsWith(fieldGridConfig.getFieldname() + "_")) {
+                        actionId = fieldGridConfig.getFieldname() + "_" + actionId;
+                    }
+                    action.setId(actionId);
+                    Condition condition = new Condition("{args[1].id}", SymbolType.equal, fieldGridConfig.getFieldname());
+                    if (!action.getConditions().contains(condition)) {
+                        action.addCondition(condition);
+                    }
+                    currComponent.addAction(action, true, eventEnum.getEventReturn());
+                }
             }
         }
     }

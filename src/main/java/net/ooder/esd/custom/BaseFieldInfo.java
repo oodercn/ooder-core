@@ -25,7 +25,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxBean> implements ESDField<M, N> {
@@ -70,9 +69,9 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
 
     ComponentType[] bindTypes = new ComponentType[]{};
 
-    Set<FieldEventBean> fieldEvents =new HashSet<>();
+    Set<FieldEventBean> fieldEvents = new HashSet<>();
 
-    Set<GridEventBean> gridEvents=new HashSet<>();
+    Set<GridEventBean> gridEvents = new HashSet<>();
 
     @JSONField(serialize = false)
     ESDClass esdClass;
@@ -267,13 +266,13 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
         UIAnnotation uiAnnotation = getAnnotation(UIAnnotation.class);
         ContainerAnnotation containerAnnotation = getAnnotation(ContainerAnnotation.class);
 
-        GridEvent gridEvent = getAnnotation( GridEvent.class);
+        GridEvent gridEvent = getAnnotation(GridEvent.class);
         if (gridEvent != null) {
             GridEventBean gridEventBean = new GridEventBean(gridEvent);
             gridEvents.add(gridEventBean);
         }
 
-       FieldEvent fieldEvent = getAnnotation( FieldEvent.class);
+        FieldEvent fieldEvent = getAnnotation(FieldEvent.class);
         if (fieldEvent != null) {
             FieldEventBean fieldEventBean = new FieldEventBean(fieldEvent);
             fieldEvents.add(fieldEventBean);
