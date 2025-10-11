@@ -183,12 +183,12 @@ public class CustomOpinionComponent extends CustomModuleComponent<OpinionCompone
                     clickFlagPath = methodAPIBean.getUrl();
                 }
             }
-            if (sortPath == null || sortPath.equals("")) {
-                MethodConfig methodAPIBean = methodConfig.getDataBean().getMethodEvent(CustomGalleryEvent.PANMOVE);
-                if (methodAPIBean != null) {
-                    sortPath = methodAPIBean.getUrl();
-                }
-            }
+//            if (sortPath == null || sortPath.equals("")) {
+//                MethodConfig methodAPIBean = methodConfig.getDataBean().getMethodEvent(CustomGalleryEvent.);
+//                if (methodAPIBean != null) {
+//                    sortPath = methodAPIBean.getUrl();
+//                }
+//            }
 
             if (editorPath == null || editorPath.equals("")) {
                 MethodConfig methodAPIBean = methodConfig.getDataBean().getMethodByItem(CustomMenuItem.EDITOR);
@@ -261,23 +261,23 @@ public class CustomOpinionComponent extends CustomModuleComponent<OpinionCompone
         }
 
 
-        if (sortPath != null && !sortPath.equals("")) {
-            MethodConfig methodBean = methodAPIBean.getDataBean().getMethodEvent(CustomGalleryEvent.PANMOVE);
-            if (methodBean != null) {
-                APICallerComponent sortAPI = new APICallerComponent(methodBean);
-                sortAPI.setAlias(CustomGridAction.SORTUP.getTarget());
-                APICallerProperties sortProperties = sortAPI.getProperties();
-                UrlPathData requestPathData = new UrlPathData(currComponent.getAlias(), RequestPathTypeEnum.OPINION, "");
-                if (requestPathData != null) {
-                    sortProperties.addRequestData(requestPathData);
-                }
-                UrlPathData ctxData = new UrlPathData(ctxComponent.getAlias(), RequestPathTypeEnum.FORM, "");
-                sortProperties.addRequestData(ctxData);
-                apiCallerComponents.add(sortAPI);
-            } else {
-                this.logger.error("【排序】绑定失败[" + this.className + "===》" + sortPath);
-            }
-        }
+//        if (sortPath != null && !sortPath.equals("")) {
+//            MethodConfig methodBean = methodAPIBean.getDataBean().getMethodEvent(CustomGalleryEvent.PANMOVE);
+//            if (methodBean != null) {
+//                APICallerComponent sortAPI = new APICallerComponent(methodBean);
+//                sortAPI.setAlias(CustomGridAction.SORTUP.getTarget());
+//                APICallerProperties sortProperties = sortAPI.getProperties();
+//                UrlPathData requestPathData = new UrlPathData(currComponent.getAlias(), RequestPathTypeEnum.OPINION, "");
+//                if (requestPathData != null) {
+//                    sortProperties.addRequestData(requestPathData);
+//                }
+//                UrlPathData ctxData = new UrlPathData(ctxComponent.getAlias(), RequestPathTypeEnum.FORM, "");
+//                sortProperties.addRequestData(ctxData);
+//                apiCallerComponents.add(sortAPI);
+//            } else {
+//                this.logger.error("【排序】绑定失败[" + this.className + "===》" + sortPath);
+//            }
+//        }
 
         if (clickFlagPath != null && !clickFlagPath.equals("")) {
             MethodConfig methodBean = methodAPIBean.getDataBean().getMethodEvent(CustomGalleryEvent.FLAGCLICK);

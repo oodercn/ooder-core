@@ -77,7 +77,7 @@ public class Action<K extends EventKey> implements CustomBean {
         this.eventKey = eventEnum;
         this.eventClass = eventEnum.getClass();
         this.eventValue = eventEnum.getEvent();
-        initAction(customAction, customAction.target());
+        initAction(customAction,eventEnum,  customAction.target());
     }
 
 
@@ -85,7 +85,7 @@ public class Action<K extends EventKey> implements CustomBean {
         this.eventKey = eventEnum;
         this.eventClass = eventEnum.getClass();
         this.eventValue = eventEnum.getEvent();
-        initAction(customAction, target);
+        initAction(customAction, eventEnum, target);
     }
 
 
@@ -93,21 +93,21 @@ public class Action<K extends EventKey> implements CustomBean {
         this.eventKey = (K) eventEnum.event();
         this.eventClass = eventEnum.getClass();
         this.eventValue = eventEnum.eventName();
-        initAction(customAction, customAction.target());
+        initAction(customAction,eventEnum.event(),  customAction.target());
     }
 
     public Action(CustomAction customAction, APIEvent eventEnum) {
         this.eventKey = (K) eventEnum.event();
         this.eventClass = eventEnum.getClass();
         this.eventValue = eventEnum.eventName();
-        initAction(customAction, customAction.target());
+        initAction(customAction,eventEnum.event(),  customAction.target());
     }
 
     public Action(CustomAction customAction, ModuleEvent eventEnum) {
         this.eventKey = (K) eventEnum.event();
         this.eventClass = eventEnum.getClass();
         this.eventValue = eventEnum.eventName();
-        initAction(customAction, customAction.target());
+        initAction(customAction,eventEnum.event(),  customAction.target());
     }
 
     public Action() {
@@ -118,17 +118,17 @@ public class Action<K extends EventKey> implements CustomBean {
         this.eventKey = (K) eventEnum.event();
         this.eventClass = eventEnum.getClass();
         this.eventValue = eventEnum.eventName();
-        initAction(customAction, target);
+        initAction(customAction,eventEnum.event(),  target);
     }
 
     public Action(CustomAction customAction, APIEvent eventEnum, String target) {
         this.eventKey = (K) eventEnum.event();
         this.eventClass = eventEnum.getClass();
         this.eventValue = eventEnum.eventName();
-        initAction(customAction, target);
+        initAction(customAction,eventEnum.event(), target);
     }
 
-    void initAction(CustomAction customAction, String target) {
+    void initAction(CustomAction customAction, EventKey eventEnum, String target) {
         if (customAction.script() != null && !customAction.script().equals("")) {
             method = "call";
             type = ActionTypeEnum.other;
@@ -139,12 +139,20 @@ public class Action<K extends EventKey> implements CustomBean {
                 script = "{" + script + "}";
             }
             List<String> params = new ArrayList<>();
-            for (String param : customAction.params()) {
-                if (!param.startsWith("{") && !param.endsWith("}")) {
-                    param = "{" + param + "}";
+            if (customAction.params()!=null && customAction.params().length>0){
+                for (String param : customAction.params()) {
+                    if (!param.startsWith("{") && !param.endsWith("}")) {
+                        param = "{" + param + "}";
+                    }
+                    params.add(param);
                 }
-                params.add(param);
+            }else{
+                int k=0;
+               while (k<eventEnum.getParams().length){
+                   k++;params.add("{args["+k+"]}");
+               }
             }
+
             String[] argArr = new String[]{script, null, null, null};
             args.addAll(Arrays.asList(argArr));
             args.addAll(params);
