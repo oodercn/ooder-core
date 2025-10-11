@@ -2,13 +2,11 @@ package net.ooder.esd.dsm.view.field;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
-import net.ooder.common.JDSException;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.CustomAnnotation;
 import net.ooder.esd.annotation.RightContextMenu;
-import net.ooder.esd.annotation.Widget;
-import net.ooder.esd.annotation.event.GridEvent;
-import net.ooder.esd.annotation.field.BlockFieldAnnotation;
 import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.bean.*;
@@ -17,6 +15,7 @@ import net.ooder.esd.bean.field.combo.ComboListBoxFieldBean;
 import net.ooder.esd.bean.field.combo.ComboxFieldBean;
 import net.ooder.esd.bean.grid.GridColItemBean;
 import net.ooder.esd.custom.ApiClassConfig;
+import net.ooder.esd.custom.BaseFieldInfo;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
@@ -24,14 +23,11 @@ import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.AggregationManager;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
 import net.ooder.esd.tool.OODTypeMapping;
-import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.Header;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
-import java.lang.annotation.Annotation;
 import java.util.*;
 
 @AnnotationType(clazz = CustomAnnotation.class)
@@ -65,6 +61,9 @@ public class FieldGridConfig implements ESDFieldConfig {
     Boolean readonly;
     GridColItemBean gridColItemBean;
     RightContextMenuBean contextMenuBean;
+
+    Set<GridEventBean> gridEvents = new HashSet<>();
+
     List<TreeListItem> items = new ArrayList<>();
 
     @JSONField(serialize = false)
@@ -135,7 +134,6 @@ public class FieldGridConfig implements ESDFieldConfig {
     }
 
     void init(ESDField colInfo) {
-
         Class returnType = colInfo.getReturnType();
         this.viewClassName = colInfo.getESDClass().getClassName();
         contextMenuBean = colInfo.getContextMenuBean();
@@ -151,9 +149,6 @@ public class FieldGridConfig implements ESDFieldConfig {
         if (gridColItemBean == null) {
             this.gridColItemBean = new GridColItemBean(colInfo);
         }
-
-
-
 
         ComboInputType inputType = gridColItemBean.getInputType();
         if (inputType == null) {
@@ -187,6 +182,12 @@ public class FieldGridConfig implements ESDFieldConfig {
         if (colInfo.getReturnType().isEnum()) {
             enumClass = colInfo.getReturnType();
         }
+
+        if (colInfo instanceof BaseFieldInfo) {
+            BaseFieldInfo baseFieldInfo = (BaseFieldInfo) colInfo;
+            this.gridEvents = baseFieldInfo.getGridEvents();
+        }
+
     }
 
     void init(FieldAggConfig aggConfig) {
@@ -201,18 +202,14 @@ public class FieldGridConfig implements ESDFieldConfig {
         this.fieldname = aggConfig.getId();
         this.captionField = aggConfig.getCaptionField();
         this.id = aggConfig.getId();
-
-
-        // this.serviceClassName = aggConfig.getServiceClassName();
+        this.readonly = aggConfig.getReadonly();
+        this.caption = aggConfig.getCaption();
+        this.domainId = aggConfig.getDomainId();
 
         if (this.simpleClassName == null || this.simpleClassName.equals("")) {
             simpleClassName = aggConfig.getSimpleClassName();
         }
-        this.readonly = aggConfig.getReadonly();
-        this.caption = aggConfig.getCaption();
-        this.domainId = aggConfig.getDomainId();
     }
-
 
 
     public FieldGridConfig(ESDField colInfo, String sourceClassName, String sourceMethodName) {
@@ -237,8 +234,6 @@ public class FieldGridConfig implements ESDFieldConfig {
         List<CustomBean> annotationBeans = new ArrayList<>();
         annotationBeans = new ArrayList<>();
         FieldAggConfig aggConfig = this.getAggConfig();
-
-
         if (aggConfig != null) {
             if (colHidden != null && colHidden) {
                 aggConfig.setColHidden(colHidden);
@@ -254,11 +249,13 @@ public class FieldGridConfig implements ESDFieldConfig {
         if (gridColItemBean != null && !AnnotationUtil.getAnnotationMap(gridColItemBean).isEmpty()) {
             annotationBeans.add(gridColItemBean);
         }
-
-
+        
         if (contextMenuBean != null && !AnnotationUtil.getAnnotationMap(contextMenuBean).isEmpty()) {
             annotationBeans.add(contextMenuBean);
         }
+
+        annotationBeans.addAll(this.getGridEvents());
+
         return annotationBeans;
     }
 
@@ -343,6 +340,14 @@ public class FieldGridConfig implements ESDFieldConfig {
             viewClassName = entityClassName;
         }
         return viewClassName;
+    }
+
+    public Set<GridEventBean> getGridEvents() {
+        return gridEvents;
+    }
+
+    public void setGridEvents(Set<GridEventBean> gridEvents) {
+        this.gridEvents = gridEvents;
     }
 
     @Override
