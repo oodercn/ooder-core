@@ -34,7 +34,6 @@ public class StyleFactory {
 
     Map<String, StyleConfig> styleConfigMap = new HashMap<String, StyleConfig>();
 
-
     private final MySpace space;
 
     public static final String defaultstyleJSONName = "styleConfig.json";

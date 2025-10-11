@@ -166,7 +166,6 @@ public class CustomGridComponent<M extends TreeGridComponent> extends CustomModu
 
 
     protected void fillCustomAction(CustomGridViewBean view, Component currComponent) {
-
         Set<GridEventBean> extAPIEvent = view.getExtAPIEvent();
         for (GridEventBean eventEnum : extAPIEvent) {
             List<Action> actions = eventEnum.getActions();

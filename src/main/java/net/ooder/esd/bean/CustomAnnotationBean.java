@@ -46,7 +46,6 @@ public class CustomAnnotationBean implements CustomBean {
 
     Class customContextMenuService;
 
-    List<FieldEvent> event;
 
     List<ComponentType> bindTypes;
 
@@ -173,13 +172,7 @@ public class CustomAnnotationBean implements CustomBean {
     public void setCustomContextMenuService(Class customContextMenuService) {
         this.customContextMenuService = customContextMenuService;
     }
-    public List<FieldEvent> getEvent() {
-        return event;
-    }
 
-    public void setEvent(List<FieldEvent> event) {
-        this.event = event;
-    }
 
     public List<ComponentType> getBindTypes() {
         return bindTypes;

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.*;
 import net.ooder.esd.annotation.*;
 import net.ooder.esd.annotation.event.FieldEvent;
+import net.ooder.esd.annotation.event.GridEvent;
 import net.ooder.esd.annotation.field.*;
 import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.annotation.ui.ComponentType;
@@ -23,6 +24,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxBean> implements ESDField<M, N> {
@@ -67,7 +70,9 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
 
     ComponentType[] bindTypes = new ComponentType[]{};
 
-    FieldEvent[] event = new FieldEvent[]{};
+    Set<FieldEventBean> fieldEvents =new HashSet<>();
+
+    Set<GridEventBean> gridEvents=new HashSet<>();
 
     @JSONField(serialize = false)
     ESDClass esdClass;
@@ -262,6 +267,18 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
         UIAnnotation uiAnnotation = getAnnotation(UIAnnotation.class);
         ContainerAnnotation containerAnnotation = getAnnotation(ContainerAnnotation.class);
 
+        GridEvent gridEvent = getAnnotation( GridEvent.class);
+        if (gridEvent != null) {
+            GridEventBean gridEventBean = new GridEventBean(gridEvent);
+            gridEvents.add(gridEventBean);
+        }
+
+       FieldEvent fieldEvent = getAnnotation( FieldEvent.class);
+        if (fieldEvent != null) {
+            FieldEventBean fieldEventBean = new FieldEventBean(fieldEvent);
+            fieldEvents.add(fieldEventBean);
+        }
+
         this.index = index;
         this.esdClass = esdClass;
         this.domainId = esdClass.getDomainId();
@@ -282,7 +299,6 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
 
 
         if (fieldAnnotation != null) {
-            this.event = fieldAnnotation.event();
             this.expression = fieldAnnotation.expression();
             this.bindTypes = fieldAnnotation.bindTypes();
             this.height = Integer.toString(fieldAnnotation.manualHeight());
@@ -482,6 +498,22 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
         return contextMenuBean;
     }
 
+    public Set<FieldEventBean> getFieldEvents() {
+        return fieldEvents;
+    }
+
+    public void setFieldEvents(Set<FieldEventBean> fieldEvents) {
+        this.fieldEvents = fieldEvents;
+    }
+
+    public Set<GridEventBean> getGridEvents() {
+        return gridEvents;
+    }
+
+    public void setGridEvents(Set<GridEventBean> gridEvents) {
+        this.gridEvents = gridEvents;
+    }
+
     public void setContextMenuBean(RightContextMenuBean contextMenuBean) {
         this.contextMenuBean = contextMenuBean;
     }
@@ -512,9 +544,6 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
         return bindTypes;
     }
 
-    public FieldEvent[] getEvent() {
-        return event;
-    }
 
     @Override
     public DisabledBean getDisabledBean() {
@@ -614,10 +643,6 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
 
     public void setBindTypes(ComponentType[] bindTypes) {
         this.bindTypes = bindTypes;
-    }
-
-    public void setEvent(FieldEvent[] event) {
-        this.event = event;
     }
 
 

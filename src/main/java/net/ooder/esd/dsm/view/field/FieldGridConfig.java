@@ -6,12 +6,12 @@ import net.ooder.common.JDSException;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomAnnotation;
 import net.ooder.esd.annotation.RightContextMenu;
+import net.ooder.esd.annotation.Widget;
+import net.ooder.esd.annotation.event.GridEvent;
+import net.ooder.esd.annotation.field.BlockFieldAnnotation;
 import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.bean.CustomRefBean;
-import net.ooder.esd.bean.MethodConfig;
-import net.ooder.esd.bean.RightContextMenuBean;
-import net.ooder.esd.bean.TreeListItem;
+import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.field.CustomFieldBean;
 import net.ooder.esd.bean.field.combo.ComboListBoxFieldBean;
 import net.ooder.esd.bean.field.combo.ComboxFieldBean;
@@ -24,12 +24,14 @@ import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.AggregationManager;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
 import net.ooder.esd.tool.OODTypeMapping;
+import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.Header;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
+import java.lang.annotation.Annotation;
 import java.util.*;
 
 @AnnotationType(clazz = CustomAnnotation.class)
@@ -150,6 +152,9 @@ public class FieldGridConfig implements ESDFieldConfig {
             this.gridColItemBean = new GridColItemBean(colInfo);
         }
 
+
+
+
         ComboInputType inputType = gridColItemBean.getInputType();
         if (inputType == null) {
             inputType = ComboInputType.input;
@@ -196,6 +201,8 @@ public class FieldGridConfig implements ESDFieldConfig {
         this.fieldname = aggConfig.getId();
         this.captionField = aggConfig.getCaptionField();
         this.id = aggConfig.getId();
+
+
         // this.serviceClassName = aggConfig.getServiceClassName();
 
         if (this.simpleClassName == null || this.simpleClassName.equals("")) {
@@ -205,6 +212,8 @@ public class FieldGridConfig implements ESDFieldConfig {
         this.caption = aggConfig.getCaption();
         this.domainId = aggConfig.getDomainId();
     }
+
+
 
     public FieldGridConfig(ESDField colInfo, String sourceClassName, String sourceMethodName) {
         this.sourceClassName = sourceClassName;
