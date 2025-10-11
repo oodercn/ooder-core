@@ -249,7 +249,7 @@ public class FieldGridConfig implements ESDFieldConfig {
         if (gridColItemBean != null && !AnnotationUtil.getAnnotationMap(gridColItemBean).isEmpty()) {
             annotationBeans.add(gridColItemBean);
         }
-        
+
         if (contextMenuBean != null && !AnnotationUtil.getAnnotationMap(contextMenuBean).isEmpty()) {
             annotationBeans.add(contextMenuBean);
         }
