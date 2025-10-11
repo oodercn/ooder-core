@@ -184,12 +184,12 @@ public class CustomContentBlockComponent extends CustomModuleComponent<ContentBl
                     clickFlagPath = methodAPIBean.getUrl();
                 }
             }
-            if (sortPath == null || sortPath.equals("")) {
-                MethodConfig methodAPIBean = methodConfig.getDataBean().getMethodEvent(CustomGalleryEvent.PANMOVE);
-                if (methodAPIBean != null) {
-                    sortPath = methodAPIBean.getUrl();
-                }
-            }
+//            if (sortPath == null || sortPath.equals("")) {
+//                MethodConfig methodAPIBean = methodConfig.getDataBean().getMethodEvent(CustomGalleryEvent.PANMOVE);
+//                if (methodAPIBean != null) {
+//                    sortPath = methodAPIBean.getUrl();
+//                }
+//            }
 
             if (editorPath == null || editorPath.equals("")) {
                 MethodConfig methodAPIBean = methodConfig.getDataBean().getMethodByItem(CustomMenuItem.EDITOR);
@@ -268,8 +268,6 @@ public class CustomContentBlockComponent extends CustomModuleComponent<ContentBl
         MethodConfig sortMethodBean = null;
         if (sortPath != null && !sortPath.equals("")) {
             sortMethodBean = ESDFacrory.getAdminESDClient().getMethodAPIBean(sortPath, projectName);
-        } else {
-            sortMethodBean = methodConfig.getDataBean().getMethodEvent(CustomGalleryEvent.PANMOVE);
         }
         if (sortMethodBean != null) {
             APICallerComponent sortAPI = new APICallerComponent(sortMethodBean);

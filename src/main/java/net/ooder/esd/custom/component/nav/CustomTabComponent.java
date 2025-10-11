@@ -47,24 +47,24 @@ public class CustomTabComponent extends CustomModuleComponent<NavTabsComponent> 
     public void addChildNav(NavTabsComponent currComponent) {
         this.addChildLayoutNav(currComponent);
         this.setCurrComponent(currComponent);
-        Action showAction = new Action(CustomLoadClassAction.tabShow,TabsEventEnum.onItemSelected);
+        Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onItemSelected);
         showAction.updateArgs(currComponent.getAlias(), 4);
         TabsViewBean viewBean = (TabsViewBean) methodAPIBean.getView();
         if (viewBean != null && viewBean.getAutoReload()) {
-            currComponent.addAction(showAction,false);
+            currComponent.addAction(showAction, false);
         } else {
-            currComponent.addAction( showAction,false);
+            currComponent.addAction(showAction, false);
         }
 
         TabsProperties properties = currComponent.getProperties();
         if (properties.getItems() != null && properties.getItems().size() > 0) {
-            Action clickItemAction = new Action(TabsEventEnum.onRender);
+            Action clickItemAction = new Action(ModuleEventEnum.onRender);
             clickItemAction.setType(ActionTypeEnum.control);
             clickItemAction.setTarget(currComponent.getAlias());
             clickItemAction.setDesc("初始化");
             clickItemAction.setMethod("fireItemClickEvent");
             clickItemAction.setArgs(Arrays.asList(new String[]{properties.getFristId()}));
-            currComponent.addAction( clickItemAction,false);
+            currComponent.getModuleComponent().addAction(clickItemAction, false);
         }
         try {
             this.addChildren(genAPIComponent(methodAPIBean));
@@ -90,8 +90,8 @@ public class CustomTabComponent extends CustomModuleComponent<NavTabsComponent> 
         Set<CustomTabsEvent> customFormEvents = view.getEvent();
         for (CustomTabsEvent eventType : customFormEvents) {
             for (CustomAction actionType : eventType.getActions(false)) {
-                currComponent.addAction(new Action(actionType,eventType.getEventEnum()),false);
-                Action action = new Action(actionType,eventType.getEventEnum());
+                currComponent.addAction(new Action(actionType, eventType.getEventEnum()), false);
+                Action action = new Action(actionType, eventType.getEventEnum());
                 MethodConfig methodConfig = methodAPIBean.getDataBean().getMethodEvent(eventType);
                 if (methodConfig != null) {
                     if (!methodConfig.isModule()) {
@@ -101,12 +101,12 @@ public class CustomTabComponent extends CustomModuleComponent<NavTabsComponent> 
                             this.addChildren(apiCallerComponent);
                         }
                     } else {
-                        action = new ShowPageAction(methodConfig,eventType.getEventEnum() );
+                        action = new ShowPageAction(methodConfig, eventType.getEventEnum());
                         action.updateArgs("{args[1]}", 6);
                         action.updateArgs("{args[2]}", 5);
                     }
                 }
-                currComponent.addAction(action,false);
+                currComponent.addAction(action, false);
             }
         }
         List<CustomFormMenu> customFormMenus = view.getCustomMenu();
@@ -174,7 +174,7 @@ public class CustomTabComponent extends CustomModuleComponent<NavTabsComponent> 
     @JSONField(serialize = false)
     APICallerComponent[] genAPIComponent(MethodConfig methodAPIBean) throws JDSException {
         List<APICallerComponent> apiCallerComponents = new ArrayList<APICallerComponent>();
-        if (dataUrl != null && !dataUrl.equals("")&& methodAPIBean.getModuleBean().getDynLoad() != null && methodAPIBean.getModuleBean().getDynLoad()) {
+        if (dataUrl != null && !dataUrl.equals("") && methodAPIBean.getModuleBean().getDynLoad() != null && methodAPIBean.getModuleBean().getDynLoad()) {
             MethodConfig methodBean = getMethodBeanByItem(CustomMenuItem.RELOAD);
             if (methodBean == null) {
                 methodBean = methodAPIBean;
@@ -223,10 +223,10 @@ public class CustomTabComponent extends CustomModuleComponent<NavTabsComponent> 
                 saveProperties.addRequestData(ctxData);
                 TabsDataBean dataBean = (TabsDataBean) methodAPIBean.getDataBean();
                 if (dataBean.getAutoSave()) {
-                    CustomAPICallAction customAPICallAction = new CustomAPICallAction(saveAPI,ModuleEventEnum.onDestroy);
+                    CustomAPICallAction customAPICallAction = new CustomAPICallAction(saveAPI, ModuleEventEnum.onDestroy);
                     Condition condition = new Condition("{page." + this.getCurrComponent().getAlias() + ".isDirtied()}", SymbolType.equal, "{true}");
                     customAPICallAction.addCondition(condition);
-                    this.addAction(customAPICallAction,false);
+                    this.addAction(customAPICallAction, false);
                 }
                 apiCallerComponents.add(saveAPI);
             }

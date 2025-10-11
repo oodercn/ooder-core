@@ -306,26 +306,26 @@ public class CustomGalleryComponent extends CustomModuleComponent<GalleryCompone
         }
 
 
-        if (sortPath != null && !sortPath.equals("")) {
-
-            MethodConfig methodBean = methodAPIBean.getDataBean().getMethodEvent(CustomGalleryEvent.PANMOVE);
-
-            if (methodBean != null) {
-                APICallerComponent sortAPI = new APICallerComponent(methodBean);
-                sortAPI.setAlias(CustomGridAction.SORTUP.getTarget());
-                APICallerProperties sortProperties = sortAPI.getProperties();
-                UrlPathData requestPathData = new UrlPathData(currComponent.getAlias(), RequestPathTypeEnum.GALLERY, "");
-
-                if (requestPathData != null) {
-                    sortProperties.addRequestData(requestPathData);
-                }
-                UrlPathData ctxData = new UrlPathData(ctxComponent.getAlias(), RequestPathTypeEnum.FORM, "");
-                sortProperties.addRequestData(ctxData);
-                apiCallerComponents.add(sortAPI);
-            } else {
-                this.logger.error("【排序】绑定失败[" + this.className + "===》" + sortPath);
-            }
-        }
+//        if (sortPath != null && !sortPath.equals("")) {
+//
+//            MethodConfig methodBean = methodAPIBean.getDataBean().getMethodEvent(CustomGalleryEvent.PANMOVE);
+//
+//            if (methodBean != null) {
+//                APICallerComponent sortAPI = new APICallerComponent(methodBean);
+//                sortAPI.setAlias(CustomGridAction.SORTUP.getTarget());
+//                APICallerProperties sortProperties = sortAPI.getProperties();
+//                UrlPathData requestPathData = new UrlPathData(currComponent.getAlias(), RequestPathTypeEnum.GALLERY, "");
+//
+//                if (requestPathData != null) {
+//                    sortProperties.addRequestData(requestPathData);
+//                }
+//                UrlPathData ctxData = new UrlPathData(ctxComponent.getAlias(), RequestPathTypeEnum.FORM, "");
+//                sortProperties.addRequestData(ctxData);
+//                apiCallerComponents.add(sortAPI);
+//            } else {
+//                this.logger.error("【排序】绑定失败[" + this.className + "===》" + sortPath);
+//            }
+//        }
 
         //装载保存事件
         if (saveUrl != null && !saveUrl.equals("")) {

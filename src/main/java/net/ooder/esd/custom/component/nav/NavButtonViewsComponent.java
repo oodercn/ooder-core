@@ -4,6 +4,7 @@ package net.ooder.esd.custom.component.nav;
 import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.action.CustomLoadClassAction;
 import net.ooder.esd.annotation.event.ActionTypeEnum;
+import net.ooder.esd.annotation.event.ModuleEventEnum;
 import net.ooder.esd.annotation.event.TabsEventEnum;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
@@ -72,13 +73,13 @@ public class NavButtonViewsComponent extends ButtonViewsComponent {
 
 
         if (viewsProperties.getItems().size() > 0) {
-            Action clickItemAction = new Action(TabsEventEnum.onRender);
+            Action clickItemAction = new Action(ModuleEventEnum.onRender);
             clickItemAction.setType(ActionTypeEnum.control);
             clickItemAction.setTarget(this.getAlias());
             clickItemAction.setDesc("初始化");
             clickItemAction.setMethod("fireItemClickEvent");
             clickItemAction.setArgs(Arrays.asList(new String[]{viewsProperties.getFristId()}));
-            this.addAction(clickItemAction);
+            this.getModuleComponent().addAction(clickItemAction);
         }
 
     }
