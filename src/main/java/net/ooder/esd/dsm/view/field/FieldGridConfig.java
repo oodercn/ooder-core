@@ -9,6 +9,7 @@ import net.ooder.esd.annotation.CustomAnnotation;
 import net.ooder.esd.annotation.RightContextMenu;
 import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.ui.SymbolType;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.field.CustomFieldBean;
 import net.ooder.esd.bean.field.combo.ComboListBoxFieldBean;
@@ -23,6 +24,8 @@ import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.AggregationManager;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
 import net.ooder.esd.tool.OODTypeMapping;
+import net.ooder.esd.tool.properties.Action;
+import net.ooder.esd.tool.properties.Condition;
 import net.ooder.esd.tool.properties.Header;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -185,7 +188,14 @@ public class FieldGridConfig implements ESDFieldConfig {
 
         if (colInfo instanceof BaseFieldInfo) {
             BaseFieldInfo baseFieldInfo = (BaseFieldInfo) colInfo;
-            this.gridEvents = baseFieldInfo.getGridEvents();
+            this.gridEvents= baseFieldInfo.getGridEvents();
+            for (GridEventBean eventBean : gridEvents) {
+                List<Action> actions = eventBean.getActions();
+                for (Action action : actions) {
+                    Condition condition = new Condition("{args[1].id}", SymbolType.equal, this.getFieldname());
+                    action.addCondition(condition);
+                }
+            }
         }
 
     }
@@ -253,6 +263,7 @@ public class FieldGridConfig implements ESDFieldConfig {
         if (contextMenuBean != null && !AnnotationUtil.getAnnotationMap(contextMenuBean).isEmpty()) {
             annotationBeans.add(contextMenuBean);
         }
+
 
         annotationBeans.addAll(this.getGridEvents());
 

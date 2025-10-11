@@ -246,7 +246,6 @@ public class CustomGridViewBean extends CustomViewBean<FieldGridConfig, UIItem, 
         if (gridEvent != null) {
             GridEventBean gridEventBean = new GridEventBean(gridEvent);
             extAPIEvent.add(gridEventBean);
-
         }
 
 
