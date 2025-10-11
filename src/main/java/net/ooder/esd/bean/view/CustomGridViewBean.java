@@ -313,6 +313,16 @@ public class CustomGridViewBean extends CustomViewBean<FieldGridConfig, UIItem, 
 
     }
 
+    public List<GridEventBean> getFieldAPIEvent() {
+        List<GridEventBean> gridEventBeans=new ArrayList<>();
+        for(String fieldName:fieldNames){
+            FieldGridConfig config =this.getFieldByName(fieldName);
+            gridEventBeans.addAll(config.getGridEvents());
+        }
+        return gridEventBeans;
+    }
+
+
     public LinkedHashSet<GridEventBean> getExtAPIEvent() {
         return extAPIEvent;
     }

@@ -188,7 +188,7 @@ public class FieldGridConfig implements ESDFieldConfig {
 
         if (colInfo instanceof BaseFieldInfo) {
             BaseFieldInfo baseFieldInfo = (BaseFieldInfo) colInfo;
-            this.gridEvents= baseFieldInfo.getGridEvents();
+            this.gridEvents = baseFieldInfo.getGridEvents();
             for (GridEventBean eventBean : gridEvents) {
                 List<Action> actions = eventBean.getActions();
                 for (Action action : actions) {

@@ -174,6 +174,13 @@ public class CustomGridComponent<M extends TreeGridComponent> extends CustomModu
             }
         }
 
+        List<GridEventBean> fieldAPIEvents = view.getFieldAPIEvent();
+        for (GridEventBean eventEnum : fieldAPIEvents) {
+            List<Action> actions = eventEnum.getActions();
+            for (Action action : actions) {
+                currComponent.addAction(action, true, eventEnum.getEventReturn());
+            }
+        }
     }
 
 
