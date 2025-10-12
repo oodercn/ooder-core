@@ -70,11 +70,9 @@ public class LayoutListItem extends TabListItem {
     }
 
     public LayoutListItem(PosType posType) {
-
         AnnotationUtil.fillDefaultValue(LayoutItemAnnotation.class, this);
         this.id = posType.name();
         this.pos = posType;
-
         switch (posType) {
             case before:
                 this.setSize(260);

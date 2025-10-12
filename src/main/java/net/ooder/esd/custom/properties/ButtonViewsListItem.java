@@ -11,6 +11,7 @@ import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.dsm.view.field.FieldItemConfig;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
+import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.RequestParamBean;
 import net.sf.cglib.beans.BeanMap;
@@ -19,7 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ButtonViewsListItem extends TreeListItem<ButtonViewsListItem> {
+public class ButtonViewsListItem extends TabListItem {
+
+    Boolean iniFold;
+
     public ButtonViewsListItem() {
         super();
     }
@@ -44,7 +48,6 @@ public class ButtonViewsListItem extends TreeListItem<ButtonViewsListItem> {
     }
 
     public ButtonViewsListItem(Enum enumType) {
-
         if (enumType instanceof ButtonViewsItem) {
             ButtonViewsItem buttonViewsItem = (ButtonViewsItem) enumType;
             this.caption = buttonViewsItem.getName();
@@ -128,7 +131,6 @@ public class ButtonViewsListItem extends TreeListItem<ButtonViewsListItem> {
 
     }
 
-
     public ButtonViewsListItem(FieldModuleConfig itemConfig) {
         this.caption = itemConfig.getCaption();
         this.imageClass = itemConfig.getImageClass();
@@ -148,6 +150,14 @@ public class ButtonViewsListItem extends TreeListItem<ButtonViewsListItem> {
             this.tagVar = new HashMap<>();
         }
 
+    }
+
+    public Boolean getIniFold() {
+        return iniFold;
+    }
+
+    public void setIniFold(Boolean iniFold) {
+        this.iniFold = iniFold;
     }
 
 }

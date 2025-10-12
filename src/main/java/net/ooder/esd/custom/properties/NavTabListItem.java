@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NavTabListItem<T extends TabListItem> extends TabListItem {
+public class NavTabListItem extends TabListItem {
 
     public NavTabListItem() {
         super();

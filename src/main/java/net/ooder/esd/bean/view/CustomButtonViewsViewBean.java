@@ -55,17 +55,11 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
     public CustomButtonViewsViewBean(MethodConfig methodAPIBean) {
         super(methodAPIBean);
         Class clazz = JSONGenUtil.getInnerReturnType(methodAPIBean.getMethod());
-        this.init(clazz);
-        ButtonViewsAnnotation formAnnotation = null;
         if (methodAPIBean.getViewClass() != null) {
-            formAnnotation = AnnotationUtil.getClassAnnotation(methodAPIBean.getViewClass().getCtClass(), ButtonViewsAnnotation.class);
+            clazz = methodAPIBean.getViewClass().getCtClass();
         }
+        this.init(clazz);
 
-        if (formAnnotation == null) {
-            AnnotationUtil.fillDefaultValue(ButtonViewsAnnotation.class, this);
-        } else {
-            AnnotationUtil.fillBean(formAnnotation, this);
-        }
     }
 
 

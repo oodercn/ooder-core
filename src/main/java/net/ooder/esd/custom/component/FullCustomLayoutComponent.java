@@ -3,7 +3,10 @@ package net.ooder.esd.custom.component;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.CustomClass;
-import net.ooder.esd.annotation.ui.*;
+import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.ui.CustomViewType;
+import net.ooder.esd.annotation.ui.Dock;
+import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.view.LayoutViewAnnotation;
 import net.ooder.esd.bean.CustomLayoutItemBean;
 import net.ooder.esd.bean.MethodConfig;
@@ -31,9 +34,8 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
     public FullCustomLayoutComponent(EUModule module, MethodConfig methodConfig, Map valueMap) {
         super(module, methodConfig, valueMap);
         CustomLayoutViewBean viewBean = (CustomLayoutViewBean) methodConfig.getView();
-        LayoutComponent layoutComponent = this.getLayoutComponent(viewBean);
-
-
+        LayoutProperties layoutProperties = new LayoutProperties(viewBean);
+        LayoutComponent layoutComponent = new LayoutComponent(euModule.getName() + ComponentType.LAYOUT.name(),layoutProperties);
         try {
             if (methodConfig.getViewClass() != null) {
                 AggEntityConfig aggEntityConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(methodConfig.getViewClass().getClassName(), false);
@@ -79,35 +81,4 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
 
     }
 
-
-    @JSONField(serialize = false)
-    public LayoutComponent getLayoutComponent(CustomLayoutViewBean layoutViewBean) {
-        LayoutComponent layoutComponent = new LayoutComponent(Dock.fill, euModule.getName() + ComponentType.LAYOUT.name());
-        LayoutProperties layoutProperties = layoutComponent.getProperties();
-        LayoutListItem topItem = new LayoutListItem(PosType.before);
-        LayoutListItem mainItem = new LayoutListItem(PosType.main);
-        List<CustomLayoutItemBean> itemBeanList = layoutViewBean.getLayoutItems();
-        for (CustomLayoutItemBean layoutItemBean : itemBeanList) {
-            if (layoutItemBean.getPos().equals(PosType.before)) {
-                topItem = new LayoutListItem(layoutItemBean);
-            } else if (layoutItemBean.getPos().equals(PosType.main)) {
-                mainItem = new LayoutListItem(layoutItemBean);
-            }
-        }
-
-        if (layoutViewBean != null) {
-            layoutProperties = new LayoutProperties(layoutViewBean);
-            layoutProperties.getItems().clear();
-            layoutProperties.addItem(topItem);
-            layoutProperties.addItem(mainItem);
-        } else {
-            layoutProperties.setBorderType(BorderType.none);
-            layoutProperties.setType(LayoutType.vertical);
-            layoutProperties.addItem(topItem);
-            layoutProperties.addItem(mainItem);
-        }
-        layoutComponent.setProperties(layoutProperties);
-        return layoutComponent;
-
-    }
 }

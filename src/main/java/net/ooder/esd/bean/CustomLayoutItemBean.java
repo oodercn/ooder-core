@@ -78,8 +78,8 @@ public class CustomLayoutItemBean implements CustomBean {
 
     public CustomLayoutItemBean(LayoutItemAnnotation itemAnnotation) {
         AnnotationUtil.fillBean(itemAnnotation, this);
-        if (itemAnnotation.id().equals(AnnotationUtil.getDefaultValue(LayoutItemAnnotation.class, "id")) && this.getPos() != null) {
-            this.id = this.getPos().name();
+        if (itemAnnotation.id().equals(AnnotationUtil.getDefaultValue(LayoutItemAnnotation.class, "id")) && pos != null) {
+            this.id =pos.name();
         }
     }
 
@@ -227,9 +227,6 @@ public class CustomLayoutItemBean implements CustomBean {
     }
 
     public PosType getPos() {
-        if (pos == null) {
-            pos = PosType.before;
-        }
         return pos;
     }
 
