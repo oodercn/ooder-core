@@ -12,11 +12,11 @@ import net.ooder.esd.annotation.menu.CustomFormMenu;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.BottomBarMenuBean;
 import net.ooder.esd.bean.MethodConfig;
-import net.ooder.esd.bean.nav.GroupItemBean;
 import net.ooder.esd.bean.data.NavGroupDataBean;
+import net.ooder.esd.bean.nav.GroupItemBean;
 import net.ooder.esd.bean.view.NavGroupViewBean;
-import net.ooder.esd.custom.component.CustomModuleComponent;
 import net.ooder.esd.custom.action.CustomAPICallAction;
+import net.ooder.esd.custom.component.CustomModuleComponent;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.APICallerComponent;
 import net.ooder.esd.tool.component.BlockComponent;
@@ -134,7 +134,7 @@ public class FullNavGroupComponent extends CustomModuleComponent {
 
         for (CustomFormEvent eventType : customFormEvents) {
             for (CustomAction actionType : eventType.getActions(false)) {
-                currComponent.addAction(new Action(actionType,eventType.getEventEnum()));
+                currComponent.addAction(new Action(actionType, eventType.getEventEnum()));
             }
         }
         List<CustomFormMenu> customFormMenus = formView.getCustomMenu();
@@ -208,10 +208,10 @@ public class FullNavGroupComponent extends CustomModuleComponent {
                 saveProperties.addRequestData(ctxData);
                 NavGroupDataBean dataBean = (NavGroupDataBean) methodAPIBean.getDataBean();
                 if (dataBean.getAutoSave()) {
-                    CustomAPICallAction customAPICallAction = new CustomAPICallAction(saveAPI,ModuleEventEnum.onDestroy);
+                    CustomAPICallAction customAPICallAction = new CustomAPICallAction(saveAPI, ModuleEventEnum.onDestroy);
                     Condition condition = new Condition("{page." + this.getCurrComponent().getAlias() + ".isDirtied()}", SymbolType.equal, "{true}");
                     customAPICallAction.addCondition(condition);
-                    this.addAction( customAPICallAction);
+                    this.addAction(customAPICallAction);
                 }
                 apiCallerComponents.add(saveAPI);
             } else {

@@ -111,14 +111,15 @@ public class TabListItem<T extends Enum> extends UIItem<T> {
                     bindClass = new Class[]{uibingClass};
                 } catch (ClassNotFoundException e) {
                     logger.error(e);
-                    //  e.printStackTrace();
                 }
             }
 
             if (bindClass.length == 0 && this.getEuClassName() != null && !this.getEuClassName().equals("")) {
                 EUModule module = null;
                 try {
-                    JDSActionContext.getActionContext().getContext().putAll(this.getTagVar());
+                    if (this.getTagVar() != null) {
+                        JDSActionContext.getActionContext().getContext().putAll(this.getTagVar());
+                    }
                     module = ESDFacrory.getAdminESDClient().getModule(this.getEuClassName(), null);
                     if (module == null) {
                         module = CustomViewFactory.getInstance().getView(this.getEuClassName(), null);
@@ -129,12 +130,8 @@ public class TabListItem<T extends Enum> extends UIItem<T> {
                     }
                 } catch (Exception e) {
                     logger.error(e);
-                    //   e.printStackTrace();
                 }
-
             }
-
-
             if (bindClass.length == 0 && this.getEntityClass() != null) {
                 bindClass = new Class[]{this.getEntityClass()};
             }
