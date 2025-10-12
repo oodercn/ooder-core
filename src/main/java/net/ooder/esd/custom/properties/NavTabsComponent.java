@@ -132,15 +132,14 @@ public class NavTabsComponent extends TabsComponent<NavTabsProperties> {
 
 
         if (viewsProperties.getItems().size() > 0) {
-            Action clickItemAction = new Action(ModuleEventEnum.onRender);
+            Action clickItemAction = new Action(TabsEventEnum.onRender);
             clickItemAction.setType(ActionTypeEnum.control);
             clickItemAction.setTarget(this.getAlias());
             clickItemAction.setDesc("初始化");
             clickItemAction.setMethod("fireItemClickEvent");
             clickItemAction.setArgs(Arrays.asList(new String[]{viewsProperties.getFristId()}));
-
-            if (!this.getModuleComponent().getEvents().containsKey(ModuleEventEnum.onRender)) {
-                this.getModuleComponent().addAction(clickItemAction, false);
+            if (!this.getEvents().containsKey(TabsEventEnum.onRender)) {
+                this.addAction( clickItemAction,false);
             }
         }
 

@@ -58,13 +58,13 @@ public class CustomTabComponent extends CustomModuleComponent<NavTabsComponent> 
 
         TabsProperties properties = currComponent.getProperties();
         if (properties.getItems() != null && properties.getItems().size() > 0) {
-            Action clickItemAction = new Action(ModuleEventEnum.onRender);
+            Action clickItemAction = new Action(TabsEventEnum.onRender);
             clickItemAction.setType(ActionTypeEnum.control);
             clickItemAction.setTarget(currComponent.getAlias());
             clickItemAction.setDesc("初始化");
             clickItemAction.setMethod("fireItemClickEvent");
             clickItemAction.setArgs(Arrays.asList(new String[]{properties.getFristId()}));
-            currComponent.getModuleComponent().addAction(clickItemAction, false);
+            currComponent.addAction( clickItemAction,false);
         }
         try {
             this.addChildren(genAPIComponent(methodAPIBean));
