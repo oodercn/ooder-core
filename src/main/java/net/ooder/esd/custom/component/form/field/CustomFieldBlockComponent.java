@@ -44,7 +44,6 @@ public class CustomFieldBlockComponent extends BlockComponent {
             if (customModuleBean == null && customComponentViewBean.getMethodConfig() != null) {
                 customModuleBean = customComponentViewBean.getMethodConfig().getModuleBean();
             }
-
             Component component = blockFieldBean.getComponent();
             if (component != null) {
                 if (component.getCS() != null) {

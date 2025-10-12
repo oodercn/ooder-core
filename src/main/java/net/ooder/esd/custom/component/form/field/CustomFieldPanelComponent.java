@@ -38,7 +38,6 @@ public class CustomFieldPanelComponent extends PanelComponent<PanelProperties> {
         this.setAlias(field.getFieldname());
         //存在集合属性
         CustomPanelFieldBean panelFieldBean = field.getWidgetConfig();
-
         Component component = field.getWidgetConfig().getComponent();
         if (component != null) {
             if (component.getCS() != null) {

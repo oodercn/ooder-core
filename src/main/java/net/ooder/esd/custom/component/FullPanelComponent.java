@@ -126,8 +126,7 @@ public class FullPanelComponent<M extends CustomFieldPanelComponent> extends Cus
         }
         APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(), mainComponent);
         this.addChildren(apiCallerComponents);
-
-        this.fillToolBar(viewBean, currComponent);
+        this.fillToolBar(viewBean,   this.getMainComponent());
     }
 
     protected void fillFromAction(CustomPanelFormViewBean view, Component currComponent) {
