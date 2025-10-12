@@ -1,9 +1,10 @@
 package net.ooder.esd.bean.field;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.esd.annotation.CustomClass;
-import net.ooder.esd.annotation.field.FormFieldAnnotation;
 import net.ooder.esd.annotation.Widget;
+import net.ooder.esd.annotation.field.FormFieldAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
@@ -14,16 +15,16 @@ import net.ooder.esd.custom.component.form.field.CustomFieldFormComponent;
 import net.ooder.esd.tool.component.FormLayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
+
 @CustomClass(clazz = CustomFieldFormComponent.class,
         viewType = CustomViewType.COMPONENT,
         moduleType = ModuleViewType.FORMCONFIG,
-        componentType = ComponentType.MENUBAR
+        componentType = ComponentType.FORMLAYOUT
 )
 @AnnotationType(clazz = FormFieldAnnotation.class)
 public class CustomFormFieldBean extends BaseWidgetBean<CustomFormViewBean, FormLayoutComponent> {

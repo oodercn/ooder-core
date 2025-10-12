@@ -346,9 +346,7 @@ public class AggEntityConfig {
                     }
                 }
             }
-
             url = requestMappingBean.getFristUrl();
-
         } catch (JDSException e) {
             e.printStackTrace();
         }

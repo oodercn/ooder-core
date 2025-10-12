@@ -38,7 +38,6 @@ public class CustomFieldFormComponent extends FormLayoutComponent {
             CustomFormViewBean customComponentViewBean = (CustomFormViewBean) field.getMethodConfig().getView();
             init(euModule, customComponentViewBean, valueMap);
             FormLayoutProperties blockProperties = new FormLayoutProperties(customComponentViewBean,field.getWidgetConfig());
-            blockProperties.initFieldBean(field.getWidgetConfig());
             this.setProperties(blockProperties);
             this.setTarget(target);
 
