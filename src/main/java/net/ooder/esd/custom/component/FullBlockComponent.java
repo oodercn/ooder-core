@@ -2,8 +2,6 @@ package net.ooder.esd.custom.component;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
-import net.ooder.esd.engine.ESDFacrory;
-import net.ooder.esd.engine.ProjectVersion;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
 import net.ooder.esd.annotation.action.CustomFormAction;
@@ -11,15 +9,18 @@ import net.ooder.esd.annotation.event.CustomFormEvent;
 import net.ooder.esd.annotation.event.ModuleEventEnum;
 import net.ooder.esd.annotation.menu.CustomFormMenu;
 import net.ooder.esd.annotation.ui.*;
-import net.ooder.esd.bean.data.CustomBlockDataBean;
-import net.ooder.esd.bean.view.CustomBlockFormViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.ToolBarMenuBean;
+import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.bean.bar.DynBar;
+import net.ooder.esd.bean.data.CustomBlockDataBean;
+import net.ooder.esd.bean.view.CustomBlockFormViewBean;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.action.CustomAPICallAction;
 import net.ooder.esd.custom.component.form.field.CustomFieldBlockComponent;
+import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
+import net.ooder.esd.engine.ProjectVersion;
 import net.ooder.esd.manager.editor.PluginsFactory;
 import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.APICallerProperties;
@@ -163,17 +164,13 @@ public class FullBlockComponent<M extends CustomFieldBlockComponent> extends Cus
         ComponentType[] bindTypes = (ComponentType[]) view.getBindTypes().toArray(new ComponentType[]{});
         ToolBarMenuBean toolBarBean = view.getToolBar();
         if (toolBarBean != null) {
+            customToolsBar = new CustomToolsBar(toolBarBean);
             Class<DynBar>[] serviceObjs = toolBarBean.getMenuClasses();
-            String groupId = currComponent.getAlias() + "Bar";
-            if (toolBarBean.getGroupId() != null && !toolBarBean.getGroupId().equals("")) {
-                groupId = toolBarBean.getGroupId();
-            }
-            customToolsBar = new CustomToolsBar(groupId);
             if (serviceObjs != null) {
                 for (Class obj : serviceObjs) {
-                    if (!obj.equals(Void.class)) {
+                    if (obj != null && !obj.equals(Void.class)) {
                         CustomToolsBar bar = PluginsFactory.getInstance().initMenuClass(obj, CustomToolsBar.class);
-                        if (customToolsBar == null) {
+                        if (bar != null) {
                             this.customToolsBar = bar;
                             List<APICallerComponent> components = customToolsBar.getApis();
                             this.addApi(components);
@@ -182,15 +179,21 @@ public class FullBlockComponent<M extends CustomFieldBlockComponent> extends Cus
                         }
                     }
                 }
-            }
-
-            if (customToolsBar != null && customToolsBar.getProperties().getGroup() != null && customToolsBar.getProperties().getGroup().getSub() != null && customToolsBar.getProperties().getGroup().getSub().size() > 0) {
-                customToolsBar.getProperties().setDock(Dock.top);
-                currComponent.getParent().addChildren(customToolsBar);
+                TreeListItem group = customToolsBar.getProperties().getGroup();
+                if (group != null && group.getSub() != null && group.getSub().size() > 0) {
+                    if (currComponent.getParent() != null) {
+                        currComponent.getParent().addChildren(customToolsBar);
+                    } else {
+                        currComponent.addChildren(customToolsBar);
+                    }
+                }
             }
 
         }
+
+
     }
+
 
     //数据对象
     @JSONField(serialize = false)

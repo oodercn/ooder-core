@@ -97,11 +97,7 @@ public class CustomFieldBlockComponent extends BlockComponent {
 
         for (FieldFormConfig fieldInfo : fieldList) {
             Component inputComponent = null;
-
-            // Class fieldClass = fieldInfo.getEsdField().getReturnType();
             if (fieldInfo.getEsdField() != null && Component.class.isAssignableFrom(fieldInfo.getEsdField().getReturnType())) {
-
-
                 if (fieldInfo.getMethodConfig() != null && fieldInfo.getMethodConfig().getRequestMethodBean() != null ) {
                     try {
                         inputComponent = (Component)  fieldInfo.getMethodConfig().getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
