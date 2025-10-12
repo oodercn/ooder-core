@@ -9,7 +9,9 @@ import net.ooder.esd.annotation.BottomBarMenu;
 import net.ooder.esd.annotation.EnumsClass;
 import net.ooder.esd.annotation.MenuBarMenu;
 import net.ooder.esd.annotation.TabItemAnnotation;
-import net.ooder.esd.annotation.event.*;
+import net.ooder.esd.annotation.event.CustomEvent;
+import net.ooder.esd.annotation.event.CustomTabsEvent;
+import net.ooder.esd.annotation.event.TabsEvent;
 import net.ooder.esd.annotation.field.TabItem;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.menu.CustomFormMenu;
@@ -25,7 +27,6 @@ import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.TabsComponent;
-import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.esd.util.OODUtil;
@@ -85,6 +86,7 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
     List<CustomFormMenu> customMenu = new ArrayList<>();
 
     public LinkedHashSet<TabsEventBean> extAPIEvent = new LinkedHashSet<>();
+
     public BaseTabsViewBean() {
         super();
     }
@@ -353,7 +355,7 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
 
         TabsEvent tabsEvent = AnnotationUtil.getClassAnnotation(clazz, TabsEvent.class);
         if (tabsEvent != null) {
-            TabsEventBean customTabsEvent= new TabsEventBean(tabsEvent);
+            TabsEventBean customTabsEvent = new TabsEventBean(tabsEvent);
             this.extAPIEvent.add(customTabsEvent);
         }
 
@@ -544,10 +546,10 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
                 Object object = invokMethod(this.methodConfig.getRequestMethodBean(), tagMap);
                 if (object != null) {
                     if (object instanceof TreeListResultModel) {
-                        TreeListResultModel<List<TreeListItem>> resultModel = (TreeListResultModel) object;
-                        List<TreeListItem> items = resultModel.getData();
+                        TreeListResultModel<List<TabListItem>> resultModel = (TreeListResultModel) object;
+                        List<TabListItem> items = resultModel.getData();
                         if (items != null) {
-                            for (TreeListItem item : items) {
+                            for (TabListItem item : items) {
                                 FieldModuleConfig fieldFormConfig = new FieldModuleConfig();
                                 fieldFormConfig.setId(item.getId());
                                 fieldFormConfig.setSourceClassName(sourceClassName);

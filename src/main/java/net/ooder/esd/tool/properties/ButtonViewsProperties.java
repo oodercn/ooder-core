@@ -39,7 +39,6 @@ public class ButtonViewsProperties extends TabsProperties<ButtonViewsListItem> {
 
     public ButtonViewsProperties(MethodConfig methodConfig, Map valueMap) {
         CustomButtonViewsViewBean tabsViewBean = (CustomButtonViewsViewBean) methodConfig.getView();
-
         this.setBorderType(BorderType.none);
         this.name = methodConfig.getName();
         this.caption = methodConfig.getCaption();
@@ -61,48 +60,55 @@ public class ButtonViewsProperties extends TabsProperties<ButtonViewsListItem> {
     }
 
     void init(CustomButtonViewsViewBean tabsViewBean) {
-        for (ButtonViewsListItem item : tabsViewBean.getTabItems()) {
-            this.addItem(item);
-        }
-
-        if (tabsViewBean.getItemBeans() != null && !tabsViewBean.getItemBeans().isEmpty()) {
-            List<ButtonViewsListItem> tabItemBeans = new ArrayList<>();
-            for (TabItemBean item : tabsViewBean.getItemBeans()) {
-                tabItemBeans.add(new ButtonViewsListItem(item));
-            }
-            this.setItems(tabItemBeans);
-        }
-
-        if (this.getItems() == null || this.getItems().isEmpty()) {
-            Class<? extends Enum> enumClass = tabsViewBean.getEnumClass();
-            Class<? extends Enum> viewClass = null;
-            String viewClassName = tabsViewBean.getViewClassName();
-            if (viewClassName != null) {
-                Class clazz = null;
-                try {
-                    clazz = ClassUtility.loadClass(viewClassName);
-                    if (clazz.isEnum()) {
-                        viewClass = clazz;
-                    }
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-            List<ButtonViewsListItem> items = this.getItems();
-            if (viewClass != null) {
-                items = ESDEnumsUtil.getEnumItems(viewClass, ButtonViewsListItem.class);
-            } else if (enumClass != null) {
-                items = ESDEnumsUtil.getEnumItems(enumClass, ButtonViewsListItem.class);
-            }
-            this.setItems(items);
-        }
 
         List<FieldModuleConfig> moduleList = tabsViewBean.getNavItems();
-        for (FieldModuleConfig itemInfo : moduleList) {
-            ButtonViewsListItem navItemProperties = new ButtonViewsListItem(itemInfo);
-            navItemProperties.getTagVar().putAll(itemInfo.getTagVar());
-            this.addItem(navItemProperties);
+
+        if (moduleList!=null && moduleList.size()>0){
+            for (FieldModuleConfig itemInfo : moduleList) {
+                ButtonViewsListItem navItemProperties = new ButtonViewsListItem(itemInfo);
+                navItemProperties.getTagVar().putAll(itemInfo.getTagVar());
+                this.addItem(navItemProperties);
+            }
+        }else{
+
+            for (ButtonViewsListItem item : tabsViewBean.getTabItems()) {
+                this.addItem(item);
+            }
+
+            if (tabsViewBean.getItemBeans() != null && !tabsViewBean.getItemBeans().isEmpty()) {
+                List<ButtonViewsListItem> tabItemBeans = new ArrayList<>();
+                for (TabItemBean item : tabsViewBean.getItemBeans()) {
+                    tabItemBeans.add(new ButtonViewsListItem(item));
+                }
+                this.setItems(tabItemBeans);
+            }
+
+            if (this.getItems() == null || this.getItems().isEmpty()) {
+                Class<? extends Enum> enumClass = tabsViewBean.getEnumClass();
+                Class<? extends Enum> viewClass = null;
+                String viewClassName = tabsViewBean.getViewClassName();
+                if (viewClassName != null) {
+                    Class clazz = null;
+                    try {
+                        clazz = ClassUtility.loadClass(viewClassName);
+                        if (clazz.isEnum()) {
+                            viewClass = clazz;
+                        }
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+                List<ButtonViewsListItem> items = this.getItems();
+                if (viewClass != null) {
+                    items = ESDEnumsUtil.getEnumItems(viewClass, ButtonViewsListItem.class);
+                } else if (enumClass != null) {
+                    items = ESDEnumsUtil.getEnumItems(enumClass, ButtonViewsListItem.class);
+                }
+                this.setItems(items);
+            }
+
         }
+
 
         if (this.getItems().size() > 0) {
             this.setValue(this.getItems().get(0).getId());
