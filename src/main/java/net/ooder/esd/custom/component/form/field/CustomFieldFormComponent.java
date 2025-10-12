@@ -4,9 +4,9 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.PositionType;
+import net.ooder.esd.bean.field.CustomFormLayoutFieldBean;
 import net.ooder.esd.bean.view.CustomFormViewBean;
 import net.ooder.esd.bean.MethodConfig;
-import net.ooder.esd.bean.field.CustomFormLayoutFieldBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;
 import net.ooder.esd.custom.CustomViewConfigFactory;
@@ -15,7 +15,6 @@ import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.FormLayoutComponent;
 import net.ooder.esd.tool.properties.form.FormLayoutProperties;
-import net.ooder.server.httpproxy.core.AbstractHandler;
 import ognl.OgnlException;
 
 import java.lang.reflect.Constructor;

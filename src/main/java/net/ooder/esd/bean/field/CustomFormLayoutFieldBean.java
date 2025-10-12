@@ -28,7 +28,7 @@ import java.util.Set;
 @CustomClass(clazz = CustomFieldFormComponent.class,
         viewType = CustomViewType.COMPONENT,
         moduleType = ModuleViewType.FORMCONFIG,
-        componentType = ComponentType.MENUBAR
+        componentType = ComponentType.FORMLAYOUT
 )
 @AnnotationType(clazz = FormFieldAnnotation.class)
 public class CustomFormLayoutFieldBean extends BaseWidgetBean<CustomFormViewBean, FormLayoutComponent> {
