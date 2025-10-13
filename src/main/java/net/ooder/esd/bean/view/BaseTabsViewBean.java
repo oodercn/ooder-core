@@ -15,8 +15,11 @@ import net.ooder.esd.annotation.event.TabsEvent;
 import net.ooder.esd.annotation.field.TabItem;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.menu.CustomFormMenu;
+import net.ooder.esd.annotation.menu.GridMenu;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.*;
+import net.ooder.esd.bean.bar.ContextMenuBar;
+import net.ooder.esd.bean.bar.ToolsBar;
 import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.properties.NavTabListItem;
@@ -37,7 +40,7 @@ import net.ooder.web.util.AnnotationUtil;
 import java.lang.reflect.Constructor;
 import java.util.*;
 
-public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListItem> extends CustomViewBean<FieldFormConfig, U, TabsComponent> implements ComponentBean<TabsComponent> {
+public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListItem> extends CustomViewBean<FieldFormConfig, U, TabsComponent> implements ComponentBean<TabsComponent>, ToolsBar {
 
     @JSONField(serialize = false)
     public List<CustomModuleBean> moduleBeans = new ArrayList<>();
@@ -937,6 +940,7 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
         }
         return bottomBar;
     }
+
 
 
     public EnumsClassBean getEnumsClassBean() {

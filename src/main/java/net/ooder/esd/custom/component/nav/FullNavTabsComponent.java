@@ -27,10 +27,7 @@ public class FullNavTabsComponent extends CustomTabComponent {
         this.fillTabsAction(viewBean, currComponent);
         this.fillViewAction(dataBean);
         this.addChildren(this.genAPIComponent(methodConfig));
-
-        // this.addChildLayoutNav(currComponent);
-
-
+        this.fillToolBar(viewBean, currComponent);
 
     }
 
