@@ -53,6 +53,7 @@ public class TreeEventBean<T extends Action> extends Event<T, TreeViewEventEnum>
         this.expression = event.expression();
         this.eventId = eventKey.name() + "|" + eventKey.getEvent();
         addAction(event.actions());
+        addAction(event.pageActions());
         addAction(event.customActions());
         addAction(event.localActions());
     }
