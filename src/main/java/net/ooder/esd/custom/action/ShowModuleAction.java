@@ -10,21 +10,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ShowPageAction<K extends EventKey> extends Action<K> {
+public class ShowModuleAction<K extends EventKey> extends Action<K> {
     Args args;
 
-    public ShowPageAction(K eventEnum) {
+    public ShowModuleAction(K eventEnum) {
         super(eventEnum);
         init();
     }
 
-    public ShowPageAction(String src, K eventEnum) {
+    public ShowModuleAction(String src, K eventEnum) {
         super(eventEnum);
         init();
         this.setTarget(src);
     }
 
-    public ShowPageAction(MethodConfig fieldMethodConfig, K eventEnum) {
+    public ShowModuleAction(MethodConfig fieldMethodConfig, K eventEnum) {
         super(eventEnum);
         init();
         this.setDesc("弹出" + fieldMethodConfig.getCaption());
@@ -38,7 +38,7 @@ public class ShowPageAction<K extends EventKey> extends Action<K> {
     }
 
 
-    public ShowPageAction(TreeListItem item, K eventEnum) {
+    public ShowModuleAction(TreeListItem item, K eventEnum) {
         super(eventEnum);
         init();
         this.setDesc("点击" + item.getCaption());

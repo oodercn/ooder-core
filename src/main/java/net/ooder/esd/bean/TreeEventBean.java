@@ -3,6 +3,7 @@ package net.ooder.esd.bean;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomAction;
+import net.ooder.esd.annotation.action.CustomLoadClassAction;
 import net.ooder.esd.annotation.event.CustomTreeEvent;
 import net.ooder.esd.annotation.event.TreeEvent;
 import net.ooder.esd.annotation.event.TreeViewEventEnum;
@@ -25,6 +26,12 @@ public class TreeEventBean<T extends Action> extends Event<T, TreeViewEventEnum>
     String expression;
 
     String domainId;
+
+    String className;
+
+    String targetFrame;
+
+    String childName;
 
 
     public TreeEventBean(String domainId, String sourceClassName, String methodName) {
@@ -52,6 +59,14 @@ public class TreeEventBean<T extends Action> extends Event<T, TreeViewEventEnum>
         this.desc = event.desc();
         this.expression = event.expression();
         this.eventId = eventKey.name() + "|" + eventKey.getEvent();
+        if (!event.pageAction().equals(CustomLoadClassAction.none)) {
+            this.className = event.className();
+            this.childName = event.childName();
+            this.targetFrame = event.targetFrame();
+            CustomLoadClassAction action = event.pageAction();
+            action.reSet(event);
+            this.addAction(new CustomAction[]{action});
+        }
         addAction(event.actions());
         addAction(event.customActions());
         addAction(event.localActions());
@@ -69,6 +84,30 @@ public class TreeEventBean<T extends Action> extends Event<T, TreeViewEventEnum>
                 }
             }
         }
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getTargetFrame() {
+        return targetFrame;
+    }
+
+    public void setTargetFrame(String targetFrame) {
+        this.targetFrame = targetFrame;
+    }
+
+    public String getChildName() {
+        return childName;
+    }
+
+    public void setChildName(String childName) {
+        this.childName = childName;
     }
 
     public String getExpression() {

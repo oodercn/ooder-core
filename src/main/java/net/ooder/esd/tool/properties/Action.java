@@ -12,6 +12,7 @@ import net.ooder.esd.annotation.event.APIEvent;
 import net.ooder.esd.annotation.event.ActionTypeEnum;
 import net.ooder.esd.annotation.event.MQTTEvent;
 import net.ooder.esd.annotation.event.ModuleEvent;
+import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.util.json.ConditionCollectionCodec;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -19,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @AnnotationType(clazz = CustomAction.class)
 public class Action<K extends EventKey> implements CustomBean {
@@ -27,10 +29,8 @@ public class Action<K extends EventKey> implements CustomBean {
     ActionTypeEnum type;
     String target;
 
-
     @JSONField(serialize = false)
     K eventKey;
-    String className;
     String enumClassName;
     String enumValue;
     String expression;
@@ -40,6 +40,10 @@ public class Action<K extends EventKey> implements CustomBean {
     List<Condition> conditions = new ArrayList<>();
     String method;
     String redirection;
+
+
+    String className;
+    String childName;
     String okFlag;
     String koFlag;
     String eventValue;
@@ -77,7 +81,7 @@ public class Action<K extends EventKey> implements CustomBean {
         this.eventKey = eventEnum;
         this.eventClass = eventEnum.getClass();
         this.eventValue = eventEnum.getEvent();
-        initAction(customAction,eventEnum,  customAction.target());
+        initAction(customAction, eventEnum, customAction.target());
     }
 
 
@@ -93,21 +97,21 @@ public class Action<K extends EventKey> implements CustomBean {
         this.eventKey = (K) eventEnum.event();
         this.eventClass = eventEnum.getClass();
         this.eventValue = eventEnum.eventName();
-        initAction(customAction,eventEnum.event(),  customAction.target());
+        initAction(customAction, eventEnum.event(), customAction.target());
     }
 
     public Action(CustomAction customAction, APIEvent eventEnum) {
         this.eventKey = (K) eventEnum.event();
         this.eventClass = eventEnum.getClass();
         this.eventValue = eventEnum.eventName();
-        initAction(customAction,eventEnum.event(),  customAction.target());
+        initAction(customAction, eventEnum.event(), customAction.target());
     }
 
     public Action(CustomAction customAction, ModuleEvent eventEnum) {
         this.eventKey = (K) eventEnum.event();
         this.eventClass = eventEnum.getClass();
         this.eventValue = eventEnum.eventName();
-        initAction(customAction,eventEnum.event(),  customAction.target());
+        initAction(customAction, eventEnum.event(), customAction.target());
     }
 
     public Action() {
@@ -118,14 +122,14 @@ public class Action<K extends EventKey> implements CustomBean {
         this.eventKey = (K) eventEnum.event();
         this.eventClass = eventEnum.getClass();
         this.eventValue = eventEnum.eventName();
-        initAction(customAction,eventEnum.event(),  target);
+        initAction(customAction, eventEnum.event(), target);
     }
 
     public Action(CustomAction customAction, APIEvent eventEnum, String target) {
         this.eventKey = (K) eventEnum.event();
         this.eventClass = eventEnum.getClass();
         this.eventValue = eventEnum.eventName();
-        initAction(customAction,eventEnum.event(), target);
+        initAction(customAction, eventEnum.event(), target);
     }
 
     void initAction(CustomAction customAction, EventKey eventEnum, String target) {
@@ -139,18 +143,19 @@ public class Action<K extends EventKey> implements CustomBean {
                 script = "{" + script + "}";
             }
             List<String> params = new ArrayList<>();
-            if (customAction.params()!=null && customAction.params().length>0){
+            if (customAction.params() != null && customAction.params().length > 0) {
                 for (String param : customAction.params()) {
                     if (!param.startsWith("{") && !param.endsWith("}")) {
                         param = "{" + param + "}";
                     }
                     params.add(param);
                 }
-            }else{
-                int k=0;
-               while (k<eventEnum.getParams().length){
-                   k++;params.add("{args["+k+"]}");
-               }
+            } else {
+                int k = 0;
+                while (k < eventEnum.getParams().length) {
+                    k++;
+                    params.add("{args[" + k + "]}");
+                }
             }
 
             String[] argArr = new String[]{script, null, null, null};
@@ -199,6 +204,15 @@ public class Action<K extends EventKey> implements CustomBean {
             }
         }
         this.desc = customAction.desc().equals("") ? eventKey + "(" + method + ")" : customAction.desc();
+    }
+
+
+    public String getChildName() {
+        return childName;
+    }
+
+    public void setChildName(String childName) {
+        this.childName = childName;
     }
 
 
@@ -408,4 +422,71 @@ public class Action<K extends EventKey> implements CustomBean {
     public String toAnnotationStr() {
         return AnnotationUtil.toAnnotationStr(this);
     }
+
+    public class Args {
+
+        String methodName = "{page.show2()}";
+        String euClassName;
+        String target;
+        String childName;
+        Map<String, Object> params;
+        String data = "{page.getData()}";
+
+        public Args(TreeListItem item) {
+            this.params = item.getTagVar();
+        }
+
+        public Args() {
+
+        }
+
+        List<Object> toArr() {
+            List<Object> args = new ArrayList<>();
+            args.add("{page.show2()}");
+            args.add(null);
+            args.add(null);
+            args.add(target);
+            args.add(childName);
+            args.add(params);
+            args.add(data);
+            args.add("{page}");
+            args.add(true);
+            return args;
+        }
+
+
+        public String getTarget() {
+            return target;
+        }
+
+        public void setTarget(String target) {
+            this.target = target;
+        }
+
+        public String getChildName() {
+            return childName;
+        }
+
+        public void setChildName(String childName) {
+            this.childName = childName;
+        }
+
+        public Map<String, Object> getParams() {
+            return params;
+        }
+
+        public void setParams(Map<String, Object> params) {
+            this.params = params;
+        }
+
+        public String getData() {
+            return data;
+        }
+
+        public void setData(String data) {
+            this.data = data;
+        }
+
+    }
+
 }
