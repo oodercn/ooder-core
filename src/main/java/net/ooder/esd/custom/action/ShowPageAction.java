@@ -3,8 +3,8 @@ package net.ooder.esd.custom.action;
 import net.ooder.common.EventKey;
 import net.ooder.esd.annotation.event.ActionTypeEnum;
 import net.ooder.esd.bean.MethodConfig;
-import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.bean.TreeListItem;
+import net.ooder.esd.tool.properties.Action;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +13,12 @@ import java.util.Map;
 public class ShowPageAction<K extends EventKey> extends Action<K> {
     Args args;
 
-    public ShowPageAction( K eventEnum) {
+    public ShowPageAction(K eventEnum) {
         super(eventEnum);
         init();
     }
 
-    public ShowPageAction(String src,K eventEnum) {
+    public ShowPageAction(String src, K eventEnum) {
         super(eventEnum);
         init();
         this.setTarget(src);
@@ -30,12 +30,16 @@ public class ShowPageAction<K extends EventKey> extends Action<K> {
         this.setDesc("弹出" + fieldMethodConfig.getCaption());
         Args args = new Args();
         setTarget(fieldMethodConfig.getEUClassName());
+        if (fieldMethodConfig.getLayoutItem() != null) {
+            args.setChildName(fieldMethodConfig.getLayoutItem().getId());
+            args.setTarget(fieldMethodConfig.getLayoutItem().getParentAlias());
+        }
         args.setParams(fieldMethodConfig.getTagVar());
         this.setArgs(args.toArr());
     }
 
 
-    public ShowPageAction(TreeListItem item,K eventEnum) {
+    public ShowPageAction(TreeListItem item, K eventEnum) {
         super(eventEnum);
         init();
         this.setDesc("点击" + item.getCaption());
@@ -56,6 +60,7 @@ public class ShowPageAction<K extends EventKey> extends Action<K> {
     public class Args {
 
         String methodName = "{page.show2()}";
+        String euClassName;
         String target;
         String childName;
         Map<String, Object> params;

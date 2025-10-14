@@ -25,10 +25,13 @@ import net.ooder.esd.bean.bar.ContextMenuBar;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.custom.ESDClassManager;
+import net.ooder.esd.custom.action.ShowPageAction;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.view.field.FieldTreeConfig;
+import net.ooder.esd.tool.properties.Action;
+import net.ooder.esd.tool.properties.Condition;
 import net.ooder.esd.tool.properties.item.CmdItem;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.esd.util.json.*;
@@ -267,6 +270,17 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
         TreeEvent treeEvent = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), TreeEvent.class);
         if (treeEvent != null) {
             TreeEventBean treeEventBean = new TreeEventBean(treeEvent);
+
+            if (treeEventBean.getActions().isEmpty()){
+                if (methodConfig.isModule()){
+                    Action action=new ShowPageAction(methodConfig,treeEventBean.getEventKey());
+                    Condition condition = new Condition("{args[3].groupName}", SymbolType.equal, this.getGroupName());
+                    action.addCondition(condition);
+                }
+            }
+
+
+
             this.extAPIEvent.add(treeEventBean);
         }
 

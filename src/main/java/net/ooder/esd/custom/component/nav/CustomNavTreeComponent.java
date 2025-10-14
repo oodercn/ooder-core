@@ -3,21 +3,17 @@ package net.ooder.esd.custom.component.nav;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.CustomAction;
-import net.ooder.esd.annotation.ui.CustomMenuItem;
-import net.ooder.esd.annotation.action.CustomLoadClassAction;
 import net.ooder.esd.annotation.action.CustomAPIMethod;
-import net.ooder.esd.annotation.ui.RequestPathTypeEnum;
-import net.ooder.esd.annotation.ui.ResponsePathTypeEnum;
-import net.ooder.esd.annotation.event.*;
 import net.ooder.esd.annotation.action.CustomFormAction;
+import net.ooder.esd.annotation.action.CustomLoadClassAction;
 import net.ooder.esd.annotation.action.CustomTreeAction;
-import net.ooder.esd.annotation.event.CustomTreeEvent;
+import net.ooder.esd.annotation.event.*;
 import net.ooder.esd.annotation.menu.TreeMenu;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.*;
-import net.ooder.esd.bean.view.*;
 import net.ooder.esd.bean.data.NavTreeDataBean;
 import net.ooder.esd.bean.data.TreeDataBaseBean;
+import net.ooder.esd.bean.view.*;
 import net.ooder.esd.custom.action.CustomAPICallAction;
 import net.ooder.esd.custom.action.ShowPageAction;
 import net.ooder.esd.custom.component.CustomContextBar;
@@ -62,15 +58,10 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
 
     public CustomNavTreeComponent(EUModule module, MethodConfig methodConfig, Map<String, Object> valueMap) {
         super(module, methodConfig, valueMap);
-
         NavTreeComboViewBean navTreeViewBean = (NavTreeComboViewBean) methodConfig.getView();
-
         this.layoutComponent = getLayoutComponent(navTreeViewBean.getLayoutViewBean());
-
         this.tabComponent = createTabsComponent(navTreeViewBean.getTabsViewBean(), valueMap);
-
         treeBlockComponent = createNavComponent(navTreeViewBean.getTreeViewBean(), valueMap);
-
         treeBlockComponent.setTarget(PosType.before.name());
         layoutComponent.addChildren(treeBlockComponent);
 
@@ -81,7 +72,6 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
     private NavTabsComponent createTabsComponent(TabsViewBean tabsViewBean, Map valueMap) {
         NavTabsComponent tabComponent = new NavTabsComponent(tabsViewBean, valueMap);
         tabComponent.getProperties().getItems().clear();
-
         Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onIniPanelView);
         showAction.updateArgs(tabComponent.getAlias(), 4);
         tabComponent.addAction(showAction);

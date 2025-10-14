@@ -1,11 +1,9 @@
 package net.ooder.esd.custom.component;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
-import net.ooder.esd.annotation.ui.Dock;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.view.LayoutViewAnnotation;
 import net.ooder.esd.bean.CustomLayoutItemBean;
@@ -18,7 +16,6 @@ import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.LayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.LayoutProperties;
-import net.ooder.esd.tool.properties.item.LayoutListItem;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +32,7 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
         super(module, methodConfig, valueMap);
         CustomLayoutViewBean viewBean = (CustomLayoutViewBean) methodConfig.getView();
         LayoutProperties layoutProperties = new LayoutProperties(viewBean);
-        LayoutComponent layoutComponent = new LayoutComponent(euModule.getName() + ComponentType.LAYOUT.name(),layoutProperties);
+        LayoutComponent layoutComponent = new LayoutComponent(euModule.getName() + ComponentType.LAYOUT.name(), layoutProperties);
         try {
             if (methodConfig.getViewClass() != null) {
                 AggEntityConfig aggEntityConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(methodConfig.getViewClass().getClassName(), false);
@@ -43,6 +40,7 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                 for (MethodConfig moduleConfig : methodConfigs) {
                     if (moduleConfig.getLayoutItem() != null) {
                         CustomLayoutItemBean layoutItemBean = moduleConfig.getLayoutItem();
+                        layoutItemBean.setParentAlias(this.getAlias());
                         Class ctClass = moduleConfig.getViewClass().getCtClass();
                         if (Component.class.isAssignableFrom(ctClass)) {
                             try {
@@ -73,7 +71,7 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
 
             this.addChildLayoutNav(layoutComponent);
             super.fillAction(viewBean);
-            this.fillToolBar(viewBean,layoutComponent);
+            this.fillToolBar(viewBean, layoutComponent);
         } catch (JDSException e) {
             e.printStackTrace();
         }

@@ -57,6 +57,8 @@ public class CustomLayoutItemBean implements CustomBean {
 
     String url;
 
+    String parentAlias;
+
     Boolean flexSize;
 
     Boolean transparent;
@@ -107,6 +109,13 @@ public class CustomLayoutItemBean implements CustomBean {
         return enumStr;
     }
 
+    public String getParentAlias() {
+        return parentAlias;
+    }
+
+    public void setParentAlias(String parentAlias) {
+        this.parentAlias = parentAlias;
+    }
 
     public Boolean getLocked() {
         return locked;
