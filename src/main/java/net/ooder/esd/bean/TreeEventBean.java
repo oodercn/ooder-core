@@ -74,14 +74,12 @@ public class TreeEventBean<T extends Action> extends Event<T, TreeViewEventEnum>
 
     public void addAction(CustomAction[] actionSet) {
         if (actions == null) {
-            if (actionSet.length > 0) {
-                actions = new ArrayList<>();
-                for (CustomAction customAction : actionSet) {
-                    if (!actions.contains(customAction)) {
-                        Action action = new Action(customAction, eventKey);
-                        actions.add((T) action);
-                    }
-                }
+            actions = new ArrayList<>();
+        }
+        for (CustomAction customAction : actionSet) {
+            if (!actions.contains(customAction)) {
+                Action action = new Action(customAction, eventKey);
+                actions.add((T) action);
             }
         }
     }

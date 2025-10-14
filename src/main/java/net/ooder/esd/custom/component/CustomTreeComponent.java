@@ -184,12 +184,16 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
                     action.getConditions().add(condition);
                 }
                 if (methodConfig != null) {
-                    APICallerComponent apiCallerComponent = (APICallerComponent) this.findComponentByAlias(methodConfig.getMethodName());
-                    if (apiCallerComponent == null) {
-                        apiCallerComponent = new APICallerComponent(methodConfig);
-                        this.addChildren(apiCallerComponent);
+                    if (action.getMethod().equals("call")) {
+                        APICallerComponent apiCallerComponent = (APICallerComponent) this.findComponentByAlias(methodConfig.getMethodName());
+                        if (apiCallerComponent == null) {
+                            apiCallerComponent = new APICallerComponent(methodConfig);
+                            this.addChildren(apiCallerComponent);
+                        }
+                        action.updateArgs("{page." + apiCallerComponent.getAlias() + "}", 3);
+                    } else if (methodConfig.isModule()) {
+                        action.updateArgs(methodConfig.getEUClassName(), 3);
                     }
-                    action.updateArgs("{page." + apiCallerComponent.getAlias() + "}", 3);
                 }
                 currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
