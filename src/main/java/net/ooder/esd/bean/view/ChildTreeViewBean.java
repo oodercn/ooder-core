@@ -86,6 +86,8 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
 
     Boolean togglePlaceholder;
 
+    List<TreeMenu> contextMenu = new ArrayList<>();
+
     @JSONField(deserializeUsing = BindClassArrDeserializer.class)
     Class[] bindClass;
 
@@ -1045,6 +1047,13 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
         return super.equals(obj);
     }
 
+    public List<TreeMenu> getContextMenu() {
+        return contextMenu;
+    }
+
+    public void setContextMenu(List<TreeMenu> contextMenu) {
+        this.contextMenu = contextMenu;
+    }
 
     @JSONField(serialize = false)
     public MethodConfig findMethod(CustomTreeEvent event) {

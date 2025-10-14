@@ -183,6 +183,7 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
                 if (!action.getConditions().contains(condition)) {
                     action.getConditions().add(condition);
                 }
+
                 if (methodConfig != null) {
                     if (action.getMethod().equals("call")) {
                         APICallerComponent apiCallerComponent = (APICallerComponent) this.findComponentByAlias(methodConfig.getMethodName());
@@ -195,6 +196,7 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
                         action.updateArgs(methodConfig.getEUClassName(), 3);
                     }
                 }
+                action.setId(childTreeViewBean.getGroupName() + "_" + eventEnum.getEventKey().getEvent() + "_" + action.getEventValue());
                 currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
         }
@@ -364,6 +366,7 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
             List<Action> actions = eventEnum.getActions();
             for (Action action : actions) {
                 action.updateArgs("{page." + this.getAlias() + "}", 3);
+                action.setId(view.getGroupName() + "_" + eventEnum.getEventKey().getEvent() + "_" + action.getEventValue());
                 currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
         }
