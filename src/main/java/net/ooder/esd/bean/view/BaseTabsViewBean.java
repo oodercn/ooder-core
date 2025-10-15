@@ -15,14 +15,14 @@ import net.ooder.esd.annotation.event.TabsEvent;
 import net.ooder.esd.annotation.field.TabItem;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.menu.CustomFormMenu;
-import net.ooder.esd.annotation.menu.GridMenu;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.*;
-import net.ooder.esd.bean.bar.ContextMenuBar;
 import net.ooder.esd.bean.bar.ToolsBar;
 import net.ooder.esd.bean.nav.TabItemBean;
+import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.properties.NavTabListItem;
+import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.engine.ESDFacrory;
@@ -941,7 +941,53 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
         return bottomBar;
     }
 
+    @JSONField(serialize = false)
+    public MethodConfig findMethod(TreeEventBean treeEventBean, Constructor constructor) {
+        String soruceClassName = treeEventBean.getSourceClassName();
+        String methodName = treeEventBean.getMethodName();
+        if (soruceClassName != null && !soruceClassName.equals(constructor.getDeclaringClass().getName())) {
+            try {
+                ApiClassConfig config = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(soruceClassName);
+                if (config != null) {
+                    MethodConfig methodConfig = config.getMethodByName(methodName);
+                    if (methodConfig != null) {
+                        return methodConfig;
+                    }
+                }
+            } catch (JDSException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 
+
+    @JSONField(serialize = false)
+    private void initExtEvent() {
+
+        Set<Class> bindClassList = this.getCustomService();
+
+        for (Class bindClass : bindClassList) {
+            if (!bindClass.equals(Void.class)) {
+                try {
+                    ApiClassConfig config = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(bindClass.getName());
+                    if (config != null) {
+                        List<MethodConfig> methodAPIBeans = config.getAllMethods();
+                        for (MethodConfig methodAPIBean : methodAPIBeans) {
+                            TabsEvent tabsEvent = AnnotationUtil.getMethodAnnotation(methodAPIBean.getMethod(), TabsEvent.class);
+                            if (tabsEvent != null) {
+                                TabsEventBean treeEventBean = new TabsEventBean(tabsEvent, methodAPIBean.getSourceClassName(), methodAPIBean.getMethodName());
+                                this.extAPIEvent.add(treeEventBean);
+                            }
+                        }
+
+                    }
+                } catch (JDSException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     public EnumsClassBean getEnumsClassBean() {
         return enumsClassBean;

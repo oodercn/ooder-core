@@ -8,6 +8,7 @@ import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Event;
 import net.ooder.web.util.AnnotationUtil;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
 
@@ -25,14 +26,22 @@ public class TabsEventBean<T extends Action> extends Event<T, TabsEventEnum> imp
     String domainId;
 
 
+
+    public TabsEventBean() {
+
+    }
+
+
+    public TabsEventBean(TabsEvent event, String sourceClassName, String methodName) {
+        this.sourceClassName = sourceClassName;
+        this.methodName = methodName;
+        this.initEvent(event);
+    }
+
     public TabsEventBean(String domainId, String sourceClassName, String methodName) {
         this.domainId = domainId;
         this.sourceClassName = sourceClassName;
         this.methodName = methodName;
-    }
-
-    public TabsEventBean() {
-
     }
 
     public TabsEventBean(CustomTabsEvent customTabsEvent) {
@@ -45,7 +54,17 @@ public class TabsEventBean<T extends Action> extends Event<T, TabsEventEnum> imp
 
     }
 
+    public TabsEventBean(TabsEvent event, Constructor constructor) {
+        this.sourceClassName = constructor.getDeclaringClass().getName();
+        this.methodName = constructor.getName();
+        this.initEvent(event);
+    }
+
+
     public TabsEventBean(TabsEvent event) {
+        this.initEvent(event);
+    }
+    public void initEvent(TabsEvent event) {
         this.eventKey = event.eventEnum();
         this.desc = event.desc();
         this.expression = event.expression();
@@ -53,6 +72,7 @@ public class TabsEventBean<T extends Action> extends Event<T, TabsEventEnum> imp
         addAction(event.actions());
         addAction(event.customActions());
     }
+
 
     public void addAction(CustomAction[] actionSet) {
         if (actions == null) {

@@ -2,36 +2,36 @@ package net.ooder.esd.bean.nav;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
-import net.ooder.common.JDSException;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.JDSException;
+import net.ooder.esd.annotation.LayoutItemAnnotation;
 import net.ooder.esd.annotation.RightContextMenu;
-import net.ooder.esd.annotation.field.TabItem;
-import net.ooder.esd.annotation.ui.CustomMenuItem;
-import net.ooder.esd.annotation.ui.FontColorEnum;
-import net.ooder.esd.annotation.ui.IconColorEnum;
-import net.ooder.esd.annotation.ui.ItemColorEnum;
-import net.ooder.esd.bean.*;
-import net.ooder.esd.bean.bar.ContextMenuBar;
+import net.ooder.esd.annotation.TabItemAnnotation;
 import net.ooder.esd.annotation.event.CustomEvent;
 import net.ooder.esd.annotation.event.CustomFormEvent;
 import net.ooder.esd.annotation.event.CustomTabsEvent;
-import net.ooder.esd.annotation.LayoutItemAnnotation;
-import net.ooder.esd.annotation.TabItemAnnotation;
-import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.event.TabsEvent;
+import net.ooder.esd.annotation.field.TabItem;
+import net.ooder.esd.annotation.ui.*;
+import net.ooder.esd.bean.CustomLayoutItemBean;
+import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.RightContextMenuBean;
+import net.ooder.esd.bean.bar.ContextMenuBar;
 import net.ooder.esd.bean.view.BaseTabsViewBean;
+import net.ooder.esd.bean.view.TabsEventBean;
 import net.ooder.esd.bean.view.TabsViewBean;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.view.field.FieldItemConfig;
+import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.json.BindClassArrDeserializer;
 import net.ooder.esd.util.json.DefaultTabItem;
 import net.ooder.esd.util.json.TabItemDeserializer;
 import net.ooder.esd.util.json.TabItemSerializer;
-import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.ConstructorBean;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.reflect.Constructor;
@@ -142,6 +142,12 @@ public class TabItemBean<T extends FieldItemConfig> implements ContextMenuBar, C
             fillData(tabViewAnnotation);
         } else {
             AnnotationUtil.fillDefaultValue(TabItemAnnotation.class, this);
+        }
+
+        TabsEvent tabsEvent = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), TabsEvent.class);
+        if (tabsEvent != null) {
+            TabsEventBean customTabsEvent = new TabsEventBean(tabsEvent);
+            viewBean.getExtAPIEvent().add(customTabsEvent);
         }
 
         LayoutItemAnnotation tabItemAnnotation = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), LayoutItemAnnotation.class);
