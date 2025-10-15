@@ -545,8 +545,8 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
                     requestBody = true;
                 }
             }
-
         }
+
 
         if (layoutItem == null) {
             LayoutItemAnnotation annotation = AnnotationUtil.getMethodAnnotation(this.getMethod(), LayoutItemAnnotation.class);

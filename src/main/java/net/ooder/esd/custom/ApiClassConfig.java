@@ -15,6 +15,7 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.tool.component.APICallerComponent;
 import net.ooder.esd.tool.properties.APICallerProperties;
+import net.ooder.esd.tool.properties.Event;
 import net.ooder.web.APIConfig;
 import net.ooder.web.APIConfigFactory;
 import net.ooder.web.RequestMethodBean;
@@ -47,6 +48,10 @@ public class ApiClassConfig {
     Map<String, MethodConfig> allMethodMap = new LinkedHashMap<>();
     @JSONField(serialize = false)
     Map<CustomEvent, MethodConfig> eventMethodMap = new LinkedHashMap<>();
+
+    @JSONField(serialize = false)
+    Map<Event, MethodConfig> extMethodMap = new LinkedHashMap<>();
+
     @JSONField(serialize = false)
     Map<CustomMenuItem, MethodConfig> itemMethodMap = new LinkedHashMap<>();
 
@@ -187,7 +192,6 @@ public class ApiClassConfig {
             if (methodConfig != null && !methodConfig.isModule()) {
                 proxyMethodList.add(this.getMethodByName(methodName));
             }
-
         }
         Arrays.sort(proxyMethodList.toArray());
         return proxyMethodList;

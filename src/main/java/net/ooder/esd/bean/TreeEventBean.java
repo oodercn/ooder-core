@@ -11,6 +11,7 @@ import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Event;
 import net.ooder.web.util.AnnotationUtil;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
 
@@ -54,7 +55,24 @@ public class TreeEventBean<T extends Action> extends Event<T, TreeViewEventEnum>
 
     }
 
+    public TreeEventBean(TreeEvent event, Constructor constructor) {
+        this.sourceClassName = constructor.getDeclaringClass().getName();
+        this.methodName = constructor.getName();
+        this.initEvent(event);
+    }
+
+
     public TreeEventBean(TreeEvent event) {
+        this.initEvent(event);
+    }
+
+    public TreeEventBean(TreeEvent event, String sourceClassName, String methodName) {
+        this.sourceClassName = sourceClassName;
+        this.methodName = methodName;
+        this.initEvent(event);
+    }
+
+    void initEvent(TreeEvent event) {
         this.eventKey = event.eventEnum();
         this.desc = event.desc();
         this.expression = event.expression();

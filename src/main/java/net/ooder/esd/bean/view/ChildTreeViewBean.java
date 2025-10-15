@@ -238,7 +238,6 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
 
 
     private void initMethod(MethodConfig methodConfig) {
-
         if (methodConfig.getViewClass() != null && !TreeListItem.class.isAssignableFrom(methodConfig.getViewClass().getCtClass())) {
             RequestParamBean requestParamBean = new RequestParamBean();
             String paramName = OODUtil.formatJavaName(methodConfig.getViewClass().getName(), false);
@@ -268,7 +267,7 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
 
         TreeEvent treeEvent = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), TreeEvent.class);
         if (treeEvent != null) {
-            TreeEventBean treeEventBean = new TreeEventBean(treeEvent);
+            TreeEventBean treeEventBean = new TreeEventBean(treeEvent, methodConfig.getSourceClassName(), methodConfig.getMethodName());
             this.extAPIEvent.add(treeEventBean);
         }
 
@@ -393,21 +392,15 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
             AnnotationUtil.fillDefaultValue(ChildTreeAnnotation.class, this);
         }
 
-        MethodConfig methodConfig = this.findMethod(CustomTreeEvent.TREENODEEDITOR);
-        if (methodConfig != null) {
-            TreeEvent treeEvent = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), TreeEvent.class);
-            if (treeEvent != null) {
-                TreeEventBean treeEventBean = new TreeEventBean(treeEvent);
-                this.extAPIEvent.add(treeEventBean);
-            }
-        } else {
-            TreeEvent treeEvent = AnnotationUtil.getConstructorAnnotation(constructor, TreeEvent.class);
-            if (treeEvent != null) {
-                TreeEventBean treeEventBean = new TreeEventBean(treeEvent);
-                this.extAPIEvent.add(treeEventBean);
-            }
-        }
 
+        //内定定义事件
+        TreeEvent treeEvent = AnnotationUtil.getConstructorAnnotation(constructor, TreeEvent.class);
+        if (treeEvent != null) {
+            TreeEventBean treeEventBean = new TreeEventBean(treeEvent, constructor);
+            this.extAPIEvent.add(treeEventBean);
+        }
+        //初始化事引擎
+        initExtEvent();
 
         RightContextMenu annotation = AnnotationUtil.getConstructorAnnotation(constructor, RightContextMenu.class);
         if (annotation != null) {
@@ -1080,5 +1073,58 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
             }
         }
         return null;
+    }
+
+
+    @JSONField(serialize = false)
+    public MethodConfig findMethod(TreeEventBean treeEventBean) {
+        String soruceClassName = treeEventBean.getSourceClassName();
+        String methodName = treeEventBean.getMethodName();
+        if (soruceClassName != null && !soruceClassName.equals(this.getConstructorBean().getClassName())) {
+            try {
+                ApiClassConfig config = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(soruceClassName);
+                if (config != null) {
+                    MethodConfig methodConfig = config.getMethodByName(methodName);
+                    if (methodConfig != null) {
+                        return methodConfig;
+                    }
+                }
+            } catch (JDSException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+
+    @JSONField(serialize = false)
+    private void initExtEvent() {
+        Set<Class> bindClassList = new HashSet<>();
+        if (getBindClass() != null && getBindClass().length > 0) {
+            bindClassList.addAll(Arrays.asList(getBindClass()));
+        }
+        if (getTreeItem() != null && getTreeItem().getBindClass().length > 0) {
+            bindClassList.addAll(Arrays.asList(getTreeItem().getBindClass()));
+        }
+        for (Class bindClass : bindClassList) {
+            if (!bindClass.equals(Void.class)) {
+                try {
+                    ApiClassConfig config = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(bindClass.getName());
+                    if (config != null) {
+                        List<MethodConfig> methodAPIBeans = config.getAllMethods();
+                        for (MethodConfig methodAPIBean : methodAPIBeans) {
+                            TreeEvent treeEvent = AnnotationUtil.getMethodAnnotation(methodAPIBean.getMethod(), TreeEvent.class);
+                            if (treeEvent != null) {
+                                TreeEventBean treeEventBean = new TreeEventBean(treeEvent, methodAPIBean.getSourceClassName(), methodAPIBean.getMethodName());
+                                this.extAPIEvent.add(treeEventBean);
+                            }
+                        }
+
+                    }
+                } catch (JDSException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

@@ -57,7 +57,6 @@ public class ActionRoot {
         }
 
         ModuleComponent moduleComponent = null;
-
         if (listItem.getEuClassName() != null) {
             try {
                 EUModule module = ESDFacrory.getAdminESDClient().getModule(listItem.getEuClassName(), null);
@@ -84,7 +83,6 @@ public class ActionRoot {
                 }
                 moduleBean.reBindMethod(moduleComponent.getMethodAPIBean());
             }
-
 
             String moduleName = moduleBean.getAlias() != null ? moduleBean.getAlias() : OODUtil.formatJavaName(moduleBean.getMethodName(), false);
             moduleName = OODUtil.formatJavaName(moduleName, false);

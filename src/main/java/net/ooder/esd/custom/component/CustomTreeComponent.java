@@ -175,15 +175,13 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
         String groupName = childTreeViewBean.getGroupName();
         Condition condition = new Condition("{args[1].groupName}", SymbolType.equal, groupName);
         Set<TreeEventBean> extAPIEvent = childTreeViewBean.getExtAPIEvent();
-        MethodConfig methodConfig = childTreeViewBean.findMethod(CustomTreeEvent.TREENODEEDITOR);
-
         for (TreeEventBean eventEnum : extAPIEvent) {
+            MethodConfig methodConfig = childTreeViewBean.findMethod(eventEnum);
             List<Action> actions = eventEnum.getActions();
             for (Action action : actions) {
                 if (!action.getConditions().contains(condition)) {
                     action.getConditions().add(condition);
                 }
-
                 if (methodConfig != null) {
                     if (action.getMethod().equals("call")) {
                         APICallerComponent apiCallerComponent = (APICallerComponent) this.findComponentByAlias(methodConfig.getMethodName());
