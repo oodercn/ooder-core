@@ -63,8 +63,6 @@ public class NavFoldingTabsComponent extends FoldingTabsComponent {
             Action saveAction = new Action(CustomPageAction.AUTOSAVE, TabsEventEnum.beforePageClose);
             this.addAction(saveAction, false);
         }
-
-
         List<TabItemBean> childTabViewBeans = tabsViewBean.getItemBeans();
         for (TabItemBean childTabViewBean : childTabViewBeans) {
             MethodConfig methodConfig = childTabViewBean.getMethodConfig();
