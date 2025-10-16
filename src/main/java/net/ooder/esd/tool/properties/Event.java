@@ -19,20 +19,23 @@ public class Event<T extends Action, K extends EventKey> implements DSMEvent<T, 
     @JSONField(serialize = false)
     public K eventKey;
 
-
     public String desc;
 
+    String eventValue;
+
+    Class eventClass;
+
     public Event(K eventKey) {
+        if (eventKey.getClass().isEnum()) {
+            this.eventClass = eventKey.getClass();
+            this.eventValue = eventKey.getEvent();
+        }
         this.eventKey = eventKey;
     }
 
     public Event() {
     }
 
-
-    public K getEventKey() {
-        return eventKey;
-    }
 
     public void setEventKey(K eventKey) {
         this.eventKey = eventKey;
@@ -72,4 +75,15 @@ public class Event<T extends Action, K extends EventKey> implements DSMEvent<T, 
     }
 
 
+    public K getEventKey() {
+        if (eventKey == null && eventClass != null && eventValue != null) {
+            try {
+                eventKey = (K) eventClass.getMethod("valueOf", String.class).invoke(eventClass.getEnumConstants(), eventValue);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return eventKey;
+    }
 }

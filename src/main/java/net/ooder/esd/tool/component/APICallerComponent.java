@@ -3,6 +3,7 @@ package net.ooder.esd.tool.component;
 import net.ooder.esd.annotation.event.APIEvent;
 import net.ooder.esd.annotation.event.APIEventEnum;
 import net.ooder.esd.annotation.event.ActionTypeEnum;
+import net.ooder.esd.annotation.event.TreeViewEventEnum;
 import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.bean.APIEventBean;
@@ -46,21 +47,22 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
         }
 
         this.addEvent(apiCallBean.getBeforeData());
-        this.addAction(apiCallBean.getBeforeDataAction());
+        this.addAction(apiCallBean.getBeforeDataAction(), APIEventEnum.beforeData);
         this.addEvent(apiCallBean.getBeforeInvoke());
-        this.addAction(apiCallBean.getBeforeInvokeAction());
+        this.addAction(apiCallBean.getBeforeInvokeAction(), APIEventEnum.beforeInvoke);
         this.addEvent(apiCallBean.getOnData());
-        this.addAction(apiCallBean.getOnDataAction());
+        this.addAction(apiCallBean.getOnDataAction(), APIEventEnum.onData);
         this.addEvent(apiCallBean.getOnExecuteSuccess());
-        this.addAction(apiCallBean.getOnExecuteSuccessAction());
+        this.addAction(apiCallBean.getOnExecuteSuccessAction(), APIEventEnum.onExecuteSuccess);
         this.addEvent(apiCallBean.getOnExecuteError());
-        this.addAction(apiCallBean.getOnExecuteErrorAction());
+        this.addAction(apiCallBean.getOnExecuteErrorAction(), APIEventEnum.onExecuteError);
         this.addEvent(apiCallBean.getOnError());
-        this.addAction(apiCallBean.getOnErrorAction());
+        this.addAction(apiCallBean.getOnErrorAction(), APIEventEnum.onError);
         this.addEvent(apiCallBean.getCallback());
-        this.addAction(apiCallBean.getCallbackAction());
+        this.addAction(apiCallBean.getCallbackAction(), APIEventEnum.callback);
         this.addEvent(apiCallBean.getAfterInvoke());
-        this.addAction(apiCallBean.getAfterInvokAction());
+        this.addAction(apiCallBean.getAfterInvokAction(), APIEventEnum.afterInvoke);
+
         List<APIEventBean> events = apiCallBean.getAllEvent();
         for (APIEventBean apiEvent : events) {
             List<Action> actions = apiEvent.getActions();
@@ -146,9 +148,10 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
     }
 
 
-    void addAction(Set<Action> actions) {
+    void addAction(Set<Action> actions, APIEventEnum apiEventEnum) {
         for (Action action : actions) {
             if (action != null) {
+                action.setEventKey(apiEventEnum);
                 this.addAction(action);
             }
         }
@@ -166,7 +169,7 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
                 && action.getType() != null && action.getType().equals(ActionTypeEnum.other)
                 && action.getMethod() != null && action.getMethod().equals("call")
                 && action.getArgs().size() > 3) {
-               action.updateArgs("{page." + alias + "}", 3);
+            action.updateArgs("{page." + alias + "}", 3);
         }
         return action;
     }

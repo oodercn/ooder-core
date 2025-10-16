@@ -72,6 +72,8 @@ public class TreeEventBean<T extends Action> extends Event<T, TreeViewEventEnum>
         this.initEvent(event);
     }
 
+
+
     void initEvent(TreeEvent event) {
         this.eventKey = event.eventEnum();
         this.desc = event.desc();

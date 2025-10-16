@@ -194,7 +194,7 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
                         action.updateArgs(methodConfig.getEUClassName(), 3);
                     }
                 }
-                action.setId(childTreeViewBean.getGroupName() + "_" + eventEnum.getEventKey().getEvent() + "_" + action.getEventValue());
+                action.setId(childTreeViewBean.getGroupName() + "_" + action.getEventKey().getEvent() + "_" + action.getEventValue());
                 currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
         }
