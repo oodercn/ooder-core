@@ -17,12 +17,16 @@ import net.ooder.esd.tool.properties.Event;
 import net.ooder.esd.tool.properties.Properties;
 import net.ooder.esd.util.json.ComponentsDeserializer;
 import net.ooder.web.util.JSONGenUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mvel2.templates.TemplateRuntime;
 
 import java.lang.reflect.Type;
 import java.util.*;
 
 public class Component<T extends Properties, K extends EventKey> {
+
+    public static Log logger = LogFactory.getLog(Component.class);
 
     protected ComponentType[] skipComponents = new ComponentType[]{ComponentType.BLOCK, ComponentType.DIV, ComponentType.DIALOG};
 
@@ -137,15 +141,20 @@ public class Component<T extends Properties, K extends EventKey> {
         }
 
         if (par) {
-            String json = JSONObject.toJSONString(action, false);
-            Map context = JDSActionContext.getActionContext().getContext();
-            if (this.getModuleComponent() != null) {
-                context.put(CustomViewFactory.CurrModuleKey, this.getModuleComponent().getEuModule());
+            try {
+                String json = JSONObject.toJSONString(action, false);
+                Map context = JDSActionContext.getActionContext().getContext();
+                if (this.getModuleComponent() != null) {
+                    context.put(CustomViewFactory.CurrModuleKey, this.getModuleComponent().getEuModule());
+                }
+                String objStr = (String) TemplateRuntime.eval(json, context);
+                action = JSONObject.parseObject(objStr, new TypeReference<Action<K>>() {
+                });
+                action.setEventKey(eventKey);
+            } catch (Throwable throwable) {
+                logger.warn(throwable.getMessage());
             }
-            String objStr = (String) TemplateRuntime.eval(json, context);
-            action = JSONObject.parseObject(objStr, new TypeReference<Action<K>>() {
-            });
-            action.setEventKey(eventKey);
+
         }
 
         if (!actions.contains(action)) {
