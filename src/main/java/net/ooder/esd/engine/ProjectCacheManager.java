@@ -199,13 +199,11 @@ public class ProjectCacheManager {
                 packages.add(euPackage);
             }
         }
-
         Collections.sort(packages, new Comparator<EUPackage>() {
             public int compare(EUPackage o1, EUPackage o2) {
                 return o1.getPackageName().compareTo(o2.getPackageName());
             }
         });
-
 
         return packages;
 

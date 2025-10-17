@@ -8,9 +8,9 @@ import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.java.JavaPackage;
 import net.ooder.esd.engine.enums.PackagePathType;
+import net.ooder.esd.engine.inner.INProjectVersion;
 import net.ooder.esd.manager.plugins.api.APIFactory;
 import net.ooder.esd.manager.plugins.api.node.APIPaths;
-import net.ooder.esd.engine.inner.INProjectVersion;
 import net.ooder.vfs.FileInfo;
 import net.ooder.vfs.Folder;
 import net.ooder.vfs.ct.CtVfsFactory;
@@ -62,11 +62,22 @@ public class EUPackage implements Comparable<EUPackage> {
         return folder;
     }
 
+    @JSONField(serialize = false)
+    public EUPackage getParent() {
+        EUPackage euPackage = null;
+        try {
+            String parentPackageName = packageName.substring(0, packageName.lastIndexOf("."));
+            euPackage = ESDFacrory.getAdminESDClient().getPackageByPath(projectVersionName, parentPackageName);
+        } catch (JDSException e) {
+            e.printStackTrace();
+        }
+        return euPackage;
+    }
+
+
     public EUPackage(INProjectVersion projectVersion, Folder folder) {
         this.projectVersionName = projectVersion.getVersionName();
-        List<FileInfo> fileInfos = folder.getFileList();
         this.name = folder.getDescrition() == null ? folder.getName() : folder.getDescrition();
-        this.id = folder.getID();
         this.path = folder.getPath();
         this.packageName = StringUtility.replace(path, projectVersion.getPath(), "");
         this.packageName = StringUtility.replace(this.packageName, "/", ".");
@@ -88,7 +99,7 @@ public class EUPackage implements Comparable<EUPackage> {
         } catch (JDSException e) {
             e.printStackTrace();
         }
-
+        this.id = packageName;
         this.packagePathType = PackagePathType.equalsPath(subpath);
         if (packagePathType != null) {
             this.desc = packageName + "(" + packagePathType.getDesc() + ")";

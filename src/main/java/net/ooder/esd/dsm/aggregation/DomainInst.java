@@ -11,7 +11,6 @@ import net.ooder.common.database.metadata.TableInfo;
 import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
 import net.ooder.common.util.ClassUtility;
-import net.ooder.config.JDSConfig;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
@@ -32,13 +31,13 @@ public class DomainInst extends DSMInst implements Comparable<DomainInst> {
     public UserSpace userSpace = UserSpace.FORM;
     @JSONField(deserializeUsing = CaseEnumsSerializer.class)
     public DSMType dsmType = DSMType.AGGREGATION;
+    public String path;
     public Set<String> dsmRefIds = new LinkedHashSet<>();
     public Map<String, AggEntityRef> aggEntityRefMap = new HashMap<>();
 
     public DomainInst() {
         super();
     }
-
 
 
     public DomainInst(String projectVersionName, UserSpace userSpace) {
@@ -48,7 +47,6 @@ public class DomainInst extends DSMInst implements Comparable<DomainInst> {
         this.name = projectVersionName + "_" + userSpace.name();
         this.space = userSpace.name().toLowerCase();
         this.packageName = "net.ooder." + projectVersionName + ".domain";
-
         if (userSpace.equals(UserSpace.USER)) {
             this.euPackage = projectVersionName;
         } else {
@@ -105,7 +103,6 @@ public class DomainInst extends DSMInst implements Comparable<DomainInst> {
         List<ESDClass> roots = this.getEntityList(AggregationType.MODULE, true);
         return roots;
     }
-
 
 
     @JSONField(serialize = false)
