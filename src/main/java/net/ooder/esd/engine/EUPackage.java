@@ -66,8 +66,10 @@ public class EUPackage implements Comparable<EUPackage> {
     public EUPackage getParent() {
         EUPackage euPackage = null;
         try {
-            String parentPackageName = packageName.substring(0, packageName.lastIndexOf("."));
-            euPackage = ESDFacrory.getAdminESDClient().getPackageByPath(projectVersionName, parentPackageName);
+            if (packageName.indexOf(".")>-1){
+                String parentPackageName = packageName.substring(0, packageName.lastIndexOf("."));
+                euPackage = ESDFacrory.getAdminESDClient().getPackageByPath(projectVersionName, parentPackageName);
+            }
         } catch (JDSException e) {
             e.printStackTrace();
         }
