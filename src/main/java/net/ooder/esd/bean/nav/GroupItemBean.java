@@ -2,17 +2,21 @@ package net.ooder.esd.bean.nav;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
-import net.ooder.common.JDSException;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.GroupCmd;
-import net.ooder.esd.annotation.field.GroupFieldAnnotation;
+import net.ooder.esd.annotation.GroupItemAnnotation;
 import net.ooder.esd.annotation.event.CustomFormEvent;
+import net.ooder.esd.annotation.event.CustomTabsEvent;
+import net.ooder.esd.annotation.field.GroupFieldAnnotation;
 import net.ooder.esd.annotation.field.TabItem;
 import net.ooder.esd.annotation.menu.CustomFormMenu;
-import net.ooder.esd.annotation.event.CustomTabsEvent;
-import net.ooder.esd.annotation.GroupItemAnnotation;
 import net.ooder.esd.annotation.ui.*;
-import net.ooder.esd.bean.*;
+import net.ooder.esd.bean.ContainerBean;
+import net.ooder.esd.bean.CustomPanelBean;
+import net.ooder.esd.bean.GroupCmdBean;
+import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomGroupFieldBean;
 import net.ooder.esd.bean.view.NavGroupViewBean;
 import net.ooder.esd.custom.ApiClassConfig;
@@ -20,15 +24,14 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.context.MethodRoot;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.dsm.view.field.FieldItemConfig;
-import net.ooder.esd.util.json.DefaultTabItem;
 import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.GroupComponent;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
 import net.ooder.esd.util.OODUtil;
+import net.ooder.esd.util.json.DefaultTabItem;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.ConstructorBean;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.reflect.Constructor;
@@ -178,7 +181,7 @@ public class GroupItemBean<T extends FieldItemConfig> extends LayoutListItem imp
     public GroupItemBean(MethodConfig methodConfig, NavGroupViewBean viewBean) {
         initViewBean(viewBean);
         initMethodConfig(methodConfig);
-        if (caption == null || !caption.equals("")) {
+        if (caption == null || caption.equals("")) {
             this.caption = methodConfig.getCaption();
         }
         if (imageClass == null || imageClass.equals("")) {
@@ -215,7 +218,7 @@ public class GroupItemBean<T extends FieldItemConfig> extends LayoutListItem imp
         this.methodConfig = methodConfig;
         this.entityClassName = methodConfig.getSourceClassName();
         this.methodName = methodConfig.getMethodName();
-        if (methodConfig.getView()!=null){
+        if (methodConfig.getView() != null) {
             this.imageClass = methodConfig.getView().getImageClass();
             this.containerBean = methodConfig.getView().getContainerBean();
         }
