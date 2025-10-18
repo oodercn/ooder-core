@@ -1621,7 +1621,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     public EUModule getEuModule() {
         if (euModule == null) {
             try {
-                euModule = ESDFacrory.getUserESDClient().getModule(className, projectName);
+                euModule = ESDFacrory.getAdminESDClient().getModule(className, projectName);
             } catch (JDSException e) {
                 e.printStackTrace();
             }

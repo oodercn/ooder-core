@@ -6,19 +6,19 @@ import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.PositionType;
 import net.ooder.esd.bean.CustomBlockBean;
-import net.ooder.esd.bean.view.CustomBlockFormViewBean;
-import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomBlockFieldBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;
+import net.ooder.esd.bean.view.CustomBlockFormViewBean;
+import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.custom.CustomViewConfigFactory;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.BlockComponent;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.properties.BlockProperties;
-import net.ooder.server.httpproxy.core.AbstractHandler;
+import net.ooder.esd.tool.properties.FieldProperties;
 import ognl.OgnlException;
 
 import java.lang.reflect.Constructor;
@@ -55,6 +55,7 @@ public class CustomFieldBlockComponent extends BlockComponent {
             CustomBlockBean blockBean = customModuleBean.getBlockBean();
             BlockProperties blockProperties = new BlockProperties(blockBean);
             blockProperties.init(blockFieldBean);
+
             this.setProperties(blockProperties);
             init(euModule, customComponentViewBean, valueMap);
         } else {
@@ -97,9 +98,9 @@ public class CustomFieldBlockComponent extends BlockComponent {
         for (FieldFormConfig fieldInfo : fieldList) {
             Component inputComponent = null;
             if (fieldInfo.getEsdField() != null && Component.class.isAssignableFrom(fieldInfo.getEsdField().getReturnType())) {
-                if (fieldInfo.getMethodConfig() != null && fieldInfo.getMethodConfig().getRequestMethodBean() != null ) {
+                if (fieldInfo.getMethodConfig() != null && fieldInfo.getMethodConfig().getRequestMethodBean() != null) {
                     try {
-                        inputComponent = (Component)  fieldInfo.getMethodConfig().getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
+                        inputComponent = (Component) fieldInfo.getMethodConfig().getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     } catch (OgnlException e) {
@@ -182,11 +183,15 @@ public class CustomFieldBlockComponent extends BlockComponent {
             }
 
             if (inputComponent != null) {
+
                 if (inputComponent.getKey().equals(ComponentType.MQTT.getClassName())) {
                     this.euModule.getComponent().addChildren(inputComponent);
                 } else if (inputComponent.getKey().equals(ComponentType.APICALLER.getClassName())) {
                     this.euModule.getComponent().getMainBoxComponent().addChildren(inputComponent);
                 } else {
+
+                    FieldProperties fieldProperties= (FieldProperties) inputComponent.getProperties();
+                    fieldProperties.setPosition("relative");
                     PositionType positionType = fieldInfo.getFieldBean().getInnerPosition();
                     if (positionType == null || positionType.equals(PositionType.inner)) {
                         this.addChildren(inputComponent);
