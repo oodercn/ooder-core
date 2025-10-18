@@ -2,12 +2,12 @@ package net.ooder.esd.custom.component.form.field;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.context.JDSActionContext;
-import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.annotation.ui.ModuleViewType;
-import net.ooder.esd.annotation.ui.PositionType;
+import net.ooder.esd.annotation.Label;
+import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.CustomBlockBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomBlockFieldBean;
+import net.ooder.esd.bean.field.LabelBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;
 import net.ooder.esd.bean.view.CustomBlockFormViewBean;
@@ -18,7 +18,7 @@ import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.BlockComponent;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.properties.BlockProperties;
-import net.ooder.esd.tool.properties.FieldProperties;
+import net.ooder.web.util.AnnotationUtil;
 import ognl.OgnlException;
 
 import java.lang.reflect.Constructor;
@@ -55,7 +55,6 @@ public class CustomFieldBlockComponent extends BlockComponent {
             CustomBlockBean blockBean = customModuleBean.getBlockBean();
             BlockProperties blockProperties = new BlockProperties(blockBean);
             blockProperties.init(blockFieldBean);
-
             this.setProperties(blockProperties);
             init(euModule, customComponentViewBean, valueMap);
         } else {
@@ -91,12 +90,44 @@ public class CustomFieldBlockComponent extends BlockComponent {
                 fieldList.add(fieldFormConfig);
             }
         }
+
         if (dbMap != null) {
             this.valueMap = dbMap;
         }
 
         for (FieldFormConfig fieldInfo : fieldList) {
             Component inputComponent = null;
+            Integer con = customComponentViewBean.getCol();
+            if (con != null && con > 0) {
+                Integer labelHeight = 24;
+                fieldInfo.getContainerBean().getUiBean().setPosition("relative");
+
+                if (fieldInfo.getFieldBean().getManualHeight() == null) {
+
+                    String caption = fieldInfo.getCustomBean().getCaption();
+                    if (fieldInfo.getFieldBean().getCaption() != null) {
+                        caption = fieldInfo.getFieldBean().getCaption();
+                    }
+                    LabelBean labelBean = fieldInfo.getLabelBean();
+
+                    if (labelBean == null) {
+                        labelBean = new LabelBean();
+                        AnnotationUtil.fillDefaultValue(Label.class, labelBean);
+                        fieldInfo.setLabelBean(labelBean);
+                    }
+                    fieldInfo.getLabelBean().setLabelCaption(caption);
+                    if (fieldInfo.getLabelBean().getLabelPos().equals(LabelPos.top)) {
+                        fieldInfo.getLabelBean().setLabelSize(labelHeight + "px");
+                        fieldInfo.getLabelBean().setLabelHAlign(HAlignType.left);
+                        fieldInfo.getLabelBean().setLabelVAlign(VAlignType.middle);
+                        fieldInfo.getFieldBean().setManualHeight(customComponentViewBean.getDefaultRowHeight() + labelHeight);
+                        fieldInfo.getContainerBean().getUiBean().setHeight((customComponentViewBean.getDefaultRowHeight() + labelHeight) + "px");
+                    }
+
+                }
+            }
+
+
             if (fieldInfo.getEsdField() != null && Component.class.isAssignableFrom(fieldInfo.getEsdField().getReturnType())) {
                 if (fieldInfo.getMethodConfig() != null && fieldInfo.getMethodConfig().getRequestMethodBean() != null) {
                     try {
@@ -107,8 +138,6 @@ public class CustomFieldBlockComponent extends BlockComponent {
                         e.printStackTrace();
                     }
                 }
-
-
             } else {
                 ComponentType componentType = fieldInfo.getComponentType();
                 if (fieldInfo.getWidgetConfig() != null && fieldInfo.getWidgetConfig().getComponentType() != null) {
@@ -119,31 +148,31 @@ public class CustomFieldBlockComponent extends BlockComponent {
                     componentType = ComponentType.COMBOINPUT;
                 }
 
-                if (fieldInfo.getComboConfig() != null && (fieldInfo.getWidgetConfig() instanceof ComboInputFieldBean) && !componentType.equals(ComponentType.LAYOUT)) {
-                    ModuleViewType moduleViewType = fieldInfo.getMethodConfig().getModuleViewType();
-                    if (moduleViewType != null) {
-                        switch (moduleViewType) {
-                            case NAVMENUBARCONFIG:
-                                componentType = ComponentType.MENUBAR;
-                                break;
-                            case NAVGALLERYCONFIG:
-                                componentType = ComponentType.GALLERY;
-                                break;
-                            case NAVTREECONFIG:
-                                componentType = ComponentType.TREEVIEW;
-                                break;
-
-                            case NAVBUTTONLAYOUTCONFIG:
-                                componentType = ComponentType.BUTTONLAYOUT;
-                                break;
-
-                            case NAVFOLDINGTREECONFIG:
-                                componentType = ComponentType.FOLDINGTABS;
-                                break;
-                        }
-                    }
-
-                }
+//                if (fieldInfo.getComboConfig() != null && (fieldInfo.getWidgetConfig() instanceof ComboInputFieldBean) && !componentType.equals(ComponentType.LAYOUT)) {
+//                    ModuleViewType moduleViewType = fieldInfo.getMethodConfig().getModuleViewType();
+//                    if (moduleViewType != null) {
+//                        switch (moduleViewType) {
+//                            case NAVMENUBARCONFIG:
+//                                componentType = ComponentType.MENUBAR;
+//                                break;
+//                            case NAVGALLERYCONFIG:
+//                                componentType = ComponentType.GALLERY;
+//                                break;
+//                            case NAVTREECONFIG:
+//                                componentType = ComponentType.TREEVIEW;
+//                                break;
+//
+//                            case NAVBUTTONLAYOUTCONFIG:
+//                                componentType = ComponentType.BUTTONLAYOUT;
+//                                break;
+//
+//                            case NAVFOLDINGTREECONFIG:
+//                                componentType = ComponentType.FOLDINGTABS;
+//                                break;
+//                        }
+//                    }
+//
+//                }
 
                 Object value = null;
                 if (valueMap != null) {
@@ -189,9 +218,6 @@ public class CustomFieldBlockComponent extends BlockComponent {
                 } else if (inputComponent.getKey().equals(ComponentType.APICALLER.getClassName())) {
                     this.euModule.getComponent().getMainBoxComponent().addChildren(inputComponent);
                 } else {
-
-                    FieldProperties fieldProperties= (FieldProperties) inputComponent.getProperties();
-                    fieldProperties.setPosition("relative");
                     PositionType positionType = fieldInfo.getFieldBean().getInnerPosition();
                     if (positionType == null || positionType.equals(PositionType.inner)) {
                         this.addChildren(inputComponent);

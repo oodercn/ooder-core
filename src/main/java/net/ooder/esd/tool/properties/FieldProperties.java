@@ -1,8 +1,6 @@
 package net.ooder.esd.tool.properties;
 
 import com.alibaba.fastjson.JSON;
-
-
 import net.ooder.annotation.Enumstype;
 import net.ooder.annotation.IconEnumstype;
 import net.ooder.esd.bean.field.FieldBean;
@@ -27,6 +25,12 @@ public class FieldProperties extends ContainerProperties implements FormField {
 
     public FieldProperties(FieldBean fieldBean) {
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(fieldBean), Map.class), this, false, false);
+        if (fieldBean.getManualWidth() != null) {
+            this.setWidth(fieldBean.getManualWidth() + "px");
+        }
+        if (fieldBean.getManualHeight() != null) {
+            this.setHeight(fieldBean.getManualWidth() + "px");
+        }
     }
 
     public FieldProperties(Enum enumType) {
