@@ -5,8 +5,6 @@ import net.ooder.annotation.Enumstype;
 import net.ooder.annotation.IconEnumstype;
 import net.ooder.common.util.StringUtility;
 import net.ooder.context.JDSActionContext;
-
-
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
@@ -28,19 +26,19 @@ public class StacksListItem extends NavTabListItem {
         this.setId(enumType.name());
 
         if (enumType instanceof IconEnumstype) {
-            if (id==null){
+            if (id == null) {
                 this.id = ((IconEnumstype) enumType).getType();
             }
-             if (caption==null){
-                 this.caption= ((IconEnumstype) enumType).getName();
-             }
+            if (caption == null) {
+                this.caption = ((IconEnumstype) enumType).getName();
+            }
             this.imageClass = ((IconEnumstype) enumType).getImageClass();
         } else if (enumType instanceof Enumstype) {
-            if (id==null){
+            if (id == null) {
                 this.id = ((Enumstype) enumType).getType();
             }
 
-            if (caption==null) {
+            if (caption == null) {
                 this.caption = ((Enumstype) enumType).getName();
             }
         }
@@ -66,16 +64,16 @@ public class StacksListItem extends NavTabListItem {
         }
         List<RequestParamBean> requestParamBeans = new ArrayList<>();
         MethodConfig childMethod = childTabViewBean.getMethodConfig();
-
-        if (childTabViewBean.getConstructorBean() != null) {
-            requestParamBeans = childTabViewBean.getConstructorBean().getParamList();
-        } else if (childMethod != null) {
+        if (childMethod != null) {
             requestParamBeans = Arrays.asList((RequestParamBean[]) (childMethod.getParamSet().toArray(new RequestParamBean[]{})));
             this.euClassName = childMethod.getEUClassName();
             if (!childMethod.getImageClass().equals(MethodConfig.DefaultImageClass)) {
                 this.imageClass = childMethod.getImageClass();
             }
+        } else if (childTabViewBean.getConstructorBean() != null) {
+            requestParamBeans = childTabViewBean.getConstructorBean().getParamList();
         }
+
 
         if (requestParamBeans.size() > 0) {
             for (RequestParamBean paramBean : requestParamBeans) {

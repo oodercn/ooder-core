@@ -55,16 +55,17 @@ public class NavTabListItem extends TabListItem {
         }
         MethodConfig childMethod = childTabViewBean.getMethodConfig();
         RequestParamBean[] requestParamBeanArr = new RequestParamBean[]{};
-        if (childTabViewBean.getConstructorBean() != null) {
-            List<RequestParamBean> requestParamBeans = childTabViewBean.getConstructorBean().getParamList();
-            requestParamBeanArr = requestParamBeans.toArray(new RequestParamBean[]{});
-        } else if (childMethod != null) {
+        if (childMethod != null) {
             requestParamBeanArr = (RequestParamBean[]) childMethod.getParamSet().toArray(new RequestParamBean[]{});
             this.euClassName = childMethod.getEUClassName();
             if (!childMethod.getImageClass().equals(MethodConfig.DefaultImageClass)) {
                 this.imageClass = childMethod.getImageClass();
             }
+        } else if (childTabViewBean.getConstructorBean() != null) {
+            List<RequestParamBean> requestParamBeans = childTabViewBean.getConstructorBean().getParamList();
+            requestParamBeanArr = requestParamBeans.toArray(new RequestParamBean[]{});
         }
+
         this.fillParams(requestParamBeanArr, valueMap);
 
     }
