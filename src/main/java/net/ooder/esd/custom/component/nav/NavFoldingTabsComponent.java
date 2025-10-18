@@ -70,9 +70,9 @@ public class NavFoldingTabsComponent extends FoldingTabsComponent {
                 ModuleViewType moduleViewType = methodConfig.getView().getModuleViewType();
                 if (moduleViewType.equals(ModuleViewType.DYNCONFIG)) {
                     EUModule childModule = methodConfig.getModule(valueMap, getModuleComponent().getProjectName());
-                    Component component = childModule.getComponent().getTopComponentBox();
-                    if (this.getModuleComponent().findComponentByAlias(component.getAlias()) == null) {
-                        this.addChildren(component);
+                        Component component = childModule.getComponent().getTopComponentBox();
+                        if (this.getModuleComponent().findComponentByAlias(component.getAlias()) == null) {
+                            this.addChildren(component);
                     }
                     List<Component> apiComponents = childModule.getComponent().findComponents(ComponentType.APICALLER, null);
                     for (Component apiComponent : apiComponents) {
