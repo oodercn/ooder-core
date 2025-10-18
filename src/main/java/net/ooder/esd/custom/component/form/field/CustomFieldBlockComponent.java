@@ -117,11 +117,11 @@ public class CustomFieldBlockComponent extends BlockComponent {
                         labelBean.setLabelHAlign(HAlignType.left);
                         labelBean.setLabelVAlign(VAlignType.middle);
                     }
-                    fieldInfo.getFieldBean().setManualHeight(customComponentViewBean.getDefaultRowHeight());
-                    fieldInfo.getContainerBean().getUiBean().setHeight((customComponentViewBean.getDefaultRowHeight()) + "px");
+                    fieldInfo.getFieldBean().setManualHeight(customComponentViewBean.getDefaultRowHeight() * 2);
+                    fieldInfo.getContainerBean().getUiBean().setHeight((customComponentViewBean.getDefaultRowHeight() * 2) + "px");
                 }
                 if (fieldInfo.getFieldBean().getManualWidth() == null) {
-                    fieldInfo.getFieldBean().setManualHeight(customComponentViewBean.getDefaultColWidth());
+                    fieldInfo.getFieldBean().setManualWidth(customComponentViewBean.getDefaultColWidth());
                     fieldInfo.getContainerBean().getUiBean().setWidth((customComponentViewBean.getDefaultColWidth()) + "px");
                 }
             }
