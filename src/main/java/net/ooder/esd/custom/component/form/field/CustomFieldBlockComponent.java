@@ -99,17 +99,13 @@ public class CustomFieldBlockComponent extends BlockComponent {
             Component inputComponent = null;
             Integer con = customComponentViewBean.getCol();
             if (con != null && con > 0) {
-                Integer labelHeight = 24;
                 fieldInfo.getContainerBean().getUiBean().setPosition("relative");
-
                 if (fieldInfo.getFieldBean().getManualHeight() == null) {
-
                     String caption = fieldInfo.getCustomBean().getCaption();
                     if (fieldInfo.getFieldBean().getCaption() != null) {
                         caption = fieldInfo.getFieldBean().getCaption();
                     }
                     LabelBean labelBean = fieldInfo.getLabelBean();
-
                     if (labelBean == null) {
                         labelBean = new LabelBean();
                         AnnotationUtil.fillDefaultValue(Label.class, labelBean);
@@ -117,12 +113,16 @@ public class CustomFieldBlockComponent extends BlockComponent {
                     }
                     labelBean.setLabelCaption(caption);
                     if (labelBean.getLabelPos() != null && labelBean.getLabelPos().equals(LabelPos.top)) {
-                        labelBean.setLabelSize(labelHeight + "px");
+                        labelBean.setLabelSize(customComponentViewBean.getDefaultRowHeight() + "px");
                         labelBean.setLabelHAlign(HAlignType.left);
                         labelBean.setLabelVAlign(VAlignType.middle);
                     }
                     fieldInfo.getFieldBean().setManualHeight(customComponentViewBean.getDefaultRowHeight());
                     fieldInfo.getContainerBean().getUiBean().setHeight((customComponentViewBean.getDefaultRowHeight()) + "px");
+                }
+                if (fieldInfo.getFieldBean().getManualWidth() == null) {
+                    fieldInfo.getFieldBean().setManualHeight(customComponentViewBean.getDefaultColWidth());
+                    fieldInfo.getContainerBean().getUiBean().setWidth((customComponentViewBean.getDefaultColWidth()) + "px");
                 }
             }
 
