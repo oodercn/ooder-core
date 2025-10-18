@@ -1,30 +1,31 @@
 package net.ooder.esd.custom;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.*;
 import net.ooder.common.JDSConstants;
 import net.ooder.common.JDSException;
 import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
 import net.ooder.common.util.ClassUtility;
-import net.ooder.annotation.MethodChinaName;
 import net.ooder.esd.annotation.CustomAnnotation;
 import net.ooder.esd.annotation.MenuBarMenu;
 import net.ooder.esd.annotation.View;
 import net.ooder.esd.annotation.view.DynLoadAnnotation;
-import net.ooder.esd.bean.*;
-import net.ooder.esd.engine.enums.MenuBarBean;
-import net.ooder.esd.util.DSMAnnotationUtil;
+import net.ooder.esd.bean.CustomRefBean;
+import net.ooder.esd.bean.MethodChinaBean;
+import net.ooder.esd.bean.RepositoryBean;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.domain.CustomDomain;
 import net.ooder.esd.dsm.repository.database.proxy.DSMColProxy;
 import net.ooder.esd.dsm.repository.database.proxy.DSMTableProxy;
+import net.ooder.esd.engine.enums.MenuBarBean;
+import net.ooder.esd.util.DSMAnnotationUtil;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.web.AggregationBean;
 import net.ooder.web.EntityBean;
 import net.ooder.web.RequestMappingBean;
-import net.ooder.annotation.*;
 import net.ooder.web.ViewBean;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.MethodUtil;
@@ -152,13 +153,17 @@ public class ESDClass {
         this.ctClass = ctClass;
         this.allCtFields = new ArrayList<>();
         for (Field field : ctClass.getDeclaredFields()) {
-            if (!Modifier.isStatic(field.getModifiers())) {
+
+            if (!Modifier.isStatic(field.getModifiers()) && !field.getName().startsWith("this$")) {
                 allCtFields.add(field);
             }
         }
 
         for (Field field : ctClass.getFields()) {
-            if (field.getDeclaringClass().equals(ctClass) && !field.getDeclaringClass().equals(Object.class)) {
+            if (field.getDeclaringClass().equals(ctClass)
+                    && !field.getName().startsWith("this$")
+                    && !field.getDeclaringClass().equals(Object.class)
+                    ) {
                 allCtFields.add(field);
             }
         }
