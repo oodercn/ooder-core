@@ -3,20 +3,21 @@ package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
+import net.ooder.annotation.CustomBean;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.CaselessStringKeyHashMap;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.config.TreeListResultModel;
-import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.*;
+import net.ooder.esd.annotation.event.CustomFormEvent;
+import net.ooder.esd.annotation.event.CustomTabsEvent;
 import net.ooder.esd.annotation.field.TabItem;
 import net.ooder.esd.annotation.field.ToolBarMenu;
-import net.ooder.esd.annotation.ui.ModuleViewType;
-import net.ooder.esd.annotation.event.CustomFormEvent;
 import net.ooder.esd.annotation.menu.CustomFormMenu;
-import net.ooder.esd.annotation.event.CustomTabsEvent;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.Dock;
+import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.nav.GroupItemBean;
 import net.ooder.esd.custom.ApiClassConfig;
@@ -25,17 +26,16 @@ import net.ooder.esd.dsm.aggregation.context.MethodRoot;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
+import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.BlockComponent;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.GroupComponent;
-import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.Properties;
 import net.ooder.esd.tool.properties.item.GalleryItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.util.EnumsUtil;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
@@ -238,56 +238,65 @@ public class NavGroupViewBean extends NavBaseViewBean<GroupItemBean, GalleryItem
                 fieldModuleConfigs.add(fieldFormConfig);
             }
         }
+        try {
 
-
-        for (FieldModuleConfig fieldModuleConfig : fieldModuleConfigs) {
-            MethodConfig methodConfig = fieldModuleConfig.getMethodConfig();
-            GroupItemAnnotation tabItemAnnotation = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), GroupItemAnnotation.class);
-            if (tabItemAnnotation != null) {
-                if (!tabItemAnnotation.customItems().equals(TabItem.class)) {
-                    TabItem[] tabItems = EnumsUtil.getEnums(tabItemAnnotation.customItems());
-                    for (TabItem tabItem : tabItems) {
-                        GroupItemBean itemBean = new GroupItemBean(methodConfig, this, tabItem);
-                        itemBeans.add(itemBean);
-                    }
-                } else if (tabItemAnnotation.bindService() != null && !tabItemAnnotation.bindService().equals(Void.class) && !tabItemAnnotation.bindService().equals(Enum.class)) {
-                    try {
-                        ApiClassConfig entityConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(tabItemAnnotation.bindService().getName());
-                        MethodConfig editorMethod = entityConfig.getTabsEvent(CustomTabsEvent.TABEDITOR);
-                        if (editorMethod != null) {
-                            GroupItemBean itemBean = new GroupItemBean(methodConfig, this);
+            List<MethodConfig> methodConfigs = new ArrayList<>();
+            for (FieldModuleConfig fieldModuleConfig : fieldModuleConfigs) {
+                methodConfigs.add(fieldModuleConfig.getMethodConfig());
+            }
+            ApiClassConfig apiClassConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(this.viewClassName);
+            for (MethodConfig methodConfig : apiClassConfig.getAllMethods()) {
+                if (!methodConfigs.contains(methodConfig)) {
+                    methodConfigs.add(methodConfig);
+                }
+            }
+            for (MethodConfig methodConfig : methodConfigs) {
+                GroupItemAnnotation tabItemAnnotation = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), GroupItemAnnotation.class);
+                if (tabItemAnnotation != null) {
+                    if (!tabItemAnnotation.customItems().equals(TabItem.class)) {
+                        TabItem[] tabItems = EnumsUtil.getEnums(tabItemAnnotation.customItems());
+                        for (TabItem tabItem : tabItems) {
+                            GroupItemBean itemBean = new GroupItemBean(methodConfig, this, tabItem);
                             itemBeans.add(itemBean);
                         }
-                        MethodConfig loadChildMethod = entityConfig.getTabsEvent(CustomTabsEvent.TABCHILD);
-                        if (loadChildMethod != null && loadChildMethod.getViewClass() != null) {
-                            String childTreeClassName = loadChildMethod.getViewClass().getClassName();
-                            if (!childTreeClassName.equals(clazz.getName())) {
-                                Class treeClass = ClassUtility.loadClass(childTreeClassName);
-                                NavGroupViewBean viewBean = new NavGroupViewBean(treeClass, this);
-                                itemBeans.addAll(viewBean.getItemBeans());
+                    } else if (tabItemAnnotation.bindService() != null && !tabItemAnnotation.bindService().equals(Void.class) && !tabItemAnnotation.bindService().equals(Enum.class)) {
+                        try {
+                            ApiClassConfig entityConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(tabItemAnnotation.bindService().getName());
+                            MethodConfig editorMethod = entityConfig.getTabsEvent(CustomTabsEvent.TABEDITOR);
+                            if (editorMethod != null) {
+                                GroupItemBean itemBean = new GroupItemBean(methodConfig, this);
+                                itemBeans.add(itemBean);
                             }
+                            MethodConfig loadChildMethod = entityConfig.getTabsEvent(CustomTabsEvent.TABCHILD);
+                            if (loadChildMethod != null && loadChildMethod.getViewClass() != null) {
+                                String childTreeClassName = loadChildMethod.getViewClass().getClassName();
+                                if (!childTreeClassName.equals(clazz.getName())) {
+                                    Class treeClass = ClassUtility.loadClass(childTreeClassName);
+                                    NavGroupViewBean viewBean = new NavGroupViewBean(treeClass, this);
+                                    itemBeans.addAll(viewBean.getItemBeans());
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } else {
+                        GroupItemBean itemBean = new GroupItemBean(methodConfig, this);
+                        itemBeans.add(itemBean);
                     }
-                } else {
+
+                } else if (methodConfig.isModule()) {
                     GroupItemBean itemBean = new GroupItemBean(methodConfig, this);
                     itemBeans.add(itemBean);
                 }
-
-            } else if (methodConfig.isModule()) {
-                GroupItemBean itemBean = new GroupItemBean(methodConfig, this);
-                itemBeans.add(itemBean);
             }
-        }
 
 
-        if (bottombarMenu != null && bottombarMenu.size() > 0) {
-            if (this.bottomBar == null) {
-                this.bottomBar = AnnotationUtil.fillDefaultValue(BottomBarMenu.class, new BottomBarMenuBean());
+            if (bottombarMenu != null && bottombarMenu.size() > 0) {
+                if (this.bottomBar == null) {
+                    this.bottomBar = AnnotationUtil.fillDefaultValue(BottomBarMenu.class, new BottomBarMenuBean());
+                }
             }
-        }
-        try {
+
             this.initHiddenField(clazz.getName());
         } catch (JDSException e) {
             e.printStackTrace();

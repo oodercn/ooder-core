@@ -2,9 +2,6 @@ package net.ooder.esd.custom.component;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
-import net.ooder.esd.bean.view.CustomGroupFormViewBean;
-import net.ooder.esd.engine.ESDFacrory;
-import net.ooder.esd.engine.ProjectVersion;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
 import net.ooder.esd.annotation.action.CustomFormAction;
@@ -12,15 +9,17 @@ import net.ooder.esd.annotation.event.CustomFormEvent;
 import net.ooder.esd.annotation.event.ModuleEventEnum;
 import net.ooder.esd.annotation.menu.CustomFormMenu;
 import net.ooder.esd.annotation.ui.*;
-import net.ooder.esd.bean.data.CustomFormDataBean;
-import net.ooder.esd.bean.data.CustomGroupDataBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.ToolBarMenuBean;
 import net.ooder.esd.bean.bar.DynBar;
+import net.ooder.esd.bean.data.CustomGroupDataBean;
+import net.ooder.esd.bean.view.CustomGroupFormViewBean;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.action.CustomAPICallAction;
 import net.ooder.esd.custom.component.form.field.CustomFieldGroupComponent;
+import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
+import net.ooder.esd.engine.ProjectVersion;
 import net.ooder.esd.manager.editor.PluginsFactory;
 import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.APICallerProperties;
@@ -134,7 +133,7 @@ public class FullGroupComponent<M extends CustomFieldGroupComponent> extends Cus
         Set<CustomFormEvent> customFormEvents = view.getEvent();
         for (CustomFormEvent eventType : customFormEvents) {
             for (CustomAction actionType : eventType.getActions(false)) {
-                currComponent.addAction( new Action(actionType,eventType.getEventEnum()));
+                currComponent.addAction(new Action(actionType, eventType.getEventEnum()));
             }
         }
         List<CustomFormMenu> customFormMenus = view.getCustomMenu();
@@ -200,9 +199,9 @@ public class FullGroupComponent<M extends CustomFieldGroupComponent> extends Cus
                 UrlPathData ctxData = new UrlPathData(ctxComponent.getAlias(), RequestPathTypeEnum.FORM, "");
                 saveProperties.addRequestData(ctxData);
 
-                CustomFormDataBean dataBean = (CustomFormDataBean) methodAPIBean.getDataBean();
+                CustomGroupDataBean dataBean = (CustomGroupDataBean) methodAPIBean.getDataBean();
                 if (dataBean.getAutoSave()) {
-                    CustomAPICallAction customAPICallAction = new CustomAPICallAction(saveAPI,ModuleEventEnum.onDestroy);
+                    CustomAPICallAction customAPICallAction = new CustomAPICallAction(saveAPI, ModuleEventEnum.onDestroy);
                     Condition condition = new Condition("{page." + this.getCurrComponent().getAlias() + ".isDirtied()}", SymbolType.equal, "{true}");
                     customAPICallAction.addCondition(condition);
                     this.addAction(customAPICallAction);
