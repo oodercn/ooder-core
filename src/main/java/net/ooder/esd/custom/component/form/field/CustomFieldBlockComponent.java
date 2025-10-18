@@ -120,13 +120,9 @@ public class CustomFieldBlockComponent extends BlockComponent {
                         labelBean.setLabelSize(labelHeight + "px");
                         labelBean.setLabelHAlign(HAlignType.left);
                         labelBean.setLabelVAlign(VAlignType.middle);
-                        fieldInfo.getFieldBean().setManualHeight(customComponentViewBean.getDefaultRowHeight() + labelHeight);
-                        fieldInfo.getContainerBean().getUiBean().setHeight((customComponentViewBean.getDefaultRowHeight() + labelHeight) + "px");
-                    } else {
-                        fieldInfo.getFieldBean().setManualHeight(customComponentViewBean.getDefaultRowHeight());
-                        fieldInfo.getContainerBean().getUiBean().setHeight((customComponentViewBean.getDefaultRowHeight()) + "px");
                     }
-
+                    fieldInfo.getFieldBean().setManualHeight(customComponentViewBean.getDefaultRowHeight());
+                    fieldInfo.getContainerBean().getUiBean().setHeight((customComponentViewBean.getDefaultRowHeight()) + "px");
                 }
             }
 
