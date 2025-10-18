@@ -115,13 +115,16 @@ public class CustomFieldBlockComponent extends BlockComponent {
                         AnnotationUtil.fillDefaultValue(Label.class, labelBean);
                         fieldInfo.setLabelBean(labelBean);
                     }
-                    fieldInfo.getLabelBean().setLabelCaption(caption);
-                    if (fieldInfo.getLabelBean().getLabelPos().equals(LabelPos.top)) {
-                        fieldInfo.getLabelBean().setLabelSize(labelHeight + "px");
-                        fieldInfo.getLabelBean().setLabelHAlign(HAlignType.left);
-                        fieldInfo.getLabelBean().setLabelVAlign(VAlignType.middle);
+                    labelBean.setLabelCaption(caption);
+                    if (labelBean.getLabelPos() != null && labelBean.getLabelPos().equals(LabelPos.top)) {
+                        labelBean.setLabelSize(labelHeight + "px");
+                        labelBean.setLabelHAlign(HAlignType.left);
+                        labelBean.setLabelVAlign(VAlignType.middle);
                         fieldInfo.getFieldBean().setManualHeight(customComponentViewBean.getDefaultRowHeight() + labelHeight);
                         fieldInfo.getContainerBean().getUiBean().setHeight((customComponentViewBean.getDefaultRowHeight() + labelHeight) + "px");
+                    } else {
+                        fieldInfo.getFieldBean().setManualHeight(customComponentViewBean.getDefaultRowHeight());
+                        fieldInfo.getContainerBean().getUiBean().setHeight((customComponentViewBean.getDefaultRowHeight()) + "px");
                     }
 
                 }
