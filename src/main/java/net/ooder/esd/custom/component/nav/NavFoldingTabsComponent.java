@@ -14,6 +14,7 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomFoldingTabsFieldBean;
 import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.bean.view.NavFoldingTabsViewBean;
+import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.DataComponent;
 import net.ooder.esd.custom.properties.NavFoldingTabsProperties;
 import net.ooder.esd.dsm.DSMFactory;
@@ -21,9 +22,9 @@ import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.FoldingTabsComponent;
-import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.Action;
-import ognl.OgnlException;
+import net.ooder.jds.core.esb.util.OgnlUtil;
+import net.ooder.web.RequestParamBean;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,21 +65,12 @@ public class NavFoldingTabsComponent extends FoldingTabsComponent {
 
     public void init(MethodConfig methodConfig, Map<String, ?> valueMap) throws JDSException {
         NavFoldingTabsViewBean tabsViewBean = (NavFoldingTabsViewBean) methodConfig.getView();
-        NavFoldingTabsProperties viewsProperties = new NavFoldingTabsProperties(tabsViewBean, valueMap);
-        this.setProperties(viewsProperties);
-        if (tabsViewBean.getAutoSave() != null && tabsViewBean.getAutoSave()) {
-            Action saveAction = new Action(CustomPageAction.AUTOSAVE, TabsEventEnum.beforePageClose);
-            this.addAction(saveAction);
-        }
-
-        List<TabItemBean> childTabViewBeans = tabsViewBean.getItemBeans();
-        this.fillComponent(childTabViewBeans, valueMap);
-
+        this.init(tabsViewBean, valueMap);
 
     }
 
 
-    void init(NavFoldingTabsViewBean tabsViewBean, Map<String, Object> valueMap) throws JDSException {
+    void init(NavFoldingTabsViewBean tabsViewBean, Map<String, ?> valueMap) throws JDSException {
         this.setProperties(new NavFoldingTabsProperties(tabsViewBean, valueMap));
 
         if (tabsViewBean.getAutoSave() != null && tabsViewBean.getAutoSave()) {
@@ -86,33 +78,35 @@ public class NavFoldingTabsComponent extends FoldingTabsComponent {
             this.addAction(saveAction, false);
         }
         List<TabItemBean> childTabViewBeans = tabsViewBean.getItemBeans();
+
         this.fillComponent(childTabViewBeans, valueMap);
 
-
-        Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onItemSelected);
-        showAction.updateArgs(this.getAlias(), 4);
-        if (tabsViewBean != null && tabsViewBean.getAutoReload()) {
-            if (!this.getEvents().containsKey(TabsEventEnum.onItemSelected)) {
-                this.addAction(showAction);
+        if (tabsViewBean.getLazyAppend() == null || tabsViewBean.getLazyAppend()) {
+            Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onItemSelected);
+            showAction.updateArgs(this.getAlias(), 4);
+            if (tabsViewBean != null && tabsViewBean.getAutoReload()) {
+                if (!this.getEvents().containsKey(TabsEventEnum.onItemSelected)) {
+                    this.addAction(showAction);
+                }
+            } else {
+                if (!this.getEvents().containsKey(TabsEventEnum.onIniPanelView)) {
+                    showAction.setEventKey(TabsEventEnum.onIniPanelView);
+                    this.addAction(showAction);
+                }
             }
-        } else {
-            if (!this.getEvents().containsKey(TabsEventEnum.onIniPanelView)) {
-                showAction.setEventKey(TabsEventEnum.onIniPanelView);
-                this.addAction(showAction);
-            }
-        }
 
-        NavFoldingTabsProperties viewsProperties = this.getProperties();
+            NavFoldingTabsProperties viewsProperties = this.getProperties();
 
-        if (viewsProperties.getItems().size() > 0) {
-            Action clickItemAction = new Action(TabsEventEnum.onRender);
-            clickItemAction.setType(ActionTypeEnum.control);
-            clickItemAction.setTarget(this.getAlias());
-            clickItemAction.setDesc("初始化");
-            clickItemAction.setMethod("fireItemClickEvent");
-            clickItemAction.setArgs(Arrays.asList(new String[]{viewsProperties.getFristId()}));
-            if (!this.getEvents().containsKey(TabsEventEnum.onRender)) {
-                this.addAction(clickItemAction);
+            if (viewsProperties.getItems().size() > 0) {
+                Action clickItemAction = new Action(TabsEventEnum.onRender);
+                clickItemAction.setType(ActionTypeEnum.control);
+                clickItemAction.setTarget(this.getAlias());
+                clickItemAction.setDesc("初始化");
+                clickItemAction.setMethod("fireItemClickEvent");
+                clickItemAction.setArgs(Arrays.asList(new String[]{viewsProperties.getFristId()}));
+                if (!this.getEvents().containsKey(TabsEventEnum.onRender)) {
+                    this.addAction(clickItemAction);
+                }
             }
         }
 
@@ -126,29 +120,32 @@ public class NavFoldingTabsComponent extends FoldingTabsComponent {
                 ModuleViewType moduleViewType = childMethodConfig.getView().getModuleViewType();
                 EUModule childModule = childMethodConfig.getModule(valueMap, DSMFactory.getInstance().getDefaultProjectName());
                 if (childTabViewBean.getLazyAppend() != null && !childTabViewBean.getLazyAppend()) {
-
-
-                    ModuleComponent other = new ModuleComponent();
-                    other.setTarget(childModule.getComponent().getTarget());
-
                     Component dataComponent = childModule.getComponent().getCurrComponent().clone();
                     dataComponent.setAlias(childTabViewBean.getGroupName() + "_" + ComponentType.FOLDINGTABS.name());
-                    other.addChildren(dataComponent);
+                    dataComponent.setTarget(childTabViewBean.getId());
                     if (dataComponent != null && dataComponent instanceof DataComponent) {
                         if (childMethodConfig.getApi().getAutoRun() != null && childMethodConfig.getApi().getAutoRun()) {
                             ResultModel resultModel = null;
                             try {
-                                resultModel = (ResultModel) childMethodConfig.getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                            } catch (OgnlException e) {
+                                Map contextMap = JDSActionContext.getActionContext().getContext();
+                                contextMap.putAll(childMethodConfig.getTagVar());
+                                if (childTabViewBean.getConstructorBean() != null && childTabViewBean.getTabItem() != null) {
+                                    Object object = childTabViewBean.getConstructorBean().invok(childTabViewBean.getTabItem());
+                                    for (RequestParamBean requestParamBean : childMethodConfig.getRequestMethodBean().getParamSet()) {
+                                        Object value = OgnlUtil.getValue(requestParamBean.getParamName(), contextMap, object);
+                                        contextMap.put(requestParamBean.getParamName(), value);
+                                    }
+                                }
+                                ;
+                                JDSActionContext.getActionContext().getContext().put(CustomViewFactory.MethodBeanKey, childMethodConfig);
+                                resultModel = (ResultModel) childMethodConfig.getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), contextMap);
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             ((DataComponent) dataComponent).setData(resultModel.get());
                         }
                     }
-
-                    this.addChildren(other);
+                    this.addChildren(dataComponent);
 
                 } else if (moduleViewType.equals(ModuleViewType.DYNCONFIG)) {
                     Component component = childModule.getComponent().getTopComponentBox();
