@@ -9,7 +9,9 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomBlockFieldBean;
 import net.ooder.esd.bean.field.LabelBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
+import net.ooder.esd.bean.field.combo.ComboFileFieldBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;
+import net.ooder.esd.bean.field.combo.ComboxFieldBean;
 import net.ooder.esd.bean.view.CustomBlockFormViewBean;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.custom.CustomViewConfigFactory;
@@ -97,6 +99,8 @@ public class CustomFieldBlockComponent extends BlockComponent {
 
         for (FieldFormConfig fieldInfo : fieldList) {
             Component inputComponent = null;
+            int height=customComponentViewBean.getDefaultRowHeight();
+            int width=customComponentViewBean.getDefaultColWidth();
             Integer con = customComponentViewBean.getCol();
             if (con != null && con > 0) {
                 fieldInfo.getContainerBean().getUiBean().setPosition("relative");
@@ -112,17 +116,28 @@ public class CustomFieldBlockComponent extends BlockComponent {
                         fieldInfo.setLabelBean(labelBean);
                     }
                     labelBean.setLabelCaption(caption);
+
                     if (labelBean.getLabelPos() != null && labelBean.getLabelPos().equals(LabelPos.top)) {
                         labelBean.setLabelSize(customComponentViewBean.getDefaultRowHeight() + "px");
                         labelBean.setLabelHAlign(HAlignType.left);
                         labelBean.setLabelVAlign(VAlignType.middle);
+                        fieldInfo.getFieldBean().setManualHeight(height * 2);
+                        fieldInfo.getContainerBean().getUiBean().setHeight((height * 2) + "px");
+                        if (fieldInfo.getComboConfig()!=null){
+                            ComboxFieldBean comboConfig= (ComboxFieldBean) fieldInfo.getComboConfig();
+                            comboConfig.setDropListHeight(200);
+                            comboConfig.setDropListWidth(width);
+                        }
+
+                    } else {
+                        fieldInfo.getFieldBean().setManualHeight(height);
+                        fieldInfo.getContainerBean().getUiBean().setHeight((height) + "px");
                     }
-                    fieldInfo.getFieldBean().setManualHeight(customComponentViewBean.getDefaultRowHeight() * 2);
-                    fieldInfo.getContainerBean().getUiBean().setHeight((customComponentViewBean.getDefaultRowHeight() * 2) + "px");
+
                 }
                 if (fieldInfo.getFieldBean().getManualWidth() == null) {
-                    fieldInfo.getFieldBean().setManualWidth(customComponentViewBean.getDefaultColWidth());
-                    fieldInfo.getContainerBean().getUiBean().setWidth((customComponentViewBean.getDefaultColWidth()) + "px");
+                    fieldInfo.getFieldBean().setManualWidth(width);
+                    fieldInfo.getContainerBean().getUiBean().setWidth(width + "px");
                 }
             }
 
