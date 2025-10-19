@@ -9,7 +9,6 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomBlockFieldBean;
 import net.ooder.esd.bean.field.LabelBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
-import net.ooder.esd.bean.field.combo.ComboFileFieldBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;
 import net.ooder.esd.bean.field.combo.ComboxFieldBean;
 import net.ooder.esd.bean.view.CustomBlockFormViewBean;
@@ -99,8 +98,8 @@ public class CustomFieldBlockComponent extends BlockComponent {
 
         for (FieldFormConfig fieldInfo : fieldList) {
             Component inputComponent = null;
-            int height=customComponentViewBean.getDefaultRowHeight();
-            int width=customComponentViewBean.getDefaultColWidth();
+            int height = customComponentViewBean.getDefaultRowHeight();
+            int width = customComponentViewBean.getDefaultColWidth();
             Integer con = customComponentViewBean.getCol();
             if (con != null && con > 0) {
                 fieldInfo.getContainerBean().getUiBean().setPosition("relative");
@@ -123,8 +122,8 @@ public class CustomFieldBlockComponent extends BlockComponent {
                         labelBean.setLabelVAlign(VAlignType.middle);
                         fieldInfo.getFieldBean().setManualHeight(height * 2);
                         fieldInfo.getContainerBean().getUiBean().setHeight((height * 2) + "px");
-                        if (fieldInfo.getComboConfig()!=null){
-                            ComboxFieldBean comboConfig= (ComboxFieldBean) fieldInfo.getComboConfig();
+                        if (fieldInfo.getComboConfig() != null) {
+                            ComboxFieldBean comboConfig = (ComboxFieldBean) fieldInfo.getComboConfig();
                             comboConfig.setDropListHeight(200);
                             comboConfig.setDropListWidth(width);
                         }
@@ -140,6 +139,7 @@ public class CustomFieldBlockComponent extends BlockComponent {
                     fieldInfo.getContainerBean().getUiBean().setWidth(width + "px");
                 }
             }
+
 
 
             if (fieldInfo.getEsdField() != null && Component.class.isAssignableFrom(fieldInfo.getEsdField().getReturnType())) {

@@ -58,8 +58,6 @@ public class CustomContentBlockViewBean extends BaseGalleryViewBean<ContentBlock
     String flagStyle;
     String defaultMore;
     SelModeType selMode;
-
-
     public List<ContentBlockMenu> toolBarMenu = new ArrayList<>();
     public List<ContentBlockMenu> customMenu = new ArrayList<>();
     public List<ContentBlockMenu> bottombarMenu = new ArrayList<>();
@@ -67,6 +65,7 @@ public class CustomContentBlockViewBean extends BaseGalleryViewBean<ContentBlock
 
 
     List<ContentBlockItemBean> contentBlockItemBeans = new ArrayList<>();
+
     @JSONField(serialize = false)
     List<ContentBlockItem> contentBlockItems;
 

@@ -1,6 +1,7 @@
 package net.ooder.esd.bean.field;
 
 import com.alibaba.fastjson.JSON;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.Label;
 import net.ooder.esd.annotation.ui.HAlignType;
@@ -9,7 +10,6 @@ import net.ooder.esd.annotation.ui.VAlignType;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.properties.Properties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -68,14 +68,6 @@ public class LabelBean implements CustomBean {
         }
         OgnlUtil.setProperties(valueMap, this, false, false);
     }
-
-//
-//    @JSONField(serialize = false)
-//    public List<CustomBean> getAnnotationBeans() {
-//        List<CustomBean> annotationBeans = new ArrayList<>();
-//        annotationBeans.add(this);
-//        return annotationBeans;
-//    }
 
 
     public Integer getManualWidth() {

@@ -1,6 +1,7 @@
 package net.ooder.esd.custom.component;
 
 import net.ooder.common.JDSException;
+import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
@@ -37,31 +38,36 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
             if (methodConfig.getViewClass() != null) {
                 AggEntityConfig aggEntityConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(methodConfig.getViewClass().getClassName(), false);
                 List<MethodConfig> methodConfigs = aggEntityConfig.getAllMethods();
-                for (MethodConfig moduleConfig : methodConfigs) {
-                    if (moduleConfig.getLayoutItem() != null) {
-                        CustomLayoutItemBean layoutItemBean = moduleConfig.getLayoutItem();
+                for (MethodConfig itemMethod : methodConfigs) {
+                    if (itemMethod.getLayoutItem() != null) {
+                        CustomLayoutItemBean layoutItemBean = itemMethod.getLayoutItem();
                         layoutItemBean.setParentAlias(this.getAlias());
-                        Class ctClass = moduleConfig.getViewClass().getCtClass();
-                        if (Component.class.isAssignableFrom(ctClass)) {
+                        Class ctClass = itemMethod.getViewClass().getCtClass();
+                        if (ModuleComponent.class.isAssignableFrom(ctClass)) {
                             try {
-                                Component component = (Component) ctClass.newInstance();
+                                ModuleComponent moduleComponent = (ModuleComponent) itemMethod.getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
+                                moduleComponent.setAlias(itemMethod.getName());
+                                moduleComponent.setTarget(layoutItemBean.getPos().name());
+                                moduleComponent.getModuleVar().putAll(itemMethod.getTagVar());
+                                layoutComponent.addChildren(moduleComponent);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        } else if (Component.class.isAssignableFrom(ctClass)) {
+                            try {
+                                Component component = (Component) itemMethod.getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
                                 component.setTarget(layoutItemBean.getPos().name());
                                 layoutComponent.addChildren(component);
-                            } catch (InstantiationException e) {
-                                e.printStackTrace();
-                            } catch (IllegalAccessException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         } else {
-
-                            EUModule mainModule = moduleConfig.getModule(valueMap, module.getPackageName());
                             ModuleComponent moduleComponent = new ModuleComponent();
-                            moduleComponent.setClassName(mainModule.getClassName());
-                            moduleComponent.setAlias(mainModule.getComponent().getAlias());
-                            moduleComponent.setClassName(moduleConfig.getEUClassName());
-                            moduleComponent.setAlias(moduleConfig.getName());
+                            moduleComponent.setAlias(itemMethod.getName());
+                            moduleComponent.setClassName(itemMethod.getEUClassName());
                             moduleComponent.setTarget(layoutItemBean.getPos().name());
-                            moduleComponent.getModuleVar().putAll(moduleConfig.getTagVar());
+                            moduleComponent.getModuleVar().putAll(itemMethod.getTagVar());
                             layoutComponent.addChildren(moduleComponent);
                         }
                     }
