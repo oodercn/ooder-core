@@ -6,16 +6,14 @@ import net.ooder.config.ErrorListResultModel;
 import net.ooder.config.ListResultModel;
 import net.ooder.config.TreeListResultModel;
 import net.ooder.context.JDSActionContext;
-
 import net.ooder.esd.annotation.event.CustomTabsEvent;
 import net.ooder.esd.annotation.field.TabItem;
 import net.ooder.esd.bean.MethodConfig;
-import net.ooder.esd.bean.view.CustomButtonViewsViewBean;
 import net.ooder.esd.bean.nav.TabItemBean;
+import net.ooder.esd.bean.view.CustomButtonViewsViewBean;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.server.httpproxy.core.HttpRequest;
 import net.ooder.web.ConstructorBean;
 import ognl.OgnlContext;
 
@@ -102,8 +100,13 @@ public class ButtonViewPageUtil {
                     if (!editorMethod.getImageClass().equals(MethodConfig.DefaultImageClass)) {
                         t.setImageClass(editorMethod.getImageClass());
                     }
+                    String euClassName = editorMethod.getEUClassName();
+                    if (tabItemBean.getTabItem() != null && tabItemBean.getTabItem().getClass().isEnum() && euClassName.indexOf(CustomViewFactory.INMODULE__) == -1) {
+                        euClassName = euClassName + CustomViewFactory.INMODULE__ + tabItemBean.getTabItem();
+                    }
                     t.setEuClassName(editorMethod.getEUClassName());
                 }
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -150,7 +153,7 @@ public class ButtonViewPageUtil {
 
 
     public static OgnlContext getOgnlContext() {
-        return  JDSActionContext.getActionContext().getOgnlContext();
+        return JDSActionContext.getActionContext().getOgnlContext();
     }
 
 
