@@ -7,23 +7,21 @@ import net.ooder.config.ErrorListResultModel;
 import net.ooder.config.ListResultModel;
 import net.ooder.config.TreeListResultModel;
 import net.ooder.context.JDSActionContext;
-
 import net.ooder.esd.annotation.event.CustomTabsEvent;
 import net.ooder.esd.annotation.field.TabItem;
 import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
-import net.ooder.esd.bean.view.NavComboBaseViewBean;
 import net.ooder.esd.bean.nav.TabItemBean;
+import net.ooder.esd.bean.view.NavComboBaseViewBean;
 import net.ooder.esd.bean.view.TabsViewBean;
 import net.ooder.esd.custom.ApiClassConfig;
+import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.engine.ESDFacrory;
-import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.server.httpproxy.core.HttpRequest;
 import net.ooder.web.ConstructorBean;
 import net.ooder.web.RequestParamBean;
 import ognl.OgnlContext;
@@ -73,8 +71,14 @@ public class TabPageUtil {
                 }
             }
         }
+
+
         if (editorMethod != null) {
-            tabListItem.setEuClassName(editorMethod.getEUClassName());
+            String euClassName = tabListItem.getEuClassName();
+            if (tabListItem.getTabItem() != null && tabListItem.getTabItem().getClass().isEnum() && euClassName.indexOf(CustomViewFactory.INMODULE__) == -1) {
+                euClassName = euClassName + CustomViewFactory.INMODULE__ + tabListItem.getTabItem();
+            }
+            tabListItem.setEuClassName(euClassName);
         } else if (tabListItem.getEuClassName() != null) {
             String euClassName = tabListItem.getEuClassName();
             try {
@@ -83,7 +87,6 @@ public class TabPageUtil {
                 e.printStackTrace();
             }
         }
-
 
         LinkedHashSet<RequestParamBean> paramBeans = editorMethod.getParamSet();
         for (RequestParamBean paramBean : paramBeans) {
@@ -230,7 +233,12 @@ public class TabPageUtil {
                     if (!editorMethod.getImageClass().equals(MethodConfig.DefaultImageClass)) {
                         t.setImageClass(editorMethod.getImageClass());
                     }
-                    t.setEuClassName(editorMethod.getEUClassName());
+                    String euClassName = editorMethod.getEUClassName();
+                    if (tabItemBean.getTabItem() != null && tabItemBean.getTabItem().getClass().isEnum() && euClassName.indexOf(CustomViewFactory.INMODULE__) == -1) {
+                        euClassName = euClassName + CustomViewFactory.INMODULE__ + tabItemBean.getTabItem();
+                    }
+
+                    t.setEuClassName(euClassName);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

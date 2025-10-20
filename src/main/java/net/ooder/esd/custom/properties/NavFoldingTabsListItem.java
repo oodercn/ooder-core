@@ -5,6 +5,7 @@ import net.ooder.common.util.StringUtility;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.nav.TabItemBean;
+import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.web.RequestParamBean;
@@ -50,6 +51,10 @@ public class NavFoldingTabsListItem extends NavTabListItem {
             }
         } else if (childTabViewBean.getConstructorBean() != null) {
             requestParamBeans = childTabViewBean.getConstructorBean().getParamList();
+        }
+
+        if (childTabViewBean.getTabItem() != null && childTabViewBean.getTabItem().getClass().isEnum() && euClassName.indexOf(CustomViewFactory.INMODULE__) == -1) {
+            this.euClassName = euClassName + CustomViewFactory.INMODULE__ + childTabViewBean.getTabItem();
         }
 
         if (requestParamBeans.size() > 0) {

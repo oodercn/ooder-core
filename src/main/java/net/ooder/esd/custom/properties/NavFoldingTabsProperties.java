@@ -1,6 +1,7 @@
 package net.ooder.esd.custom.properties;
 
 
+import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.ui.BorderType;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.nav.TabItemBean;
@@ -9,6 +10,7 @@ import net.ooder.esd.bean.view.NavFoldingTabsViewBean;
 import net.ooder.esd.bean.view.TabsViewBean;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.RequestParamBean;
 
 import java.util.*;
@@ -20,7 +22,6 @@ public class NavFoldingTabsProperties extends NavTabsProperties<NavFoldingTabsLi
 
     }
 
-
     public NavFoldingTabsProperties(NavFoldingTabsViewBean navTabsViewBean, Map<String, ?> valueMap) {
         init(navTabsViewBean, valueMap);
     }
@@ -30,9 +31,7 @@ public class NavFoldingTabsProperties extends NavTabsProperties<NavFoldingTabsLi
     }
 
     void init(NavFoldingTabsViewBean navTabsViewBean, Map<String, ?> valueMap) {
-
         List<TabItemBean> childTabViewBeans = navTabsViewBean.getItemBeans();
-
         for (TabItemBean itemInfo : childTabViewBeans) {
             NavFoldingTabsListItem navItemProperties = new NavFoldingTabsListItem(itemInfo, valueMap);
             Map<String, Object> tagMap = new HashMap<>();
@@ -68,8 +67,9 @@ public class NavFoldingTabsProperties extends NavTabsProperties<NavFoldingTabsLi
             navItemProperties.getTagVar().putAll(tagMap);
             navItemProperties.getTagVar().putAll(itemInfo.getTagVar());
             this.addItem(navItemProperties);
-
         }
+
+
         if (this.getItems() != null && this.getItems().size() > 0) {
             this.setValue(this.getItems().get(0).getId());
         }
@@ -90,7 +90,6 @@ public class NavFoldingTabsProperties extends NavTabsProperties<NavFoldingTabsLi
             NavFoldingTabsListItem navItemProperties = new NavFoldingTabsListItem(itemInfo);
             Map<String, Object> tagMap = new HashMap<>();
             Set<RequestParamBean> paramBeans = navTabsViewBean.getParamSet();
-
             for (RequestParamBean paramBean : paramBeans) {
                 if (!Arrays.asList(DSMFactory.SkipParams).contains(paramBean.getParamName())) {
                     Object obj = valueMap.get(paramBean.getParamName());

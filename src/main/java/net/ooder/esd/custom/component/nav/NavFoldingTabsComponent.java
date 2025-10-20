@@ -117,6 +117,7 @@ public class NavFoldingTabsComponent extends FoldingTabsComponent {
         for (TabItemBean childTabViewBean : childTabViewBeans) {
             MethodConfig childMethodConfig = childTabViewBean.getMethodConfig();
             if (childMethodConfig != null) {
+
                 ModuleViewType moduleViewType = childMethodConfig.getView().getModuleViewType();
                 EUModule childModule = childMethodConfig.getModule(valueMap, DSMFactory.getInstance().getDefaultProjectName());
                 if (childTabViewBean.getLazyAppend() != null && !childTabViewBean.getLazyAppend()) {
