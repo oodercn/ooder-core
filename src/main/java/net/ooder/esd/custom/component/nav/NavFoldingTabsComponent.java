@@ -94,9 +94,7 @@ public class NavFoldingTabsComponent extends FoldingTabsComponent {
                     this.addAction(showAction);
                 }
             }
-
             NavFoldingTabsProperties viewsProperties = this.getProperties();
-
             if (viewsProperties.getItems().size() > 0) {
                 Action clickItemAction = new Action(TabsEventEnum.onRender);
                 clickItemAction.setType(ActionTypeEnum.control);
@@ -117,35 +115,33 @@ public class NavFoldingTabsComponent extends FoldingTabsComponent {
         for (TabItemBean childTabViewBean : childTabViewBeans) {
             MethodConfig childMethodConfig = childTabViewBean.getMethodConfig();
             if (childMethodConfig != null) {
-
                 ModuleViewType moduleViewType = childMethodConfig.getView().getModuleViewType();
                 EUModule childModule = childMethodConfig.getModule(valueMap, DSMFactory.getInstance().getDefaultProjectName());
                 if (childTabViewBean.getLazyAppend() != null && !childTabViewBean.getLazyAppend()) {
                     Component dataComponent = childModule.getComponent().getCurrComponent().clone();
-                    dataComponent.setAlias(childTabViewBean.getGroupName() + "_" + ComponentType.FOLDINGTABS.name());
+                    dataComponent.setAlias(childTabViewBean.getId() + "_" + ComponentType.FOLDINGTABS.name());
                     dataComponent.setTarget(childTabViewBean.getId());
                     if (dataComponent != null && dataComponent instanceof DataComponent) {
-                        if (childMethodConfig.getApi().getAutoRun() != null && childMethodConfig.getApi().getAutoRun()) {
-                            ResultModel resultModel = null;
-                            try {
-                                Map contextMap = JDSActionContext.getActionContext().getContext();
-                                contextMap.putAll(childMethodConfig.getTagVar());
-                                if (childTabViewBean.getConstructorBean() != null && childTabViewBean.getTabItem() != null) {
-                                    Object object = childTabViewBean.getConstructorBean().invok(childTabViewBean.getTabItem());
-                                    for (RequestParamBean requestParamBean : childMethodConfig.getRequestMethodBean().getParamSet()) {
-                                        Object value = OgnlUtil.getValue(requestParamBean.getParamName(), contextMap, object);
-                                        contextMap.put(requestParamBean.getParamName(), value);
-                                    }
+                        ResultModel resultModel = null;
+                        try {
+                            Map contextMap = JDSActionContext.getActionContext().getContext();
+                            contextMap.putAll(childMethodConfig.getTagVar());
+                            if (childTabViewBean.getConstructorBean() != null && childTabViewBean.getTabItem() != null) {
+                                Object object = childTabViewBean.getConstructorBean().invok(childTabViewBean.getTabItem());
+                                for (RequestParamBean requestParamBean : childMethodConfig.getRequestMethodBean().getParamSet()) {
+                                    Object value = OgnlUtil.getValue(requestParamBean.getParamName(), contextMap, object);
+                                    contextMap.put(requestParamBean.getParamName(), value);
                                 }
-                                ;
-                                JDSActionContext.getActionContext().getContext().put(CustomViewFactory.MethodBeanKey, childMethodConfig);
-                                resultModel = (ResultModel) childMethodConfig.getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), contextMap);
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
-                            ((DataComponent) dataComponent).setData(resultModel.get());
+                            ;
+                            JDSActionContext.getActionContext().getContext().put(CustomViewFactory.MethodBeanKey, childMethodConfig);
+                            resultModel = (ResultModel) childMethodConfig.getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), contextMap);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+                        ((DataComponent) dataComponent).setData(resultModel.get());
                     }
+
                     this.addChildren(dataComponent);
 
                 } else if (moduleViewType.equals(ModuleViewType.DYNCONFIG)) {

@@ -373,10 +373,8 @@ public class CustomGalleryComponent extends CustomModuleComponent<GalleryCompone
                 APICallerComponent loadApi = new APICallerComponent(methodBean);
                 APICallerProperties apiProperties = loadApi.getProperties();
                 loadApi.setAlias(CustomGridAction.RELOAD.getTarget());
-
                 UrlPathData ctxData = new UrlPathData(ctxComponent.getAlias(), RequestPathTypeEnum.FORM, "");
                 apiProperties.addRequestData(ctxData);
-
 
                 if (responsePathData != null) {
                     apiProperties.addResponseData(responsePathData);
@@ -395,7 +393,7 @@ public class CustomGalleryComponent extends CustomModuleComponent<GalleryCompone
                     UrlPathData pageBarPathData = new UrlPathData(pageBarComponent.getAlias(), ResponsePathTypeEnum.PAGEBAR, "size");
                     apiProperties.addResponseData(pageBarPathData);
                 }
-                apiProperties.setAutoRun(true);
+                // apiProperties.setAutoRun(true);
                 apiCallerComponents.add(loadApi);
             } else {
                 this.logger.error("【数据加载】绑定失败[" + this.className + "===》" + dataUrl);

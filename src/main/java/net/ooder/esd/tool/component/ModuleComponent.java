@@ -1362,9 +1362,11 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         CtxBaseComponent ctxBaseComponent = getCtxBaseComponent();
         List<String> customFieldNames = new ArrayList<>();
         for (Component component : allComponent) {
-
             if (component.getProperties() instanceof FormField) {
                 FormField fieldProperties = (FormField) component.getProperties();
+                if (fieldProperties.getName() == null) {
+                    fieldProperties.setName(component.getAlias());
+                }
                 if (!(fieldProperties instanceof HiddenInputProperties)) {
                     if (component.getParent().getAlias() != null && !component.getParent().getAlias().equals(ctxBaseComponent.getAlias())) {
                         customFieldNames.add(fieldProperties.getName());

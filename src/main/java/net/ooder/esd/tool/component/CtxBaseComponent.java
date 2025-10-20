@@ -77,7 +77,8 @@ public class CtxBaseComponent extends BlockComponent {
         if (components != null) {
             for (Component component : components) {
                 HiddenInputComponent hiddenInputComponent = (HiddenInputComponent) component;
-                if (hiddenInputComponent.getProperties().getName().equals(name)) {
+                String fieldName = hiddenInputComponent.getProperties().getName() == null ? hiddenInputComponent.getAlias() : hiddenInputComponent.getProperties().getName();
+                if (fieldName.equals(name)) {
                     return hiddenInputComponent;
                 }
             }

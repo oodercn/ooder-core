@@ -104,7 +104,7 @@ public class ButtonViewPageUtil {
                     if (tabItemBean.getTabItem() != null && tabItemBean.getTabItem().getClass().isEnum() && euClassName.indexOf(CustomViewFactory.INMODULE__) == -1) {
                         euClassName = euClassName + CustomViewFactory.INMODULE__ + tabItemBean.getTabItem();
                     }
-                    t.setEuClassName(editorMethod.getEUClassName());
+                    t.setEuClassName(euClassName);
                 }
 
 

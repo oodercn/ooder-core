@@ -1,8 +1,8 @@
 package net.ooder.esd.custom.properties;
 
 
-import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.ui.BorderType;
+import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.bean.view.NavFoldingComboViewBean;
@@ -10,7 +10,6 @@ import net.ooder.esd.bean.view.NavFoldingTabsViewBean;
 import net.ooder.esd.bean.view.TabsViewBean;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
-import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.RequestParamBean;
 
 import java.util.*;
@@ -30,80 +29,87 @@ public class NavFoldingTabsProperties extends NavTabsProperties<NavFoldingTabsLi
         init(navTabsViewBean, valueMap);
     }
 
+
+    public NavFoldingTabsProperties(MethodConfig methodConfig, Map<String, ?> valueMap) {
+        this.name = methodConfig.getName();
+        NavFoldingComboViewBean tabsViewBean = (NavFoldingComboViewBean) methodConfig.getView();
+        init(tabsViewBean, valueMap);
+    }
+
+
     void init(NavFoldingTabsViewBean navTabsViewBean, Map<String, ?> valueMap) {
-        List<TabItemBean> childTabViewBeans = navTabsViewBean.getItemBeans();
-        for (TabItemBean itemInfo : childTabViewBeans) {
-            NavFoldingTabsListItem navItemProperties = new NavFoldingTabsListItem(itemInfo, valueMap);
-            Map<String, Object> tagMap = new HashMap<>();
-            Set<RequestParamBean> paramBeans = navTabsViewBean.getParamSet();
-            for (RequestParamBean paramBean : paramBeans) {
-                if (!Arrays.asList(DSMFactory.SkipParams).contains(paramBean.getParamName())) {
-                    Object obj = valueMap.get(paramBean.getParamName());
-                    if (obj != null && !obj.equals("")) {
-                        tagMap.put(paramBean.getParamName(), obj);
-                    }
-                }
-            }
-
-            navItemProperties.getTagVar().putAll(tagMap);
-            this.addItem(navItemProperties);
-        }
-
+        this.getItems().clear();
         List<FieldModuleConfig> moduleList = navTabsViewBean.getNavItems();
-        this.setBorderType(BorderType.none);
-        for (FieldModuleConfig itemInfo : moduleList) {
-            NavFoldingTabsListItem navItemProperties = new NavFoldingTabsListItem(itemInfo);
-            Map<String, Object> tagMap = new HashMap<>();
-            Set<RequestParamBean> paramBeans = navTabsViewBean.getParamSet();
-            for (RequestParamBean paramBean : paramBeans) {
-                if (!Arrays.asList(DSMFactory.SkipParams).contains(paramBean.getParamName())) {
-                    Object obj = valueMap.get(paramBean.getParamName());
-                    if (obj != null && !obj.equals("")) {
-                        tagMap.put(paramBean.getParamName(), obj);
-                    }
-                }
+        if (moduleList.size() > 0) {
+            fillNavItem(moduleList, navTabsViewBean, valueMap);
+        } else {
+            List<TabItemBean> childTabViewBeans = navTabsViewBean.getItemBeans();
+            for (TabItemBean itemInfo : childTabViewBeans) {
+                NavFoldingTabsListItem navItemProperties = new NavFoldingTabsListItem(itemInfo, valueMap);
+                Set<RequestParamBean> paramBeans = navTabsViewBean.getParamSet();
+                Map<String, Object> tagMap = getParamMap(valueMap, paramBeans);
+                navItemProperties.getTagVar().putAll(tagMap);
+                this.addItem(navItemProperties);
             }
-
-            navItemProperties.getTagVar().putAll(tagMap);
-            navItemProperties.getTagVar().putAll(itemInfo.getTagVar());
-            this.addItem(navItemProperties);
         }
-
-
-        if (this.getItems() != null && this.getItems().size() > 0) {
-            this.setValue(this.getItems().get(0).getId());
-        }
-        if (navTabsViewBean.getCaption() != null && !navTabsViewBean.getCaption().equals("")) {
-            this.caption = navTabsViewBean.getCaption();
-        }
-        if (navTabsViewBean.getImageClass() != null && !navTabsViewBean.getImageClass().equals("")) {
-            this.imageClass = navTabsViewBean.getImageClass();
-        }
+        fillDefaultValue(navTabsViewBean);
 
     }
 
 
     void init(NavFoldingComboViewBean navTabsViewBean, Map<String, ?> valueMap) {
-        List<NavTabListItem> childTabViewBeans = navTabsViewBean.getTabItems();
-        this.setBorderType(BorderType.none);
-        for (NavTabListItem itemInfo : childTabViewBeans) {
-            NavFoldingTabsListItem navItemProperties = new NavFoldingTabsListItem(itemInfo);
-            Map<String, Object> tagMap = new HashMap<>();
-            Set<RequestParamBean> paramBeans = navTabsViewBean.getParamSet();
-            for (RequestParamBean paramBean : paramBeans) {
-                if (!Arrays.asList(DSMFactory.SkipParams).contains(paramBean.getParamName())) {
-                    Object obj = valueMap.get(paramBean.getParamName());
-                    if (obj != null && !obj.equals("")) {
-                        tagMap.put(paramBean.getParamName(), obj);
-                    }
-                }
+        this.getItems().clear();
+        List<FieldModuleConfig> moduleList = navTabsViewBean.getNavItems();
+        if (moduleList.size() > 0) {
+            fillNavItem(moduleList, navTabsViewBean, valueMap);
+        } else {
+            List<NavTabListItem> childTabViewBeans = navTabsViewBean.getTabItems();
+            this.setBorderType(BorderType.none);
+            for (NavTabListItem itemInfo : childTabViewBeans) {
+                NavFoldingTabsListItem navItemProperties = new NavFoldingTabsListItem(itemInfo);
+                Set<RequestParamBean> paramBeans = navTabsViewBean.getParamSet();
+                Map<String, Object> tagMap = getParamMap(valueMap, paramBeans);
+                navItemProperties.getTagVar().putAll(tagMap);
+                navItemProperties.getTagVar().putAll(itemInfo.getTagVar());
+                this.addItem(navItemProperties);
             }
+        }
 
+        fillDefaultValue(navTabsViewBean);
+        TabsViewBean tabsViewBean = navTabsViewBean.getTabsViewBean();
+        initTab(tabsViewBean);
+
+    }
+
+
+    void fillNavItem(List<FieldModuleConfig> moduleList, CustomViewBean navTabsViewBean, Map<String, ?> valueMap) {
+        for (FieldModuleConfig itemInfo : moduleList) {
+            NavFoldingTabsListItem navItemProperties = new NavFoldingTabsListItem(itemInfo);
+            Set<RequestParamBean> paramBeans = navTabsViewBean.getParamSet();
+            Map<String, Object> tagMap = getParamMap(valueMap, paramBeans);
             navItemProperties.getTagVar().putAll(tagMap);
             navItemProperties.getTagVar().putAll(itemInfo.getTagVar());
             this.addItem(navItemProperties);
-
         }
+    }
+
+    private Map<String, Object> getParamMap(Map<String, ?> valueMap, Set<RequestParamBean> paramBeans) {
+        Map<String, Object> tagMap = new HashMap<>();
+        for (RequestParamBean paramBean : paramBeans) {
+            if (!Arrays.asList(DSMFactory.SkipParams).contains(paramBean.getParamName())) {
+                Object obj = valueMap.get(paramBean.getParamName());
+                if (obj != null && !obj.equals("")) {
+                    tagMap.put(paramBean.getParamName(), obj);
+                }
+            }
+        }
+        return tagMap;
+    }
+
+    ;
+
+
+    void fillDefaultValue(CustomViewBean navTabsViewBean) {
         if (this.getItems() != null && this.getItems().size() > 0) {
             this.setValue(this.getItems().get(0).getId());
         }
@@ -113,12 +119,9 @@ public class NavFoldingTabsProperties extends NavTabsProperties<NavFoldingTabsLi
         if (navTabsViewBean.getImageClass() != null && !navTabsViewBean.getImageClass().equals("")) {
             this.imageClass = navTabsViewBean.getImageClass();
         }
-        TabsViewBean tabsViewBean = navTabsViewBean.getTabsViewBean();
-
-        initTab(tabsViewBean);
-
 
     }
+
 
     void initTab(TabsViewBean tabsViewBean) {
         this.activeLast = tabsViewBean.getActiveLast();
@@ -133,13 +136,6 @@ public class NavFoldingTabsProperties extends NavTabsProperties<NavFoldingTabsLi
             this.maxHeight = tabsViewBean.getMaxHeight();
         }
 
-    }
-
-
-    public NavFoldingTabsProperties(MethodConfig methodConfig, Map<String, ?> valueMap) {
-        this.name = methodConfig.getName();
-        NavFoldingComboViewBean tabsViewBean = (NavFoldingComboViewBean) methodConfig.getView();
-        init(tabsViewBean, valueMap);
     }
 
 

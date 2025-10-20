@@ -622,9 +622,12 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
     public TabItemBean getChildTabBean(TabItem tabItem) {
         List<TabItemBean> childTabViewBeans = this.getItemBeans();
         for (TabItemBean childTabViewBean : childTabViewBeans) {
-            if (childTabViewBean.getTabItem() != null && childTabViewBean.getTabItem().getType().equals(tabItem.getType())) {
-                return childTabViewBean;
-
+            if (childTabViewBean.getTabItem() != null) {
+                if (childTabViewBean.getTabItem().getType() != null && childTabViewBean.getTabItem().getType().equals(tabItem.getType())) {
+                    return childTabViewBean;
+                } else if (tabItem.getType().equals(childTabViewBean.getId())) {
+                    return childTabViewBean;
+                }
             }
         }
         return null;
