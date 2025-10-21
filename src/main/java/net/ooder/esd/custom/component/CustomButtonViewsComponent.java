@@ -55,6 +55,7 @@ public class CustomButtonViewsComponent extends ButtonViewsComponent {
 
         this.setAlias(tabsViewBean.getMethodName());
         List<TabItemBean> childTabViewBeans = tabsViewBean.getItemBeans();
+
         this.fillComponent(childTabViewBeans, valueMap);
 
         if (tabsViewBean.getLazyAppend() == null || tabsViewBean.getLazyAppend()) {

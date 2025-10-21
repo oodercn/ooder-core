@@ -34,7 +34,18 @@ public class NavTabListItem extends TabListItem {
         super(id, caption, imgClass);
     }
 
+
     public NavTabListItem(TabItemBean childTabViewBean, Map<String, ?> valueMap) {
+        init(childTabViewBean, valueMap);
+    }
+
+    public NavTabListItem(FieldModuleConfig itemConfig) {
+        this.init(itemConfig);
+
+    }
+
+
+    public void init(TabItemBean childTabViewBean, Map<String, ?> valueMap) {
         this.id = childTabViewBean.getId();
         this.caption = childTabViewBean.getCaption();
         this.imageClass = childTabViewBean.getImageClass();
@@ -91,8 +102,7 @@ public class NavTabListItem extends TabListItem {
         }
     }
 
-
-    public NavTabListItem(FieldModuleConfig itemConfig) {
+    void init(FieldModuleConfig itemConfig) {
         this.caption = itemConfig.getCaption();
         this.imageClass = itemConfig.getImageClass();
         this.euClassName = itemConfig.getEuClassName();
@@ -109,7 +119,7 @@ public class NavTabListItem extends TabListItem {
         if (tagVar == null) {
             this.tagVar = new HashMap<>();
         }
-
     }
+
 
 }
