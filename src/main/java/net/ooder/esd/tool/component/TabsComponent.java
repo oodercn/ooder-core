@@ -89,8 +89,8 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
             MethodConfig childMethodConfig = childTabViewBean.getMethodConfig();
             if (childMethodConfig != null) {
                 ModuleViewType moduleViewType = childMethodConfig.getView().getModuleViewType();
-                EUModule childModule = childMethodConfig.getModule(valueMap, DSMFactory.getInstance().getDefaultProjectName());
                 if (childTabViewBean.getLazyAppend() != null && !childTabViewBean.getLazyAppend()) {
+                    EUModule childModule = childMethodConfig.getModule(valueMap, DSMFactory.getInstance().getDefaultProjectName());
                     Component dataComponent = childModule.getComponent().getCurrComponent().clone();
                     dataComponent.setAlias(childTabViewBean.getId() + "_" + this.typeKey.name());
                     dataComponent.setTarget(childTabViewBean.getId());
@@ -146,6 +146,7 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
                     this.addChildren(dataComponent);
 
                 } else if (moduleViewType.equals(ModuleViewType.DYNCONFIG)) {
+                    EUModule childModule = childMethodConfig.getModule(valueMap, DSMFactory.getInstance().getDefaultProjectName());
                     Component component = childModule.getComponent().getTopComponentBox();
                     if (this.getModuleComponent().findComponentByAlias(component.getAlias()) == null) {
                         this.addChildren(component);
@@ -164,6 +165,7 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
 
     @Override
     public void setData(List<NavTabListItem> data) {
+        this.getProperties().setItems(data);
         List<TabItemBean> childTabViewBeans = new ArrayList<>();
         for (NavTabListItem navTabListItem : data) {
             TabItemBean tabItemBean = new TabItemBean(navTabListItem);
