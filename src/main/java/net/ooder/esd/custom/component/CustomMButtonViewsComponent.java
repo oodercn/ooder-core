@@ -1,4 +1,4 @@
-package net.ooder.esd.custom.component.nav;
+package net.ooder.esd.custom.component;
 
 
 import net.ooder.common.JDSException;

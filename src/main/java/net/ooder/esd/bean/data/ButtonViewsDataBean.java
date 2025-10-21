@@ -11,11 +11,11 @@ import net.ooder.esd.annotation.ui.ResponsePathTypeEnum;
 import net.ooder.esd.annotation.view.ButtonViewsViewAnnotation;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.custom.ESDClass;
-import net.ooder.esd.custom.component.nav.FullNavButtonViewsComponent;
+import net.ooder.esd.custom.component.nav.FullButtonViewsComponent;
 import net.ooder.web.util.AnnotationUtil;
 
 @CustomClass(
-        clazz = FullNavButtonViewsComponent.class,
+        clazz = FullButtonViewsComponent.class,
         viewType = CustomViewType.LISTMODULE,
         moduleType = ModuleViewType.NAVBUTTONVIEWSCONFIG
 )

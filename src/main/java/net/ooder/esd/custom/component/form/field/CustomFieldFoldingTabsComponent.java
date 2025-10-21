@@ -7,7 +7,7 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomFoldingTabsFieldBean;
 import net.ooder.esd.bean.view.NavFoldingTabsViewBean;
 import net.ooder.esd.custom.ApiClassConfig;
-import net.ooder.esd.custom.component.nav.NavFoldingTabsComponent;
+import net.ooder.esd.custom.component.CustomFoldingTabsComponent;
 import net.ooder.esd.custom.properties.NavFoldingTabsListItem;
 import net.ooder.esd.custom.properties.NavFoldingTabsProperties;
 import net.ooder.esd.dsm.DSMFactory;
@@ -22,7 +22,7 @@ import net.ooder.esd.tool.properties.item.TabListItem;
 import java.util.List;
 import java.util.Map;
 
-public class CustomFieldFoldingTabsComponent extends NavFoldingTabsComponent {
+public class CustomFieldFoldingTabsComponent extends CustomFoldingTabsComponent {
     @JSONField(serialize = false)
     EUModule euModule;
 

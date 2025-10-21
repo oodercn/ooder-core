@@ -1,4 +1,4 @@
-package net.ooder.esd.custom.properties;
+package net.ooder.esd.custom.component;
 
 
 import net.ooder.common.JDSException;
@@ -13,6 +13,7 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomTabsFieldBean;
 import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.bean.view.TabsViewBean;
+import net.ooder.esd.custom.properties.NavTabsProperties;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.Component;
@@ -23,10 +24,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class NavTabsComponent extends TabsComponent<NavTabsProperties> {
+public class CustomTabsComponent extends TabsComponent<NavTabsProperties> {
 
 
-    public NavTabsComponent(EUModule euModule, FieldFormConfig<CustomTabsFieldBean, ?> field, String target, Object value, Map<String, Object> valueMap) {
+    public CustomTabsComponent(EUModule euModule, FieldFormConfig<CustomTabsFieldBean, ?> field, String target, Object value, Map<String, Object> valueMap) {
         super(field.getMethodConfig().getFieldName());
         try {
             this.init(euModule, field.getMethodConfig(), valueMap);
@@ -35,7 +36,7 @@ public class NavTabsComponent extends TabsComponent<NavTabsProperties> {
         }
     }
 
-    public NavTabsComponent(EUModule module, MethodConfig methodConfig, Map<String, ?> valueMap) {
+    public CustomTabsComponent(EUModule module, MethodConfig methodConfig, Map<String, ?> valueMap) {
         super(methodConfig.getFieldName());
         try {
             this.init(module, methodConfig, valueMap);
@@ -46,7 +47,7 @@ public class NavTabsComponent extends TabsComponent<NavTabsProperties> {
     }
 
 
-    public NavTabsComponent(TabsViewBean tabsViewBean, Map<String, Object> valueMap) {
+    public CustomTabsComponent(TabsViewBean tabsViewBean, Map<String, Object> valueMap) {
         super(tabsViewBean.getName());
         try {
             init(tabsViewBean, valueMap);

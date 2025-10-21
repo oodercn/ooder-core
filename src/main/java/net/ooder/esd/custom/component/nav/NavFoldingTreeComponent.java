@@ -16,7 +16,6 @@ import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.*;
-import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.BlockProperties;
 import net.ooder.esd.tool.properties.Event;
@@ -29,7 +28,7 @@ import java.util.Map;
 public class NavFoldingTreeComponent extends FoldingTabsComponent {
 
     public NavFoldingTreeComponent(MethodConfig methodConfig, LayoutComponent layoutComponent, Map<String, ?> valueMap) throws JDSException {
-        this.setProperties( new NavFoldingTabsProperties(methodConfig, valueMap));
+        this.setProperties(new NavFoldingTabsProperties(methodConfig, valueMap));
         List<FieldModuleConfig> fieldModuleConfigList = methodConfig.getView().getNavItems();
 
         BlockComponent contentComponent = new BlockComponent(Dock.fill, methodConfig.getName() + "Content");
@@ -47,7 +46,7 @@ public class NavFoldingTreeComponent extends FoldingTabsComponent {
             Map<TreeViewEventEnum, Event> eventMap = leftTreePanel.getEvents();
             Event event = eventMap.get(TreeViewEventEnum.onItemSelected);
             if (event == null) {
-                Action showAction = new Action(CustomLoadClassAction.show2,TreeViewEventEnum.onItemSelected);
+                Action showAction = new Action(CustomLoadClassAction.show2, TreeViewEventEnum.onItemSelected);
                 showAction.updateArgs(layoutComponent.getAlias(), 4);
                 leftTreePanel.addAction(showAction);
                 TreeViewProperties properties = leftTreePanel.getProperties();
@@ -68,21 +67,14 @@ public class NavFoldingTreeComponent extends FoldingTabsComponent {
                     clickItemAction.setDesc("初始化");
                     clickItemAction.setMethod("fireItemClickEvent");
                     clickItemAction.setArgs(Arrays.asList(new String[]{properties.getFristId()}));
-                    leftTreePanel.addAction( clickItemAction);
+                    leftTreePanel.addAction(clickItemAction);
                 }
-                ESDFacrory.getAdminESDClient().saveModule(childModule,true);
+                ESDFacrory.getAdminESDClient().saveModule(childModule, true);
             }
-
-//            ModuleComponent moduleComponent = new ModuleComponent();
-//            moduleComponent.setClassName(childModule.getClassName());
-//            moduleComponent.setAlias(childModule.getComponent().getAlias());
-//            moduleComponent.setTarget(childModule.getComponent().getTarget());
-//            moduleComponent.getModuleVar().putAll(moduleInfo.getTagVar());
-
             treeComponent.getModuleVar().putAll(moduleInfo.getTagVar());
             this.addChildren(treeComponent);
         }
-        this.setAlias(methodConfig.getName() );
+        this.setAlias(methodConfig.getName());
     }
 
 

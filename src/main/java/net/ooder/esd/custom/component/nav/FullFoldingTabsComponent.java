@@ -14,6 +14,7 @@ import net.ooder.esd.bean.data.NavFoldingTabsDataBean;
 import net.ooder.esd.bean.data.TabsDataBean;
 import net.ooder.esd.bean.view.NavFoldingTabsViewBean;
 import net.ooder.esd.custom.action.CustomAPICallAction;
+import net.ooder.esd.custom.component.CustomFoldingTabsComponent;
 import net.ooder.esd.custom.component.CustomModuleComponent;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.APICallerComponent;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class FullNavFoldingTabsComponent extends CustomModuleComponent {
+public class FullFoldingTabsComponent extends CustomModuleComponent {
 
 
     ResponsePathTypeEnum itemType;
@@ -35,14 +36,14 @@ public class FullNavFoldingTabsComponent extends CustomModuleComponent {
     String reSetUrl;
 
 
-    public FullNavFoldingTabsComponent() {
+    public FullFoldingTabsComponent() {
         super();
     }
 
-    public FullNavFoldingTabsComponent(EUModule module, MethodConfig methodConfig, Map<String, Object> valueMap) throws ClassNotFoundException {
+    public FullFoldingTabsComponent(EUModule module, MethodConfig methodConfig, Map<String, Object> valueMap) throws ClassNotFoundException {
         super(module, methodConfig, valueMap);
 
-        NavFoldingTabsComponent tabcomponent = new NavFoldingTabsComponent(euModule, methodConfig, valueMap);
+        CustomFoldingTabsComponent tabcomponent = new CustomFoldingTabsComponent(euModule, methodConfig, valueMap);
         this.addChildLayoutNav(tabcomponent);
         this.setCurrComponent(tabcomponent);
         NavFoldingTabsViewBean viewBean = (NavFoldingTabsViewBean) methodConfig.getView();

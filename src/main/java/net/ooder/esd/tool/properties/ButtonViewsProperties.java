@@ -9,6 +9,7 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomButtonViewsViewBean;
 import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.custom.properties.ButtonViewsListItem;
+import net.ooder.esd.custom.properties.NavTabsProperties;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.util.ESDEnumsUtil;
@@ -17,7 +18,7 @@ import net.ooder.web.RequestParamBean;
 
 import java.util.*;
 
-public class ButtonViewsProperties extends TabsProperties<ButtonViewsListItem> {
+public class ButtonViewsProperties extends NavTabsProperties<ButtonViewsListItem> {
 
     public HAlignType barHAlign;
     public VAlignType barVAlign;

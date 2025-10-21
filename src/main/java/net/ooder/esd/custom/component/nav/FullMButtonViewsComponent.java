@@ -7,6 +7,7 @@ import net.ooder.esd.annotation.event.CustomTabsEvent;
 import net.ooder.esd.annotation.menu.CustomFormMenu;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.MButtonViewsViewBean;
+import net.ooder.esd.custom.component.CustomMButtonViewsComponent;
 import net.ooder.esd.custom.component.CustomModuleComponent;
 import net.ooder.esd.custom.action.ShowPageAction;
 import net.ooder.esd.engine.EUModule;

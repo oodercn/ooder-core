@@ -58,7 +58,7 @@ public class CustomViewFactory {
 
     public static final String dynBuild = "DYN";
 
-    public static final String INMODULE__ = "~";
+    public static final String INMODULE__ = "__";
 
     public static final String DSMdsm = "DSMdsm";
 

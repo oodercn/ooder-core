@@ -1,23 +1,42 @@
 package net.ooder.esd.tool.component;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.util.TypeUtils;
+import net.ooder.common.JDSException;
+import net.ooder.config.ResultModel;
+import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.event.TabsEventEnum;
 import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.ui.ModuleViewType;
+import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.nav.TabItemBean;
+import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.DataComponent;
 import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.custom.properties.NavTabsProperties;
+import net.ooder.esd.dsm.DSMFactory;
+import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.properties.AbsUIProperties;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.PanelProperties;
 import net.ooder.esd.tool.properties.item.TabListItem;
+import net.ooder.jds.core.esb.util.OgnlUtil;
+import net.ooder.web.RequestParamBean;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class TabsComponent<T extends NavTabsProperties> extends Component<T, TabsEventEnum> implements DataComponent<List<NavTabListItem>> {
 
     public TabsComponent addAction(Action<TabsEventEnum> action) {
-        super.addAction( action);
+        super.addAction(action);
         return this;
+    }
+
+    public TabsComponent(ComponentType type, String alias) {
+        super(type, alias);
     }
 
     public TabsComponent(String alias, T properties) {
@@ -61,15 +80,106 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
         this.setProperties((T) new NavTabsProperties());
     }
 
-    @Override
-    @JSONField(serialize = false)
-    public List<NavTabListItem> getData() {
-        return this.getProperties().getItems();
+
+    protected void fillComponent(List<TabItemBean> childTabViewBeans, Map<String, ?> valueMap) throws JDSException {
+        if (this.getChildren() != null) {
+            this.getChildren().clear();
+        }
+        for (TabItemBean childTabViewBean : childTabViewBeans) {
+            MethodConfig childMethodConfig = childTabViewBean.getMethodConfig();
+            if (childMethodConfig != null) {
+                ModuleViewType moduleViewType = childMethodConfig.getView().getModuleViewType();
+                EUModule childModule = childMethodConfig.getModule(valueMap, DSMFactory.getInstance().getDefaultProjectName());
+                if (childTabViewBean.getLazyAppend() != null && !childTabViewBean.getLazyAppend()) {
+                    Component dataComponent = childModule.getComponent().getCurrComponent().clone();
+                    dataComponent.setAlias(childTabViewBean.getId() + "_" + this.typeKey.name());
+                    dataComponent.setTarget(childTabViewBean.getId());
+                    if (dataComponent != null && dataComponent instanceof DataComponent) {
+                        ResultModel resultModel = null;
+                        try {
+                            Map contextMap = JDSActionContext.getActionContext().getContext();
+                            contextMap.putAll(childMethodConfig.getTagVar());
+                            if (childTabViewBean.getConstructorBean() != null && childTabViewBean.getTabItem() != null) {
+                                Object object = childTabViewBean.getConstructorBean().invok(childTabViewBean.getTabItem());
+
+                                Set<RequestParamBean> paramBeanSet = childMethodConfig.getParamSet();
+                                for (RequestParamBean paramBean : paramBeanSet) {
+                                    if (paramBean.getParamClass().isEnum()) {
+                                        Object value = OgnlUtil.getValue(paramBean.getParamName(), contextMap, object);
+                                        if (value != null) {
+                                            contextMap.put(paramBean.getParamName(), value);
+                                            break;
+                                        }
+                                    }
+                                }
+                            } else {
+                                String euClassName = childTabViewBean.getClassName();
+                                String value = null;
+                                if (euClassName.indexOf(CustomViewFactory.INMODULE__) > -1) {
+                                    String[] nameArr = euClassName.split(CustomViewFactory.INMODULE__);
+                                    value = nameArr[1];
+                                }
+
+                                if (childMethodConfig != null && value != null && childMethodConfig.getRequestMethodBean().getParamSet().size() > 0) {
+                                    Set<RequestParamBean> paramBeanSet = childMethodConfig.getParamSet();
+                                    for (RequestParamBean paramBean : paramBeanSet) {
+                                        if (paramBean.getParamClass().isEnum()) {
+                                            Object obj = TypeUtils.castToJavaBean(value, paramBean.getParamClass());
+                                            if (obj != null) {
+                                                JDSActionContext.getActionContext().getContext().put(paramBean.getParamName(), obj);
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                            ;
+                            JDSActionContext.getActionContext().getContext().put(CustomViewFactory.MethodBeanKey, childMethodConfig);
+                            resultModel = (ResultModel) childMethodConfig.getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), contextMap);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        ((DataComponent) dataComponent).setData(resultModel.get());
+                    }
+
+                    this.addChildren(dataComponent);
+
+                } else if (moduleViewType.equals(ModuleViewType.DYNCONFIG)) {
+                    Component component = childModule.getComponent().getTopComponentBox();
+                    if (this.getModuleComponent().findComponentByAlias(component.getAlias()) == null) {
+                        this.addChildren(component);
+                    }
+                    List<Component> apiComponents = childModule.getComponent().findComponents(ComponentType.APICALLER, null);
+                    for (Component apiComponent : apiComponents) {
+                        if (this.getModuleComponent().findComponentByAlias(component.getAlias()) == null) {
+                            childModule.getComponent().addChildren(apiComponent);
+                        }
+                    }
+
+                }
+            }
+        }
     }
 
     @Override
     public void setData(List<NavTabListItem> data) {
-        this.getProperties().setItems(data);
+        List<TabItemBean> childTabViewBeans = new ArrayList<>();
+        for (NavTabListItem navTabListItem : data) {
+            TabItemBean tabItemBean = new TabItemBean(navTabListItem);
+            childTabViewBeans.add(tabItemBean);
+        }
+        try {
+            this.fillComponent(childTabViewBeans, JDSActionContext.getActionContext().getContext());
+        } catch (JDSException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    @JSONField(serialize = false)
+    public List<NavTabListItem> getData() {
+        return this.getProperties().getItems();
     }
 
 }

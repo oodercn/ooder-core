@@ -19,7 +19,7 @@ import net.ooder.esd.bean.view.TabsViewBean;
 import net.ooder.esd.custom.action.CustomAPICallAction;
 import net.ooder.esd.custom.action.ShowPageAction;
 import net.ooder.esd.custom.component.CustomModuleComponent;
-import net.ooder.esd.custom.properties.NavTabsComponent;
+import net.ooder.esd.custom.component.CustomTabsComponent;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.APICallerComponent;
 import net.ooder.esd.tool.component.Component;
@@ -27,7 +27,7 @@ import net.ooder.esd.tool.properties.*;
 
 import java.util.*;
 
-public class CustomTabComponent extends CustomModuleComponent<NavTabsComponent> {
+public class BaseNavTabsComponent extends CustomModuleComponent<CustomTabsComponent> {
 
     ResponsePathTypeEnum itemType;
 
@@ -35,16 +35,16 @@ public class CustomTabComponent extends CustomModuleComponent<NavTabsComponent> 
 
     String reSetUrl;
 
-    public CustomTabComponent() {
+    public BaseNavTabsComponent() {
         super();
     }
 
-    public CustomTabComponent(EUModule module, MethodConfig methodAPIBean, Map<String, Object> valueMap) {
+    public BaseNavTabsComponent(EUModule module, MethodConfig methodAPIBean, Map<String, Object> valueMap) {
         super(module, methodAPIBean, valueMap);
     }
 
 
-    public void addChildNav(NavTabsComponent currComponent) {
+    public void addChildNav(CustomTabsComponent currComponent) {
         this.addChildLayoutNav(currComponent);
         this.setCurrComponent(currComponent);
         Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onItemSelected);

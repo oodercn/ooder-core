@@ -2,26 +2,26 @@ package net.ooder.esd.custom.component.form.field;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
-import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomTabsFieldBean;
+import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.bean.view.TabsViewBean;
 import net.ooder.esd.custom.ApiClassConfig;
-import net.ooder.esd.custom.properties.NavTabsComponent;
+import net.ooder.esd.custom.CustomViewFactory;
+import net.ooder.esd.custom.component.CustomTabsComponent;
 import net.ooder.esd.custom.properties.NavTabsProperties;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.ESDFacrory;
-import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.engine.EUModule;
-import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.Component;
+import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.item.TabListItem;
 
 import java.util.List;
 import java.util.Map;
 
-public class CustomFieldTabsComponent extends NavTabsComponent {
+public class CustomFieldTabsComponent extends CustomTabsComponent {
     @JSONField(serialize = false)
     EUModule euModule;
 
@@ -87,7 +87,7 @@ public class CustomFieldTabsComponent extends NavTabsComponent {
                             this.addChildren(newmodule.getComponent().getCurrComponent());
                         }
                     } else if (tabListItem.getBindClass() != null) {
-                        for(Class clazz:tabListItem.getBindClass()){
+                        for (Class clazz : tabListItem.getBindClass()) {
                             ApiClassConfig apiClassConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(clazz.getName());
                             MethodConfig methodConfig = apiClassConfig.findEditorMethod();
                             if (methodConfig != null) {

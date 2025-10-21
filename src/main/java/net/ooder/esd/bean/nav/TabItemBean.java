@@ -327,6 +327,8 @@ public class TabItemBean<T extends FieldItemConfig> implements ContextMenuBar, C
         this.imageClass = tabListItem.getImageClass();
         this.className = tabListItem.getEuClassName();
         this.caption = tabListItem.getCaption();
+        this.lazyAppend = tabListItem.getDynLoad();
+        this.lazyLoad = tabListItem.getDynLoad();
         this.tabItem = new DefaultTabItem(tabListItem);
         this.popBtn = tabListItem.getPopBtn();
         this.closeBtn = tabListItem.getCloseBtn();

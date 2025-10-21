@@ -8,10 +8,10 @@ import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.ResponsePathTypeEnum;
 import net.ooder.esd.annotation.view.NavFoldingTabsViewAnnotation;
 import net.ooder.esd.bean.MethodConfig;
-import net.ooder.esd.custom.component.nav.FullNavFoldingTabsComponent;
+import net.ooder.esd.custom.component.nav.FullFoldingTabsComponent;
 import net.ooder.web.util.AnnotationUtil;
 
-@CustomClass(clazz = FullNavFoldingTabsComponent.class,
+@CustomClass(clazz = FullFoldingTabsComponent.class,
         viewType = CustomViewType.FRAME,
         moduleType = ModuleViewType.NAVFOLDINGTABSCONFIG
 )

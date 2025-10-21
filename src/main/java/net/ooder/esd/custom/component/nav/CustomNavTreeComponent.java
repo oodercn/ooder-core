@@ -19,7 +19,7 @@ import net.ooder.esd.custom.action.ShowPageAction;
 import net.ooder.esd.custom.component.CustomContextBar;
 import net.ooder.esd.custom.component.CustomModuleComponent;
 import net.ooder.esd.custom.properties.CustomCmdBar;
-import net.ooder.esd.custom.properties.NavTabsComponent;
+import net.ooder.esd.custom.component.CustomTabsComponent;
 import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.manager.editor.PluginsFactory;
@@ -43,7 +43,7 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
     @JSONField(serialize = false)
     public TreeViewComponent treeComponent;
     @JSONField(serialize = false)
-    public NavTabsComponent tabComponent;
+    public CustomTabsComponent tabsComponent;
     @JSONField(serialize = false)
     public LayoutComponent layoutComponent;
 
@@ -60,17 +60,16 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
         super(module, methodConfig, valueMap);
         NavTreeComboViewBean navTreeViewBean = (NavTreeComboViewBean) methodConfig.getView();
         this.layoutComponent = getLayoutComponent(navTreeViewBean.getLayoutViewBean());
-        this.tabComponent = createTabsComponent(navTreeViewBean.getTabsViewBean(), valueMap);
+        this.tabsComponent = createTabsComponent(navTreeViewBean.getTabsViewBean(), valueMap);
         treeBlockComponent = createNavComponent(navTreeViewBean.getTreeViewBean(), valueMap);
         treeBlockComponent.setTarget(PosType.before.name());
         layoutComponent.addChildren(treeBlockComponent);
-
-        tabComponent.setTarget(PosType.main.name());
-        layoutComponent.addChildren(tabComponent);
+        tabsComponent.setTarget(PosType.main.name());
+        layoutComponent.addChildren(tabsComponent);
     }
 
-    private NavTabsComponent createTabsComponent(TabsViewBean tabsViewBean, Map valueMap) {
-        NavTabsComponent tabComponent = new NavTabsComponent(tabsViewBean, valueMap);
+    private CustomTabsComponent createTabsComponent(TabsViewBean tabsViewBean, Map valueMap) {
+        CustomTabsComponent tabComponent = new CustomTabsComponent(tabsViewBean, valueMap);
         tabComponent.getProperties().getItems().clear();
         Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onIniPanelView);
         showAction.updateArgs(tabComponent.getAlias(), 4);
@@ -94,7 +93,7 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
             saveAction.setMethod("autoSave");
             saveAction.setType(ActionTypeEnum.control);
             saveAction.addCondition(condition);
-            saveAction.setTarget(tabComponent.getAlias());
+            saveAction.setTarget(tabsComponent.getAlias());
             treeComponent.addAction(saveAction);
         }
         if (!navTreeViewBean.getTabsViewBean().getSingleOpen()) {
@@ -103,7 +102,7 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
             removeAction.setMethod("removeItems");
             removeAction.setType(ActionTypeEnum.control);
             removeAction.addCondition(condition);
-            removeAction.setTarget(tabComponent.getAlias());
+            removeAction.setTarget(tabsComponent.getAlias());
             removeAction.setArgs(Arrays.asList(new String[]{"{args[1].id}"}));
             treeComponent.addAction(removeAction);
         } else {
@@ -112,7 +111,7 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
             clearAction.setMethod("clearItems");
             clearAction.setType(ActionTypeEnum.control);
             clearAction.addCondition(condition);
-            clearAction.setTarget(tabComponent.getAlias());
+            clearAction.setTarget(tabsComponent.getAlias());
             treeComponent.addAction(clearAction);
         }
 
@@ -122,14 +121,14 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
         action.setMethod("insertItems2");
         action.setType(ActionTypeEnum.control);
         action.addCondition(condition);
-        action.setTarget(tabComponent.getAlias());
+        action.setTarget(tabsComponent.getAlias());
         action.setArgs(Arrays.asList(new String[]{"{args[1]}"}));
         treeComponent.addAction(action);
         Action tabclickItemAction = new Action(TreeViewEventEnum.onItemSelected);
         tabclickItemAction.setDesc("添加点击事件");
         tabclickItemAction.addCondition(condition);
         tabclickItemAction.setType(ActionTypeEnum.control);
-        tabclickItemAction.setTarget(tabComponent.getAlias());
+        tabclickItemAction.setTarget(tabsComponent.getAlias());
         tabclickItemAction.setMethod("fireItemClickEvent");
         tabclickItemAction.setArgs(Arrays.asList(new String[]{"{args[1].id}"}));
 
@@ -670,12 +669,12 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
         this.treeComponent = treeComponent;
     }
 
-    public NavTabsComponent getTabComponent() {
-        return tabComponent;
+    public CustomTabsComponent getTabsComponent() {
+        return tabsComponent;
     }
 
-    public void setTabComponent(NavTabsComponent tabComponent) {
-        this.tabComponent = tabComponent;
+    public void setTabsComponent(CustomTabsComponent tabsComponent) {
+        this.tabsComponent = tabsComponent;
     }
 
     public LayoutComponent getLayoutComponent() {

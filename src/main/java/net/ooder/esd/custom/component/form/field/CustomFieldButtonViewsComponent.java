@@ -8,7 +8,7 @@ import net.ooder.esd.bean.field.CustomButtonViewsFieldBean;
 import net.ooder.esd.bean.view.CustomButtonViewsViewBean;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.CustomViewFactory;
-import net.ooder.esd.custom.component.nav.NavButtonViewsComponent;
+import net.ooder.esd.custom.component.CustomButtonViewsComponent;
 import net.ooder.esd.custom.properties.ButtonViewsListItem;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
@@ -21,7 +21,7 @@ import net.ooder.esd.tool.properties.ButtonViewsProperties;
 import java.util.List;
 import java.util.Map;
 
-public class CustomFieldButtonViewsComponent extends NavButtonViewsComponent {
+public class CustomFieldButtonViewsComponent extends CustomButtonViewsComponent {
     @JSONField(serialize = false)
     EUModule euModule;
 

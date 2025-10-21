@@ -8,6 +8,7 @@ import net.ooder.esd.annotation.menu.CustomFormMenu;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.StacksViewBean;
 import net.ooder.esd.custom.component.CustomModuleComponent;
+import net.ooder.esd.custom.component.CustomStacksComponent;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.properties.Action;

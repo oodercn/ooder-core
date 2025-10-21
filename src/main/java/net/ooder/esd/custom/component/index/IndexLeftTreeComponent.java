@@ -15,7 +15,6 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.NavTreeComboViewBean;
 import net.ooder.esd.bean.data.NavTreeDataBean;
 import net.ooder.esd.custom.component.nav.CustomNavTreeComponent;
-import net.ooder.esd.custom.component.nav.NavTreeComponent;
 import net.ooder.esd.custom.properties.NavTabsProperties;
 import net.ooder.esd.custom.properties.NavTreeProperties;
 import net.ooder.esd.engine.EUModule;
@@ -61,7 +60,7 @@ public class IndexLeftTreeComponent extends CustomNavTreeComponent {
     }
 
 
-    public void addChildNav(NavTreeComponent currComponent, NavTreeComboViewBean navTreeViewBean) {
+    public void addChildNav(TreeViewComponent currComponent, NavTreeComboViewBean navTreeViewBean) {
 
         BlockComponent blockPanelComponent = new BlockComponent(Dock.fill, currComponent.getAlias() + "Panel");
         blockPanelComponent.setTarget(PosType.before.name());
