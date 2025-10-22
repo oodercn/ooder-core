@@ -346,6 +346,7 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
     }
 
     protected void initBaseTabViews(Class clazz) {
+        int index = 0;
         if (clazz.isEnum()) {
             this.setEnumClass((Class<? extends Enum>) clazz);
         }
@@ -367,26 +368,36 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
             TabItemAnnotation tabItemAnnotation = AnnotationUtil.getConstructorAnnotation(constructor, TabItemAnnotation.class);
             if (tabItemAnnotation != null) {
                 Class[] bindClass = tabItemAnnotation.bindClass();
-
                 if (!tabItemAnnotation.customItems().equals(TabItem.class)) {
                     TabItem[] tabItems = EnumsUtil.getEnums(tabItemAnnotation.customItems());
-                    int k = 0;
                     for (TabItem tabItem : tabItems) {
-                        TabItemBean oitemBean = new TabItemBean(constructor, this, tabItem, k);
+                        TabItemBean oitemBean = new TabItemBean(constructor, this, tabItem, index);
                         TabItemBean itemBean = this.getTabItemBeanById(oitemBean.getId());
+                        if (tabItemAnnotation.index() > -1) {
+                            oitemBean.setIndex(tabItemAnnotation.index());
+                        } else {
+                            oitemBean.setIndex(index);
+                        }
+
                         if (itemBean == null) {
                             itemBeans.add(oitemBean);
                         } else {
                             itemBean.update(oitemBean);
                         }
-                        k = k + 1;
+                        index = index + 1;
                     }
                 } else if (tabItemAnnotation.bindClass().length > 0) {
                     try {
                         MethodConfig editorMethod = this.findMethodByEvent(CustomTabsEvent.TABEDITOR, bindClass);
-
                         if (editorMethod != null) {
                             TabItemBean oitemBean = new TabItemBean(constructor, this);
+
+                            if (tabItemAnnotation.index() > -1) {
+                                oitemBean.setIndex(tabItemAnnotation.index());
+                            } else {
+                                oitemBean.setIndex(index);
+                            }
+
                             TabItemBean itemBean = this.getTabItemBeanById(oitemBean.getId());
                             if (itemBean == null) {
                                 itemBeans.add(oitemBean);
@@ -399,6 +410,12 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
                     }
                 } else {
                     TabItemBean oitemBean = new TabItemBean(constructor, this);
+                    if (tabItemAnnotation.index() > -1) {
+                        oitemBean.setIndex(tabItemAnnotation.index());
+                    } else {
+                        oitemBean.setIndex(index);
+                    }
+
                     TabItemBean itemBean = this.getTabItemBeanById(oitemBean.getId());
                     if (itemBean == null) {
                         itemBeans.add(oitemBean);
@@ -406,6 +423,7 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
                         itemBean.update(oitemBean);
                     }
                 }
+                index = index + 1;
             }
         }
 
@@ -428,16 +446,19 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
                 Class[] bindClass = tabItemAnnotation.bindClass();
                 if (!tabItemAnnotation.customItems().equals(TabItem.class)) {
                     TabItem[] tabItems = EnumsUtil.getEnums(tabItemAnnotation.customItems());
-                    int k = 0;
+
                     for (TabItem tabItem : tabItems) {
-                        TabItemBean oitemBean = new TabItemBean(methodConfig, this, tabItem, k);
+                        TabItemBean oitemBean = new TabItemBean(methodConfig, this, tabItem, index);
                         TabItemBean itemBean = this.getTabItemBeanById(oitemBean.getId());
+                        if (tabItemAnnotation.index() > -1) {
+                            oitemBean.setIndex(tabItemAnnotation.index());
+                        }
                         if (itemBean == null) {
                             itemBeans.add(oitemBean);
                         } else {
                             itemBean.update(oitemBean);
                         }
-                        k = k + 1;
+                        index = index + 1;
 
                     }
                 } else if (bindClass.length > 0) {
@@ -446,6 +467,11 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
                         if (editorMethod != null) {
                             TabItemBean oitemBean = new TabItemBean(methodConfig, this);
                             TabItemBean itemBean = this.getTabItemBeanById(oitemBean.getId());
+                            if (tabItemAnnotation.index() > -1) {
+                                oitemBean.setIndex(tabItemAnnotation.index());
+                            } else {
+                                oitemBean.setIndex(index);
+                            }
                             if (itemBean == null) {
                                 itemBeans.add(oitemBean);
                             } else {
@@ -457,6 +483,11 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
                     }
                 } else {
                     TabItemBean oitemBean = new TabItemBean(methodConfig, this);
+                    if (tabItemAnnotation.index() > -1) {
+                        oitemBean.setIndex(tabItemAnnotation.index());
+                    } else {
+                        oitemBean.setIndex(index);
+                    }
                     TabItemBean itemBean = this.getTabItemBeanById(oitemBean.getId());
                     if (itemBean == null) {
                         itemBeans.add(oitemBean);
@@ -467,7 +498,13 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
 
             } else if (methodConfig.isModule()) {
                 TabItemBean oitemBean = new TabItemBean(methodConfig, this);
+
                 TabItemBean itemBean = this.getTabItemBeanById(oitemBean.getId());
+                if (tabItemAnnotation.index() > -1) {
+                    oitemBean.setIndex(tabItemAnnotation.index());
+                } else {
+                    oitemBean.setIndex(index);
+                }
                 if (itemBean == null) {
                     itemBeans.add(oitemBean);
                 } else {

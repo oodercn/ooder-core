@@ -340,6 +340,7 @@ public class TabItemBean<T extends FieldItemConfig> implements ContextMenuBar, C
 
     public void update(TabItemBean tabListItem) {
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(tabListItem), Map.class), this, false, false);
+        this.index = tabListItem.getIndex();
     }
 
 

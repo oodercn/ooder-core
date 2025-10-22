@@ -54,6 +54,7 @@ public class NavTabListItem extends TabListItem {
         this.bindClass = childTabViewBean.getBindClass();
         this.index = childTabViewBean.getIndex();
 
+
         if (childTabViewBean.getIndex() != null && childTabViewBean.getIndex() != -1) {
             this.tabindex = childTabViewBean.getIndex();
         }
