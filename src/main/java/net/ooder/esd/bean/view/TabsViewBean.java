@@ -44,6 +44,11 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
 
     }
 
+    public TabsViewBean(Class clazz, CustomTreeViewBean parentItem) {
+        this.domainId = parentItem.getDomainId();
+        init(clazz);
+    }
+
     public TabsViewBean(Class<? extends TabListItem> clazz) {
         init(clazz);
     }
@@ -59,6 +64,18 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
         this.viewClassName = parentItem.getViewClassName();
         this.sourceClassName = parentItem.getSourceClassName();
         init(clazz);
+    }
+
+
+    void init(Class clazz) {
+        TabsAnnotation tabsAnnotation = AnnotationUtil.getClassAnnotation(clazz, TabsAnnotation.class);
+        if (tabsAnnotation != null) {
+            fillData(tabsAnnotation);
+        } else {
+            AnnotationUtil.fillDefaultValue(TabsAnnotation.class, this);
+        }
+        this.initBaseTabViews(clazz);
+
     }
 
     public TabsViewBean(ModuleComponent moduleComponent) {
@@ -104,7 +121,7 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
         }
 
         NavTabsProperties tabsProperties = (NavTabsProperties) tabsComponent.getProperties();
-        this.init(tabsProperties);
+        this.initProperties(tabsProperties);
         List<Component> components = cloneComponentList(tabsComponent.getChildren());
         if (tabItems == null || tabItems.isEmpty()) {
             tabItems = (List<U>) tabsProperties.getItems();
@@ -141,7 +158,7 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
         this.setModuleBeans(navModuleBeans);
         this.setTabItems(tabItems);
         tabsProperties.setItems(tabItems);
-        this.init(tabsProperties);
+        this.initProperties(tabsProperties);
         try {
             DSMFactory.getInstance().saveCustomViewBean(this);
         } catch (JDSException e) {
@@ -151,7 +168,7 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
     }
 
 
-    public <N extends NavTabsProperties> void init(N tabsProperties) {
+    public <N extends NavTabsProperties> void initProperties(N tabsProperties) {
         Map valueMap = AnnotationUtil.getDefaultAnnMap(TabsAnnotation.class);
         valueMap.putAll(JSON.parseObject(JSON.toJSONString(tabsProperties), Map.class));
         OgnlUtil.setProperties(valueMap, this, false, false);
@@ -215,55 +232,6 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
         return tabItems;
     }
 
-    void init(Class clazz) {
-        TabsAnnotation tabsAnnotation = AnnotationUtil.getClassAnnotation(clazz, TabsAnnotation.class);
-        if (tabsAnnotation != null) {
-            fillData(tabsAnnotation);
-        } else {
-            AnnotationUtil.fillDefaultValue(TabsAnnotation.class, this);
-        }
-
-        this.initBaseTabViews(clazz);
-        if (itemBeans == null || itemBeans.isEmpty()) {
-            Class<? extends Enum> enumClass = this.getEnumClass();
-            Class<? extends Enum> viewClass = null;
-            String viewClassName = this.getViewClassName();
-            if (viewClassName != null) {
-                try {
-                    viewClass = ClassUtility.loadClass(viewClassName);
-                    if (enumClass.isEnum()) {
-                        viewClass = enumClass;
-                    }
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            List<NavTabListItem> items = new ArrayList<>();
-            if (viewClass != null) {
-                items = ESDEnumsUtil.getEnumItems(viewClass, NavTabListItem.class);
-            } else if (enumClass != null) {
-                items = ESDEnumsUtil.getEnumItems(enumClass, NavTabListItem.class);
-            }
-
-            for (NavTabListItem buttonViewsListItem : items) {
-                TabItemBean itemBean = this.getTabItemBeanById(buttonViewsListItem.getId());
-                if (itemBean == null) {
-                    itemBean = new TabItemBean(buttonViewsListItem);
-                    itemBeans.add(itemBean);
-                } else {
-                    itemBean.update(buttonViewsListItem);
-                }
-            }
-        }
-
-        try {
-            this.initHiddenField(clazz.getName());
-        } catch (JDSException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     @Override
     public Set<CustomTabsEvent> getEvent() {
@@ -277,13 +245,6 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
     @Override
     public ComponentType getComponentType() {
         return ComponentType.TABS;
-    }
-
-
-    public TabsViewBean(Class clazz, CustomTreeViewBean parentItem) {
-        this.domainId = parentItem.getDomainId();
-        init(clazz);
-
     }
 
 

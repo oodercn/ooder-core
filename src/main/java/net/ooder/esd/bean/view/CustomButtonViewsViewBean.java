@@ -4,7 +4,6 @@ package net.ooder.esd.bean.view;
 import com.alibaba.fastjson.JSON;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.CaselessStringKeyHashMap;
-import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.ButtonViewsAnnotation;
 import net.ooder.esd.annotation.event.CustomTabsEvent;
 import net.ooder.esd.annotation.field.TabItem;
@@ -24,7 +23,6 @@ import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.ModulePlaceHolder;
 import net.ooder.esd.tool.properties.ButtonViewsProperties;
-import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.RemoteConnectionManager;
 import net.ooder.web.util.AnnotationUtil;
@@ -159,39 +157,7 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
             AnnotationUtil.fillDefaultValue(ButtonViewsAnnotation.class, this);
         }
         this.initBaseTabViews(clazz);
-        if (itemBeans == null || itemBeans.isEmpty()) {
-            Class<? extends Enum> enumClass = this.getEnumClass();
-            Class<? extends Enum> viewClass = null;
-            String viewClassName = this.getViewClassName();
-            if (viewClassName != null) {
-                try {
-                    viewClass = ClassUtility.loadClass(viewClassName);
-                    if (enumClass.isEnum()) {
-                        viewClass = enumClass;
-                    }
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
 
-            List<ButtonViewsListItem> items = new ArrayList<>();
-            if (viewClass != null) {
-                items = ESDEnumsUtil.getEnumItems(viewClass, ButtonViewsListItem.class);
-            } else if (enumClass != null) {
-                items = ESDEnumsUtil.getEnumItems(enumClass, ButtonViewsListItem.class);
-            }
-
-            for (ButtonViewsListItem buttonViewsListItem : items) {
-                TabItemBean itemBean = this.getTabItemBeanById(buttonViewsListItem.getId());
-                if (itemBean == null) {
-                    itemBean = new TabItemBean(buttonViewsListItem);
-                    itemBeans.add(itemBean);
-                } else {
-                    itemBean.update(buttonViewsListItem);
-                }
-            }
-
-        }
     }
 
 

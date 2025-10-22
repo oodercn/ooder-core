@@ -347,7 +347,6 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
     }
 
     protected void initBaseTabViews(Class clazz) {
-        int index = 0;
         if (clazz.isEnum()) {
             this.setEnumClass((Class<? extends Enum>) clazz);
         }
@@ -357,13 +356,64 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
             this.enumsClassBean = new EnumsClassBean(enums.clazz());
         }
 
-
         TabsEvent tabsEvent = AnnotationUtil.getClassAnnotation(clazz, TabsEvent.class);
         if (tabsEvent != null) {
             TabsEventBean customTabsEvent = new TabsEventBean(tabsEvent);
             this.extAPIEvent.add(customTabsEvent);
         }
 
+        itemBeans = initConstructor(clazz);
+        itemBeans.addAll(initMethodTabItem());
+
+        if (itemBeans.isEmpty()) {
+            itemBeans = initEnums();
+        }
+        try {
+            this.initHiddenField(clazz.getName());
+        } catch (JDSException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private List<TabItemBean> initEnums() {
+        List<TabItemBean> enumItemBeans = new ArrayList<>();
+        Class<? extends Enum> enumClass = this.getEnumClass();
+        Class<? extends Enum> viewClass = null;
+        String viewClassName = this.getViewClassName();
+        if (viewClassName != null) {
+            try {
+                viewClass = ClassUtility.loadClass(viewClassName);
+                if (enumClass.isEnum()) {
+                    viewClass = enumClass;
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        List<NavTabListItem> items = new ArrayList<>();
+        if (viewClass != null) {
+            items = ESDEnumsUtil.getEnumItems(viewClass, NavTabListItem.class);
+        } else if (enumClass != null) {
+            items = ESDEnumsUtil.getEnumItems(enumClass, NavTabListItem.class);
+        }
+
+        for (NavTabListItem tabListItem : items) {
+            TabItemBean itemBean = this.getTabItemBeanById(tabListItem.getId());
+            if (itemBean == null) {
+                itemBean = new TabItemBean(tabListItem);
+                enumItemBeans.add(itemBean);
+            } else {
+                itemBean.update(tabListItem);
+            }
+        }
+        return enumItemBeans;
+    }
+
+
+    private List<TabItemBean> initConstructor(Class clazz) {
+        int index = 0;
+        List<TabItemBean> constructorItemBeans = new ArrayList<>();
         Constructor[] constructors = clazz.getConstructors();
         for (Constructor constructor : constructors) {
             TabItemAnnotation tabItemAnnotation = AnnotationUtil.getConstructorAnnotation(constructor, TabItemAnnotation.class);
@@ -381,7 +431,7 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
                         }
 
                         if (itemBean == null) {
-                            itemBeans.add(oitemBean);
+                            constructorItemBeans.add(oitemBean);
                         } else {
                             itemBean.update(oitemBean);
                         }
@@ -401,7 +451,7 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
 
                             TabItemBean itemBean = this.getTabItemBeanById(oitemBean.getId());
                             if (itemBean == null) {
-                                itemBeans.add(oitemBean);
+                                constructorItemBeans.add(oitemBean);
                             } else {
                                 itemBean.update(oitemBean);
                             }
@@ -416,10 +466,9 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
                     } else {
                         oitemBean.setIndex(index);
                     }
-
                     TabItemBean itemBean = this.getTabItemBeanById(oitemBean.getId());
                     if (itemBean == null) {
-                        itemBeans.add(oitemBean);
+                        constructorItemBeans.add(oitemBean);
                     } else {
                         itemBean.update(oitemBean);
                     }
@@ -427,10 +476,13 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
                 index = index + 1;
             }
         }
+        return constructorItemBeans;
+    }
 
-
+    private List<TabItemBean> initMethodTabItem() {
+        List<TabItemBean> methdItemBeans = new ArrayList<>();
+        int index = 0;
         Set<String> fieldNames = this.getItemNames();
-        Map<String, Object> tagMap = new HashMap<>();
         List<FieldModuleConfig> fieldModuleConfigs = new ArrayList<>();
         for (String fieldName : fieldNames) {
             FieldModuleConfig fieldFormConfig = this.getItemConfigMap().get(fieldName);
@@ -447,7 +499,6 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
                 Class[] bindClass = tabItemAnnotation.bindClass();
                 if (!tabItemAnnotation.customItems().equals(TabItem.class)) {
                     TabItem[] tabItems = EnumsUtil.getEnums(tabItemAnnotation.customItems());
-
                     for (TabItem tabItem : tabItems) {
                         TabItemBean oitemBean = new TabItemBean(methodConfig, this, tabItem, index);
                         TabItemBean itemBean = this.getTabItemBeanById(oitemBean.getId());
@@ -455,7 +506,7 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
                             oitemBean.setIndex(tabItemAnnotation.index());
                         }
                         if (itemBean == null) {
-                            itemBeans.add(oitemBean);
+                            methdItemBeans.add(oitemBean);
                         } else {
                             itemBean.update(oitemBean);
                         }
@@ -491,7 +542,7 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
                     }
                     TabItemBean itemBean = this.getTabItemBeanById(oitemBean.getId());
                     if (itemBean == null) {
-                        itemBeans.add(oitemBean);
+                        methdItemBeans.add(oitemBean);
                     } else {
                         itemBean.update(oitemBean);
                     }
@@ -499,49 +550,20 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
 
             } else if (methodConfig.isModule()) {
                 TabItemBean oitemBean = new TabItemBean(methodConfig, this);
-
                 TabItemBean itemBean = this.getTabItemBeanById(oitemBean.getId());
-                if (tabItemAnnotation.index() > -1) {
-                    oitemBean.setIndex(tabItemAnnotation.index());
+                if (methodConfig.getIndex() > -1) {
+                    oitemBean.setIndex(methodConfig.getIndex());
                 } else {
                     oitemBean.setIndex(index);
                 }
                 if (itemBean == null) {
-                    itemBeans.add(oitemBean);
+                    methdItemBeans.add(oitemBean);
                 } else {
                     itemBean.update(oitemBean);
                 }
             }
         }
-
-        if (itemBeans == null || itemBeans.isEmpty()) {
-            itemBeans = new ArrayList<>();
-            Class<? extends Enum> enumClass = this.getEnumClass();
-            Class<? extends Enum> viewClass = null;
-            String viewClassName = this.getViewClassName();
-            if (viewClassName != null) {
-                try {
-                    viewClass = ClassUtility.loadClass(viewClassName);
-                    if (enumClass.isEnum()) {
-                        viewClass = enumClass;
-                    }
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-            List<TabListItem> tabListItems = ESDEnumsUtil.getEnumItems(viewClass, TabListItem.class);
-            for (TabListItem listItem : tabListItems) {
-                itemBeans.add(new TabItemBean(listItem));
-            }
-        }
-
-
-        try {
-            this.initHiddenField(clazz.getName());
-        } catch (JDSException e) {
-            e.printStackTrace();
-        }
-
+        return methdItemBeans;
     }
 
     protected U findTabItem(String target) {
