@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import net.ooder.annotation.FormulaParams;
 import net.ooder.common.util.StringUtility;
 import net.ooder.context.JDSActionContext;
-import net.ooder.esd.tool.properties.item.UIItem;
 import net.ooder.esd.bean.TreeListItem;
+import net.ooder.esd.tool.properties.item.UIItem;
 import net.ooder.web.util.OgnlUtil;
 import ognl.OgnlContext;
 import ognl.OgnlException;
@@ -49,7 +49,7 @@ public class ESDEnumsUtil {
 
     public static <T extends UIItem> List<T> getEnumItems(Class<? extends Enum> enumClass, Class<T> clazz) {
         List<T> items = new ArrayList<>();
-
+        int index = 0;
         Enum[] enums = getDefaultEnums(enumClass, null);
         for (Enum enumItem : enums) {
             try {
@@ -57,10 +57,13 @@ public class ESDEnumsUtil {
                     OgnlContext context = OgnlUtil.getOgnlContext();
                     T item = (T) OgnlRuntime.callConstructor(context, clazz.getName(), new Object[]{enumItem});
                     if (item != null) {
+                        item.setIndex(index);
                         item.setId(enumItem.name());
                         items.add(item);
+                        index++;
                     }
                 }
+
             } catch (OgnlException e) {
                 e.printStackTrace();
             }

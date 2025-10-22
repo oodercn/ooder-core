@@ -2,8 +2,8 @@ package net.ooder.esd.tool.properties;
 
 import com.alibaba.fastjson.JSON;
 import net.ooder.common.util.ClassUtility;
-import net.ooder.esd.bean.view.CustomGalleryViewBean;
 import net.ooder.esd.bean.gallery.GalleryItemBean;
+import net.ooder.esd.bean.view.CustomGalleryViewBean;
 import net.ooder.esd.tool.properties.item.CmdItem;
 import net.ooder.esd.tool.properties.item.GalleryItem;
 import net.ooder.esd.tool.properties.list.AbsListProperties;
@@ -49,8 +49,13 @@ public class GalleryProperties extends AbsListProperties<GalleryItem> {
         this.init(galleryViewBean.getContainerBean());
         List<GalleryItemBean> galleryItemBeans = galleryViewBean.getGalleryItemBeans();
         if (galleryItemBeans != null) {
+            int index = 0;
             for (GalleryItemBean galleryItemBean : galleryItemBeans) {
-                this.addItem(new GalleryItem(galleryItemBean));
+                GalleryItem galleryItem=new GalleryItem(galleryItemBean);
+                galleryItem.setIndex(index);
+                galleryItem.setTabindex(index);
+                this.addItem(galleryItem);
+                index++;
             }
         }
 
