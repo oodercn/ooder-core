@@ -41,7 +41,7 @@ public class NavFoldingTabsViewBean extends TabsViewBean<NavFoldingTabsListItem>
         NavFoldingTabsProperties tabsProperties = component.getProperties();
         updateModule(moduleComponent);
         this.foldingTabsFieldBean = stacksFieldBean;
-        this.init(tabsProperties);
+        this.initProperties(tabsProperties);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class NavFoldingTabsViewBean extends TabsViewBean<NavFoldingTabsListItem>
         if (moduleComponent.getCurrComponent() instanceof FoldingTabsComponent) {
             FoldingTabsComponent component = (FoldingTabsComponent) moduleComponent.getCurrComponent();
             NavFoldingTabsProperties tabsProperties = component.getProperties();
-            this.init(tabsProperties);
+            this.initProperties(tabsProperties);
         }
         return javaSrcBeans;
 

@@ -108,17 +108,13 @@ public class CustomFieldFoldingTabsComponent extends CustomFoldingTabsComponent 
                                 this.addChildren(newmodule.getComponent().getCurrComponent());
                             }
                         }
-
                     }
-
 
                 } catch (JDSException e) {
                     e.printStackTrace();
                 }
             }
-
         }
-
         this.setProperties(blockProperties);
     }
 

@@ -52,7 +52,6 @@ public class CustomButtonViewsComponent extends ButtonViewsComponent {
             Action saveAction = new Action(CustomPageAction.AUTOSAVE, TabsEventEnum.beforePageClose);
             this.addAction(saveAction, false);
         }
-
         this.setAlias(tabsViewBean.getMethodName());
         List<TabItemBean> childTabViewBeans = tabsViewBean.getItemBeans();
 

@@ -176,6 +176,10 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
         } catch (JDSException e) {
             e.printStackTrace();
         }
+        if (childTabViewBeans.size()>0){
+            this.getProperties().setValue(childTabViewBeans.get(0).getId());
+        }
+
     }
 
     @Override

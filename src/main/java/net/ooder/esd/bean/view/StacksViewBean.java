@@ -46,7 +46,7 @@ public class StacksViewBean extends TabsViewBean<StacksListItem> {
         this.setXpath(realPath);
         StacksProperties tabsProperties = component.getProperties();
         updateModule(moduleComponent);
-        this.init(tabsProperties);
+        this.initProperties(tabsProperties);
     }
 
     public StacksViewBean(Set<Annotation> annotations) {
