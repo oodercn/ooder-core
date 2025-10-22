@@ -1537,22 +1537,6 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
         ModuleViewType[] skipViewType = new ModuleViewType[]{ModuleViewType.NONE, ModuleViewType.DYNCONFIG, ModuleViewType.LAYOUTCONFIG};
         if (moduleViewType == null || Arrays.asList(skipViewType).contains(moduleViewType)) {
 
-//            if (this.view != null) {
-//                ModuleViewType[] types = ModuleViewType.values();
-//                for (ModuleViewType type : types) {
-//                    Class beanClass = null;
-//                    try {
-//                        beanClass = ClassUtility.loadClass(type.getBeanClassName());
-//                        if (beanClass.isAssignableFrom(view.getClass())) {
-//                            moduleViewType = type;
-//                        }
-//                    } catch (ClassNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//
-//            }
-
             if (moduleViewType == null || Arrays.asList(skipViewType).contains(moduleViewType)) {
                 if (method != null) {
                     moduleViewType = CustomViewConfigFactory.getInstance().getModuleViewType(method);
@@ -1715,7 +1699,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
             }
         }
 
-        if (this.getModuleBean().getModuleViewType() != null && !this.getModuleBean().getModuleViewType().equals(ModuleViewType.NONE)) {
+        if (this.getModuleViewType() != null && !this.getModuleViewType().equals(ModuleViewType.NONE)) {
             isModule = true;
         }
         return isModule;
