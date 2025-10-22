@@ -36,6 +36,7 @@ import net.ooder.esd.util.OODUtil;
 import net.ooder.esd.util.json.EMSerializer;
 import net.ooder.util.EnumsUtil;
 import net.ooder.web.util.AnnotationUtil;
+import ognl.OgnlException;
 
 import java.lang.reflect.Constructor;
 import java.util.*;
@@ -560,19 +561,11 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
         return null;
     }
 
-    public LinkedHashSet<TabsEventBean> getExtAPIEvent() {
-        return extAPIEvent;
-    }
-
-    public void setExtAPIEvent(LinkedHashSet<TabsEventBean> extAPIEvent) {
-        this.extAPIEvent = extAPIEvent;
-    }
-
     @Override
     @JSONField(serialize = false)
     public List<FieldModuleConfig> getNavItems() {
         Set<String> fieldNames = this.getItemNames();
-        Map<String, Object> tagMap = new HashMap<>();
+
         List<FieldModuleConfig> fields = new ArrayList<>();
         for (String fieldName : fieldNames) {
             FieldModuleConfig fieldFormConfig = this.getItemConfigMap().get(fieldName);
@@ -583,38 +576,44 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
 
         if (fields.isEmpty() && this.methodConfig != null) {
             try {
-                Object object = invokMethod(this.methodConfig.getRequestMethodBean(), tagMap);
-                if (object != null) {
-                    if (object instanceof TreeListResultModel) {
-                        TreeListResultModel<List<TabListItem>> resultModel = (TreeListResultModel) object;
-                        List<TabListItem> items = resultModel.getData();
-                        if (items != null) {
-                            for (TabListItem item : items) {
-                                FieldModuleConfig fieldFormConfig = new FieldModuleConfig();
-                                fieldFormConfig.setId(item.getId());
-                                fieldFormConfig.setSourceClassName(sourceClassName);
-                                fieldFormConfig.setMethodName(methodName);
-                                fieldFormConfig.setViewClassName(viewClassName);
-                                fieldFormConfig.setDomainId(domainId);
-                                fieldFormConfig.setFieldname(item.getId());
-                                fieldFormConfig.setCaption(item.getCaption());
-                                fieldFormConfig.setImageClass(item.getImageClass());
-                                fieldFormConfig.setEuClassName(item.getEuClassName());
-                                fieldFormConfig.setTagVar(item.getTagVar());
-                                fields.add(fieldFormConfig);
-                            }
-                        }
-
-                    }
-                }
-
-
+                fields = dynFillModule();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         return fields;
     }
+
+    private List<FieldModuleConfig> dynFillModule() throws OgnlException, ClassNotFoundException {
+        List<FieldModuleConfig> fields = new ArrayList<>();
+        Object object = invokMethod(this.methodConfig.getRequestMethodBean(), this.getTagVar());
+        if (object != null) {
+            if (object instanceof TreeListResultModel) {
+                TreeListResultModel<List<TabListItem>> resultModel = (TreeListResultModel) object;
+                List<TabListItem> items = resultModel.getData();
+                if (items != null) {
+                    for (TabListItem item : items) {
+                        FieldModuleConfig fieldFormConfig = new FieldModuleConfig();
+                        fieldFormConfig.setId(item.getId());
+                        fieldFormConfig.setSourceClassName(sourceClassName);
+                        fieldFormConfig.setMethodName(methodName);
+                        fieldFormConfig.setViewClassName(viewClassName);
+                        fieldFormConfig.setDomainId(domainId);
+                        fieldFormConfig.setFieldname(item.getId());
+                        fieldFormConfig.setCaption(item.getCaption());
+                        fieldFormConfig.setImageClass(item.getImageClass());
+                        fieldFormConfig.setEuClassName(item.getEuClassName());
+                        fieldFormConfig.setTagVar(item.getTagVar());
+                        fields.add(fieldFormConfig);
+                    }
+                }
+
+            }
+        }
+        return fields;
+    }
+
+    ;
 
 
     @Override
@@ -700,6 +699,99 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
         annotationBeans.add(this);
         return annotationBeans;
     }
+
+
+    @Override
+    public ToolBarMenuBean getToolBar() {
+        if (toolBar == null) {
+            if (toolBarMenu != null && toolBarMenu.size() > 0) {
+                this.toolBar = AnnotationUtil.fillDefaultValue(ToolBarMenu.class, new ToolBarMenuBean());
+                this.toolBar.setMenus(toolBarMenu.toArray(new CustomFormMenu[]{}));
+            }
+        }
+        return toolBar;
+    }
+
+    @Override
+    public MenuBarBean getMenuBar() {
+        if (menuBar == null) {
+            if (customMenu != null && customMenu.size() > 0) {
+                this.menuBar = AnnotationUtil.fillDefaultValue(MenuBarMenu.class, new MenuBarBean());
+                this.menuBar.setMenus(customMenu.toArray(new CustomFormMenu[]{}));
+            }
+        }
+        return menuBar;
+    }
+
+    public abstract Set<E> getEvent();
+
+
+    @Override
+    public BottomBarMenuBean getBottomBar() {
+        if (bottomBar == null) {
+            if (bottombarMenu != null && bottombarMenu.size() > 0) {
+                this.bottomBar = AnnotationUtil.fillDefaultValue(BottomBarMenu.class, new BottomBarMenuBean());
+            }
+        }
+        return bottomBar;
+    }
+
+    @JSONField(serialize = false)
+    public MethodConfig findMethod(TreeEventBean treeEventBean, Constructor constructor) {
+        String soruceClassName = treeEventBean.getSourceClassName();
+        String methodName = treeEventBean.getMethodName();
+        if (soruceClassName != null && !soruceClassName.equals(constructor.getDeclaringClass().getName())) {
+            try {
+                ApiClassConfig config = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(soruceClassName);
+                if (config != null) {
+                    MethodConfig methodConfig = config.getMethodByName(methodName);
+                    if (methodConfig != null) {
+                        return methodConfig;
+                    }
+                }
+            } catch (JDSException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+
+    @JSONField(serialize = false)
+    private void initExtEvent() {
+
+        Set<Class> bindClassList = this.getCustomService();
+
+        for (Class bindClass : bindClassList) {
+            if (!bindClass.equals(Void.class)) {
+                try {
+                    ApiClassConfig config = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(bindClass.getName());
+                    if (config != null) {
+                        List<MethodConfig> methodAPIBeans = config.getAllMethods();
+                        for (MethodConfig methodAPIBean : methodAPIBeans) {
+                            TabsEvent tabsEvent = AnnotationUtil.getMethodAnnotation(methodAPIBean.getMethod(), TabsEvent.class);
+                            if (tabsEvent != null) {
+                                TabsEventBean treeEventBean = new TabsEventBean(tabsEvent, methodAPIBean.getSourceClassName(), methodAPIBean.getMethodName());
+                                this.extAPIEvent.add(treeEventBean);
+                            }
+                        }
+
+                    }
+                } catch (JDSException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public LinkedHashSet<TabsEventBean> getExtAPIEvent() {
+        return extAPIEvent;
+    }
+
+    public void setExtAPIEvent(LinkedHashSet<TabsEventBean> extAPIEvent) {
+        this.extAPIEvent = extAPIEvent;
+    }
+
 
     public Boolean getActiveLast() {
         return activeLast;
@@ -945,89 +1037,6 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
         this.customMenu = customMenu;
     }
 
-
-    @Override
-    public ToolBarMenuBean getToolBar() {
-        if (toolBar == null) {
-            if (toolBarMenu != null && toolBarMenu.size() > 0) {
-                this.toolBar = AnnotationUtil.fillDefaultValue(ToolBarMenu.class, new ToolBarMenuBean());
-                this.toolBar.setMenus(toolBarMenu.toArray(new CustomFormMenu[]{}));
-            }
-        }
-        return toolBar;
-    }
-
-    @Override
-    public MenuBarBean getMenuBar() {
-        if (menuBar == null) {
-            if (customMenu != null && customMenu.size() > 0) {
-                this.menuBar = AnnotationUtil.fillDefaultValue(MenuBarMenu.class, new MenuBarBean());
-                this.menuBar.setMenus(customMenu.toArray(new CustomFormMenu[]{}));
-            }
-        }
-        return menuBar;
-    }
-
-    public abstract Set<E> getEvent();
-
-
-    @Override
-    public BottomBarMenuBean getBottomBar() {
-        if (bottomBar == null) {
-            if (bottombarMenu != null && bottombarMenu.size() > 0) {
-                this.bottomBar = AnnotationUtil.fillDefaultValue(BottomBarMenu.class, new BottomBarMenuBean());
-            }
-        }
-        return bottomBar;
-    }
-
-    @JSONField(serialize = false)
-    public MethodConfig findMethod(TreeEventBean treeEventBean, Constructor constructor) {
-        String soruceClassName = treeEventBean.getSourceClassName();
-        String methodName = treeEventBean.getMethodName();
-        if (soruceClassName != null && !soruceClassName.equals(constructor.getDeclaringClass().getName())) {
-            try {
-                ApiClassConfig config = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(soruceClassName);
-                if (config != null) {
-                    MethodConfig methodConfig = config.getMethodByName(methodName);
-                    if (methodConfig != null) {
-                        return methodConfig;
-                    }
-                }
-            } catch (JDSException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-
-    @JSONField(serialize = false)
-    private void initExtEvent() {
-
-        Set<Class> bindClassList = this.getCustomService();
-
-        for (Class bindClass : bindClassList) {
-            if (!bindClass.equals(Void.class)) {
-                try {
-                    ApiClassConfig config = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(bindClass.getName());
-                    if (config != null) {
-                        List<MethodConfig> methodAPIBeans = config.getAllMethods();
-                        for (MethodConfig methodAPIBean : methodAPIBeans) {
-                            TabsEvent tabsEvent = AnnotationUtil.getMethodAnnotation(methodAPIBean.getMethod(), TabsEvent.class);
-                            if (tabsEvent != null) {
-                                TabsEventBean treeEventBean = new TabsEventBean(tabsEvent, methodAPIBean.getSourceClassName(), methodAPIBean.getMethodName());
-                                this.extAPIEvent.add(treeEventBean);
-                            }
-                        }
-
-                    }
-                } catch (JDSException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     public EnumsClassBean getEnumsClassBean() {
         return enumsClassBean;
