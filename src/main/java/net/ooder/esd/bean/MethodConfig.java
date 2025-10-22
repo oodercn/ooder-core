@@ -66,6 +66,8 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
 
     private static final Log logger = LogFactory.getLog(JDSConstants.CONFIG_KEY, MethodConfig.class);
 
+    private static final ModuleViewType[] skipViewType = new ModuleViewType[]{ModuleViewType.NONE, ModuleViewType.DYNCONFIG, ModuleViewType.LAYOUTCONFIG};
+
     public static String DefaultImageClass = "fa-solid fa-code";
 
     String imageClass = DefaultImageClass;
@@ -1534,8 +1536,24 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
             view.getModuleViewType();
         }
 
-        ModuleViewType[] skipViewType = new ModuleViewType[]{ModuleViewType.NONE, ModuleViewType.DYNCONFIG, ModuleViewType.LAYOUTCONFIG};
+
         if (moduleViewType == null || Arrays.asList(skipViewType).contains(moduleViewType)) {
+
+//            if (this.view != null) {
+//                ModuleViewType[] types = ModuleViewType.values();
+//                for (ModuleViewType type : types) {
+//                    Class beanClass = null;
+//                    try {
+//                        beanClass = ClassUtility.loadClass(type.getBeanClassName());
+//                        if (beanClass.isAssignableFrom(view.getClass())) {
+//                            moduleViewType = type;
+//                        }
+//                    } catch (ClassNotFoundException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//            }
 
             if (moduleViewType == null || Arrays.asList(skipViewType).contains(moduleViewType)) {
                 if (method != null) {
@@ -1681,6 +1699,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
     @JSONField(serialize = false)
     public boolean isModule() {
         boolean isModule = false;
+        ModuleViewType moduleViewType = null;
         for (CustomMenuItem menuItem : this.getBindMenus()) {
             if (!menuItem.getReturnView().equals(ModuleViewType.NONE) && menuItem.getDefaultView()) {
                 isModule = true;
@@ -1697,11 +1716,18 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
             if (comboModuleAnnotation != null) {
                 isModule = true;
             }
+
+            moduleViewType = CustomViewConfigFactory.getInstance().getModuleViewType(this.getMethod());
+            if (moduleViewType != null && !Arrays.asList(skipViewType).contains(moduleViewType)) {
+                isModule = true;
+            }
         }
 
-        if (this.getModuleViewType() != null && !this.getModuleViewType().equals(ModuleViewType.NONE)) {
+        if (this.getModuleBean().getModuleViewType() != null && !this.getModuleBean().getModuleViewType().equals(ModuleViewType.NONE)) {
             isModule = true;
         }
+
+
         return isModule;
     }
 
