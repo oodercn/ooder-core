@@ -404,9 +404,9 @@ public class FieldTreeConfig<T> implements ESDFieldConfig {
                     }
 
                 }
-                aggConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(entityClassName, true).getFieldByName(this.fieldname);
+                aggConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(entityClassName, false).getFieldByName(this.fieldname);
                 if (aggConfig == null) {
-                    aggConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(getViewClassName(), true).getFieldByName(this.fieldname);
+                    aggConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(getViewClassName(), false).getFieldByName(this.fieldname);
                 }
                 if (aggConfig == null) {
                     aggConfig = new FieldAggConfig(this.getEsdField(), domainId);

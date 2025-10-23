@@ -66,7 +66,7 @@ public class EUPackage implements Comparable<EUPackage> {
     public EUPackage getParent() {
         EUPackage euPackage = null;
         try {
-            if (packageName.indexOf(".")>-1){
+            if (packageName.indexOf(".") > -1) {
                 String parentPackageName = packageName.substring(0, packageName.lastIndexOf("."));
                 euPackage = ESDFacrory.getAdminESDClient().getPackageByPath(projectVersionName, parentPackageName);
             }
@@ -336,6 +336,13 @@ public class EUPackage implements Comparable<EUPackage> {
     public void setImageClass(String imageClass) {
         this.imageClass = imageClass;
     }
+
+    @Override
+    public String toString() {
+        return path;
+    }
+
+    ;
 
     @Override
     public int compareTo(EUPackage o) {

@@ -1,11 +1,11 @@
 package net.ooder.esd.tool;
 
+import net.ooder.annotation.UserSpace;
 import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
-import net.ooder.annotation.UserSpace;
 
 public class DSMProperties {
 
@@ -44,7 +44,7 @@ public class DSMProperties {
         this.domainId = methodConfig.getDomainId();
         if (domainId == null) {
             try {
-                DomainInst domainInst = DSMFactory.getInstance().getDefaultDomain(projectName, UserSpace.VIEW);
+                DomainInst domainInst = DSMFactory.getInstance().getDefaultDomain(projectName, UserSpace.USER);
                 this.domainId = domainInst.getDomainId();
             } catch (JDSException e) {
                 e.printStackTrace();

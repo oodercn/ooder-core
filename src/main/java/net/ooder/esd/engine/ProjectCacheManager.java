@@ -2,6 +2,9 @@ package net.ooder.esd.engine;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import net.ooder.annotation.UserSpace;
 import net.ooder.common.FolderState;
 import net.ooder.common.FolderType;
@@ -16,6 +19,7 @@ import net.ooder.esd.annotation.ui.EUFileType;
 import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.custom.CustomViewFactory;
+import net.ooder.esd.custom.component.CustomDynLoadView;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.repository.RepositoryInst;
@@ -43,9 +47,6 @@ import net.ooder.vfs.*;
 import net.ooder.vfs.ct.CtVfsFactory;
 import net.ooder.vfs.ct.CtVfsService;
 import net.ooder.web.RemoteConnectionManager;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mvel2.templates.TemplateRuntime;
@@ -529,9 +530,12 @@ public class ProjectCacheManager {
     public void saveModule(EUModule euModule, boolean dynBuild) throws JDSException {
         String path = euModule.getPath();
         ModuleComponent moduleComponent = euModule.getComponent();
+        if (moduleComponent instanceof CustomDynLoadView) {
+            return;
+        }
+
         moduleComponent.setModuleType(euModule.getFiletype());
         MethodConfig methodConfig = moduleComponent.getMethodAPIBean();
-
 
         if (methodConfig != null && dynBuild) {
             DSMProperties dsmProperties = moduleComponent.getProperties().getDsmProperties();

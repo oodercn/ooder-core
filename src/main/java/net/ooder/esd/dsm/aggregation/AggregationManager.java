@@ -183,30 +183,35 @@ public class AggregationManager {
             if (clazz != null) {
                 className = clazz.getName();
                 String domainId = getRealDomainId(className, true);
-                String uKey = className + "[" + domainId + "]";
-                esdClassConfig = aggEntityConfigMap.get(uKey);
-                if (esdClassConfig == null || (reload && esdClassConfig.getLastUpdateTime() != null)) {
-                    synchronized (uKey) {
-                        if (reload) {
-                            esdClassConfig = createAggEntityConfig(className, domainId);
-                            aggEntityConfigMap.put(uKey, esdClassConfig);
-                        } else if (esdClassConfig == null) {
-                            esdClassConfig = loadAggEntityConfig(className, domainId);
-                            if (esdClassConfig == null) {
+                if (ClassUtility.isDebug(className)) {
+                    ESDClass esdClass = classManager.getAggEntityByName(className, reload);
+                    esdClassConfig = new AggEntityConfig(esdClass, domainId);
+                    esdClassConfig.setSourceClassName(className);
+                } else {
+                    String uKey = className + "[" + domainId + "]";
+                    esdClassConfig = aggEntityConfigMap.get(uKey);
+                    if (esdClassConfig == null || (reload && esdClassConfig.getLastUpdateTime() != null)) {
+                        synchronized (uKey) {
+                            if (reload) {
                                 esdClassConfig = createAggEntityConfig(className, domainId);
-                                esdClassConfig.setDomainId(domainId);
                                 aggEntityConfigMap.put(uKey, esdClassConfig);
-                                aggEntityConfigCache.put(uKey, JSON.toJSONString(esdClassConfig));
-
-                                if (JDSServer.getClusterClient().isLogin()) {
-                                    aggEntityConfigTasks.add(new SaveAggEntityConfigTask<>(esdClassConfig));
-                                } else {
-                                    this.updateAggEntityConfig(esdClassConfig);
+                            } else if (esdClassConfig == null) {
+                                esdClassConfig = loadAggEntityConfig(className, domainId);
+                                if (esdClassConfig == null) {
+                                    esdClassConfig = createAggEntityConfig(className, domainId);
+                                    esdClassConfig.setDomainId(domainId);
+                                    aggEntityConfigMap.put(uKey, esdClassConfig);
+                                    aggEntityConfigCache.put(uKey, JSON.toJSONString(esdClassConfig));
+                                    if (JDSServer.getClusterClient().isLogin()) {
+                                        aggEntityConfigTasks.add(new SaveAggEntityConfigTask<>(esdClassConfig));
+                                    } else {
+                                        this.updateAggEntityConfig(esdClassConfig);
+                                    }
                                 }
                             }
                         }
+                        aggEntityConfigMap.put(uKey, esdClassConfig);
                     }
-                    aggEntityConfigMap.put(uKey, esdClassConfig);
                 }
                 actionContext.put(aggClassName, esdClassConfig);
             }
@@ -517,33 +522,40 @@ public class AggregationManager {
         String apiClassName = "ApiClassConfig[" + className + "]";
         Map actionContext = JDSActionContext.getActionContext().getContext();
         ApiClassConfig apiClassConfig = (ApiClassConfig) actionContext.get(apiClassName);
+
         if (apiClassConfig == null) {
             Class clazz = classManager.checkInterface(className);
             if (clazz != null) {
                 try {
                     className = clazz.getName();
                     String domainId = getRealDomainId(className, true);
-                    String uKey = className + "[" + domainId + "]";
-                    apiClassConfig = apiConfigMap.get(uKey);
-                    if (apiClassConfig == null || load) {
-                        synchronized (uKey) {
-                            apiClassConfig = loadApiConfig(className, domainId);
-                            if (apiClassConfig == null) {
-                                ESDClass esdClass = classManager.getAggEntityByName(className, load);
-                                if (esdClass != null) {
-                                    apiClassConfig = new ApiClassConfig(esdClass);
-                                    apiClassConfig.setDomainId(domainId);
-                                    apiConfigMap.put(uKey, apiClassConfig);
-                                    apiConfigCache.put(uKey, JSON.toJSONString(apiClassConfig));
-                                    if (JDSServer.getClusterClient().isLogin()) {
-                                        apiConfigTasks.add(new SaveApiEntityConfigTask(apiClassConfig));
-                                    } else {
-                                        this.updateApiClassConfig(apiClassConfig);
+                    if (ClassUtility.isDebug(className)) {
+                        ESDClass esdClass = classManager.getAggEntityByName(className, load);
+                        apiClassConfig = new ApiClassConfig(esdClass);
+                        apiClassConfig.setDomainId(domainId);
+                    } else {
+                        String uKey = className + "[" + domainId + "]";
+                        apiClassConfig = apiConfigMap.get(uKey);
+                        if (apiClassConfig == null || load) {
+                            synchronized (uKey) {
+                                apiClassConfig = loadApiConfig(className, domainId);
+                                if (apiClassConfig == null) {
+                                    ESDClass esdClass = classManager.getAggEntityByName(className, load);
+                                    if (esdClass != null) {
+                                        apiClassConfig = new ApiClassConfig(esdClass);
+                                        apiClassConfig.setDomainId(domainId);
+                                        apiConfigMap.put(uKey, apiClassConfig);
+                                        apiConfigCache.put(uKey, JSON.toJSONString(apiClassConfig));
+                                        if (JDSServer.getClusterClient().isLogin()) {
+                                            apiConfigTasks.add(new SaveApiEntityConfigTask(apiClassConfig));
+                                        } else {
+                                            this.updateApiClassConfig(apiClassConfig);
 
+                                        }
                                     }
+                                } else {
+                                    apiConfigMap.put(uKey, apiClassConfig);
                                 }
-                            } else {
-                                apiConfigMap.put(uKey, apiClassConfig);
                             }
                         }
                     }
@@ -558,10 +570,12 @@ public class AggregationManager {
         return apiClassConfig;
     }
 
+
     private ApiClassConfig loadApiConfig(String className, String domainId) {
         ApiClassConfig apiClassConfig = null;
         String uKey = className + "[" + domainId + "]";
         try {
+
             String json = apiConfigCache.get(uKey);
             if (json == null) {
                 Folder dsmFolder = this.getVfsClient().getFolderByPath(apiClassConfigFolder.getPath() + domainId);

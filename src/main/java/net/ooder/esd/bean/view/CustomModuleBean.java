@@ -498,7 +498,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
             }
         }
 
-        if (this.getViewBean() != null) {
+        if (methodConfig != null) {
             ContainerBean containerBean = this.getViewBean().getContainerBean();
             if (containerBean != null) {
                 dialogBean.setContainerBean(containerBean);
