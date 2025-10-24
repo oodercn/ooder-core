@@ -206,7 +206,7 @@ public class ESDClassManager {
             domainFutures = executorService.invokeAll(esdTasks);
             for (Future<ESDClass> resultFuture : domainFutures) {
                 try {
-                    ESDClass result = resultFuture.get(50, TimeUnit.MILLISECONDS);
+                    ESDClass result = resultFuture.get(200, TimeUnit.MILLISECONDS);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -216,8 +216,6 @@ public class ESDClassManager {
                 }
             }
             executorService.shutdownNow();
-
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

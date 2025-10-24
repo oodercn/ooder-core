@@ -140,16 +140,18 @@ public class Component<T extends Properties, K extends EventKey> {
             actions = new ArrayList<Action>();
         }
 
-        if (par) {
+        if (par && this.getModuleComponent() != null) {
             try {
                 String json = JSONObject.toJSONString(action, false);
                 Map context = JDSActionContext.getActionContext().getContext();
-                if (this.getModuleComponent() != null) {
-                    context.put(CustomViewFactory.CurrModuleKey, this.getModuleComponent().getEuModule());
-                }
-                String objStr = (String) TemplateRuntime.eval(json, context);
+//                context.put(CustomViewFactory.CurrModuleKey, this.getModuleComponent().getEuModule());
+//                if (!context.containsKey(CustomViewFactory.TopModuleKey)) {
+//                    context.put(CustomViewFactory.TopModuleKey, this.getModuleComponent().getEuModule());
+//                }
+                String objStr = (String) TemplateRuntime.eval(json, this, context);
                 action = JSONObject.parseObject(objStr, new TypeReference<Action<K>>() {
                 });
+
                 action.setEventKey(eventKey);
             } catch (Throwable throwable) {
                 logger.warn(throwable.getMessage());
@@ -168,6 +170,26 @@ public class Component<T extends Properties, K extends EventKey> {
         events.put(eventKey, event);
         return this;
     }
+
+    @JSONField(serialize = false)
+    public EUModule getCurrModule() {
+        if (this.getModuleComponent() != null) {
+            return this.getModuleComponent().getEuModule();
+        }
+        return null;
+    }
+
+    @JSONField(serialize = false)
+    public EUModule getTopModule() {
+        EUModule euModule = null;
+        Map context = JDSActionContext.getActionContext().getContext();
+        euModule = (EUModule) context.get(CustomViewFactory.TopModuleKey);
+        if (euModule == null) {
+            euModule = this.getModuleComponent().getTopModule();
+        }
+        return euModule;
+    }
+
 
     public void removeChildren(Component... components) {
         if (children == null) {

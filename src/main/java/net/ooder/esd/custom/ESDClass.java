@@ -23,10 +23,7 @@ import net.ooder.esd.dsm.repository.database.proxy.DSMTableProxy;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.util.DSMAnnotationUtil;
 import net.ooder.esd.util.OODUtil;
-import net.ooder.web.AggregationBean;
-import net.ooder.web.EntityBean;
-import net.ooder.web.RequestMappingBean;
-import net.ooder.web.ViewBean;
+import net.ooder.web.*;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.MethodUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +33,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 public class ESDClass {
     protected Log log = LogFactory.getLog(JDSConstants.CONFIG_KEY, ESDClass.class);
@@ -153,7 +154,6 @@ public class ESDClass {
         this.ctClass = ctClass;
         this.allCtFields = new ArrayList<>();
         for (Field field : ctClass.getDeclaredFields()) {
-
             if (!Modifier.isStatic(field.getModifiers()) && !field.getName().startsWith("this$")) {
                 allCtFields.add(field);
             }
@@ -277,28 +277,25 @@ public class ESDClass {
 
         }
         //initField();
-
-
         //  log.info("end new ESDClass---end= " + className + "[" + className + "] times=" + (System.currentTimeMillis() - start));
     }
 
 
     public void initField() {
+        long start = System.currentTimeMillis();
         if (esdFieldMap == null || esdFieldMap.isEmpty()) {
-            long start = System.currentTimeMillis();
             Map<String, ESDField> fieldMap = new LinkedHashMap<String, ESDField>();
             Map<String, ESDField> disableFieldMap = new LinkedHashMap<String, ESDField>();
             Map<String, CustomAnnotation> customAnnotationMap = new LinkedHashMap<String, CustomAnnotation>();
             int index = 0;
+            List<Callable<CustomFieldInfo>> fieldTasks = new ArrayList<>();
             for (Field field : allCtFields) {
-                CustomAnnotation methodmapping = field.getAnnotation(CustomAnnotation.class);
-                Uid uid = field.getAnnotation(Uid.class);
-                Pid pid = field.getAnnotation(Pid.class);
-                Caption caption = field.getAnnotation(Caption.class);
-                CustomFieldInfo fieldInfo = new CustomFieldInfo(field, index, this);
-                if (methodmapping != null || uid != null || pid != null || caption != null) {
-                    fieldInfo.setDefault(false);
-                }
+                fieldTasks.add(new InitFieldTask<>(field, index, this));
+                index++;
+            }
+            List<CustomFieldInfo> fields = this.invokFieldTasks(className, fieldTasks);
+            for (CustomFieldInfo fieldInfo : fields) {
+                Field field = fieldInfo.field;
                 if (fieldInfo.isSerialize()) {
                     fieldMap.put(field.getName().toLowerCase(), fieldInfo);
                     esdFieldMap.put(fieldInfo.getFieldName(), fieldInfo);
@@ -308,102 +305,149 @@ public class ESDClass {
                     disableFieldMap.put(field.getName().toLowerCase(), fieldInfo);
                     disableFieldList.add(fieldInfo);
                 }
-                if (methodmapping != null) {
-                    if (methodmapping.captionField()) {
-                        captionField = fieldInfo;
-                    }
-                    customAnnotationMap.put(field.getName().toLowerCase(), methodmapping);
-                    if (methodmapping.uid()) {
-                        this.uid = field.getName();
-                    }
-                }
-                if (uid != null) {
+
+                if (fieldInfo.isUid()) {
                     this.uid = field.getName();
                 }
 
-                if (caption != null) {
+                if (fieldInfo.isCaptionField()) {
                     this.captionField = fieldInfo;
                 }
 
             }
 
-
-            //   log.info("end new ESDClass---fillAnnotation= " + className + "[" + className + "] times=" + (System.currentTimeMillis() - start));
-
             for (Method method : allCtMethods) {
                 if (!Arrays.asList(customClassName).contains(method.getName())) {
-                    CustomMethodInfo methodInfo = new CustomMethodInfo(method, this);
-                    if (methodInfo.isSerialize()) {
-                        if (MethodUtil.isGetMethod(methodInfo.getInnerMethod()) || methodInfo.isModule()) {
-                            String fieldName = MethodUtil.getFieldName(method);
-                            methodInfo.setFieldName(fieldName);
-                            CustomAnnotation methodmapping = AnnotationUtil.getMethodAnnotation(method, CustomAnnotation.class);
-                            DynLoadAnnotation dynLoadAnnotation = AnnotationUtil.getMethodAnnotation(method, DynLoadAnnotation.class);
-                            CustomAnnotation allmapping = customAnnotationMap.get(fieldName);
-                            Caption caption = AnnotationUtil.getMethodAnnotation(method, Caption.class);
-                            Uid uid = AnnotationUtil.getMethodAnnotation(method, Uid.class);
-                            //字段必须可见
-                            if (methodInfo.isSerialize() && !disableFieldMap.containsKey(fieldName)) {
-                                //如果字段未定义
-                                ESDField field = fieldMap.get(fieldName.toLowerCase());
-                                if (field == null
-                                        || !(field instanceof CustomFieldInfo)
-                                        || ((CustomFieldInfo) fieldMap.get(fieldName.toLowerCase())).isDefault()) {
-                                    fieldMap.put(fieldName.toLowerCase(), methodInfo);
-                                    esdFieldMap.put(methodInfo.getFieldName(), methodInfo);
-
-                                    if (!fieldNameList.contains(methodInfo.getFieldName())) {
-                                        fieldNameList.add(methodInfo.getFieldName());
-                                    }
-
-                                } else {
-                                    if (allmapping == null && (methodmapping != null || dynLoadAnnotation != null)) {
-                                        //优先使用字段注解
+                    List<Callable<CustomMethodInfo>> methodTasks = new ArrayList<>();
+                    for (Method ctmethod : allCtMethods) {
+                        methodTasks.add(new InitMethodTask<>(ctmethod, index, this));
+                        index++;
+                    }
+                    List<CustomMethodInfo> methodInfos = this.invokMethodTasks(className, methodTasks);
+                    for (CustomMethodInfo methodInfo : methodInfos) {
+                        if (methodInfo.isSerialize()) {
+                            if (MethodUtil.isGetMethod(methodInfo.getInnerMethod()) || methodInfo.isModule()) {
+                                String fieldName = MethodUtil.getFieldName(method);
+                                methodInfo.setFieldName(fieldName);
+                                CustomAnnotation methodmapping = AnnotationUtil.getMethodAnnotation(method, CustomAnnotation.class);
+                                DynLoadAnnotation dynLoadAnnotation = AnnotationUtil.getMethodAnnotation(method, DynLoadAnnotation.class);
+                                CustomAnnotation allmapping = customAnnotationMap.get(fieldName);
+                                Caption caption = AnnotationUtil.getMethodAnnotation(method, Caption.class);
+                                Uid uid = AnnotationUtil.getMethodAnnotation(method, Uid.class);
+                                //字段必须可见
+                                if (methodInfo.isSerialize() && !disableFieldMap.containsKey(fieldName)) {
+                                    //如果字段未定义
+                                    ESDField field = fieldMap.get(fieldName.toLowerCase());
+                                    if (field == null
+                                            || !(field instanceof CustomFieldInfo)
+                                            || ((CustomFieldInfo) fieldMap.get(fieldName.toLowerCase())).isDefault()) {
                                         fieldMap.put(fieldName.toLowerCase(), methodInfo);
+                                        esdFieldMap.put(methodInfo.getFieldName(), methodInfo);
+                                        if (!fieldNameList.contains(methodInfo.getFieldName())) {
+                                            fieldNameList.add(methodInfo.getFieldName());
+                                        }
+                                    } else {
+                                        if (allmapping == null && (methodmapping != null || dynLoadAnnotation != null)) {
+                                            //优先使用字段注解
+                                            fieldMap.put(fieldName.toLowerCase(), methodInfo);
+                                        }
                                     }
                                 }
-                            }
-                            if (methodmapping != null && methodmapping.uid()) {
-                                this.uid = fieldName;
-                            }
-                            if (uid != null) {
-                                this.uid = fieldName;
-                            }
-                            if (methodmapping != null && methodmapping.captionField()) {
-                                this.captionField = methodInfo;
-                            }
-                            if (caption != null) {
-                                this.captionField = methodInfo;
+                                if (methodmapping != null && methodmapping.uid()) {
+                                    this.uid = fieldName;
+                                }
+                                if (uid != null) {
+                                    this.uid = fieldName;
+                                }
+                                if (methodmapping != null && methodmapping.captionField()) {
+                                    this.captionField = methodInfo;
+                                    disableFieldMap.put(methodInfo.getName().toLowerCase(), methodInfo);
+                                    disableFieldList.add(methodInfo);
+                                }
+
                             }
 
-                        } else if (!MethodUtil.isSetMethod(method)) {
-                            otherMethodsList.add(methodInfo);
-                        }
-                        methodsList.add(methodInfo);
-                    } else if (!disableFieldMap.containsKey(methodInfo.getName())) {
-                        disableFieldMap.put(methodInfo.getName().toLowerCase(), methodInfo);
-                        disableFieldList.add(methodInfo);
-                    }
+                            Set<String> keySet = fieldMap.keySet();
+                            for (String fieldName : keySet) {
+                                ESDField field = fieldMap.get(fieldName);
+                                if (field != null) {
+                                    allFieldMap.put(field.getFieldName(), field);
+                                    if (field.isSerialize()) {
+                                        if (field.isHidden() || field.isPid()) {
+                                            if (!hiddenFieldList.contains(field)) {
+                                                hiddenFieldList.add(field);
+                                            }
+                                        }
+                                        if (caption != null) {
+                                            this.captionField = methodInfo;
+                                        }
 
-                }
-            }
-            log.info("end new ESDClass---fillallCtMethods= " + className + "[" + className + "] times=" + (System.currentTimeMillis() - start));
-            Set<String> keySet = fieldMap.keySet();
-            for (String fieldName : keySet) {
-                ESDField field = fieldMap.get(fieldName);
-                if (field != null) {
-                    allFieldMap.put(field.getFieldName(), field);
-                    if (field.isSerialize()) {
-                        if (field.isHidden() || field.isPid()) {
-                            if (!hiddenFieldList.contains(field)) {
-                                hiddenFieldList.add(field);
+                                    } else if (!MethodUtil.isSetMethod(method)) {
+                                        otherMethodsList.add(methodInfo);
+                                    }
+                                    methodsList.add(methodInfo);
+                                } else if (!disableFieldMap.containsKey(methodInfo.getName())) {
+                                }
                             }
                         }
                     }
                 }
             }
         }
+        log.info("end new ESDClass---fillallCtMethods= " + className + "[" + className + "] times=" + (System.currentTimeMillis() - start));
 
+    }
+
+    ;
+
+
+    private List<CustomFieldInfo> invokFieldTasks(String taskName, List<Callable<CustomFieldInfo>> esdTasks) {
+        List<Future<CustomFieldInfo>> domainFutures = null;
+        List<CustomFieldInfo> customFieldInfos = new ArrayList<>();
+        try {
+            RemoteConnectionManager.initConnection(taskName, esdTasks.size());
+            ExecutorService executorService = RemoteConnectionManager.getConntctionService(taskName);
+            domainFutures = executorService.invokeAll(esdTasks);
+            for (Future<CustomFieldInfo> resultFuture : domainFutures) {
+                try {
+                    CustomFieldInfo fieldInfo = resultFuture.get();
+                    customFieldInfos.add(fieldInfo);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+            executorService.shutdownNow();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return customFieldInfos;
+    }
+
+
+    private List<CustomMethodInfo> invokMethodTasks(String taskName, List<Callable<CustomMethodInfo>> esdTasks) {
+        List<Future<CustomMethodInfo>> domainFutures = null;
+        List<CustomMethodInfo> customMethodInfos = new ArrayList<>();
+        try {
+            RemoteConnectionManager.initConnection(taskName, esdTasks.size());
+            ExecutorService executorService = RemoteConnectionManager.getConntctionService(taskName);
+            domainFutures = executorService.invokeAll(esdTasks);
+            for (Future<CustomMethodInfo> resultFuture : domainFutures) {
+                try {
+                    CustomMethodInfo methodInfo = resultFuture.get();
+                    customMethodInfos.add(methodInfo);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+            executorService.shutdownNow();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return customMethodInfos;
     }
 
 

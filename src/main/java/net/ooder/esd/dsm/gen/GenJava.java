@@ -1,5 +1,9 @@
 package net.ooder.esd.dsm.gen;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import javassist.ClassPool;
+import javassist.NotFoundException;
 import net.ooder.common.JDSConstants;
 import net.ooder.common.JDSException;
 import net.ooder.common.logging.ChromeProxy;
@@ -28,10 +32,6 @@ import net.ooder.esd.engine.inner.INProject;
 import net.ooder.vfs.Folder;
 import net.ooder.vfs.VFSConstants;
 import net.ooder.web.APIConfigFactory;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import javassist.ClassPool;
-import javassist.NotFoundException;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.*;
@@ -95,20 +95,30 @@ public class GenJava {
         INProject dsmProject = null;
         try {
             dsmProject = ESDFacrory.getDefalutProjectManager().getProjectByName(projectVersionName);
-            this.javaBuildPath = JDSConfig.Config.rootServerHome().getAbsolutePath() + File.separator + ESDClient.EXPORT_PATH + File.separator + dsmProject.getProjectName() + File.separator + JavaPath + File.separator;
-            File javaBuild = new File(javaBuildPath);
+            if (CompileJava.isDebug()) {
+                this.javaBuildPath = CompileJava.getDebugClassPath();
+                this.javaLibPath = CompileJava.getDebugLibPath();
 
-            if (!javaBuild.exists()) {
-                javaBuild.mkdirs();
+            } else {
+                this.javaBuildPath = JDSConfig.Config.rootServerHome().getAbsolutePath() + File.separator + ESDClient.EXPORT_PATH + File.separator + dsmProject.getProjectName() + File.separator + JavaPath + File.separator;
+                File javaBuild = new File(javaBuildPath);
+
+                if (!javaBuild.exists()) {
+                    javaBuild.mkdirs();
+                }
+                if (javaBuild.listFiles().length > 0 || dsmProject.getDefAccess().equals(ProjectDefAccess.Public)) {
+                    ClassUtility.getContextClassPath().add(javaBuildPath);
+                }
+
+                this.javaLibPath = JDSConfig.Config.currServerHome().getAbsolutePath() + File.separator + ESDClient.EXPORT_PATH + File.separator + dsmProject.getProjectName() + File.separator + LibPath + File.separator;
+
+                File libBuild = new File(javaLibPath);
+                if (!libBuild.exists()) {
+                    libBuild.mkdirs();
+                }
             }
-            if (javaBuild.listFiles().length > 0 || dsmProject.getDefAccess().equals(ProjectDefAccess.Public)) {
-                ClassUtility.getContextClassPath().add(javaBuildPath);
-            }
-            this.javaLibPath = JDSConfig.Config.currServerHome().getAbsolutePath() + File.separator + ESDClient.EXPORT_PATH + File.separator + dsmProject.getProjectName() + File.separator + LibPath + File.separator;
-            File libBuild = new File(javaLibPath);
-            if (!libBuild.exists()) {
-                libBuild.mkdirs();
-            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -131,22 +141,6 @@ public class GenJava {
 
 
     }
-
-//
-//    public JavaSrcBean updateAggJava(String className, String domainId, String projectName, JavaSrcBean javaSrcBean, ChromeProxy chrome) throws JDSException {
-//        DomainInst domainInst = DSMFactory.getInstance().getAggregationManager().getDomainInstById(domainId, projectName);
-//        List<AggEntityRef> dsmRefs = DSMFactory.getInstance().getAggregationManager().getEntityRefByName(className, domainInst.getDomainId(), projectName);
-//        JavaTemp javaTemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaSrcBean.getJavaTempId());
-//        AggEntityConfig esdClassConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(className, domainId);
-//        AggEntityRoot root = new AggEntityRoot(domainInst, esdClassConfig, dsmRefs);
-//        root.setClassName(javaSrcBean.getClassName());
-//        root.setPackageName(javaSrcBean.getPackageName());
-//        createJava(javaTemp, root, chrome);
-//        javaSrcBean.setDate(System.currentTimeMillis());
-//        return javaSrcBean;
-//    }
-//
-//
 
 
     private void copyStreamToFile(InputStream input, File file) throws IOException {

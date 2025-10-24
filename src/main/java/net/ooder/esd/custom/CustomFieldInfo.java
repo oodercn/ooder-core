@@ -1,6 +1,10 @@
 package net.ooder.esd.custom;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.Caption;
+import net.ooder.annotation.Pid;
+import net.ooder.annotation.Uid;
+import net.ooder.esd.annotation.CustomAnnotation;
 import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.bean.ComponentBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
@@ -30,7 +34,12 @@ public class CustomFieldInfo<M extends ComponentBean, N extends ComboBoxBean> ex
     @JSONField(serialize = false)
     Method method;
 
+
     private boolean isDefault = true;
+
+    private boolean isUid = false;
+
+    boolean captionField = false;
 
 
     public CustomFieldInfo(Field field, Integer index, ESDClass esdClass) {
@@ -47,6 +56,25 @@ public class CustomFieldInfo<M extends ComponentBean, N extends ComboBoxBean> ex
                 returnType = innerClass;
             }
         }
+
+
+        CustomAnnotation methodmapping = field.getAnnotation(CustomAnnotation.class);
+        Uid uid = field.getAnnotation(Uid.class);
+        Pid pid = field.getAnnotation(Pid.class);
+        Caption caption = field.getAnnotation(Caption.class);
+        if (methodmapping != null || uid != null || pid != null || caption != null) {
+            isDefault = false;
+        }
+        if (methodmapping != null) {
+            if (methodmapping.captionField()) {
+                captionField = true;
+            }
+            if (methodmapping.uid()) {
+                this.uid = true;
+            }
+        }
+
+
         for (Method method : this.esdClass.getAllCtMethods()) {
             String fieldName = MethodUtil.getFieldName(method);
             if (fieldName.equals(this.name)) {
@@ -100,6 +128,28 @@ public class CustomFieldInfo<M extends ComponentBean, N extends ComboBoxBean> ex
         return annotationSet;
     }
 
+    public void setField(Field field) {
+        this.field = field;
+    }
+
+    @Override
+    public boolean isUid() {
+        return isUid;
+    }
+
+    @Override
+    public void setUid(boolean uid) {
+        isUid = uid;
+    }
+
+    public boolean isCaptionField() {
+        return captionField;
+    }
+
+    public void setCaptionField(boolean captionField) {
+        this.captionField = captionField;
+    }
+
     @Override
     public Class getReturnType() {
         return returnType;
@@ -126,6 +176,9 @@ public class CustomFieldInfo<M extends ComponentBean, N extends ComboBoxBean> ex
         this.value = value;
     }
 
+    public Field getField() {
+        return field;
+    }
 
     @Override
     public int compareTo(CustomFieldInfo o) {
