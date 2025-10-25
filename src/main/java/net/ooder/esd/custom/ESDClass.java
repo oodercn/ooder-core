@@ -332,10 +332,7 @@ public class ESDClass {
                 }
             }
 
-
             List<CustomMethodInfo> methodInfos = this.invokMethodTasks(className, methodTasks);
-
-
 
             for (CustomMethodInfo methodInfo : methodInfos) {
                 if (methodInfo.isSerialize()) {
