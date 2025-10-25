@@ -1,6 +1,10 @@
 package net.ooder.esd.custom;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.Caption;
+import net.ooder.annotation.Pid;
+import net.ooder.annotation.Uid;
+import net.ooder.esd.annotation.CustomAnnotation;
 import net.ooder.esd.annotation.ModuleAnnotation;
 import net.ooder.esd.annotation.ViewType;
 import net.ooder.esd.annotation.field.APIEventAnnotation;
@@ -30,11 +34,18 @@ public class CustomMethodInfo<M extends ComponentBean, N extends ComboBoxBean> e
     String methodInfo;
 
     String methodName;
+
     boolean isModule = false;
 
+    boolean isDefault = false;
+
+    boolean captionField = false;
+
     ViewType viewType;
+
     @JSONField(serialize = false)
     Method innerMethod;
+
     @JSONField(serialize = false)
     Class returnType;
 
@@ -63,6 +74,33 @@ public class CustomMethodInfo<M extends ComponentBean, N extends ComboBoxBean> e
                 continue;
             }
         }
+
+
+        CustomAnnotation methodmapping = field.getAnnotation(CustomAnnotation.class);
+        Uid uid = field.getAnnotation(Uid.class);
+        Pid pid = field.getAnnotation(Pid.class);
+        Caption caption = field.getAnnotation(Caption.class);
+        if (methodmapping != null || uid != null || pid != null || caption != null) {
+            isDefault = false;
+        }
+        if (methodmapping != null) {
+            if (methodmapping.captionField()) {
+                captionField = true;
+            }
+            if (methodmapping.uid()) {
+                this.uid = true;
+            }
+        }
+
+        if (methodmapping != null && methodmapping.uid()) {
+            this.uid = true;
+        }
+        if (uid != null) {
+            this.uid = true;
+        }
+
+
+
 
         try {
             if (returnType.isArray() || Collection.class.isAssignableFrom(returnType)) {
@@ -147,6 +185,30 @@ public class CustomMethodInfo<M extends ComponentBean, N extends ComboBoxBean> e
         annotationSet.addAll(AnnotationUtil.getAllAnnotations(innerMethod, false));
         return annotationSet;
 
+    }
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
+    }
+
+    public boolean isCaptionField() {
+        return captionField;
+    }
+
+    public void setCaptionField(boolean captionField) {
+        this.captionField = captionField;
+    }
+
+    public Field getField() {
+        return field;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
     }
 
     @Override

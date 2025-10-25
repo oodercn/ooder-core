@@ -40,6 +40,7 @@ import java.util.concurrent.Future;
 
 public class ESDClass {
     protected Log log = LogFactory.getLog(JDSConstants.CONFIG_KEY, ESDClass.class);
+
     private Class ctClass;
 
     private String sourceClassName;
@@ -288,12 +289,16 @@ public class ESDClass {
             Map<String, ESDField> disableFieldMap = new LinkedHashMap<String, ESDField>();
             Map<String, CustomAnnotation> customAnnotationMap = new LinkedHashMap<String, CustomAnnotation>();
             int index = 0;
+
+
             List<Callable<CustomFieldInfo>> fieldTasks = new ArrayList<>();
             for (Field field : allCtFields) {
                 fieldTasks.add(new InitFieldTask<>(field, index, this));
                 index++;
             }
+
             List<CustomFieldInfo> fields = this.invokFieldTasks(className, fieldTasks);
+
             for (CustomFieldInfo fieldInfo : fields) {
                 Field field = fieldInfo.field;
                 if (fieldInfo.isSerialize()) {
@@ -316,83 +321,83 @@ public class ESDClass {
 
             }
 
+            List<Callable<CustomMethodInfo>> methodTasks = new ArrayList<>();
             for (Method method : allCtMethods) {
                 if (!Arrays.asList(customClassName).contains(method.getName())) {
-                    List<Callable<CustomMethodInfo>> methodTasks = new ArrayList<>();
-                    for (Method ctmethod : allCtMethods) {
-                        methodTasks.add(new InitMethodTask<>(ctmethod, index, this));
+                    String fieldName = MethodUtil.getFieldName(method);
+                    if (disableFieldMap.containsKey(fieldName)) {
+                        methodTasks.add(new InitMethodTask<>(method, index, this));
                         index++;
                     }
-                    List<CustomMethodInfo> methodInfos = this.invokMethodTasks(className, methodTasks);
-                    for (CustomMethodInfo methodInfo : methodInfos) {
-                        if (methodInfo.isSerialize()) {
-                            if (MethodUtil.isGetMethod(methodInfo.getInnerMethod()) || methodInfo.isModule()) {
-                                String fieldName = MethodUtil.getFieldName(method);
-                                methodInfo.setFieldName(fieldName);
-                                CustomAnnotation methodmapping = AnnotationUtil.getMethodAnnotation(method, CustomAnnotation.class);
-                                DynLoadAnnotation dynLoadAnnotation = AnnotationUtil.getMethodAnnotation(method, DynLoadAnnotation.class);
-                                CustomAnnotation allmapping = customAnnotationMap.get(fieldName);
-                                Caption caption = AnnotationUtil.getMethodAnnotation(method, Caption.class);
-                                Uid uid = AnnotationUtil.getMethodAnnotation(method, Uid.class);
-                                //字段必须可见
-                                if (methodInfo.isSerialize() && !disableFieldMap.containsKey(fieldName)) {
-                                    //如果字段未定义
-                                    ESDField field = fieldMap.get(fieldName.toLowerCase());
-                                    if (field == null
-                                            || !(field instanceof CustomFieldInfo)
-                                            || ((CustomFieldInfo) fieldMap.get(fieldName.toLowerCase())).isDefault()) {
-                                        fieldMap.put(fieldName.toLowerCase(), methodInfo);
-                                        esdFieldMap.put(methodInfo.getFieldName(), methodInfo);
-                                        if (!fieldNameList.contains(methodInfo.getFieldName())) {
-                                            fieldNameList.add(methodInfo.getFieldName());
-                                        }
-                                    } else {
-                                        if (allmapping == null && (methodmapping != null || dynLoadAnnotation != null)) {
-                                            //优先使用字段注解
-                                            fieldMap.put(fieldName.toLowerCase(), methodInfo);
-                                        }
+                }
+            }
+
+
+            List<CustomMethodInfo> methodInfos = this.invokMethodTasks(className, methodTasks);
+
+
+
+            for (CustomMethodInfo methodInfo : methodInfos) {
+                if (methodInfo.isSerialize()) {
+                    if (MethodUtil.isGetMethod(methodInfo.getInnerMethod()) || methodInfo.isModule()) {
+                        String fieldName=methodInfo.getFieldName();
+                        //字段必须可见
+                        if (methodInfo.isSerialize() && !disableFieldMap.containsKey(methodInfo.getFieldName())) {
+                            //如果字段未定义
+                            ESDField field = fieldMap.get(fieldName.toLowerCase());
+                            if (field == null
+                                    || !(field instanceof CustomFieldInfo)
+                                    || ((CustomFieldInfo) fieldMap.get(fieldName.toLowerCase())).isDefault()) {
+                                fieldMap.put(fieldName.toLowerCase(), methodInfo);
+                                esdFieldMap.put(methodInfo.getFieldName(), methodInfo);
+                                if (!fieldNameList.contains(methodInfo.getFieldName())) {
+                                    fieldNameList.add(methodInfo.getFieldName());
+                                }
+                            } else {
+                              //  if (allmapping == null && (methodmapping != null || dynLoadAnnotation != null)) {
+                                    //优先使用字段注解
+                                    fieldMap.put(fieldName.toLowerCase(), methodInfo);
+                               // }
+                            }
+                        }
+
+                        if (methodInfo.isUid()){
+                            this.uid = fieldName;
+                        }
+                        if (methodInfo.isCaption()){
+                            this.captionField = methodInfo;
+                            disableFieldMap.put(methodInfo.getName().toLowerCase(), methodInfo);
+                            disableFieldList.add(methodInfo);
+                        }
+
+                    }
+
+                    Set<String> keySet = fieldMap.keySet();
+                    for (String fieldName : keySet) {
+                        ESDField field = fieldMap.get(fieldName);
+                        if (field != null) {
+                            allFieldMap.put(field.getFieldName(), field);
+                            if (field.isSerialize()) {
+                                if (field.isHidden() || field.isPid()) {
+                                    if (!hiddenFieldList.contains(field)) {
+                                        hiddenFieldList.add(field);
                                     }
                                 }
-                                if (methodmapping != null && methodmapping.uid()) {
-                                    this.uid = fieldName;
-                                }
-                                if (uid != null) {
-                                    this.uid = fieldName;
-                                }
-                                if (methodmapping != null && methodmapping.captionField()) {
+                                if (caption != null) {
                                     this.captionField = methodInfo;
-                                    disableFieldMap.put(methodInfo.getName().toLowerCase(), methodInfo);
-                                    disableFieldList.add(methodInfo);
                                 }
 
+                            } else if (!MethodUtil.isSetMethod(methodInfo.getInnerMethod())) {
+                                otherMethodsList.add(methodInfo);
                             }
-
-                            Set<String> keySet = fieldMap.keySet();
-                            for (String fieldName : keySet) {
-                                ESDField field = fieldMap.get(fieldName);
-                                if (field != null) {
-                                    allFieldMap.put(field.getFieldName(), field);
-                                    if (field.isSerialize()) {
-                                        if (field.isHidden() || field.isPid()) {
-                                            if (!hiddenFieldList.contains(field)) {
-                                                hiddenFieldList.add(field);
-                                            }
-                                        }
-                                        if (caption != null) {
-                                            this.captionField = methodInfo;
-                                        }
-
-                                    } else if (!MethodUtil.isSetMethod(method)) {
-                                        otherMethodsList.add(methodInfo);
-                                    }
-                                    methodsList.add(methodInfo);
-                                } else if (!disableFieldMap.containsKey(methodInfo.getName())) {
-                                }
-                            }
+                            methodsList.add(methodInfo);
+                        } else if (!disableFieldMap.containsKey(methodInfo.getName())) {
                         }
                     }
                 }
             }
+
+
         }
         log.info("end new ESDClass---fillallCtMethods= " + className + "[" + className + "] times=" + (System.currentTimeMillis() - start));
 
