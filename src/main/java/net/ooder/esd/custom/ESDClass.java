@@ -287,11 +287,7 @@ public class ESDClass {
             Map<String, ESDField> fieldMap = new LinkedHashMap<String, ESDField>();
             Map<String, ESDField> disableFieldMap = new LinkedHashMap<String, ESDField>();
             Map<String, CustomAnnotation> customAnnotationMap = new LinkedHashMap<String, CustomAnnotation>();
-
-
             int index = 0;
-
-
             List<Callable<CustomFieldInfo>> fieldTasks = new ArrayList<>();
             for (Field field : allCtFields) {
                 fieldTasks.add(new InitFieldTask<>(field, index, this));
