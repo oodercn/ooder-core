@@ -10,7 +10,6 @@ import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomAnnotation;
 import net.ooder.esd.annotation.MenuBarMenu;
 import net.ooder.esd.annotation.View;
-import net.ooder.esd.annotation.view.DynLoadAnnotation;
 import net.ooder.esd.bean.CustomRefBean;
 import net.ooder.esd.bean.MethodChinaBean;
 import net.ooder.esd.bean.RepositoryBean;
@@ -288,6 +287,8 @@ public class ESDClass {
             Map<String, ESDField> fieldMap = new LinkedHashMap<String, ESDField>();
             Map<String, ESDField> disableFieldMap = new LinkedHashMap<String, ESDField>();
             Map<String, CustomAnnotation> customAnnotationMap = new LinkedHashMap<String, CustomAnnotation>();
+
+
             int index = 0;
 
 
@@ -337,7 +338,8 @@ public class ESDClass {
             for (CustomMethodInfo methodInfo : methodInfos) {
                 if (methodInfo.isSerialize()) {
                     if (MethodUtil.isGetMethod(methodInfo.getInnerMethod()) || methodInfo.isModule()) {
-                        String fieldName=methodInfo.getFieldName();
+                        String fieldName = methodInfo.getFieldName();
+                        CustomAnnotation allmapping = customAnnotationMap.get(fieldName);
                         //字段必须可见
                         if (methodInfo.isSerialize() && !disableFieldMap.containsKey(methodInfo.getFieldName())) {
                             //如果字段未定义
@@ -351,17 +353,17 @@ public class ESDClass {
                                     fieldNameList.add(methodInfo.getFieldName());
                                 }
                             } else {
-                              //  if (allmapping == null && (methodmapping != null || dynLoadAnnotation != null)) {
+                                if (allmapping == null && (methodInfo.isCustomFiled() || methodInfo.isDynLoad())) {
                                     //优先使用字段注解
                                     fieldMap.put(fieldName.toLowerCase(), methodInfo);
-                               // }
+                                }
                             }
                         }
 
-                        if (methodInfo.isUid()){
+                        if (methodInfo.isUid()) {
                             this.uid = fieldName;
                         }
-                        if (methodInfo.isCaption()){
+                        if (methodInfo.isCaption()) {
                             this.captionField = methodInfo;
                             disableFieldMap.put(methodInfo.getName().toLowerCase(), methodInfo);
                             disableFieldList.add(methodInfo);

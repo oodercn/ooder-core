@@ -2,7 +2,6 @@ package net.ooder.esd.custom;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.Caption;
-import net.ooder.annotation.Pid;
 import net.ooder.annotation.Uid;
 import net.ooder.esd.annotation.CustomAnnotation;
 import net.ooder.esd.annotation.ModuleAnnotation;
@@ -13,6 +12,7 @@ import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ui.ModuleViewType;
+import net.ooder.esd.annotation.view.DynLoadAnnotation;
 import net.ooder.esd.bean.ComponentBean;
 import net.ooder.esd.bean.CustomRefBean;
 import net.ooder.esd.bean.field.CustomFieldBean;
@@ -37,9 +37,19 @@ public class CustomMethodInfo<M extends ComponentBean, N extends ComboBoxBean> e
 
     boolean isModule = false;
 
+    boolean dynLoad = false;
+
     boolean isDefault = false;
 
+
+    boolean customFiled = false;
+
     boolean captionField = false;
+
+
+    CustomAnnotation methodmapping;
+
+    CustomAnnotation dynLoadAnnotation;
 
     ViewType viewType;
 
@@ -68,6 +78,17 @@ public class CustomMethodInfo<M extends ComponentBean, N extends ComboBoxBean> e
         this.innerMethod = method;
         this.name = fieldName;
         this.id = fieldName;
+
+        String fieldName = MethodUtil.getFieldName(method);
+        CustomAnnotation methodmapping = AnnotationUtil.getMethodAnnotation(method, CustomAnnotation.class);
+        DynLoadAnnotation dynLoadAnnotation = AnnotationUtil.getMethodAnnotation(method, DynLoadAnnotation.class);
+        Caption caption = AnnotationUtil.getMethodAnnotation(method, Caption.class);
+        Uid uid = AnnotationUtil.getMethodAnnotation(method, Uid.class);
+        if (dynLoadAnnotation != null) {
+            dynLoad = true;
+        }
+
+
         for (Field fieldInfo : this.esdClass.getAllCtFields()) {
             if (fieldInfo.getName().equals(fieldName)) {
                 this.field = fieldInfo;
@@ -75,15 +96,8 @@ public class CustomMethodInfo<M extends ComponentBean, N extends ComboBoxBean> e
             }
         }
 
-
-        CustomAnnotation methodmapping = field.getAnnotation(CustomAnnotation.class);
-        Uid uid = field.getAnnotation(Uid.class);
-        Pid pid = field.getAnnotation(Pid.class);
-        Caption caption = field.getAnnotation(Caption.class);
-        if (methodmapping != null || uid != null || pid != null || caption != null) {
-            isDefault = false;
-        }
         if (methodmapping != null) {
+            this.customFiled = true;
             if (methodmapping.captionField()) {
                 captionField = true;
             }
@@ -92,14 +106,14 @@ public class CustomMethodInfo<M extends ComponentBean, N extends ComboBoxBean> e
             }
         }
 
-        if (methodmapping != null && methodmapping.uid()) {
-            this.uid = true;
+        if (caption != null) {
+            captionField = true;
         }
+
+
         if (uid != null) {
             this.uid = true;
         }
-
-
 
 
         try {
@@ -308,6 +322,38 @@ public class CustomMethodInfo<M extends ComponentBean, N extends ComboBoxBean> e
 
     public void setModule(boolean module) {
         isModule = module;
+    }
+
+    public boolean isDynLoad() {
+        return dynLoad;
+    }
+
+    public void setDynLoad(boolean dynLoad) {
+        this.dynLoad = dynLoad;
+    }
+
+    public boolean isCustomFiled() {
+        return customFiled;
+    }
+
+    public void setCustomFiled(boolean customFiled) {
+        this.customFiled = customFiled;
+    }
+
+    public CustomAnnotation getMethodmapping() {
+        return methodmapping;
+    }
+
+    public void setMethodmapping(CustomAnnotation methodmapping) {
+        this.methodmapping = methodmapping;
+    }
+
+    public CustomAnnotation getDynLoadAnnotation() {
+        return dynLoadAnnotation;
+    }
+
+    public void setDynLoadAnnotation(CustomAnnotation dynLoadAnnotation) {
+        this.dynLoadAnnotation = dynLoadAnnotation;
     }
 
     @Override
