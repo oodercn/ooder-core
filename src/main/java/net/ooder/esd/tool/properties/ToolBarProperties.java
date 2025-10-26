@@ -75,7 +75,6 @@ public class ToolBarProperties extends BarProperties<TreeListItem> {
     public ToolBarProperties(MenuBarBean menuBarBean) {
         super();
         this.id = menuBarBean.getId();
-        this.fristGroupId = group.getId();
         this.handler = menuBarBean.getHandler();
         this.dock = menuBarBean.getDock();
         this.autoFontColor = menuBarBean.getAutoFontColor();
@@ -85,6 +84,7 @@ public class ToolBarProperties extends BarProperties<TreeListItem> {
         this.dynLoad = menuBarBean.getDynLoad();
         this.sethAlign(menuBarBean.gethAlign());
         this.setvAlign(menuBarBean.getvAlign());
+
         group = new TreeListItem(menuBarBean.getId() + "Root", menuBarBean.getCaption());
         this.addItem(group);
         this.fristGroupId = group.getId();
