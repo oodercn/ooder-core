@@ -46,19 +46,18 @@ public class DomainInst extends DSMInst implements Comparable<DomainInst> {
         this.projectVersionName = projectVersionName;
         this.name = projectVersionName + "_" + userSpace.name();
         this.space = userSpace.name().toLowerCase();
-        this.packageName = "net.ooder." + projectVersionName + ".domain";
         if (userSpace.equals(UserSpace.USER)) {
             this.euPackage = projectVersionName;
         } else {
             this.euPackage = projectVersionName + "." + space;
         }
-//        if (userSpace.equals(UserSpace.User) || userSpace.equals(UserSpace.SYS)) {
-//            this.packageName = "net.ooder." + projectVersionName;
-//        } else {
-//            this.packageName = "net.ooder." + projectVersionName + "." + userSpace.name().toLowerCase();
-//        }
+        if (userSpace.equals(UserSpace.USER) || userSpace.equals(UserSpace.SYS)) {
+            this.packageName = "";
+        } else {
+            this.packageName = "net.ooder." + projectVersionName + "." + userSpace.name().toLowerCase();
+        }
 
-        this.packageName = "net.ooder." + projectVersionName + "." + userSpace.name().toLowerCase();
+
     }
 
 

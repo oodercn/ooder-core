@@ -1,19 +1,19 @@
 package net.ooder.esd.dsm.java;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.github.javaparser.StaticJavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.PackageDeclaration;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.IOUtility;
 import net.ooder.common.util.StringUtility;
 import net.ooder.context.JDSActionContext;
+import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.DSMInst;
 import net.ooder.esd.dsm.enums.DSMType;
 import net.ooder.esd.dsm.gen.GenJava;
-import net.ooder.esd.bean.TreeListItem;
-import com.github.javaparser.StaticJavaParser;
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.PackageDeclaration;
 
 import java.io.*;
 import java.util.*;
@@ -251,12 +251,12 @@ public class JavaPackage {
                     find = namematcher.find();
                 }
 
-                if (!childFile.isDirectory() && !childFile.getName().endsWith(".class")) {
+                if (!childFile.isDirectory() && childFile.getName().endsWith(".java")) {
                     JavaSrcBean javaFile = getJavaSrcBeanByPath(childFile);
                     if (javaFile != null) {
                         javaFile.setDsmId(dsmId);
                     } else {
-                        String javaFileName = StringUtility.replace(childFile.getName(), ".class", ".java");
+                        String javaFileName = childFile.getName();
                         File javaClassFile = new File(childFile.getParentFile(), javaFileName);
                         if (javaClassFile.exists()) {
                             javaFile = new JavaSrcBean(javaClassFile, dsmInst, null);
