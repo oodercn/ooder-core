@@ -202,7 +202,7 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                 String menuId = type.type() + "_" + ComboInputType.button.name();
                 TreeListItem menuItem = itemMap.get(menuId);
                 String caption = type.caption();
-                if (!showCaption) {
+                if (showCaption != null && !showCaption) {
                     caption = "";
                 }
                 if (menuItem == null) {
@@ -236,7 +236,7 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
         String expression = component.getProperties().getExpression();
         if (expression == null || expression.equals("") || this.parExpression(expression)) {
             String caption = component.getProperties().getDesc();
-            if (!showCaption) {
+            if (showCaption != null && !showCaption) {
                 caption = "";
             }
             String imageClass = component.getProperties().getImageClass();
@@ -302,7 +302,7 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
         String expression = component.getProperties().getExpression();
         if (expression == null || expression.equals("") || this.parExpression(expression)) {
             String caption = component.getProperties().getDesc();
-            if (!showCaption) {
+            if (showCaption != null && !showCaption) {
                 caption = "";
             }
 
