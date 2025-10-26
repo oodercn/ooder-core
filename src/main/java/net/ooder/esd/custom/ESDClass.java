@@ -322,7 +322,7 @@ public class ESDClass {
             for (Method method : allCtMethods) {
                 if (!Arrays.asList(customClassName).contains(method.getName())) {
                     String fieldName = MethodUtil.getFieldName(method);
-                    if (disableFieldMap.containsKey(fieldName)) {
+                    if (!disableFieldMap.containsKey(fieldName)) {
                         methodTasks.add(new InitMethodTask<>(method, index, this));
                         index++;
                     }
@@ -391,8 +391,6 @@ public class ESDClass {
                     }
                 }
             }
-
-
         }
         log.info("end new ESDClass---fillallCtMethods= " + className + "[" + className + "] times=" + (System.currentTimeMillis() - start));
 
