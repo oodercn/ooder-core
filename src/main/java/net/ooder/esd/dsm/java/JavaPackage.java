@@ -31,7 +31,7 @@ public class JavaPackage {
     DSMInst dsmInst;
 
     DSMType dsmType;
-    String imageClass = "fa-solid fa-code-branch";
+    String imageClass =  "ri-folder-open-line";
     String projectVersionName;
 
     @JSONField(serialize = false)
@@ -174,14 +174,10 @@ public class JavaPackage {
     public List<JavaPackage> listAllChildren() {
         List<JavaPackage> allJavaPackages = new ArrayList<>();
         List<JavaPackage> javaPackages = listChildren();
-        // if (this.listAllFile().size() > 0) {
         allJavaPackages.addAll(javaPackages);
         for (JavaPackage javaPackage : javaPackages) {
-            //if (javaPackage.listAllFile().size() > 0) {
             allJavaPackages.addAll(javaPackage.listAllChildren());
-            //}
         }
-        //}
         return allJavaPackages;
     }
 
