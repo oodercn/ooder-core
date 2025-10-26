@@ -7,7 +7,6 @@ import net.ooder.annotation.UserSpace;
 import net.ooder.config.ResultModel;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomAnnotation;
-import net.ooder.esd.annotation.event.ActionTypeEnum;
 import net.ooder.esd.annotation.field.APIEventAnnotation;
 import net.ooder.esd.annotation.field.ComboInputAnnotation;
 import net.ooder.esd.annotation.ui.ComboInputType;
@@ -21,11 +20,11 @@ public class CodeEditorTools {
 
     @MethodChinaName(cname = "")
     @APIEventAnnotation(
-            bindAction = {@CustomAction(name = "searchreplaceAction", method = "call", type = ActionTypeEnum.other, target = "callback", args = {"{page.content.showFindWnd()}"}, _return = true)}
+            bindAction = {@CustomAction(script = "page.content.showFindWnd()")}
     )
     @RequestMapping(method = RequestMethod.POST, value = "searchreplaceAction")
     @ComboInputAnnotation(inputType = ComboInputType.button)
-    @CustomAnnotation(index = 4, caption = "查找替换", tips = "查找替换", imageClass = "fas-magnifying-glass")
+    @CustomAnnotation(index = 1, caption = "查找替换", tips = "查找替换", imageClass = "ri-search-line")
     public @ResponseBody
     ResultModel<Boolean> searchreplaceAction(String content, String path) {
         ResultModel<Boolean> result = new ResultModel<Boolean>();
@@ -36,7 +35,7 @@ public class CodeEditorTools {
     @MethodChinaName(cname = "")
     @RequestMapping(method = RequestMethod.POST, value = "jumptoAction")
     @ComboInputAnnotation(inputType = ComboInputType.button)
-    @CustomAnnotation(index = 3, caption = "跳到行", tips = "跳到行", imageClass = "fas-arrow-down-1-9")
+    @CustomAnnotation(index = 3, caption = "跳到行", tips = "跳到行", imageClass = "spafont spa-icon-jumpto")
     public @ResponseBody
     ResultModel<Boolean> jumptoAction(String content, String path) {
         ResultModel<Boolean> result = new ResultModel<Boolean>();
