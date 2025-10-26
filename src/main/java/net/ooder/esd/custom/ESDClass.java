@@ -337,7 +337,7 @@ public class ESDClass {
                         String fieldName = methodInfo.getFieldName();
                         CustomAnnotation allmapping = customAnnotationMap.get(fieldName);
                         //字段必须可见
-                        if (methodInfo.isSerialize() && !disableFieldMap.containsKey(methodInfo.getFieldName())) {
+                        if (!disableFieldMap.containsKey(methodInfo.getFieldName())) {
                             //如果字段未定义
                             ESDField field = fieldMap.get(fieldName.toLowerCase());
                             if (field == null
@@ -364,35 +364,36 @@ public class ESDClass {
                             disableFieldMap.put(methodInfo.getName().toLowerCase(), methodInfo);
                             disableFieldList.add(methodInfo);
                         }
-
+                    } else if (!MethodUtil.isSetMethod(methodInfo.getInnerMethod())) {
+                        otherMethodsList.add(methodInfo);
                     }
+                    methodsList.add(methodInfo);
 
-                    Set<String> keySet = fieldMap.keySet();
-                    for (String fieldName : keySet) {
-                        ESDField field = fieldMap.get(fieldName);
-                        if (field != null) {
-                            allFieldMap.put(field.getFieldName(), field);
-                            if (field.isSerialize()) {
-                                if (field.isHidden() || field.isPid()) {
-                                    if (!hiddenFieldList.contains(field)) {
-                                        hiddenFieldList.add(field);
-                                    }
-                                }
-                                if (caption != null) {
-                                    this.captionField = methodInfo;
-                                }
+                } else if (!disableFieldMap.containsKey(methodInfo.getName())) {
+                    disableFieldMap.put(methodInfo.getName().toLowerCase(), methodInfo);
+                    disableFieldList.add(methodInfo);
+                }
+            }
 
-                            } else if (!MethodUtil.isSetMethod(methodInfo.getInnerMethod())) {
-                                otherMethodsList.add(methodInfo);
+            log.info("end new ESDClass---fillallCtMethods= " + className + "[" + className + "] times=" + (System.currentTimeMillis() - start));
+
+
+            Set<String> keySet = fieldMap.keySet();
+            for (String fieldName : keySet) {
+                ESDField field = fieldMap.get(fieldName);
+                if (field != null) {
+                    allFieldMap.put(field.getFieldName(), field);
+                    if (field.isSerialize()) {
+                        if (field.isHidden() || field.isPid()) {
+                            if (!hiddenFieldList.contains(field)) {
+                                hiddenFieldList.add(field);
                             }
-                            methodsList.add(methodInfo);
-                        } else if (!disableFieldMap.containsKey(methodInfo.getName())) {
                         }
                     }
                 }
             }
         }
-        log.info("end new ESDClass---fillallCtMethods= " + className + "[" + className + "] times=" + (System.currentTimeMillis() - start));
+
 
     }
 
