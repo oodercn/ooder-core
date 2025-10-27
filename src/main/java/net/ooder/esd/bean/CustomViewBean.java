@@ -143,7 +143,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
     //仅供临时存储更新
     public CustomModuleBean moduleBean;
 
-
     @JSONField(deserializeUsing = ComponentsDeserializer.class)
     public ComponentList customComponentBeans;
 
@@ -157,19 +156,15 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
     }
 
     public void addChildJavaSrc(List<JavaSrcBean> javaSrcBeans) {
-
         List<String> childs = this.getViewJavaSrcBean().getChildClassList();
         for (JavaSrcBean javaSrcBean : javaSrcBeans) {
             if (javaSrcBean != null && !childs.contains(javaSrcBean.getClassName())) {
                 childs.add(javaSrcBean.getClassName());
             }
-
         }
-
     }
 
     public abstract List<JavaSrcBean> updateModule(ModuleComponent moduleComponent);
-
 
     @Override
     public List<JavaSrcBean> getJavaSrcBeans() {
@@ -184,7 +179,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         return updateModule(moduleComponent);
     }
 
-
     public void updateContainerBean(Component component) {
         if (containerBean == null) {
             containerBean = new ContainerBean(component);
@@ -192,7 +186,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
             containerBean.update(component);
         }
     }
-
 
     protected void updateBaseModule(ModuleComponent moduleComponent) {
         customComponentBeans = moduleComponent.findComponents(ComponentType.getCustomAPIComponents());
@@ -251,7 +244,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
             }
         }
     }
-
 
     @JSONField(serialize = false)
     public List<CustomBean> getMethodAnnotationBeans() {
