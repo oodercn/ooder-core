@@ -52,6 +52,7 @@ public class CustomLayoutItemBean implements CustomBean {
     AttachmentType panelBgImgAttachment;
 
     String itemClass;
+
     @JSONField(deserializeUsing = BindClassArrDeserializer.class)
     Class[] bindClass;
 
