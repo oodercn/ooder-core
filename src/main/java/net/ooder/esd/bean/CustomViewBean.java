@@ -397,7 +397,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
 
     public CustomViewBean(MethodConfig methodAPIBean) {
         this.methodConfig = methodAPIBean;
-        moduleBean = new CustomModuleBean(methodAPIBean.getCustomMethodInfo());
+        this.moduleBean = new CustomModuleBean(methodAPIBean.getCustomMethodInfo());
         if (methodAPIBean.getViewClass() != null) {
             this.viewClassName = methodAPIBean.getViewClass().getClassName();
             Class clazz = methodAPIBean.getViewClass().getCtClass();
@@ -425,9 +425,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         if (menuBar != null && (menuBar.getId() == null || menuBar.getId().equals(""))) {
             menuBar.setId(this.methodName + ComponentType.MENUBAR.getType());
         }
-
         String serviceClass = methodAPIBean.getMethod().getDeclaringClass().getName();
-
         if (customServiceClass.isEmpty() || !customServiceClass.contains(serviceClass)) {
             customServiceClass.add(serviceClass);
         }
@@ -570,7 +568,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
     public MethodConfig getMethodConfig() {
         if (methodConfig == null && this.getSourceClassName() != null) {
             try {
-
                 ApiClassConfig apiClassConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(this.getSourceClassName());
                 if (apiClassConfig != null) {
                     if (methodName != null) {

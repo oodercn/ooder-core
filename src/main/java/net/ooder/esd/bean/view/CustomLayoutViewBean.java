@@ -77,7 +77,6 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         this.updateModule(moduleComponent);
     }
 
-
     @Override
     public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
@@ -124,7 +123,6 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         this.addChildJavaSrc(javaSrcBeans);
         return javaSrcBeans;
     }
-
 
     public ComponentBean findComByPos(PosType posType) {
         CustomLayoutItemBean itemBean = this.getLayoutItem(posType);
@@ -178,7 +176,6 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         }
         return null;
     }
-
 
     public CustomLayoutViewBean(MethodConfig methodAPIBean) {
         super(methodAPIBean);
@@ -234,7 +231,6 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         this.sourceMethodName = methodAPIBean.getMethodName();
         this.methodName = methodAPIBean.getMethodName();
     }
-
 
     @Override
     public List<CustomBean> getAnnotationBeans() {
@@ -314,7 +310,6 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
 
     }
 
-
     public CustomViewBean getItemViewBean(LayoutListItem currListItem, String projectName) throws JDSException {
         CustomViewBean customViewBean = null;
         if (currListItem.getEuClassName() != null) {
@@ -328,7 +323,6 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         }
         return customViewBean;
     }
-
 
     public LayoutListItem findTabItem(String target) {
         return this.findTabItem(target, tabItems);
@@ -346,7 +340,6 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         }
         return null;
     }
-
 
     public Set<MethodConfig> bindItem(List<JavaSrcBean> javaSrcBeanList, TabListItem currListItem) {
         List<Class> classList = new ArrayList<>();
@@ -384,7 +377,6 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         return methodConfigs;
     }
 
-
     public void init(LayoutAnnotation layoutAnnotation) {
         this.type = layoutAnnotation.type();
         this.left = layoutAnnotation.left();
@@ -406,7 +398,6 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
 
     }
 
-
     public CustomLayoutItemBean getLayoutItem(PosType posType) {
         for (CustomLayoutItemBean itemBean : layoutItems) {
             if (itemBean.getPos().equals(posType)) {
@@ -421,7 +412,6 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
 
         return null;
     }
-
 
     @Override
     public ComponentBean findComByPath(String path) {
@@ -443,7 +433,6 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         }
         return null;
     }
-
 
     public List<CustomModuleBean> getModuleBeans() {
         if (moduleBeans == null || moduleBeans.size() == 0) {

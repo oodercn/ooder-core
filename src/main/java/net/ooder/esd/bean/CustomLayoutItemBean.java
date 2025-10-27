@@ -2,15 +2,15 @@ package net.ooder.esd.bean;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.LayoutItemAnnotation;
 import net.ooder.esd.annotation.ui.AttachmentType;
 import net.ooder.esd.annotation.ui.OverflowType;
 import net.ooder.esd.annotation.ui.PosType;
-import net.ooder.esd.util.json.BindClassArrDeserializer;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
+import net.ooder.esd.util.json.BindClassArrDeserializer;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.util.Map;
@@ -81,7 +81,7 @@ public class CustomLayoutItemBean implements CustomBean {
     public CustomLayoutItemBean(LayoutItemAnnotation itemAnnotation) {
         AnnotationUtil.fillBean(itemAnnotation, this);
         if (itemAnnotation.id().equals(AnnotationUtil.getDefaultValue(LayoutItemAnnotation.class, "id")) && pos != null) {
-            this.id =pos.name();
+            this.id = pos.name();
         }
     }
 
@@ -93,21 +93,6 @@ public class CustomLayoutItemBean implements CustomBean {
         this.bindClass = bindClass;
     }
 
-    public String toEnumsStr() {
-        StringBuffer enumBuffer = new StringBuffer();
-        if (bindClass != null && bindClass.length > 0) {
-            for (Class clazz : bindClass) {
-                enumBuffer.append(clazz.getName() + ".class,");
-            }
-        } else {
-            enumBuffer.append("null");
-        }
-        String enumStr = enumBuffer.toString();
-        if (enumStr.endsWith(",")) {
-            enumStr = enumStr.substring(0, enumStr.length() - 1);
-        }
-        return enumStr;
-    }
 
     public String getParentAlias() {
         return parentAlias;
@@ -299,6 +284,23 @@ public class CustomLayoutItemBean implements CustomBean {
     public void setEuClassName(String euClassName) {
         this.euClassName = euClassName;
     }
+
+    public String toEnumsStr() {
+        StringBuffer enumBuffer = new StringBuffer();
+        if (bindClass != null && bindClass.length > 0) {
+            for (Class clazz : bindClass) {
+                enumBuffer.append(clazz.getName() + ".class,");
+            }
+        } else {
+            enumBuffer.append("null");
+        }
+        String enumStr = enumBuffer.toString();
+        if (enumStr.endsWith(",")) {
+            enumStr = enumStr.substring(0, enumStr.length() - 1);
+        }
+        return enumStr;
+    }
+
 
     public String toAnnotationStr() {
         return AnnotationUtil.toAnnotationStr(this);
