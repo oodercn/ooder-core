@@ -47,11 +47,8 @@ public class LayoutProperties extends AbsUIListProperties<LayoutListItem> {
         this.top = layoutViewBean.getTop();
         this.transparent = layoutViewBean.getTransparent();
         this.dragSortable = layoutViewBean.getDragSortable();
-
         this.flexSize = layoutViewBean.getFlexSize();
-
-        conLayoutColumns = layoutViewBean.getConLayoutColumns();
-
+        this.conLayoutColumns = layoutViewBean.getConLayoutColumns();
         if (layoutViewBean.getListKey() != null && layoutViewBean.getListKey().size() > 0) {
             listKey = layoutViewBean.getListKey();
         }
@@ -68,9 +65,7 @@ public class LayoutProperties extends AbsUIListProperties<LayoutListItem> {
         this.top = layoutAnnotation.top();
         this.transparent = layoutAnnotation.transparent();
         this.dragSortable = layoutAnnotation.dragSortable();
-
         this.flexSize = layoutAnnotation.flexSize();
-
         if (layoutAnnotation.conLayoutColumns() != -1) {
             conLayoutColumns = layoutAnnotation.conLayoutColumns();
         }
