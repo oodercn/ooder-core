@@ -281,9 +281,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
                 }
             }
         }
-
     }
-
 
     public ComponentBean findComByAlias(String alias) {
         String path = OODUtil.formatJavaName(alias, false).toLowerCase();
@@ -600,7 +598,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         this.methodConfig = methodConfig;
     }
 
-
     public void moveBottom(String fieldname) {
         List<String> fieldNames = new ArrayList<>();
         List<String> displayFieldNames = this.getDisplayFieldNames();
@@ -842,14 +839,12 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         return displayFieldNames;
     }
 
-
     @JSONField(serialize = false)
     public List<String> getHiddenFieldNames() {
         List<String> hiddenFieldNames = new ArrayList<>();
         for (T field : this.getAllFields()) {
             String fieldName = field.getFieldname();
             if (!hiddenFieldNames.contains(fieldName)) {
-
                 boolean isPid = false;
                 if (field.getPid() != null && field.getPid()) {
                     isPid = true;
@@ -865,7 +860,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
                     hiddenFieldNames.add(fieldName);
                 }
             }
-
         }
         return hiddenFieldNames;
     }
@@ -912,7 +906,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         return moduleFields;
     }
 
-
     protected LinkedHashSet<String> getItemNames() {
         if (itemNames == null) {
             itemNames = new LinkedHashSet<>();
@@ -931,7 +924,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         }
         return itemNames;
     }
-
 
     protected Map<String, FieldModuleConfig> getItemConfigMap() {
         if (itemConfigMap == null) {
@@ -994,7 +986,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         this.fieldConfigMap = fieldConfigMap;
     }
 
-
     public void removeField(String name) {
         fieldConfigMap.remove(name);
         fieldNames.remove(name);
@@ -1005,7 +996,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
     public T getFieldByName(String name) {
         return fieldConfigMap.get(name);
     }
-
 
     public T findFieldByName(String name) {
         for (T fieldFormConfig : this.getAllFields()) {
@@ -1095,7 +1085,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         this.caption = caption;
     }
 
-    // @JSONField(serialize = false)
     public String getViewClassName() {
         if (viewClassName == null && entityClassName != null) {
             this.viewClassName = entityClassName;
@@ -1155,12 +1144,10 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         this.sourceClassName = sourceClassName;
     }
 
-
     @Override
     public String getMethodName() {
         return methodName;
     }
-
 
     public Set<CustomMenu> getMenus() {
         return menus;
@@ -1288,8 +1275,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
 
         return classSet;
     }
-
-    ;
 
     public String toAnnotationStr() {
         return AnnotationUtil.toAnnotationStr(this);
