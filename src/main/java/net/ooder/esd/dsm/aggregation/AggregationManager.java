@@ -523,7 +523,7 @@ public class AggregationManager {
         Map actionContext = JDSActionContext.getActionContext().getContext();
         ApiClassConfig apiClassConfig = (ApiClassConfig) actionContext.get(apiClassName);
 
-        if (apiClassConfig == null) {
+        if (apiClassConfig == null || load) {
             Class clazz = classManager.checkInterface(className);
             if (clazz != null) {
                 try {

@@ -375,19 +375,37 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                             this.addAction(action);
                         }
                     } else {
-                        Action action = new Action(ToolBarEventEnum.onClick);
-                        action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
-                        action.setType(ActionTypeEnum.control);
-                        action.setTarget(component.getAlias());
-                        action.setDesc(component.getProperties().getTips());
-                        action.setMethod("invoke");
-                        action.setRedirection("other:callback:call");
-                        action.set_return(false);
-                        List<Condition> conditions = new ArrayList<>();
-                        Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
-                        conditions.add(condition);
-                        action.setConditions(conditions);
-                        this.addAction(action);
+                        if (component.getActions().size()>0){
+                            for( Action action:actions){
+                                action.setEventKey(ToolBarEventEnum.onClick);
+                                action.setTarget(component.getAlias());
+                                action.setDesc(component.getProperties().getTips());
+                                List<Condition> conditions = new ArrayList<>();
+                                Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
+                                conditions.add(condition);
+                                action.setConditions(conditions);
+                                this.addAction(action);
+                            }
+                        }else{
+                            Action action = new Action(ToolBarEventEnum.onClick);
+                            action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
+                            action.setType(ActionTypeEnum.control);
+                            action.setTarget(component.getAlias());
+                            action.setDesc(component.getProperties().getTips());
+                            action.setMethod("invoke");
+                            action.setRedirection("other:callback:call");
+                            action.set_return(false);
+                            List<Condition> conditions = new ArrayList<>();
+                            Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
+                            conditions.add(condition);
+                            action.setConditions(conditions);
+                            this.addAction(action);
+                        }
+
+
+
+
+
                     }
                 }
             }
