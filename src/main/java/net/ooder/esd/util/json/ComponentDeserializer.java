@@ -32,7 +32,7 @@ public class ComponentDeserializer extends JavaObjectDeserializer {
             if (property != null) {
                 String propertyJson = obj.getJSONObject("properties").toJSONString();
                 Map context = JDSActionContext.getActionContext().getContext();
-                propertyJson = (String) TemplateRuntime.eval(propertyJson, context);
+                propertyJson = (String) TemplateRuntime.eval(propertyJson,MvelDSMRoot.getInstance(), context);
                 Class clazz = ComponentType.fromType(classType).getClazz();
                 Type realType = JSONGenUtil.getRealType(clazz, Properties.class);
                 if (realType != null) {

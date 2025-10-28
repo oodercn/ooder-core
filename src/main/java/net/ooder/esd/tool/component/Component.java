@@ -144,10 +144,6 @@ public class Component<T extends Properties, K extends EventKey> {
             try {
                 String json = JSONObject.toJSONString(action, false);
                 Map context = JDSActionContext.getActionContext().getContext();
-//                context.put(CustomViewFactory.CurrModuleKey, this.getModuleComponent().getEuModule());
-//                if (!context.containsKey(CustomViewFactory.TopModuleKey)) {
-//                    context.put(CustomViewFactory.TopModuleKey, this.getModuleComponent().getEuModule());
-//                }
                 String objStr = (String) TemplateRuntime.eval(json, this, context);
                 action = JSONObject.parseObject(objStr, new TypeReference<Action<K>>() {
                 });

@@ -572,7 +572,7 @@ public class ProjectCacheManager {
         }
 
         String json = JSONObject.toJSONString(moduleComponent, true);
-        json = (String) TemplateRuntime.eval(json, JDSActionContext.getActionContext().getContext());
+        json = (String) TemplateRuntime.eval(json, moduleComponent, JDSActionContext.getActionContext().getContext());
         try {
             moduleCache.put(path, euModule);
             this.getVfsClient().saveFileAsContent(path, json, VFSConstants.Default_Encoding);

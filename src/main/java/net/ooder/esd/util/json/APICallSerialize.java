@@ -24,7 +24,7 @@ public class APICallSerialize extends CollectionCodec {
             LinkedHashSet<APICallerComponent> actions = (LinkedHashSet<APICallerComponent>) object;
             String json = JSONArray.toJSONString(actions, false);
             Map context = JDSActionContext.getActionContext().getContext();
-            String objStr = (String) TemplateRuntime.eval(json, context);
+            String objStr = (String) TemplateRuntime.eval(json,MvelDSMRoot.getInstance(), context);
             List<APICallerComponent> realAction = JSONArray.parseArray(objStr, APICallerComponent.class);
             actions.addAll(realAction);
             super.write(serializer, actions, fieldName, fieldType, features);
@@ -32,7 +32,7 @@ public class APICallSerialize extends CollectionCodec {
             List<APICallerComponent> actions = (List<APICallerComponent>) object;
             String json = JSONArray.toJSONString(actions, false);
             Map context = JDSActionContext.getActionContext().getContext();
-            String objStr = (String) TemplateRuntime.eval(json, context);
+            String objStr = (String) TemplateRuntime.eval(json,MvelDSMRoot.getInstance(), context);
             List<APICallerComponent> realAction = JSONArray.parseArray(objStr, APICallerComponent.class);
             super.write(serializer, realAction, fieldName, fieldType, features);
         }

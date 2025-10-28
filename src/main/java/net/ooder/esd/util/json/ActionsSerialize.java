@@ -21,7 +21,7 @@ public class ActionsSerialize extends CollectionCodec {
         List<Action> actions = (List<Action>) object;
         String json = JSONArray.toJSONString(actions, false);
         Map context = JDSActionContext.getActionContext().getContext();
-        String objStr = (String) TemplateRuntime.eval(json, context);
+        String objStr = (String) TemplateRuntime.eval(json, MvelDSMRoot.getInstance(), context);
         List<Action> realAction = JSONArray.parseArray(objStr, Action.class);
         super.write(serializer, realAction, fieldName, fieldType, features);
     }

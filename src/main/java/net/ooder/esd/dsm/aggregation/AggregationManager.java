@@ -446,7 +446,6 @@ public class AggregationManager {
 
     public void deleteApiClassConfig(String className, boolean clear) throws JDSException {
         Class clazz = classManager.checkInterface(className);
-
         if (clazz != null) {
             className = clazz.getName();
             String domainId = getRealDomainId(className, true);

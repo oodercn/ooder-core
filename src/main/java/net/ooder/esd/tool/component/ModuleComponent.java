@@ -45,6 +45,7 @@ import net.ooder.esd.tool.properties.list.ListFieldProperties;
 import net.ooder.esd.tool.properties.list.TreeListProperties;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.esd.util.json.ComponentsMapDeserializer;
+import net.ooder.esd.util.json.MvelDSMRoot;
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.jds.core.esb.task.ExcuteObj;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -1549,7 +1550,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                     if (target != null && !target.equals("dock") && !target.equals(this.getClassName()) && moduleAction.contains(action.getType())) {
                         if (target.startsWith("@{")) {
                             Map context = JDSActionContext.getActionContext().getContext();
-                            target = (String) TemplateRuntime.eval(target, context);
+                            target = (String) TemplateRuntime.eval(target,this, context);
                         }
 
                         if (!required.contains(target)) {
