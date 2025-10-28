@@ -538,7 +538,7 @@ public class AggregationManager {
                         apiClassConfig = apiConfigMap.get(uKey);
                         if (apiClassConfig == null || load) {
                             synchronized (uKey) {
-                                apiClassConfig = loadApiConfig(className, domainId);
+                                apiClassConfig = loadApiConfig(className, domainId, load);
                                 if (apiClassConfig == null) {
                                     ESDClass esdClass = classManager.getAggEntityByName(className, load);
                                     if (esdClass != null) {
@@ -571,13 +571,13 @@ public class AggregationManager {
     }
 
 
-    private ApiClassConfig loadApiConfig(String className, String domainId) {
+    private ApiClassConfig loadApiConfig(String className, String domainId, boolean reload) {
         ApiClassConfig apiClassConfig = null;
         String uKey = className + "[" + domainId + "]";
         try {
 
             String json = apiConfigCache.get(uKey);
-            if (json == null) {
+            if (json == null || reload) {
                 Folder dsmFolder = this.getVfsClient().getFolderByPath(apiClassConfigFolder.getPath() + domainId);
                 if (dsmFolder == null) {
                     dsmFolder = apiClassConfigFolder.createChildFolder(domainId, JDSServer.getInstance().getAdminUser().getId());
