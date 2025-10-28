@@ -16,15 +16,15 @@ import java.util.Set;
 @AnnotationType(clazz = Disabled.class)
 public class DisabledBean implements CustomBean {
 
-    Boolean disabled;
+    Boolean disabled=false;
 
-    Boolean defaultFocus;
+    Boolean defaultFocus=false;
 
-    Boolean disableClickEffect;
+    Boolean disableClickEffect=false;
 
-    Boolean disableHoverEffect;
+    Boolean disableHoverEffect=false;
 
-    Boolean disableTips;
+    Boolean disableTips=false;
 
     public DisabledBean() {
 
