@@ -1413,7 +1413,7 @@ public class AggregationManager {
             String simClassName = formartClassName(className);
             String fileName = simClassName + ".entity";
             Folder packageFolder = this.getVfsClient().mkDir(dsmFolder.getPath() + folerPath);
-            FileInfo fileInfo = packageFolder.createFile(simClassName, fileName, null);
+            FileInfo fileInfo = packageFolder.createFile(fileName, className, null);
             this.getVfsClient().saveFileAsContent(fileInfo.getPath(), content, VFSConstants.Default_Encoding);
         }
 
