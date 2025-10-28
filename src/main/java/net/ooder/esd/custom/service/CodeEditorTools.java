@@ -24,7 +24,6 @@ public class CodeEditorTools {
     @APIEventAnnotation(
             bindAction = {@CustomAction(script = "page.content.showFindWnd()")}
     )
-    @ToolBarEvent(eventEnum=ToolBarEventEnum.onClick,actions = @CustomAction(script = "page.content.showFindWnd()"))
     @RequestMapping(method = RequestMethod.POST, value = "searchreplaceAction")
     @ComboInputAnnotation(inputType = ComboInputType.button)
     @CustomAnnotation(index = 1, caption = "查找替换", tips = "查找替换", imageClass = "ri-search-line")
@@ -38,7 +37,10 @@ public class CodeEditorTools {
     @MethodChinaName(cname = "")
     @RequestMapping(method = RequestMethod.POST, value = "jumptoAction")
     @ComboInputAnnotation(inputType = ComboInputType.button)
-    @CustomAnnotation(index = 3, caption = "跳到行", tips = "跳到行", imageClass = "spafont spa-icon-jumpto")
+    @APIEventAnnotation(
+            bindAction = {@CustomAction(script = "page.content.showJumpToWnd()")}
+    )
+    @CustomAnnotation(index = 2, caption = "跳到行", tips = "跳到行", imageClass = "spafont spa-icon-jumpto")
     public @ResponseBody
     ResultModel<Boolean> jumptoAction(String content, String path) {
         ResultModel<Boolean> result = new ResultModel<Boolean>();
@@ -49,7 +51,10 @@ public class CodeEditorTools {
     @MethodChinaName(cname = "")
     @RequestMapping(method = RequestMethod.POST, value = "reindentAction")
     @ComboInputAnnotation(inputType = ComboInputType.button)
-    @CustomAnnotation(index = 4, caption = "调整缩进", tips = "调整缩进", imageClass = "fas-indent")
+    @APIEventAnnotation(
+            bindAction = {@CustomAction(script = "page.content.reindent()")}
+    )
+    @CustomAnnotation(index = 3, caption = "调整缩进", tips = "调整缩进", imageClass = "fas-indent")
     public @ResponseBody
     ResultModel<Boolean> reindentAction(String content, String path) {
         ResultModel<Boolean> result = new ResultModel<Boolean>();
