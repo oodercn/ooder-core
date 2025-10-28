@@ -4,6 +4,8 @@ import net.ooder.context.JDSActionContext;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.engine.EUModule;
+import net.ooder.esd.tool.component.Component;
+import net.ooder.esd.tool.component.ModuleComponent;
 
 import java.util.Map;
 
@@ -13,12 +15,24 @@ public class MvelDSMRoot {
 
     public EUModule currModule;
 
+    public Component currComponent;
+
+    public ModuleComponent moduleComponent;
+
+    public Component topCurrComponent;
+
+    public ModuleComponent topModuleComponent;
+
     public EUModule topModule;
 
     public MethodConfig methodBean;
 
     public MethodConfig topMethodBean;
 
+
+    public MvelDSMRoot() {
+
+    }
 
     public static MvelDSMRoot getInstance() {
         Map context = JDSActionContext.getActionContext().getContext();
@@ -30,11 +44,47 @@ public class MvelDSMRoot {
         return dsmRoot;
     }
 
-    ;
 
+    public Component getTopCurrComponent() {
+        if (topCurrComponent == null) {
+            ModuleComponent topModuleComponent = this.getTopModuleComponent();
+            if (topModuleComponent != null) {
+                topCurrComponent = topModuleComponent.getCurrComponent();
+            }
+        }
+        return topCurrComponent;
+    }
 
-    public MvelDSMRoot() {
+    public void setTopCurrComponent(Component topCurrComponent) {
+        this.topCurrComponent = topCurrComponent;
+    }
 
+    public ModuleComponent getTopModuleComponent() {
+        if (topModuleComponent == null) {
+            EUModule topModule = this.getTopModule();
+            if (topModuleComponent != null) {
+                topModuleComponent = topModule.getComponent();
+            }
+        }
+        return topModuleComponent;
+    }
+
+    public void setTopModuleComponent(ModuleComponent topModuleComponent) {
+        this.topModuleComponent = topModuleComponent;
+    }
+
+    public Component getCurrComponent() {
+        if (currComponent == null) {
+            ModuleComponent moduleComponent = this.getModuleComponent();
+            if (moduleComponent != null) {
+                currComponent = moduleComponent.getCurrComponent();
+            }
+        }
+        return currComponent;
+    }
+
+    public void setCurrComponent(Component currComponent) {
+        this.currComponent = currComponent;
     }
 
     public EUModule getCurrModule() {
@@ -45,6 +95,19 @@ public class MvelDSMRoot {
         return currModule;
     }
 
+    public ModuleComponent getModuleComponent() {
+        if (moduleComponent == null) {
+            EUModule euModule = this.getCurrModule();
+            if (euModule != null) {
+                moduleComponent = euModule.getComponent();
+            }
+        }
+        return moduleComponent;
+    }
+
+    public void setModuleComponent(ModuleComponent moduleComponent) {
+        this.moduleComponent = moduleComponent;
+    }
 
     public EUModule getTopModule() {
         if (topModule == null) {
