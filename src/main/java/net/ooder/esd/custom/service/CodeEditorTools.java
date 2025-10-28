@@ -7,6 +7,8 @@ import net.ooder.annotation.UserSpace;
 import net.ooder.config.ResultModel;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomAnnotation;
+import net.ooder.esd.annotation.event.ToolBarEvent;
+import net.ooder.esd.annotation.event.ToolBarEventEnum;
 import net.ooder.esd.annotation.field.APIEventAnnotation;
 import net.ooder.esd.annotation.field.ComboInputAnnotation;
 import net.ooder.esd.annotation.ui.ComboInputType;
@@ -22,6 +24,7 @@ public class CodeEditorTools {
     @APIEventAnnotation(
             bindAction = {@CustomAction(script = "page.content.showFindWnd()")}
     )
+    @ToolBarEvent(eventEnum=ToolBarEventEnum.onClick,actions = @CustomAction(script = "page.content.showFindWnd()"))
     @RequestMapping(method = RequestMethod.POST, value = "searchreplaceAction")
     @ComboInputAnnotation(inputType = ComboInputType.button)
     @CustomAnnotation(index = 1, caption = "查找替换", tips = "查找替换", imageClass = "ri-search-line")
