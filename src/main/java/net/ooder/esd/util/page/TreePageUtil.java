@@ -23,7 +23,6 @@ import net.ooder.web.RemoteConnectionManager;
 
 import java.util.*;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -208,7 +207,7 @@ public class TreePageUtil {
             List<Future<T>> futures = RemoteConnectionManager.getConntctionService(taskId).invokeAll(tasks);
             for (Future<T> resultFuture : futures) {
                 try {
-                    T item = resultFuture.get(200, TimeUnit.MILLISECONDS);
+                    T item = resultFuture.get();
                     if (item != null) {
                         if (item.getPattern() != null && !item.getPattern().equals("")
                                 // && (childTreeViewBean == null || (childTreeViewBean != null && (childTreeViewBean.getDeepSearch() != null && childTreeViewBean.getDeepSearch())))) {

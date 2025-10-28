@@ -8,17 +8,16 @@ import net.ooder.config.TreeListResultModel;
 import net.ooder.context.JDSActionContext;
 import net.ooder.context.JDSContext;
 import net.ooder.esd.annotation.event.CustomTreeEvent;
+import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.bean.view.ChildTreeViewBean;
 import net.ooder.esd.bean.view.CustomTreeViewBean;
-import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
-import net.ooder.esd.bean.TreeListItem;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.server.context.MinServerActionContextImpl;
-import net.ooder.server.httpproxy.core.HttpRequest;
 import net.ooder.web.ConstructorBean;
 import ognl.OgnlContext;
 import ognl.OgnlException;
@@ -36,6 +35,7 @@ public class TreeItemTask<T extends TreeListItem> implements Callable<T> {
     private List<String> ids = new ArrayList<>();
     private OgnlContext onglContext;
     private CustomTreeViewBean viewBean;
+    private AggEntityConfig aggEntityConfig;
 
     public TreeItemTask(Object object, Class<T> clazz, CustomTreeViewBean viewBean, ChildTreeViewBean childTreeViewBean, List<String> ids) {
         this.clazz = clazz;
@@ -46,7 +46,7 @@ public class TreeItemTask<T extends TreeListItem> implements Callable<T> {
         }
         this.viewBean = viewBean;
         JDSContext context = JDSActionContext.getActionContext();
-        this.autoruncontext = new MinServerActionContextImpl(context.getHttpRequest(),context.getOgnlContext());
+        this.autoruncontext = new MinServerActionContextImpl(context.getHttpRequest(), context.getOgnlContext());
         autoruncontext.getParamMap().putAll(context.getPagectx());
         autoruncontext.getParamMap().putAll(context.getContext());
         if (context.getSessionId() != null) {
@@ -55,7 +55,11 @@ public class TreeItemTask<T extends TreeListItem> implements Callable<T> {
         }
         autoruncontext.setSessionMap(context.getSession());
         onglContext = autoruncontext.getOgnlContext();
-
+        try {
+            aggEntityConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(clazz.getName(), false);
+        } catch (JDSException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -63,7 +67,7 @@ public class TreeItemTask<T extends TreeListItem> implements Callable<T> {
         long start = System.currentTimeMillis();
         T t = null;
         JDSActionContext.setContext(autoruncontext);
-        AggEntityConfig aggEntityConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(clazz.getName(), false);
+
         if (childTreeViewBean != null) {
             ConstructorBean constructorBean = childTreeViewBean.getConstructorBean();
             t = (T) constructorBean.invok(obj);
