@@ -375,8 +375,8 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                             this.addAction(action);
                         }
                     } else {
-                        if (component.getActions().size()>0){
-                            for( Action action:actions){
+                        if (component.getActions() != null && component.getActions().size() > 0) {
+                            for (Action action : actions) {
                                 action.setEventKey(ToolBarEventEnum.onClick);
                                 action.setTarget(component.getAlias());
                                 action.setDesc(component.getProperties().getTips());
@@ -386,7 +386,7 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                                 action.setConditions(conditions);
                                 this.addAction(action);
                             }
-                        }else{
+                        } else {
                             Action action = new Action(ToolBarEventEnum.onClick);
                             action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
                             action.setType(ActionTypeEnum.control);
@@ -401,9 +401,6 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                             action.setConditions(conditions);
                             this.addAction(action);
                         }
-
-
-
 
 
                     }
