@@ -182,7 +182,7 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
             reloadProperties.addResponseData(formData);
             UrlPathData formCtxData = new UrlPathData(this.getCtxBaseComponent().getAlias(), ResponsePathTypeEnum.FORM, "data");
             reloadProperties.addResponseData(formCtxData);
-            reloadProperties.setAutoRun(true);
+            //reloadProperties.setAutoRun(true);
             apiCallerComponents.add(reloadAPI);
         }
 

@@ -338,7 +338,7 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                         }
                         TreeListItem menuItem = itemMap.get(menuId);
                         if (menuItem == null) {
-                            menuItem = new TreeListItem(menuId, caption, menuItem.getImageClass(), tips, component.getProperties().getMenuType());
+                            menuItem = new TreeListItem(menuId, caption, component.getProperties().getImageClass(), tips, component.getProperties().getMenuType());
                             this.getGroup().addChild(menuItem);
 
                             itemMap.put(menuId, menuItem);
