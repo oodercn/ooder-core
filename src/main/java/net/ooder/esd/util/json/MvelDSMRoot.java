@@ -13,21 +13,21 @@ public class MvelDSMRoot {
 
     public static final String DSMROOT = "DSMROOT";
 
-    public EUModule currModule;
+    private EUModule currModule;
 
-    public Component currComponent;
+    private Component currComponent;
 
-    public ModuleComponent moduleComponent;
+    private ModuleComponent moduleComponent;
 
-    public Component topCurrComponent;
+    private Component topCurrComponent;
 
-    public ModuleComponent topModuleComponent;
+    private ModuleComponent topModuleComponent;
 
-    public EUModule topModule;
+    private EUModule topModule;
 
-    public MethodConfig methodBean;
+    private MethodConfig methodBean;
 
-    public MethodConfig topMethodBean;
+    private MethodConfig topMethodBean;
 
 
     public MvelDSMRoot() {
@@ -55,10 +55,6 @@ public class MvelDSMRoot {
         return topCurrComponent;
     }
 
-    public void setTopCurrComponent(Component topCurrComponent) {
-        this.topCurrComponent = topCurrComponent;
-    }
-
     public ModuleComponent getTopModuleComponent() {
         if (topModuleComponent == null) {
             EUModule topModule = this.getTopModule();
@@ -69,9 +65,6 @@ public class MvelDSMRoot {
         return topModuleComponent;
     }
 
-    public void setTopModuleComponent(ModuleComponent topModuleComponent) {
-        this.topModuleComponent = topModuleComponent;
-    }
 
     public Component getCurrComponent() {
         if (currComponent == null) {
@@ -83,9 +76,6 @@ public class MvelDSMRoot {
         return currComponent;
     }
 
-    public void setCurrComponent(Component currComponent) {
-        this.currComponent = currComponent;
-    }
 
     public EUModule getCurrModule() {
         if (currModule == null) {
@@ -105,9 +95,6 @@ public class MvelDSMRoot {
         return moduleComponent;
     }
 
-    public void setModuleComponent(ModuleComponent moduleComponent) {
-        this.moduleComponent = moduleComponent;
-    }
 
     public EUModule getTopModule() {
         if (topModule == null) {
@@ -135,6 +122,23 @@ public class MvelDSMRoot {
         return topMethodBean;
     }
 
+
+    public void setModuleComponent(ModuleComponent moduleComponent)
+    {
+        this.moduleComponent = moduleComponent;
+    }
+    public void setCurrComponent(Component currComponent) {
+
+        this.currComponent = currComponent;
+    }
+
+    public void setTopModuleComponent(ModuleComponent topModuleComponent) {
+        this.topModuleComponent = topModuleComponent;
+    }
+
+    public void setTopCurrComponent(Component topCurrComponent) {
+        this.topCurrComponent = topCurrComponent;
+    }
 
     public void setCurrModule(EUModule currModule) {
         this.currModule = currModule;

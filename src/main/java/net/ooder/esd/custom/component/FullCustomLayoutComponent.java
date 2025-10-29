@@ -3,9 +3,11 @@ package net.ooder.esd.custom.component;
 import net.ooder.common.JDSException;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.CustomClass;
+import net.ooder.esd.annotation.RequestPathAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
+import net.ooder.esd.annotation.ui.RequestPathEnum;
 import net.ooder.esd.annotation.view.LayoutViewAnnotation;
 import net.ooder.esd.bean.CustomLayoutItemBean;
 import net.ooder.esd.bean.MethodConfig;
@@ -13,10 +15,12 @@ import net.ooder.esd.bean.view.CustomLayoutViewBean;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.engine.EUModule;
+import net.ooder.esd.tool.component.APICallerComponent;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.LayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.LayoutProperties;
+import net.ooder.esd.tool.properties.UrlPathData;
 
 import java.util.List;
 import java.util.Map;
@@ -63,12 +67,40 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                 e.printStackTrace();
                             }
                         } else {
-                            ModuleComponent moduleComponent = new ModuleComponent();
-                            moduleComponent.setAlias(itemMethod.getName());
-                            moduleComponent.setClassName(itemMethod.getEUClassName());
-                            moduleComponent.setTarget(layoutItemBean.getPos().name());
-                            moduleComponent.getModuleVar().putAll(itemMethod.getTagVar());
-                            layoutComponent.addChildren(moduleComponent);
+
+                            try {
+                                ModuleComponent moduleComponent = itemMethod.getModule(valueMap, projectName).getComponent();
+                                Component topComponent = moduleComponent.getLastBoxComponent();
+                                List<APICallerComponent> components = moduleComponent.findComponents(ComponentType.APICALLER.name(), null);
+                                for (APICallerComponent apicomponent : components) {
+                                    apicomponent.setAlias(moduleComponent.getAlias() + "." + moduleComponent.getAlias());
+                                    module.getComponent().addChildren(apicomponent);
+                                    apicomponent.getProperties().addRequestData(new UrlPathData((RequestPathAnnotation) RequestPathEnum.CTX));
+                                }
+
+                                if (topComponent == null) {
+                                    topComponent = moduleComponent.getTopComponentBox();
+                                }
+                                topComponent.setTarget(layoutItemBean.getPos().name());
+                                layoutComponent.addChildren(topComponent);
+                            } catch (JDSException e) {
+                                e.printStackTrace();
+                            }
+
+//
+//                            ModuleComponent moduleComponent = itemMethod.getModule(valueMap,projectName).getComponent();
+//                            List<APICallerComponent> components = moduleComponent.findComponents(ComponentType.APICALLER.name(), null);
+//                            for (APICallerComponent apicomponent : components) {
+//                                apicomponent.setAlias(moduleComponent.getAlias() + "." + moduleComponent.getAlias());
+//                                apicomponent.getProperties().addRequestData(new UrlPathData((RequestPathAnnotation) RequestPathEnum.CTX));
+//                                module.getComponent().addChildren(apicomponent);
+//                            }
+//                            ModuleComponent moduleComponent = new ModuleComponent();
+//                            moduleComponent.setAlias(itemMethod.getName());
+//                            moduleComponent.setClassName(itemMethod.getEUClassName());
+//                            moduleComponent.setTarget(layoutItemBean.getPos().name());
+//                            moduleComponent.getModuleVar().putAll(itemMethod.getTagVar());
+
                         }
                     }
 
