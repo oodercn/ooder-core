@@ -1,7 +1,7 @@
 package net.ooder.esd.custom.component.nav;
 
 import net.ooder.esd.annotation.action.CustomFormAction;
-import net.ooder.esd.annotation.event.ModuleEventEnum;
+import net.ooder.esd.annotation.event.TreeViewEventEnum;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.NavTreeComboViewBean;
 import net.ooder.esd.engine.EUModule;
@@ -24,7 +24,7 @@ public class FullNavTreeComponent<M extends LayoutComponent> extends CustomNavTr
         this.fillMenuAction(bean.getTreeViewBean(), getTreeComponent());
         APICallerComponent component = (APICallerComponent) this.findComponentByAlias("RELOAD");
         if (component != null && (component.getProperties().getAutoRun() == null || !component.getProperties().getAutoRun())) {
-            Action action = new Action(CustomFormAction.RELOAD, ModuleEventEnum.afterShow);
+            Action action = new Action(CustomFormAction.RELOAD, TreeViewEventEnum.onRender);
             this.addAction(action);
         }
     }
