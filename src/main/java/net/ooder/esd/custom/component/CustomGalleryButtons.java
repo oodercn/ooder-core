@@ -7,14 +7,10 @@ import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
-import net.ooder.esd.annotation.ui.CustomMenuItem;
-import net.ooder.esd.bean.bar.DynBar;
 import net.ooder.esd.annotation.event.ActionTypeEnum;
 import net.ooder.esd.annotation.event.GalleryEventEnum;
-import net.ooder.esd.annotation.ui.BorderType;
-import net.ooder.esd.annotation.ui.ComboInputType;
-import net.ooder.esd.annotation.ui.Dock;
-import net.ooder.esd.annotation.ui.SymbolType;
+import net.ooder.esd.annotation.ui.*;
+import net.ooder.esd.bean.bar.DynBar;
 import net.ooder.esd.bean.field.CustomGalleryFieldBean;
 import net.ooder.esd.custom.action.CustomConditionAction;
 import net.ooder.esd.custom.action.ShowPageAction;
@@ -24,7 +20,6 @@ import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Condition;
 import net.ooder.esd.tool.properties.GalleryProperties;
 import net.ooder.esd.tool.properties.item.GalleryItem;
-
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.jds.core.esb.task.ExcuteObj;
 
@@ -96,10 +91,11 @@ public class CustomGalleryButtons extends GalleryComponent implements DynBar<Dyn
     }
 
 
-    public void addMenu(CustomMenu... formTypes) {
+    public List<GalleryItem> addMenu(CustomMenu... formTypes) {
+        List<GalleryItem> treeListItems = new ArrayList<>();
         for (CustomMenu type : formTypes) {
             if (!type.type().equals("")) {
-                String menuId = type.type() + "_" +  ComboInputType.button.name();
+                String menuId = type.type() + "_" + ComboInputType.button.name();
                 GalleryItem menuItem = itemMap.get(menuId);
                 if (menuItem == null) {
                     menuItem = new GalleryItem(menuId, type.caption(), type.imageClass());
@@ -116,10 +112,15 @@ public class CustomGalleryButtons extends GalleryComponent implements DynBar<Dyn
                         menuItem.setImageClass(type.imageClass());
                     }
                 }
-                fillActions(type);
+                if (!treeListItems.contains(menuItem)) {
+                    treeListItems.add(menuItem);
+                    fillActions(type);
+                }
+
             }
         }
         this.getProperties().setWidth(((width + 1.5) * itemMap.size()) + "em");
+        return treeListItems;
     }
 
 
@@ -168,7 +169,7 @@ public class CustomGalleryButtons extends GalleryComponent implements DynBar<Dyn
                         action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
                         action.setConditions(conditions);
                         action.set_return(false);
-                        this.addAction( action);
+                        this.addAction(action);
                     }
                 } else {
                     Action action = new Action(GalleryEventEnum.onClick);
@@ -183,7 +184,7 @@ public class CustomGalleryButtons extends GalleryComponent implements DynBar<Dyn
                     conditions.add(condition);
                     action.setConditions(conditions);
                     action.set_return(false);
-                    this.addAction( action);
+                    this.addAction(action);
                 }
             }
 
@@ -254,7 +255,7 @@ public class CustomGalleryButtons extends GalleryComponent implements DynBar<Dyn
                 action.setConditions(conditions);
                 action.set_return(false);
 
-                this.addAction( action);
+                this.addAction(action);
             }
         }
     }
@@ -277,7 +278,7 @@ public class CustomGalleryButtons extends GalleryComponent implements DynBar<Dyn
         for (CustomAction actionType : formActionTypes) {
             try {
                 if (EsbUtil.parExpression(actionType.expression(), Boolean.class)) {
-                    CustomConditionAction action = new CustomConditionAction(actionType, type,GalleryEventEnum.onClick);
+                    CustomConditionAction action = new CustomConditionAction(actionType, type, GalleryEventEnum.onClick);
                     this.addAction(action);
                 }
             } catch (Throwable e) {
