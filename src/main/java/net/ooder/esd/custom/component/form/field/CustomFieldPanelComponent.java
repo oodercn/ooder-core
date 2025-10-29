@@ -4,20 +4,21 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.PositionType;
-import net.ooder.esd.bean.*;
+import net.ooder.esd.bean.CustomDivBean;
+import net.ooder.esd.bean.CustomPanelBean;
+import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomPanelFieldBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;
 import net.ooder.esd.bean.view.CustomBlockFormViewBean;
 import net.ooder.esd.bean.view.CustomModuleBean;
-import net.ooder.esd.custom.CustomViewConfigFactory;
 import net.ooder.esd.bean.view.CustomPanelFormViewBean;
+import net.ooder.esd.custom.CustomViewConfigFactory;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.PanelComponent;
 import net.ooder.esd.tool.properties.PanelProperties;
-import net.ooder.server.httpproxy.core.AbstractHandler;
 import ognl.OgnlException;
 
 import java.lang.reflect.Constructor;
@@ -34,7 +35,7 @@ public class CustomFieldPanelComponent extends PanelComponent<PanelProperties> {
 
 
     public CustomFieldPanelComponent(EUModule euModule, FieldFormConfig<CustomPanelFieldBean, ?> field, String target, Object value, Map<String, Object> valueMap) {
-       CustomPanelFormViewBean customComponentViewBean = (CustomPanelFormViewBean) field.getMethodConfig().getView();
+        CustomPanelFormViewBean customComponentViewBean = (CustomPanelFormViewBean) field.getMethodConfig().getView();
         this.setAlias(field.getFieldname());
         //存在集合属性
         CustomPanelFieldBean panelFieldBean = field.getWidgetConfig();
@@ -70,8 +71,8 @@ public class CustomFieldPanelComponent extends PanelComponent<PanelProperties> {
         CustomPanelFormViewBean customComponentViewBean = (CustomPanelFormViewBean) methodConfig.getView();
         if (methodConfig.getModuleBean() != null && methodConfig.getModuleBean().getBlockBean() != null) {
             CustomPanelBean panelBean = methodConfig.getModuleBean().getPanelBean();
-            if (customComponentViewBean.getContainerBean() != null) {
-                if (panelBean.getDivBean()==null){
+            if (customComponentViewBean.getContainerBean() != null && panelBean != null) {
+                if (panelBean.getDivBean() == null) {
                     panelBean.setDivBean(new CustomDivBean());
                 }
                 panelBean.getDivBean().setContainerBean(customComponentViewBean.getContainerBean());
@@ -82,7 +83,6 @@ public class CustomFieldPanelComponent extends PanelComponent<PanelProperties> {
         this.setAlias(methodConfig.getFieldName());
         init(euModule, customComponentViewBean, dbMap);
     }
-
 
 
     void init(EUModule euModule, CustomPanelFormViewBean customComponentViewBean, Map dbMap) {
@@ -102,9 +102,9 @@ public class CustomFieldPanelComponent extends PanelComponent<PanelProperties> {
         for (FieldFormConfig fieldInfo : fieldList) {
             Component inputComponent = null;
             if (fieldInfo.getEsdField() != null && Component.class.isAssignableFrom(fieldInfo.getEsdField().getReturnType())) {
-                if (fieldInfo.getMethodConfig()!=null && fieldInfo.getMethodConfig().getRequestMethodBean()!=null){
+                if (fieldInfo.getMethodConfig() != null && fieldInfo.getMethodConfig().getRequestMethodBean() != null) {
                     try {
-                        inputComponent = (Component)fieldInfo.getMethodConfig().getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
+                        inputComponent = (Component) fieldInfo.getMethodConfig().getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     } catch (OgnlException e) {
