@@ -59,11 +59,11 @@ public class RADTopMenu extends MenuBarComponent implements MenuDynBar<MenuDynBa
     }
 
     public RADTopMenu(String alias) {
-        super(alias,  new MenuBarProperties());
+        super(alias, new MenuBarProperties());
     }
 
     public RADTopMenu(MenuBarMenu topMenu) {
-        super(topMenu.id(),  new MenuBarProperties());
+        super(topMenu.id(), new MenuBarProperties());
         this.id = topMenu.id();
         this.index = topMenu.index();
         this.caption = topMenu.caption();
@@ -73,7 +73,7 @@ public class RADTopMenu extends MenuBarComponent implements MenuDynBar<MenuDynBa
 
 
     public RADTopMenu(MenuBarBean topMenuBean) {
-        super(topMenuBean.getId(),  new PopMenuProperties());
+        super(topMenuBean.getId(), new PopMenuProperties());
         this.id = topMenuBean.getId();
         this.index = topMenuBean.getIndex();
         this.caption = topMenuBean.getCaption();
@@ -83,7 +83,7 @@ public class RADTopMenu extends MenuBarComponent implements MenuDynBar<MenuDynBa
 
 
     public RADTopMenu(String id, String caption, String imageClass, Integer index) {
-        super(id,new MenuBarProperties());
+        super(id, new MenuBarProperties());
         this.id = id;
         this.index = index;
         this.caption = caption;
@@ -178,10 +178,11 @@ public class RADTopMenu extends MenuBarComponent implements MenuDynBar<MenuDynBa
     }
 
 
-    public void addMenu(CustomMenu... types) {
+    public List<TreeListItem> addMenu(CustomMenu... types) {
+        List<TreeListItem> treeListItems = new ArrayList<>();
         for (CustomMenu type : types) {
             if (!type.type().equals("")) {
-                String menuId = type.type() + "_" +  ComboInputType.button.name();
+                String menuId = type.type() + "_" + ComboInputType.button.name();
                 TreeListItem menuItem = itemMap.get(menuId);
                 if (menuItem == null) {
                     menuItem = new TreeListItem(menuId, type.caption(), type.imageClass());
@@ -200,9 +201,14 @@ public class RADTopMenu extends MenuBarComponent implements MenuDynBar<MenuDynBa
 
                 }
 
-                fillActions(type);
+                if (!treeListItems.contains(menuItem)) {
+                    treeListItems.add(menuItem);
+                    fillActions(type);
+                }
             }
         }
+        return treeListItems;
+
     }
 
 
@@ -242,7 +248,7 @@ public class RADTopMenu extends MenuBarComponent implements MenuDynBar<MenuDynBa
                 conditions.add(condition);
                 action.setConditions(conditions);
                 action.set_return(false);
-                this.addAction(  action);
+                this.addAction(action);
             }
         }
     }
@@ -308,7 +314,7 @@ public class RADTopMenu extends MenuBarComponent implements MenuDynBar<MenuDynBa
                     if (!apis.contains(component)) {
                         this.apis.add(component);
                     }
-                    Action action = new Action( MenuEventEnum.onMenuSelected);
+                    Action action = new Action(MenuEventEnum.onMenuSelected);
                     action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
                     action.setType(ActionTypeEnum.control);
                     action.setTarget(component.getAlias());
@@ -320,7 +326,7 @@ public class RADTopMenu extends MenuBarComponent implements MenuDynBar<MenuDynBa
                     conditions.add(condition);
                     action.setConditions(conditions);
                     action.set_return(false);
-                    this.addAction( action);
+                    this.addAction(action);
                 }
             }
         }
@@ -343,7 +349,7 @@ public class RADTopMenu extends MenuBarComponent implements MenuDynBar<MenuDynBa
         for (CustomAction actionType : workListActionTypes) {
             try {
                 if (EsbUtil.parExpression(actionType.expression(), Boolean.class)) {
-                    CustomConditionAction action = new CustomConditionAction(actionType, type,MenuEventEnum.onMenuSelected);
+                    CustomConditionAction action = new CustomConditionAction(actionType, type, MenuEventEnum.onMenuSelected);
                     this.addAction(action);
                 }
             } catch (Throwable e) {

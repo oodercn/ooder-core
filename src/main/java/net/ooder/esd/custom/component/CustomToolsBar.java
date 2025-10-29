@@ -332,15 +332,18 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
 
                     } else {
                         String menuId = component.getAlias() + ComboInputType.button.name();
+                        String tips = component.getProperties().getTips();
+                        if (tips == null && !caption.equals("")) {
+                            tips = caption;
+                        }
                         TreeListItem menuItem = itemMap.get(menuId);
                         if (menuItem == null) {
-                            menuItem = new TreeListItem(menuId, caption, menuItem.getImageClass(), caption, component.getProperties().getMenuType());
+                            menuItem = new TreeListItem(menuId, caption, menuItem.getImageClass(), tips, component.getProperties().getMenuType());
                             this.getGroup().addChild(menuItem);
+
                             itemMap.put(menuId, menuItem);
                         } else {
-                            if (component.getProperties().getTips() != null) {
-                                menuItem.setTips(component.getProperties().getTips());
-                            }
+                            menuItem.setTips(tips);
                             menuItem.setCaption(caption);
                             if (expression != null && !expression.equals("")) {
                                 menuItem.setExpression(expression);
@@ -349,7 +352,7 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                         if (paramsMap != null) {
                             menuItem.getTagVar().putAll(paramsMap);
                         }
-                        action.setDesc("点击：" + menuItem.getDesc() == null ? menuItem.getName() : menuItem.getDesc());
+                        action.setDesc("点击：" + tips);
                         Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                         conditions.add(condition);
                         action.setConditions(conditions);
