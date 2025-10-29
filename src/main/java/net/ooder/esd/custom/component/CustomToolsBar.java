@@ -196,7 +196,8 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
     }
 
 
-    public void addMenu(CustomMenu... types) {
+    public List<TreeListItem> addMenu(CustomMenu... types) {
+        List<TreeListItem> treeListItems = new ArrayList<>();
         for (CustomMenu type : types) {
             if (!type.type().equals("")) {
                 String menuId = type.type() + "_" + ComboInputType.button.name();
@@ -219,9 +220,13 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                         menuItem.setImageClass(type.imageClass());
                     }
                 }
-                fillActions(type);
+                if (!treeListItems.contains(menuItem)) {
+                    treeListItems.add(menuItem);
+                    fillActions(type);
+                }
             }
         }
+        return treeListItems;
     }
 
     public void addMenu(APICallerComponent component) {
@@ -308,7 +313,6 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
 
             if (component.getActions() != null && component.getActions().size() > 0) {
                 Set<Action> actions = component.getActions();
-
                 for (Action action : actions) {
                     List<Condition> conditions = action.getConditions();
                     if (conditions == null) {
@@ -330,23 +334,22 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                         String menuId = component.getAlias() + ComboInputType.button.name();
                         TreeListItem menuItem = itemMap.get(menuId);
                         if (menuItem == null) {
-                            menuItem = new TreeListItem(menuId, caption, imageClass, caption, component.getProperties().getMenuType());
+                            menuItem = new TreeListItem(menuId, caption, menuItem.getImageClass(), caption, component.getProperties().getMenuType());
                             this.getGroup().addChild(menuItem);
                             itemMap.put(menuId, menuItem);
                         } else {
-                            menuItem.setTips(component.getProperties().getTips());
+                            if (component.getProperties().getTips() != null) {
+                                menuItem.setTips(component.getProperties().getTips());
+                            }
                             menuItem.setCaption(caption);
                             if (expression != null && !expression.equals("")) {
                                 menuItem.setExpression(expression);
-                            }
-                            if (imageClass != null && !imageClass.equals("")) {
-                                menuItem.setImageClass(imageClass);
                             }
                         }
                         if (paramsMap != null) {
                             menuItem.getTagVar().putAll(paramsMap);
                         }
-                        action.setDesc("点击：" + menuItem.getDesc());
+                        action.setDesc("点击：" + menuItem.getDesc() == null ? menuItem.getName() : menuItem.getDesc());
                         Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                         conditions.add(condition);
                         action.setConditions(conditions);

@@ -1,10 +1,10 @@
 package net.ooder.esd.custom.component;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.EsbBeanAnnotation;
 import net.ooder.common.JDSConstants;
 import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
-import net.ooder.annotation.EsbBeanAnnotation;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
 import net.ooder.esd.annotation.event.ActionTypeEnum;
@@ -13,9 +13,9 @@ import net.ooder.esd.annotation.menu.CustomMenuType;
 import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ui.SymbolType;
+import net.ooder.esd.bean.ListMenuBean;
 import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.bean.bar.DynBar;
-import net.ooder.esd.bean.ListMenuBean;
 import net.ooder.esd.custom.action.CustomConditionAction;
 import net.ooder.esd.custom.action.ShowPageAction;
 import net.ooder.esd.tool.component.APICallerComponent;
@@ -26,7 +26,6 @@ import net.ooder.esd.tool.properties.item.UIItem;
 import net.ooder.esd.tool.properties.list.ListFieldProperties;
 import net.ooder.esd.util.json.APICallSerialize;
 import net.ooder.esd.util.json.CaseEnumsSerializer;
-
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.jds.core.esb.task.ExcuteObj;
 
@@ -56,7 +55,7 @@ public class CustomListBar extends ListComponent implements DynBar<DynBar, TreeL
     }
 
     public CustomListBar(ListMenuBean menuBarBean) {
-        super(menuBarBean.getId(),  new ListFieldProperties(menuBarBean));
+        super(menuBarBean.getId(), new ListFieldProperties(menuBarBean));
         this.id = menuBarBean.getId();
 
     }
@@ -99,13 +98,11 @@ public class CustomListBar extends ListComponent implements DynBar<DynBar, TreeL
     }
 
 
-
-
-
-    public void addMenu(CustomMenu... types) {
+    public List<TreeListItem> addMenu(CustomMenu... types) {
+        List<TreeListItem> treeListItems = new ArrayList<>();
         for (CustomMenu type : types) {
             if (!type.type().equals("")) {
-                String menuId = type.type() + "_" +  ComboInputType.button.name();
+                String menuId = type.type() + "_" + ComboInputType.button.name();
                 TreeListItem menuItem = itemMap.get(menuId);
                 String caption = type.caption();
                 if (menuItem == null) {
@@ -121,9 +118,14 @@ public class CustomListBar extends ListComponent implements DynBar<DynBar, TreeL
                         menuItem.setImageClass(type.imageClass());
                     }
                 }
-                fillActions(type);
+                if (!treeListItems.contains(menuItem)) {
+                    treeListItems.add(menuItem);
+                    fillActions(type);
+                }
+
             }
         }
+        return treeListItems;
     }
 
     public void addMenu(APICallerComponent component) {
@@ -191,7 +193,7 @@ public class CustomListBar extends ListComponent implements DynBar<DynBar, TreeL
                 conditions.add(condition);
                 action.setConditions(conditions);
                 action.set_return(false);
-                this.addAction( action);
+                this.addAction(action);
 
             }
         }
@@ -221,7 +223,7 @@ public class CustomListBar extends ListComponent implements DynBar<DynBar, TreeL
                             Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                             conditions.add(condition);
                             action.setConditions(conditions);
-                            this.addAction(  action);
+                            this.addAction(action);
                         }
                     } else {
                         if (!apis.contains(component)) {
@@ -278,7 +280,7 @@ public class CustomListBar extends ListComponent implements DynBar<DynBar, TreeL
                         Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                         conditions.add(condition);
                         action.setConditions(conditions);
-                        this.addAction( action);
+                        this.addAction(action);
                     }
                 } else {
                     if (!apis.contains(component)) {
@@ -296,7 +298,7 @@ public class CustomListBar extends ListComponent implements DynBar<DynBar, TreeL
                     Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                     conditions.add(condition);
                     action.setConditions(conditions);
-                    this.addAction( action);
+                    this.addAction(action);
 
 
                 }
@@ -328,7 +330,7 @@ public class CustomListBar extends ListComponent implements DynBar<DynBar, TreeL
             try {
                 if (exprossion != null && !exprossion.equals("") && EsbUtil.parExpression(exprossion, Boolean.class)) {
                     CustomConditionAction action = new CustomConditionAction(actionType, type, ListEventEnum.onClick);
-                    this.addAction(  action);
+                    this.addAction(action);
                     actions.add(action);
                 }
             } catch (Throwable e) {
@@ -339,7 +341,6 @@ public class CustomListBar extends ListComponent implements DynBar<DynBar, TreeL
         }
         return actions;
     }
-
 
 
     public List<APICallerComponent> getApis() {

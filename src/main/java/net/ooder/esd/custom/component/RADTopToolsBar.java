@@ -1,25 +1,24 @@
 package net.ooder.esd.custom.component;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.EsbBeanAnnotation;
 import net.ooder.common.JDSConstants;
 import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
-import net.ooder.annotation.EsbBeanAnnotation;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
-import net.ooder.esd.annotation.menu.CustomMenuType;
-import net.ooder.esd.annotation.ui.CustomMenuItem;
-import net.ooder.esd.bean.bar.MenuDynBar;
 import net.ooder.esd.annotation.event.ActionTypeEnum;
 import net.ooder.esd.annotation.event.ToolBarEventEnum;
+import net.ooder.esd.annotation.menu.CustomMenuType;
 import net.ooder.esd.annotation.menu.GridMenu;
 import net.ooder.esd.annotation.ui.ComboInputType;
+import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ui.SymbolType;
 import net.ooder.esd.bean.ToolBarMenuBean;
 import net.ooder.esd.bean.TreeListItem;
+import net.ooder.esd.bean.bar.MenuDynBar;
 import net.ooder.esd.custom.action.CustomConditionAction;
 import net.ooder.esd.custom.action.ShowPageAction;
-import net.ooder.esd.util.json.CaseEnumsSerializer;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.APICallerComponent;
 import net.ooder.esd.tool.component.ToolBarComponent;
@@ -27,7 +26,7 @@ import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Condition;
 import net.ooder.esd.tool.properties.Event;
 import net.ooder.esd.tool.properties.ToolBarProperties;
-
+import net.ooder.esd.util.json.CaseEnumsSerializer;
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.jds.core.esb.task.ExcuteObj;
 
@@ -63,7 +62,7 @@ public class RADTopToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
 
 
     public RADTopToolsBar(String id) {
-        super(id,  new ToolBarProperties());
+        super(id, new ToolBarProperties());
         this.id = id;
     }
 
@@ -180,10 +179,11 @@ public class RADTopToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
     }
 
 
-    public void addMenu(CustomMenu... types) {
+    public List<TreeListItem> addMenu(CustomMenu... types) {
+        List<TreeListItem> treeListItems = new ArrayList<>();
         for (CustomMenu type : types) {
             if (!type.type().equals("")) {
-                String menuId = type.type()+ "_" +  ComboInputType.button.name();
+                String menuId = type.type() + "_" + ComboInputType.button.name();
                 TreeListItem menuItem = itemMap.get(menuId);
                 String caption = type.caption();
                 if (!showCaption) {
@@ -205,9 +205,13 @@ public class RADTopToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                         menuItem.setImageClass(type.imageClass());
                     }
                 }
-                fillActions(type);
+                if (!treeListItems.contains(menuItem)) {
+                    treeListItems.add(menuItem);
+                    fillActions(type);
+                }
             }
         }
+        return treeListItems;
     }
 
     public void addMenu(APICallerComponent component) {
@@ -330,7 +334,7 @@ public class RADTopToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                         Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                         conditions.add(condition);
                         action.setConditions(conditions);
-                        this.addAction( action);
+                        this.addAction(action);
                     }
 
                 }
@@ -371,7 +375,7 @@ public class RADTopToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                         Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                         conditions.add(condition);
                         action.setConditions(conditions);
-                        this.addAction(  action);
+                        this.addAction(action);
                     }
                 } else {
                     if (!apis.contains(component)) {
@@ -389,7 +393,7 @@ public class RADTopToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                     Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                     conditions.add(condition);
                     action.setConditions(conditions);
-                    this.addAction( action);
+                    this.addAction(action);
 
 
                 }
@@ -420,8 +424,8 @@ public class RADTopToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
             String exprossion = actionType.expression();
             try {
                 if (exprossion != null && !exprossion.equals("") && EsbUtil.parExpression(exprossion, Boolean.class)) {
-                    CustomConditionAction action = new CustomConditionAction(actionType, type,ToolBarEventEnum.onMenuBtnClick);
-                    this.addAction( action);
+                    CustomConditionAction action = new CustomConditionAction(actionType, type, ToolBarEventEnum.onMenuBtnClick);
+                    this.addAction(action);
                     actions.add(action);
                 }
             } catch (Throwable e) {

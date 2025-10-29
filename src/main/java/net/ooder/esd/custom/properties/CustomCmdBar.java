@@ -7,8 +7,6 @@ import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
-import net.ooder.esd.bean.bar.DynBar;
-import net.ooder.esd.bean.bar.RowCmdDynBar;
 import net.ooder.esd.annotation.event.ActionTypeEnum;
 import net.ooder.esd.annotation.event.GridEventEnum;
 import net.ooder.esd.annotation.event.TreeViewEventEnum;
@@ -18,6 +16,8 @@ import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.RowCmdBean;
 import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.bean.TreeRowCmdBean;
+import net.ooder.esd.bean.bar.DynBar;
+import net.ooder.esd.bean.bar.RowCmdDynBar;
 import net.ooder.esd.bean.grid.GridRowCmdBean;
 import net.ooder.esd.custom.action.ShowPageAction;
 import net.ooder.esd.custom.component.CustomMTreeComponent;
@@ -26,10 +26,8 @@ import net.ooder.esd.custom.component.grid.CustomGridComponent;
 import net.ooder.esd.custom.component.grid.CustomMGridComponent;
 import net.ooder.esd.custom.component.nav.CustomNavTreeComponent;
 import net.ooder.esd.tool.component.*;
-import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.*;
 import net.ooder.esd.tool.properties.item.CmdItem;
-
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.jds.core.esb.task.ExcuteObj;
 
@@ -234,7 +232,8 @@ public class CustomCmdBar<T extends Component> implements DynBar<RowCmdDynBar, C
     }
 
 
-    public void addMenu(CustomMenu... types) {
+    public List<CmdItem> addMenu(CustomMenu... types) {
+        List<CmdItem> treeListItems = new ArrayList<>();
         for (CustomMenu type : types) {
             if (!type.type().equals("")) {
                 String menuId = type.type() + ComboInputType.button.name();
@@ -267,10 +266,14 @@ public class CustomCmdBar<T extends Component> implements DynBar<RowCmdDynBar, C
                         menuItem.setImageClass(type.imageClass());
                     }
                 }
-                fillActions(type);
+                if (!treeListItems.contains(menuItem)) {
+                    treeListItems.add(menuItem);
+                    fillActions(type);
+                }
             }
             setTagCmds(cmdItems);
         }
+        return treeListItems;
     }
 
     public RowCmdBean getRowCmdBean() {

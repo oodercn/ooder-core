@@ -435,7 +435,8 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
         return menuItem;
     }
 
-    public void addMenu(CustomMenu... types) {
+    public List<TreeListItem> addMenu(CustomMenu... types) {
+        List<TreeListItem> treeListItems = new ArrayList<>();
         for (CustomMenu type : types) {
             if (!type.type().equals("")) {
                 String menuId = type.type() + "_" + ComboInputType.button.name();
@@ -453,9 +454,13 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
                         menuItem.setImageClass(type.imageClass());
                     }
                 }
-                fillActions(type);
+                if (!treeListItems.contains(menuItem)) {
+                    treeListItems.add(menuItem);
+                    fillActions(type);
+                }
             }
         }
+        return treeListItems;
     }
 
 
