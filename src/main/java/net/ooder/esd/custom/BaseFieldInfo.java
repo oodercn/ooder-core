@@ -105,7 +105,7 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
 
     Class<? extends Enum> enumClass;
 
-    String[] enums;
+    Set<String> enums;
 
     M widgetConfig;
 
@@ -145,7 +145,7 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
                     }
                 }
                 if ((enumClass != null && !enumClass.equals(Enum.class) && !enumClass.equals(Void.class))
-                        || (enums != null && enums.length > 0)) {
+                        || (enums != null && enums.size() > 0)) {
                     inputType = ComboInputType.listbox;
                 }
             }
@@ -330,9 +330,9 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
             this.isCaption = customAnnotation.captionField();
             this.uid = customAnnotation.uid();
             this.enumClass = customAnnotation.enumClass();
-            this.enums = customAnnotation.enums();
+            this.enums = new HashSet<>(Arrays.asList(customAnnotation.enums()));
             if ((enumClass != null && !enumClass.equals(Enum.class) && !enumClass.equals(Void.class))
-                    || (enums != null && enums.length > 0)) {
+                    || (enums != null && enums.size() > 0)) {
                 componentType = ComponentType.COMBOINPUT;
             }
 
@@ -766,12 +766,20 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
         this.enumClass = enumClass;
     }
 
+    public CustomUIBean getUiBean() {
+        return uiBean;
+    }
+
+    public void setUiBean(CustomUIBean uiBean) {
+        this.uiBean = uiBean;
+    }
+
     @Override
-    public String[] getEnums() {
+    public Set<String> getEnums() {
         return enums;
     }
 
-    public void setEnums(String[] enums) {
+    public void setEnums(Set<String> enums) {
         this.enums = enums;
     }
 

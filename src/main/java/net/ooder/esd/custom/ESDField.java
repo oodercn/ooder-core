@@ -10,6 +10,7 @@ import net.ooder.esd.bean.field.LabelBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.bean.grid.GridColItemBean;
 import java.lang.reflect.Type;
+import java.util.Set;
 
 public interface ESDField<M , N extends ComboBoxBean> {
 
@@ -129,7 +130,7 @@ public interface ESDField<M , N extends ComboBoxBean> {
     @CustomAnnotation(caption = "高级类型")
     ComponentType getComponentType();
 
-    String[] getEnums();
+    Set<String> getEnums();
 
     Class<? extends Enum>  getEnumClass();
 

@@ -18,6 +18,7 @@ import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.util.Map;
+import java.util.Set;
 
 @AnnotationType(clazz = CustomAnnotation.class)
 public class CustomFieldBean implements CustomBean {
@@ -38,7 +39,7 @@ public class CustomFieldBean implements CustomBean {
 
     Boolean pid;
 
-    String[] enums;
+    Set<String> enums;
 
     ComboInputType inputType;
 
@@ -115,11 +116,11 @@ public class CustomFieldBean implements CustomBean {
         this.captionField = captionField;
     }
 
-    public String[] getEnums() {
+    public Set<String> getEnums() {
         return enums;
     }
 
-    public void setEnums(String[] enums) {
+    public void setEnums(Set<String> enums) {
         this.enums = enums;
     }
 

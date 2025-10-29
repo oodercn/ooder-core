@@ -8,6 +8,8 @@ import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
+import java.util.Set;
+
 @AnnotationType(clazz = CustomAnnotation.class)
 public class DBFieldConfig implements CustomBean {
 
@@ -25,7 +27,7 @@ public class DBFieldConfig implements CustomBean {
     Boolean split;
     Boolean captionField;
     String simpleClassName;
-    String[] enums;
+    Set<String> enums;
     Class<? extends Enum> enumClass;
 
 
@@ -189,14 +191,13 @@ public class DBFieldConfig implements CustomBean {
         this.enumClass = enumClass;
     }
 
-    public String[] getEnums() {
+    public Set<String> getEnums() {
         return enums;
     }
 
-    public void setEnums(String[] enums) {
+    public void setEnums(Set<String> enums) {
         this.enums = enums;
     }
-
 
     public String toAnnotationStr() {
         return AnnotationUtil.toAnnotationStr(this);
