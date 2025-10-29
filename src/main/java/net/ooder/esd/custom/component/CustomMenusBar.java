@@ -142,7 +142,6 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
             for (TreeListItem childItem : items) {
                 menuItem.addChild(childItem);
             }
-
             if (this.parentId != null && !this.parentId.equals("")) {
                 TreeListItem item = new TreeListItem(ComboInputType.split, parentId + "spilit");
                 menuItem.addChild(item);
@@ -169,8 +168,8 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
     }
 
 
-    public void addMenu(CustomMenu... types) {
-        Set<TreeListItem> treeListItems = new HashSet<>();
+    public List<TreeListItem> addMenu(CustomMenu... types) {
+        List<TreeListItem> treeListItems = new ArrayList<>();
         for (CustomMenu type : types) {
             if (!type.type().equals("")) {
                 String menuId = type.type() + "_" + ComboInputType.button.name();
@@ -194,10 +193,13 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                         menuItem.setImageClass(type.imageClass());
                     }
                 }
-                treeListItems.add(menuItem);
-                fillActions(type);
+                if (!treeListItems.contains(menuItem)) {
+                    treeListItems.add(menuItem);
+                    fillActions(type);
+                }
             }
         }
+        return treeListItems;
     }
 
 
@@ -309,18 +311,38 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
         List<Condition> conditionList = new ArrayList<>();
         conditionList.addAll(conditions);
         String expression = component.getProperties().getExpression();
-        if (expression == null || expression.equals("") || this.parExpression(expression)) {
 
+
+        if (expression == null || expression.equals("") || this.parExpression(expression)) {
             String caption = component.getProperties().getDesc();
             String imageClass = component.getProperties().getImageClass();
             Set<CustomMenuItem> items = component.getProperties().getBindMenu();
             if (items != null && items.size() > 0) {
+                List<CustomMenu> customMenuList = new ArrayList<>();
                 for (CustomMenuItem item : items) {
-                    this.addMenu(item.getMenu());
+                    customMenuList.add(item.getMenu());
                 }
-                if (!apis.contains(component)) {
-                    this.apis.add(component);
+                List<TreeListItem> listItem = this.addMenu(customMenuList.toArray(new CustomMenu[]{}));
+                if (component.getActions() == null && component.getActions().isEmpty()) {
+                    if (!apis.contains(component)) {
+                        this.apis.add(component);
+                    }
+                } else {
+                    for (TreeListItem item : listItem) {
+                        for (Action action : component.getActions()) {
+                            if (this.parentId != null && !this.parentId.equals("")) {
+                                Condition condition = new Condition("{args[2].id}", SymbolType.equal, item.getId());
+                                conditionList.add(condition);
+                                action.setEventKey(MenuEventEnum.onMenuSelected);
+                            } else {
+                                Condition condition = new Condition("{args[1].id}", SymbolType.equal, item.getId());
+                                conditionList.add(condition);
+                                action.setEventKey(MenuEventEnum.onMenuBtnClick);
+                            }
+                        }
+                    }
                 }
+
             } else {
                 String menuId = component.getAlias() + "_" + ComboInputType.button.name();
                 TreeListItem menuItem = itemMap.get(menuId);
@@ -343,57 +365,48 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                 if (paramsMap != null) {
                     menuItem.getTagVar().putAll(paramsMap);
                 }
-
-                if (!apis.contains(component)) {
-                    this.apis.add(component);
-                    Set<Action> actions = component.getActions();
-                    if (actions != null && actions.size() > 0) {
-                        for (Action action : actions) {
-                            if (this.parentId != null && !this.parentId.equals("")) {
-                                Condition condition = new Condition("{args[2].id}", SymbolType.equal, menuId);
-                                conditionList.add(condition);
-                                action.setEventKey(MenuEventEnum.onMenuSelected);
-                            } else {
-                                Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
-                                conditionList.add(condition);
-                                action.setEventKey(MenuEventEnum.onMenuBtnClick);
-                            }
-                            action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
-                            //action.set_return(false);
-                            action.updateArgs("{page." + component.getAlias() + "}", 3);
-                            action.setConditions(conditionList);
-                            this.addAction(action);
-                        }
-                    } else {
-                        Action action = new Action(MenuEventEnum.onMenuSelected);
-                        action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
-                        action.setType(ActionTypeEnum.control);
-                        action.setTarget(component.getAlias());
-                        action.setDesc(caption);
-                        action.setMethod("invoke");
-                        action.setRedirection("other:callback:call");
-                        action.set_return(false);
-
+                Set<Action> actions = component.getActions();
+                if (actions != null && actions.size() > 0) {
+                    for (Action action : actions) {
                         if (this.parentId != null && !this.parentId.equals("")) {
                             Condition condition = new Condition("{args[2].id}", SymbolType.equal, menuId);
                             conditionList.add(condition);
-                            action.setConditions(conditionList);
                             action.setEventKey(MenuEventEnum.onMenuSelected);
-                            this.addAction(action);
                         } else {
                             Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                             conditionList.add(condition);
-                            action.setConditions(conditionList);
                             action.setEventKey(MenuEventEnum.onMenuBtnClick);
-                            this.addAction(action);
                         }
-
+                        action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
+                        action.updateArgs("{page." + component.getAlias() + "}", 3);
+                        action.setConditions(conditionList);
+                        this.addAction(action);
                     }
+                } else if (!apis.contains(component)) {
+                    this.apis.add(component);
+                    Action action = new Action(MenuEventEnum.onMenuSelected);
+                    action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
+                    action.setType(ActionTypeEnum.control);
+                    action.setTarget(component.getAlias());
+                    action.setDesc(caption);
+                    action.setMethod("invoke");
+                    action.setRedirection("other:callback:call");
+                    action.set_return(false);
 
-
+                    if (this.parentId != null && !this.parentId.equals("")) {
+                        Condition condition = new Condition("{args[2].id}", SymbolType.equal, menuId);
+                        conditionList.add(condition);
+                        action.setConditions(conditionList);
+                        action.setEventKey(MenuEventEnum.onMenuSelected);
+                        this.addAction(action);
+                    } else {
+                        Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
+                        conditionList.add(condition);
+                        action.setConditions(conditionList);
+                        action.setEventKey(MenuEventEnum.onMenuBtnClick);
+                        this.addAction(action);
+                    }
                 }
-
-
             }
         }
         return component;

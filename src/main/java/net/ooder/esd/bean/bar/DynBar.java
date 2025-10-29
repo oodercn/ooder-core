@@ -13,7 +13,7 @@ public interface DynBar<T extends DynBar, I extends UIItem> extends Comparable<T
 
     public void addSplit(String id);
 
-    public void addMenu(CustomMenu... types);
+    public List<I> addMenu(CustomMenu... types);
 
     public boolean initMenuClass(Class clazz);
 

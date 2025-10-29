@@ -10,6 +10,7 @@ import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
 import net.ooder.esd.annotation.menu.CustomMenuType;
 import net.ooder.esd.annotation.ui.CustomMenuItem;
+import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.bean.bar.DynBar;
 import net.ooder.esd.annotation.event.ActionTypeEnum;
 import net.ooder.esd.annotation.event.FieldEventEnum;
@@ -118,7 +119,8 @@ public class CustomBottomBar extends StatusButtonsComponent implements DynBar<Dy
     }
 
 
-    public void addMenu(CustomMenu... formTypes) {
+    public    List<CmdItem> addMenu(CustomMenu... formTypes) {
+        List<CmdItem> treeListItems = new ArrayList<>();
         for (CustomMenu type : formTypes) {
             if (!type.type().equals("")) {
                 String menuId = type.type() + "_" + ComboInputType.button.name();
@@ -140,9 +142,13 @@ public class CustomBottomBar extends StatusButtonsComponent implements DynBar<Dy
                         menuItem.setImageClass(type.imageClass());
                     }
                 }
+                if (!treeListItems.contains(menuItem)){
+                    treeListItems.add(menuItem);
+                }
                 fillActions(type);
             }
         }
+        return treeListItems;
     }
 
     public void addComponentMenu(APICallerComponent component, Map<String, Object> paramsMap) {
@@ -195,7 +201,6 @@ public class CustomBottomBar extends StatusButtonsComponent implements DynBar<Dy
                     }
                 }
                 Set<Action> actions = component.getActions();
-
                 if (actions != null && actions.size() > 0) {
                     for (Action action : actions) {
                         Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);

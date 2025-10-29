@@ -114,6 +114,7 @@ public class Action<K extends EventKey> implements CustomBean {
         initAction(customAction, eventEnum.event(), customAction.target());
     }
 
+
     public Action() {
 
     }
@@ -131,6 +132,7 @@ public class Action<K extends EventKey> implements CustomBean {
         this.eventValue = eventEnum.eventName();
         initAction(customAction, eventEnum.event(), target);
     }
+
 
     void initAction(CustomAction customAction, EventKey eventEnum, String target) {
         if (customAction.script() != null && !customAction.script().equals("")) {
@@ -268,6 +270,8 @@ public class Action<K extends EventKey> implements CustomBean {
 
     public void setEventKey(K eventKey) {
         this.eventKey = eventKey;
+        this.eventClass = eventKey.getClass();
+        this.eventValue = eventKey.getEvent();
     }
 
     public void updateArgs(String value, int k) {
@@ -340,7 +344,7 @@ public class Action<K extends EventKey> implements CustomBean {
         this.conditions = conditions;
     }
 
-    public List getArgs() {
+    public List<String> getArgs() {
         return args;
     }
 

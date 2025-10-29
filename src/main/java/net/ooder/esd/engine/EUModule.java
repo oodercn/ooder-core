@@ -1,27 +1,24 @@
 package net.ooder.esd.engine;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import javassist.NotFoundException;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.StringUtility;
+import net.ooder.esd.annotation.event.ActionTypeEnum;
+import net.ooder.esd.annotation.event.ToolBarEventEnum;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.EUFileType;
+import net.ooder.esd.annotation.ui.SymbolType;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.component.CustomMenusBar;
 import net.ooder.esd.engine.inner.INProjectVersion;
-import net.ooder.esd.tool.component.Component;
-import net.ooder.esd.tool.component.ComponentList;
-import net.ooder.esd.tool.component.DialogComponent;
-import net.ooder.esd.tool.component.HiddenInputComponent;
 import net.ooder.esd.tool.DSMProperties;
-import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.*;
+import net.ooder.esd.tool.properties.Condition;
 import net.ooder.esd.tool.properties.DivProperties;
 import net.ooder.esd.tool.properties.WidgetProperties;
-import javassist.NotFoundException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class EUModule<T extends ModuleComponent> extends EUFile {
 
@@ -64,7 +61,7 @@ public class EUModule<T extends ModuleComponent> extends EUFile {
     public List<Class> bindService = new ArrayList<Class>();
 
 
-    public void clearParams(){
+    public void clearParams() {
         component.getCtxBaseComponent().clearParams();
     }
 
@@ -297,5 +294,40 @@ public class EUModule<T extends ModuleComponent> extends EUFile {
         return this.getComponent().getDesc() == null ? this.getClassName() : this.getComponent().getDesc();
     }
 
+//
+//    List<Condition> conditions = new ArrayList<>();
+//                                action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
+//                                action.set_return(false);
+//    Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
+//                                conditions.add(condition);
+//                                if (action.getScript() != null && !action.getScript().equals("")) {
+//        action.setMethod("call");
+//        action.setType(ActionTypeEnum.other);
+//        action.setTarget("callback");
+//        String script = action.getScript();
+//        if (!script.startsWith("{") && !script.endsWith("}")) {
+//            script = "{" + script + "}";
+//        }
+//        List<String> params = new ArrayList<>();
+//        List<String> args = action.getArgs();
+//        if (args != null && args.size() > 0) {
+//            for (String param : args) {
+//                if (!param.startsWith("{") && !param.endsWith("}")) {
+//                    param = "{" + param + "}";
+//                }
+//                params.add(param);
+//            }
+//        } else {
+//            int k = 0;
+//            while (k < ToolBarEventEnum.onClick.getParams().length) {
+//                k++;
+//                params.add("{args[" + k + "]}");
+//            }
+//        }
+//
+//        String[] argArr = new String[]{script, null, null, null};
+//        args.addAll(Arrays.asList(argArr));
+//        args.addAll(params);
+//        action.setArgs(args);
 
 }

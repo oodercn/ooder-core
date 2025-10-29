@@ -1772,6 +1772,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
             if (viewClassName == null
                     || viewClassName.equals("")
                     || viewClassName.equals("void")
+                    || viewClassName.equals(ModuleComponent.class.getName())
                     || viewClassName.startsWith("java.")
                     || viewClassName.equals(this.getSourceClassName())) {
                 if (this.getMethod() != null) {

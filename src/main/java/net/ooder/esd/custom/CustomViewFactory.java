@@ -35,6 +35,7 @@ import net.ooder.esd.tool.properties.Properties;
 import net.ooder.esd.tool.properties.form.FormField;
 import net.ooder.esd.tool.properties.list.ListFieldProperties;
 import net.ooder.esd.util.DSMAnnotationUtil;
+import net.ooder.esd.util.json.MvelDSMRoot;
 import net.ooder.server.JDSServer;
 import net.ooder.server.httpproxy.core.Handler;
 import net.ooder.vfs.ct.CtVfsFactory;
@@ -138,55 +139,63 @@ public class CustomViewFactory {
             if (methodConfig.getDynDataBean() != null && module.getRealClassName().equals(module.getClassName())) {
                 customClass = (Class<T>) CustomDynLoadView.class;
             }
+            if (valueMap == null) {
+                valueMap = new HashMap<>();
+            }
 
-            if (customClass != null && methodConfig.getView() != null) {
-                Constructor<T> constructor = customClass.getConstructor(new Class[]{EUModule.class, MethodConfig.class, Map.class});
-                if (valueMap == null) {
-                    valueMap = new HashMap<>();
-                }
-                EUModule oTopModule = (EUModule) JDSActionContext.getActionContext().getContext().get(CustomViewFactory.TopModuleKey);
-                EUModule omodule = (EUModule) JDSActionContext.getActionContext().getContext().get(CustomViewFactory.CurrModuleKey);
+            try {
+                Method sourceMethod = methodConfig.getRequestMethodBean().getSourceMethod();
 
-                if (oTopModule == null) {
-                    oTopModule = module;
-                    JDSActionContext.getActionContext().getContext().put(CustomViewFactory.TopModuleKey, module);
-                }
-                if (omodule == null) {
-                    omodule = module;
+                if (sourceMethod != null && sourceMethod.getReturnType().isAssignableFrom(ModuleComponent.class)) {
+                    ModuleComponent moduleComponent = (ModuleComponent) methodConfig.getRequestMethodBean().invok(null, (Map<String, Object>) valueMap);
+                    module.setComponent(moduleComponent);
+                } else if (customClass != null && methodConfig.getView() != null) {
+
+                    Constructor<T> constructor = customClass.getConstructor(new Class[]{EUModule.class, MethodConfig.class, Map.class});
+
+                    EUModule oTopModule = (EUModule) JDSActionContext.getActionContext().getContext().get(CustomViewFactory.TopModuleKey);
+                    EUModule omodule = (EUModule) JDSActionContext.getActionContext().getContext().get(CustomViewFactory.CurrModuleKey);
+
+                    if (oTopModule == null) {
+                        oTopModule = module;
+                        JDSActionContext.getActionContext().getContext().put(CustomViewFactory.TopModuleKey, module);
+                    }
+                    if (omodule == null) {
+                        omodule = module;
+                        JDSActionContext.getActionContext().getContext().put(CustomViewFactory.CurrModuleKey, module);
+                    }
+
+                    MethodConfig omethodConfig = (MethodConfig) JDSActionContext.getActionContext().getContext().get(CustomViewFactory.MethodBeanKey);
                     JDSActionContext.getActionContext().getContext().put(CustomViewFactory.CurrModuleKey, module);
+                    JDSActionContext.getActionContext().getContext().put(CustomViewFactory.MethodBeanKey, methodConfig);
+
+                    T component = constructor.newInstance(new Object[]{module, methodConfig, valueMap});
+                    ModuleProperties properties = new ModuleProperties(customClass, methodConfig, module.getProjectVersion().getProjectName());
+                    component.setProperties(properties);
+                    String json = JSONObject.toJSONString(component);
+                    String obj = (String) TemplateRuntime.eval(json, MvelDSMRoot.getInstance(),perContext(oTopModule, component.getEuModule()));
+                    T moduleComponent = JSONObject.parseObject(obj, customClass);
+                    moduleComponent.setProperties(properties);
+                    moduleComponent.setCache(false);
+                    try {
+                        saveModule(module, dynbuild);
+                    } catch (Throwable e) {
+                        logger.error(e);
+                    }
+                    moduleComponent.setCtxBaseComponent(component.getCtxBaseComponent());
+                    if (component instanceof CustomGridComponent) {
+                        ((CustomGridComponent) moduleComponent).setCmdBar(((CustomGridComponent) component).getCmdBar());
+                    }
+                    if (component instanceof CustomModuleComponent) {
+                        ((CustomModuleComponent) moduleComponent).setMainComponent(((CustomModuleComponent) component).getMainComponent());
+                    }
+                    module.setComponent(moduleComponent);
+                    module.getComponent().fillFormValues(valueMap, true);
+                    JDSActionContext.getActionContext().getContext().put(CustomViewFactory.CurrModuleKey, omodule);
+                    JDSActionContext.getActionContext().getContext().put(CustomViewFactory.MethodBeanKey, omethodConfig);
                 }
-
-                MethodConfig omethodConfig = (MethodConfig) JDSActionContext.getActionContext().getContext().get(CustomViewFactory.MethodBeanKey);
-                JDSActionContext.getActionContext().getContext().put(CustomViewFactory.CurrModuleKey, module);
-                JDSActionContext.getActionContext().getContext().put(CustomViewFactory.MethodBeanKey, methodConfig);
-
-                T component = constructor.newInstance(new Object[]{module, methodConfig, valueMap});
-                ModuleProperties properties = new ModuleProperties(customClass, methodConfig, module.getProjectVersion().getProjectName());
-                component.setProperties(properties);
-                String json = JSONObject.toJSONString(component);
-                String obj = (String) TemplateRuntime.eval(json, perContext(oTopModule, component.getEuModule()));
-                T moduleComponent = JSONObject.parseObject(obj, customClass);
-                moduleComponent.setProperties(properties);
-                moduleComponent.setCache(false);
-
-                try {
-                    saveModule(module, dynbuild);
-                } catch (Throwable e) {
-                    logger.error(e);
-                }
-
-
-                moduleComponent.setCtxBaseComponent(component.getCtxBaseComponent());
-                if (component instanceof CustomGridComponent) {
-                    ((CustomGridComponent) moduleComponent).setCmdBar(((CustomGridComponent) component).getCmdBar());
-                }
-                if (component instanceof CustomModuleComponent) {
-                    ((CustomModuleComponent) moduleComponent).setMainComponent(((CustomModuleComponent) component).getMainComponent());
-                }
-                module.setComponent(moduleComponent);
-                module.getComponent().fillFormValues(valueMap, true);
-                JDSActionContext.getActionContext().getContext().put(CustomViewFactory.CurrModuleKey, omodule);
-                JDSActionContext.getActionContext().getContext().put(CustomViewFactory.MethodBeanKey, omethodConfig);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return module;
@@ -245,6 +254,7 @@ public class CustomViewFactory {
                 ProjectVersion version = ESDFacrory.getAdminESDClient().getProjectVersionByName(projectName);
                 methodAPIBean.setDomainId(version.getProject().getProjectName());
             }
+
             String url = methodAPIBean.getUrl();
             PackagePathType packagePathType = PackagePathType.startPath(url);
             //添加线程缓存避免嵌套调用\
@@ -323,6 +333,7 @@ public class CustomViewFactory {
             ProjectVersion version = ESDFacrory.getAdminESDClient().getProjectVersionByName(projectName);
             module = version.createCustomModule(methodAPIBean.getEUClassName());
             module = createModuleComponent(methodAPIBean, customClass, module, valueMap, dynBuild);
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new JDSException(e);
