@@ -1,5 +1,6 @@
 package net.ooder.esd.custom;
 
+import net.ooder.annotation.Disabled;
 import net.ooder.common.database.metadata.ColInfo;
 import net.ooder.common.database.util.TypeMapping;
 import net.ooder.common.util.StringUtility;
@@ -11,17 +12,19 @@ import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.field.CustomFieldBean;
 import net.ooder.esd.bean.field.FieldBean;
-import net.ooder.esd.bean.field.SearchFieldBean;
 import net.ooder.esd.bean.field.LabelBean;
+import net.ooder.esd.bean.field.SearchFieldBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;
 import net.ooder.esd.bean.grid.GridColItemBean;
 import net.ooder.esd.manager.editor.CustomMenuAction;
 import net.ooder.esd.tool.OODTypeMapping;
-import net.ooder.annotation.Disabled;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TableFieldInfo<M extends WidgetBean, N extends ComboBoxBean> implements ESDField<M, N> {
 
@@ -40,9 +43,9 @@ public class TableFieldInfo<M extends WidgetBean, N extends ComboBoxBean> implem
 
     boolean dynLoad = false;
 
-    String[] enums;
+    Set<String> enums;
 
-    Class<? extends Enum>  enumClass;
+    Class<? extends Enum> enumClass;
 
     String imageClsss;
 
@@ -89,7 +92,7 @@ public class TableFieldInfo<M extends WidgetBean, N extends ComboBoxBean> implem
             desc = desc.substring(0, 12);
         }
 
-        this.enums = dbcol.getEnums();
+        this.enums = new HashSet<>(Arrays.asList(dbcol.getEnums()));
         this.enumClass = dbcol.getEnumClass();
         ComponentType componentType = OODTypeMapping.getComponentType(dbcol);
         try {
@@ -179,7 +182,7 @@ public class TableFieldInfo<M extends WidgetBean, N extends ComboBoxBean> implem
         this.widgetConfig = widgetConfig;
     }
 
-    public Class<? extends Enum>  getEnumClass() {
+    public Class<? extends Enum> getEnumClass() {
         return enumClass;
     }
 
@@ -432,11 +435,12 @@ public class TableFieldInfo<M extends WidgetBean, N extends ComboBoxBean> implem
         return null;
     }
 
-    public String[] getEnums() {
+    @Override
+    public Set<String> getEnums() {
         return enums;
     }
 
-    public void setEnums(String[] enums) {
+    public void setEnums(Set<String> enums) {
         this.enums = enums;
     }
 

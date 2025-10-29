@@ -18,8 +18,8 @@ import net.ooder.esd.custom.action.CustomAPICallAction;
 import net.ooder.esd.custom.action.ShowPageAction;
 import net.ooder.esd.custom.component.CustomContextBar;
 import net.ooder.esd.custom.component.CustomModuleComponent;
-import net.ooder.esd.custom.properties.CustomCmdBar;
 import net.ooder.esd.custom.component.CustomTabsComponent;
+import net.ooder.esd.custom.properties.CustomCmdBar;
 import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.manager.editor.PluginsFactory;
@@ -176,7 +176,6 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
             APICallerProperties reloadProperties = reloadAPI.getProperties();
             UrlPathData requestCtxData = new UrlPathData(this.getCtxBaseComponent().getAlias(), RequestPathTypeEnum.FORM, "");
             reloadProperties.addRequestData(requestCtxData);
-
             UrlPathData requestFormData = new UrlPathData(treeBlockComponent.getAlias(), RequestPathTypeEnum.FORM, "");
             reloadProperties.addRequestData(requestFormData);
             UrlPathData formData = new UrlPathData(this.getTreeComponent().getAlias(), itemType, "data");
@@ -322,6 +321,7 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
                 this.fillLazyLoadAction(viewBean);
                 super.fillToolBar(viewBean, currComponent);
                 this.fillHelpBar(viewBean, currComponent);
+
             }
         } catch (JDSException e) {
             e.printStackTrace();

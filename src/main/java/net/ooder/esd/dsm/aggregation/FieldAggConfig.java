@@ -18,10 +18,7 @@ import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @AnnotationType(clazz = CustomAnnotation.class)
 public class FieldAggConfig implements CustomBean, Comparable<FieldAggConfig> {
@@ -50,7 +47,7 @@ public class FieldAggConfig implements CustomBean, Comparable<FieldAggConfig> {
     Boolean captionField;
     String simpleClassName;
     Class<? extends Enum>  enumClass;
-    String[] enums;
+    Set<String> enums;
     ComponentType componentType;
     Map tagVar = new HashMap<>();
     Integer index = 0;
@@ -223,11 +220,11 @@ public class FieldAggConfig implements CustomBean, Comparable<FieldAggConfig> {
         return esdField;
     }
 
-    public String[] getEnums() {
+    public Set<String> getEnums() {
         return enums;
     }
 
-    public void setEnums(String[] enums) {
+    public void setEnums(Set<String> enums) {
         this.enums = enums;
     }
 

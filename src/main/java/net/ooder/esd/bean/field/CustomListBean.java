@@ -45,7 +45,7 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
 
     String xpath;
 
-    String[] enums;
+    Set<String> enums;
 
     List<TreeListItem> items;
 
@@ -121,7 +121,7 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
 
 
     void init(ESDField esdField) {
-        if (enums == null || enums.length == 0) {
+        if (enums == null || enums.size() == 0) {
             enums = esdField.getEnums();
         }
 
@@ -157,8 +157,8 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
         }
 
 
-        if (enums != null && enums.length > 0) {
-            items = ESDEnumsUtil.getItems(enums);
+        if (enums != null && enums.size() > 0) {
+            items = ESDEnumsUtil.getItems(enums.toArray(new String[]{}));
         } else if (itemsExpression != null) {
             items = ESDEnumsUtil.parItemExpression(itemsExpression);
         } else {
@@ -200,11 +200,11 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
         return annotationBeans;
     }
 
-    public String[] getEnums() {
+    public Set<String> getEnums() {
         return enums;
     }
 
-    public void setEnums(String[] enums) {
+    public void setEnums(Set<String> enums) {
         this.enums = enums;
     }
 

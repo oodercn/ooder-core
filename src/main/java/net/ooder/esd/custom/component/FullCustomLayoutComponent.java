@@ -3,8 +3,6 @@ package net.ooder.esd.custom.component;
 import net.ooder.common.JDSException;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.CustomClass;
-import net.ooder.esd.annotation.action.CustomModuleAction;
-import net.ooder.esd.annotation.event.ModuleEventEnum;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
@@ -18,7 +16,6 @@ import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.LayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.LayoutProperties;
 
 import java.util.List;
@@ -45,7 +42,7 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                     if (itemMethod.getLayoutItem() != null) {
                         CustomLayoutItemBean layoutItemBean = itemMethod.getLayoutItem();
                         layoutItemBean.setParentAlias(this.getAlias());
-                        Class ctClass = itemMethod.getViewClass().getCtClass();
+                        Class ctClass = itemMethod.getInnerReturnType();
                         if (ModuleComponent.class.isAssignableFrom(ctClass)) {
                             try {
                                 ModuleComponent moduleComponent = (ModuleComponent) itemMethod.getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
@@ -65,14 +62,11 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                 e.printStackTrace();
                             }
                         } else {
-
                             ModuleComponent moduleComponent = new ModuleComponent();
                             moduleComponent.setAlias(itemMethod.getName());
                             moduleComponent.setClassName(itemMethod.getEUClassName());
                             moduleComponent.setTarget(layoutItemBean.getPos().name());
                             moduleComponent.getModuleVar().putAll(itemMethod.getTagVar());
-                            Action action = new Action(CustomModuleAction.INITDATA, ModuleEventEnum.afterShow);
-                            moduleComponent.addAction(action);
                             layoutComponent.addChildren(moduleComponent);
                         }
                     }
