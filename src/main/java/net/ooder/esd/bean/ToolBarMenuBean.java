@@ -57,6 +57,7 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
 
     public Class bindService;
 
+    public PositionType position;
 
     public Boolean disabled;
 
@@ -183,6 +184,7 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
         this.disabled = annotation.disabled();
         this.iconFontSize = annotation.iconFontSize();
         this.dock = annotation.dock();
+        this.position = annotation.position();
 
 
         this.autoFontColor = annotation.autoFontColor();
@@ -211,6 +213,14 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
 
         }
         return alias;
+    }
+
+    public PositionType getPosition() {
+        return position;
+    }
+
+    public void setPosition(PositionType position) {
+        this.position = position;
     }
 
     public List<T> getEnumItems() {

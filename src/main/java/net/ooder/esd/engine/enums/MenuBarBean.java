@@ -77,7 +77,7 @@ public class MenuBarBean<T extends Enum> implements CustomBean, Comparable<MenuB
 
     Class[] menuClasses;
 
-
+    PositionType position;
 
     Boolean autoIconColor = true;
 
@@ -141,6 +141,7 @@ public class MenuBarBean<T extends Enum> implements CustomBean, Comparable<MenuB
         this.vAlign = menu.vAlign();
         this.hAlign = menu.hAlign();
         this.handler = menu.handler();
+        this.position = menu.position();
         if (!menu.top().equals("")) {
             this.top = menu.top();
         }
@@ -263,7 +264,13 @@ public class MenuBarBean<T extends Enum> implements CustomBean, Comparable<MenuB
         this.dock = dock;
     }
 
+    public PositionType getPosition() {
+        return position;
+    }
 
+    public void setPosition(PositionType position) {
+        this.position = position;
+    }
 
     public Boolean getAutoIconColor() {
         return autoIconColor;

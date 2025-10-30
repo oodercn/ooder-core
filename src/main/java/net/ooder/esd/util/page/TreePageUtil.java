@@ -23,6 +23,7 @@ import net.ooder.web.RemoteConnectionManager;
 
 import java.util.*;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -203,11 +204,11 @@ public class TreePageUtil {
             }
         taskId = taskId + "_" + classSet.toString() + "_" + objs.size();
         try {
-            RemoteConnectionManager.initConnection(taskId, tasks.size());
+            //RemoteConnectionManager.initConnection(taskId, tasks.size());
             List<Future<T>> futures = RemoteConnectionManager.getConntctionService(taskId).invokeAll(tasks);
             for (Future<T> resultFuture : futures) {
                 try {
-                    T item = resultFuture.get();
+                    T item = resultFuture.get(200, TimeUnit.MILLISECONDS);
                     if (item != null) {
                         if (item.getPattern() != null && !item.getPattern().equals("")
                                 // && (childTreeViewBean == null || (childTreeViewBean != null && (childTreeViewBean.getDeepSearch() != null && childTreeViewBean.getDeepSearch())))) {
@@ -242,7 +243,7 @@ public class TreePageUtil {
                     e.printStackTrace();
                 }
             }
-            RemoteConnectionManager.getConntctionService(taskId).shutdown();
+            RemoteConnectionManager.getConntctionService(taskId).shutdownNow();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
