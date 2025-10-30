@@ -2,17 +2,17 @@ package net.ooder.esd.bean;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.BottomBarMenu;
 import net.ooder.esd.annotation.CustomMenu;
 import net.ooder.esd.annotation.menu.CustomMenuType;
 import net.ooder.esd.annotation.ui.*;
-import net.ooder.esd.util.json.CaseEnumsSerializer;
 import net.ooder.esd.tool.component.StatusButtonsComponent;
 import net.ooder.esd.tool.properties.form.StatusButtonsProperties;
 import net.ooder.esd.tool.properties.item.CmdItem;
+import net.ooder.esd.util.json.CaseEnumsSerializer;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.util.ArrayList;
@@ -49,6 +49,8 @@ public class BottomBarMenuBean<T extends Enum> implements CustomBean {
     AlignType itemAlign;
 
     StatusItemType itemType;
+
+    PositionType position;
 
     Boolean connected;
 
@@ -159,6 +161,13 @@ public class BottomBarMenuBean<T extends Enum> implements CustomBean {
         this.alias = alias;
     }
 
+    public PositionType getPosition() {
+        return position;
+    }
+
+    public void setPosition(PositionType position) {
+        this.position = position;
+    }
 
     public Boolean getAutoIconColor() {
         return autoIconColor;
