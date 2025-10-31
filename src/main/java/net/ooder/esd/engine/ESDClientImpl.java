@@ -813,7 +813,6 @@ public class ESDClientImpl implements ESDClient {
 
             File devFile = new File(JDSConfig.Config.rootServerHome().getAbsolutePath() + "/" + EXPORT_PATH + "/" + version.getProject().getProjectName() + "/" + filePath);
 
-
             InputStream input = new ByteArrayInputStream(json.getBytes(VFSConstants.Default_Encoding));
             IOUtility.copy(input, clsFile);
             IOUtility.copyFile(clsFile, localFile);
@@ -832,7 +831,20 @@ public class ESDClientImpl implements ESDClient {
             APIConfigFactory.getInstance().clear(className);
             CustomViewFactory.getInstance().clear();
             ESDClassManager.getInstance().clear(className);
-            //  DSMFactory.getInstance().clear();
+
+            File localFile = new File(JDSUtil.getJdsRealPath() + WEBAPP_PATH + "/" + version.getProject().getProjectName() + "/cls/" + MD5.getHashString(className));
+            File devFile = new File(JDSConfig.Config.rootServerHome().getAbsolutePath() + "/" + EXPORT_PATH + "/" + version.getProject().getProjectName() + "/cls/" + MD5.getHashString(className));
+
+            if (localFile.exists()) {
+                localFile.delete();
+            }
+
+
+            if (devFile.exists()) {
+                devFile.delete();
+            }
+
+
             if (server == null) {
                 server = this.getDefaultLocalServer(projectName);
             }
@@ -840,24 +852,11 @@ public class ESDClientImpl implements ESDClient {
                 throw new JDSException("请配置服务器！");
             }
 
-
-            File localFile = new File(JDSUtil.getJdsRealPath() + WEBAPP_PATH + "/" + version.getProject().getProjectName() + "/cls/" + MD5.getHashString(className));
-
             File clsFile = new File(server.getPath() + "/" + WEBAPP_PATH + "/" + version.getProject().getProjectName() + "/cls/" + MD5.getHashString(className));
-
-            File devFile = new File(JDSConfig.Config.rootServerHome().getAbsolutePath() + "/" + EXPORT_PATH + "/" + version.getProject().getProjectName() + "/cls/" + MD5.getHashString(className));
-
-            if (localFile.exists()) {
-                localFile.delete();
-            }
-
             if (clsFile.exists()) {
                 clsFile.delete();
             }
 
-            if (devFile.exists()) {
-                devFile.delete();
-            }
 
         } catch (Exception e) {
             throw new JDSException(e);
@@ -1232,31 +1231,33 @@ public class ESDClientImpl implements ESDClient {
         }
 
         for (String path : realPaths) {
-            getVfsClient().clearCache(path);
-            Folder folder = getVfsClient().getFolderByPath(path);
-            try {
-                if (folder != null) {
-                    EUPackage euPackage = this.getPackageByPath(projectName, folder.getPath());
-                    if (euPackage != null) {
-                        List<EUModule> modules = euPackage.listAllModule();
-                        for (EUModule module : modules) {
-                            this.delModule(module);
-                        }
-                    }
-                    getVfsClient().deleteFolder(folder.getID());
-                } else {
+            Folder folder = null;
+            if (path.endsWith("/")) {
+                folder = getVfsClient().getFolderByPath(path);
+            } else {
+                String name = path.substring(path.lastIndexOf("/") + 1, path.length());
+                if (name.indexOf(".") > -1) {
                     FileInfo fileInfo = getVfsClient().getFileByPath(path);
                     if (fileInfo != null) {
                         if (fileInfo.getName().endsWith(".cls")) {
                             this.delModule(this.getModule(fileInfo.getPath(), projectName));
-                        } else {
-                            getVfsClient().deleteFile(fileInfo.getID());
                         }
+                        getVfsClient().deleteFile(fileInfo.getID());
                     }
-
+                } else {
+                    folder = getVfsClient().getFolderByPath(path);
                 }
-            } catch (JDSException e) {
-                e.printStackTrace();
+            }
+
+            if (folder != null) {
+                EUPackage euPackage = this.getPackageByPath(projectName, folder.getPath());
+                if (euPackage != null) {
+                    List<EUModule> modules = euPackage.listAllModule();
+                    for (EUModule module : modules) {
+                        this.delModule(module);
+                    }
+                }
+                getVfsClient().deleteFolder(folder.getID());
             }
         }
     }
