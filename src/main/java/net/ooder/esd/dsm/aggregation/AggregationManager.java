@@ -178,7 +178,7 @@ public class AggregationManager {
         String aggClassName = "AggEntityConfig[" + className + "]";
         AggEntityConfig esdClassConfig = (AggEntityConfig) actionContext.get(aggClassName);
 
-        if (esdClassConfig == null || reload) {
+        if (esdClassConfig != null && reload) {
             Class clazz = classManager.checkInterface(className);
             if (clazz != null) {
                 className = clazz.getName();
@@ -1015,41 +1015,39 @@ public class AggregationManager {
 
     }
 
+
     public void delAggEntityClass(String className, String projectName, boolean clear) throws JDSException {
+
         Class clazz = classManager.checkInterface(className);
-        if (clazz != null) {
+        if (clazz != null ) {
+
             String realClassName = clazz.getName();
             Set<String> classNameSet = new HashSet<>();
             classNameSet.add(className);
             classNameSet.add(realClassName);
-            AggEntityConfig aggEntityConfig = this.getAggEntityConfig(className, false);
-            if (aggEntityConfig != null) {
-                Set<String> otherClassNameSet = aggEntityConfig.getOtherClassNames();
-                for (String clazzName : classNameSet) {
-                    ESDClass esdClass = classManager.getAggEntityByName(clazzName, false);
-                    if (esdClass != null) {
-                        String oDomainId = esdClass.getDomainId();
-                        String domainId = getRealDomainId(className, false);
-                        if (oDomainId != null && !oDomainId.equals(domainId)) {
-                            domainId = getRealDomainId(className, true);
-                        }
-                        this.delAggEntity(clazzName);
-                        this.delEntityRef(clazzName, domainId, projectName, false);
-                        if (clear) {
-                            clearEntitySrc(clazzName, domainId, projectName);
-                        }
-                        if (esdClass != null && esdClass.isProxy() && esdClass.getSourceClass() != null) {
-                            Class sourceClazz = classManager.checkInterface(esdClass.getSourceClass().getClassName());
-                            if (sourceClazz != null) {
-                                String sourceClassName = sourceClazz.getName();
-                                if (!sourceClassName.equals(clazzName)) {
-                                    delAggEntityClass(sourceClassName, projectName, clear);
-                                }
+            for (String clazzName : classNameSet) {
+                ESDClass esdClass = classManager.getAggEntityByName(clazzName, false);
+                if (esdClass != null) {
+                    String oDomainId = esdClass.getDomainId();
+                    String domainId = getRealDomainId(className, false);
+                    if (oDomainId != null && !oDomainId.equals(domainId)) {
+                        domainId = getRealDomainId(className, true);
+                    }
+                    this.delAggEntity(clazzName);
+                    this.delEntityRef(clazzName, domainId, projectName, false);
+                    if (clear) {
+                        clearEntitySrc(clazzName, domainId, projectName);
+                    }
+                    if (esdClass != null && esdClass.isProxy() && esdClass.getSourceClass() != null) {
+                        Class sourceClazz = classManager.checkInterface(esdClass.getSourceClass().getClassName());
+                        if (sourceClazz != null) {
+                            String sourceClassName = sourceClazz.getName();
+                            if (!sourceClassName.equals(clazzName)) {
+                                delAggEntityClass(sourceClassName, projectName, clear);
                             }
                         }
-                        this.deleteApiClassConfig(className, clear);
                     }
-                    //BuildFactory.getInstance().syncEsdClassTasks(className, otherClassNameSet);
+                    this.deleteApiClassConfig(className, clear);
 
                 }
             }
