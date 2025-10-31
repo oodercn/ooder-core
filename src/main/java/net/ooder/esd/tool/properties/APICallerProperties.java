@@ -49,6 +49,10 @@ public class APICallerProperties extends DataProperties {
 
     Boolean autoRun;
 
+    Boolean checkValid;
+
+    Boolean checkRequired;
+
     Boolean queryAsync;
 
     @JSONField(serialize = false)
@@ -111,7 +115,6 @@ public class APICallerProperties extends DataProperties {
 
 
     private void update(RequestMethodBean methodBean) {
-
         Set<RequestParamBean> paramSet = methodBean.getParamSet();
         this.methodName = methodBean.getMethodName();
         this.sourceClassName = methodBean.getClassName();
@@ -587,6 +590,22 @@ public class APICallerProperties extends DataProperties {
 
     public void setResponseCallBackMap(Map<String, UrlPath> responseCallBackMap) {
         this.responseCallBackMap = responseCallBackMap;
+    }
+
+    public Boolean getCheckValid() {
+        return checkValid;
+    }
+
+    public void setCheckValid(Boolean checkValid) {
+        this.checkValid = checkValid;
+    }
+
+    public Boolean getCheckRequired() {
+        return checkRequired;
+    }
+
+    public void setCheckRequired(Boolean checkRequired) {
+        this.checkRequired = checkRequired;
     }
 
     public Set<CustomMenuItem> getBindMenu() {

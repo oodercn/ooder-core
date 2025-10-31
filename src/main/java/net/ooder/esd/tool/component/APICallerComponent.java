@@ -3,7 +3,6 @@ package net.ooder.esd.tool.component;
 import net.ooder.esd.annotation.event.APIEvent;
 import net.ooder.esd.annotation.event.APIEventEnum;
 import net.ooder.esd.annotation.event.ActionTypeEnum;
-import net.ooder.esd.annotation.event.TreeViewEventEnum;
 import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.bean.APIEventBean;
@@ -62,21 +61,6 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
         this.addAction(apiCallBean.getCallbackAction(), APIEventEnum.callback);
         this.addEvent(apiCallBean.getAfterInvoke());
         this.addAction(apiCallBean.getAfterInvokAction(), APIEventEnum.afterInvoke);
-
-        List<APIEventBean> events = apiCallBean.getAllEvent();
-        for (APIEventBean apiEvent : events) {
-            List<Action> actions = apiEvent.getActions();
-            int k = 0;
-            if (this.getActions() != null) {
-                k = this.getActions().size();
-            }
-            for (Action action : actions) {
-                action.setId(this.getAlias() + "_" + k);
-                this.addAction(action, true, apiEvent.getEventReturn());
-                k++;
-            }
-        }
-
     }
 
 

@@ -9,20 +9,20 @@ import net.ooder.esd.annotation.event.CustomFormEvent;
 import net.ooder.esd.annotation.event.ModuleEventEnum;
 import net.ooder.esd.annotation.menu.CustomFormMenu;
 import net.ooder.esd.annotation.ui.*;
-import net.ooder.esd.bean.data.CustomFormDataBean;
-import net.ooder.esd.bean.view.CustomFormViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.ToolBarMenuBean;
 import net.ooder.esd.bean.bar.DynBar;
+import net.ooder.esd.bean.data.CustomFormDataBean;
+import net.ooder.esd.bean.view.CustomFormViewBean;
+import net.ooder.esd.custom.CustomViewFactory;
+import net.ooder.esd.custom.action.CustomAPICallAction;
+import net.ooder.esd.custom.action.ShowPageAction;
 import net.ooder.esd.custom.component.CustomFormComponent;
+import net.ooder.esd.custom.component.CustomModuleComponent;
 import net.ooder.esd.custom.component.CustomToolsBar;
 import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.ProjectVersion;
-import net.ooder.esd.custom.component.CustomModuleComponent;
-import net.ooder.esd.custom.CustomViewFactory;
-import net.ooder.esd.custom.action.CustomAPICallAction;
-import net.ooder.esd.custom.action.ShowPageAction;
 import net.ooder.esd.manager.editor.PluginsFactory;
 import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.APICallerProperties;
@@ -136,10 +136,15 @@ public class FullClassFormComponent extends CustomModuleComponent<CustomFormComp
         this.addChildLayoutNav(currComponent);
         this.setCurrComponent(currComponent);
 
-
         APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(), mainComponent);
         this.addChildren(apiCallerComponents);
         this.fillToolBar(viewBean, currComponent);
+
+        APICallerComponent component = (APICallerComponent) this.findComponentByAlias("RELOAD");
+        if (component != null && (component.getProperties().getAutoRun() == null || !component.getProperties().getAutoRun())) {
+            Action action = new Action(CustomFormAction.RELOAD, ModuleEventEnum.afterShow);
+            this.getModuleComponent().addAction(action);
+        }
     }
 
 
@@ -147,7 +152,7 @@ public class FullClassFormComponent extends CustomModuleComponent<CustomFormComp
         Set<CustomFormEvent> customFormEvents = view.getEvent();
         for (CustomFormEvent eventType : customFormEvents) {
             for (CustomAction actionType : eventType.getActions(false)) {
-                Action action = new Action(actionType,eventType.getEventEnum());
+                Action action = new Action(actionType, eventType.getEventEnum());
                 MethodConfig methodConfig = methodAPIBean.getDataBean().getMethodEvent(eventType);
                 if (methodConfig != null) {
                     if (!methodConfig.isModule()) {
@@ -157,12 +162,12 @@ public class FullClassFormComponent extends CustomModuleComponent<CustomFormComp
                             this.addChildren(apiCallerComponent);
                         }
                     } else {
-                        action = new ShowPageAction(methodConfig,eventType.getEventEnum());
+                        action = new ShowPageAction(methodConfig, eventType.getEventEnum());
                         action.updateArgs("{args[1]}", 6);
                         action.updateArgs("{args[2]}", 5);
                     }
                 }
-                currComponent.addAction( action);
+                currComponent.addAction(action);
             }
         }
         List<CustomFormMenu> customFormMenus = view.getCustomMenu();
@@ -233,10 +238,10 @@ public class FullClassFormComponent extends CustomModuleComponent<CustomFormComp
                 saveProperties.addRequestData(ctxData);
                 CustomFormDataBean dataBean = (CustomFormDataBean) methodAPIBean.getDataBean();
                 if (dataBean.getAutoSave()) {
-                    CustomAPICallAction customAPICallAction = new CustomAPICallAction(saveAPI,ModuleEventEnum.onDestroy);
+                    CustomAPICallAction customAPICallAction = new CustomAPICallAction(saveAPI, ModuleEventEnum.onDestroy);
                     Condition condition = new Condition("{page." + this.getCurrComponent().getAlias() + ".isDirtied()}", SymbolType.equal, "{true}");
                     customAPICallAction.addCondition(condition);
-                    this.addAction( customAPICallAction);
+                    this.addAction(customAPICallAction);
                 }
                 apiCallerComponents.add(saveAPI);
             } else {

@@ -47,6 +47,12 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
 
     public String xpath;
 
+
+    public Boolean checkValid;
+
+    public Boolean checkRequired;
+
+
     public Class<? extends Enum> enumClass;
 
     public Boolean isAllform;
@@ -161,6 +167,8 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
         this.queryAsync = apiCallerProperties.getQueryAsync();
         this.autoRun = apiCallerProperties.getAutoRun();
         this.isAllform = apiCallerProperties.getIsAllform();
+        this.checkRequired = apiCallerProperties.getCheckRequired();
+        this.checkValid = apiCallerProperties.getCheckValid();
 
         Map<APIEventEnum, Event> eventMap = apiCallerComponent.getEvents();
         Set<APIEventEnum> eventEnums = eventMap.keySet();
@@ -302,7 +310,8 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
             apiCallerProperties.setAutoRun(apiEventAnnotation.autoRun());
             apiCallerProperties.setQueryAsync(apiEventAnnotation.queryAsync());
             apiCallerProperties.setIsAllform(apiEventAnnotation.isAllform());
-
+            apiCallerProperties.setCheckRequired(apiEventAnnotation.checkRequired());
+            apiCallerProperties.setCheckValid(apiEventAnnotation.checkValid());
 
             APIExtparams apiExtparams = DSMAnnotationUtil.getMethodCustomAnnotation(method, APIExtparams.class);
             if (apiExtparams != null) {
@@ -1171,6 +1180,29 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
         this.index = index;
     }
 
+    public Boolean getCheckValid() {
+        return checkValid;
+    }
+
+    public void setCheckValid(Boolean checkValid) {
+        this.checkValid = checkValid;
+    }
+
+    public Boolean getCheckRequired() {
+        return checkRequired;
+    }
+
+    public void setCheckRequired(Boolean checkRequired) {
+        this.checkRequired = checkRequired;
+    }
+
+    public Set<Action> getCustomAction() {
+        return customAction;
+    }
+
+    public void setCustomAction(Set<Action> customAction) {
+        this.customAction = customAction;
+    }
 
     public String toAnnotationStr() {
 
