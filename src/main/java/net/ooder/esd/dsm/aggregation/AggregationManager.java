@@ -201,12 +201,13 @@ public class AggregationManager {
                                     esdClassConfig = createAggEntityConfig(className, domainId);
                                     esdClassConfig.setDomainId(domainId);
                                     aggEntityConfigMap.put(uKey, esdClassConfig);
-                                    aggEntityConfigCache.put(uKey, JSON.toJSONString(esdClassConfig));
-                                    if (JDSServer.getClusterClient().isLogin()) {
-                                        aggEntityConfigTasks.add(new SaveAggEntityConfigTask<>(esdClassConfig));
-                                    } else {
-                                        this.updateAggEntityConfig(esdClassConfig);
-                                    }
+                                    SaveAggEntityConfigTask task=new SaveAggEntityConfigTask(esdClassConfig);
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            task.call();
+                                        }
+                                    }).start();
                                 }
                             }
                         }
@@ -465,14 +466,43 @@ public class AggregationManager {
                 this.getVfsClient().deleteFile(fileInfo.getID());
             }
         }
+    }
+
+
+
+
+    public void updateAggEntityConfig(AggEntityConfig esdClassConfig) throws JDSException {
+        Class sourceClazz = classManager.checkInterface(esdClassConfig.getSourceClassName());
+        if (sourceClazz != null) {
+            String className = sourceClazz.getName();
+            CustomViewFactory.getInstance().reLoad();
+            String oDomainId = esdClassConfig.getDomainId();
+            String domainId = getRealDomainId(className, false);
+            if (oDomainId != null && !oDomainId.equals(domainId)) {
+                domainId = getRealDomainId(className, true);
+            }
+            String uKey = className + "[" + domainId + "]";
+            String content = JSON.toJSONString(esdClassConfig);
+            aggEntityConfigCache.put(uKey, content);
+            aggEntityConfigMap.put(uKey, esdClassConfig);
+            Folder dsmFolder = aggClassConfigFolder.createChildFolder(domainId, JDSServer.getInstance().getAdminUser().getId());
+            String folerPath = formartPackagePath(className);
+            String simClassName = formartClassName(className);
+            String fileName = simClassName + ".entity";
+            Folder packageFolder = this.getVfsClient().mkDir(dsmFolder.getPath() + folerPath);
+            FileInfo fileInfo = packageFolder.createFile(fileName, className, null);
+            this.getVfsClient().saveFileAsContent(fileInfo.getPath(), content, VFSConstants.Default_Encoding);
+        }
 
 
     }
 
     public void updateApiClassConfigs(Set<ApiClassConfig> apiClassConfigSet) throws JDSException {
         for (ApiClassConfig apiClassConfig : apiClassConfigSet) {
-            updateApiClassConfig(apiClassConfig);
+            SaveApiEntityConfigTask task = new SaveApiEntityConfigTask(apiClassConfig);
+            this.apiConfigTasks.add(task);
         }
+        this.commitTask();
     }
 
     public void updateApiClassConfig(ApiClassConfig apiClassConfig) throws JDSException {
@@ -486,12 +516,6 @@ public class AggregationManager {
             if (oDomainId != null && !oDomainId.equals(domainId)) {
                 domainId = getRealDomainId(className, true);
             }
-//            Set<String> esdClassSet = new HashSet<>();
-//            for (Class clazz : apiClassConfig.getOtherClass()) {
-//                esdClassSet.add(clazz.getName());
-//            }
-//            apiClassConfig.setOtherClassNames(esdClassSet);
-
             String uKey = className + "[" + domainId + "]";
             if (!context.containsKey(uKey) && domainId != null) {
                 String content = JSON.toJSONString(apiClassConfig);
@@ -544,12 +568,15 @@ public class AggregationManager {
                                         apiClassConfig = new ApiClassConfig(esdClass);
                                         apiClassConfig.setDomainId(domainId);
                                         apiConfigMap.put(uKey, apiClassConfig);
-                                        apiConfigCache.put(uKey, JSON.toJSONString(apiClassConfig));
-                                        if (JDSServer.getClusterClient().isLogin()) {
-                                            apiConfigTasks.add(new SaveApiEntityConfigTask(apiClassConfig));
-                                        } else {
-                                            this.updateApiClassConfig(apiClassConfig);
-                                        }
+                                        //异步持久化
+                                        SaveApiEntityConfigTask task = new SaveApiEntityConfigTask(apiClassConfig);
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                task.call();
+                                            }
+                                        }).start();
+
                                     }
                                 } else {
                                     apiConfigMap.put(uKey, apiClassConfig);
@@ -849,7 +876,7 @@ public class AggregationManager {
             if (esdClassNameSet.size() > 0) {
                 Integer start = 0;
                 int size = esdClassNameSet.size();
-                String[] delfileInfoIds = esdClassNameSet.toArray(new String[esdClassNameSet.size()]);
+                String[] esdclassArr = esdClassNameSet.toArray(new String[esdClassNameSet.size()]);
                 int page = 0;
                 while (page * pageSize < size) {
                     page++;
@@ -860,8 +887,8 @@ public class AggregationManager {
                     if (end >= size) {
                         end = size;
                     }
-                    String[] loadFileIds = Arrays.copyOfRange(delfileInfoIds, start, start + pageSize);
-                    SyncDelAggTable syncLoadClass = new SyncDelAggTable(loadFileIds, projectName, clear);
+                    String[] esdClassNames = Arrays.copyOfRange(esdclassArr, start, start + pageSize);
+                    SyncDelAggTable syncLoadClass = new SyncDelAggTable(esdClassNames, projectName, clear);
                     delAggTablTasks.add(syncLoadClass);
                     start = end;
                 }
@@ -869,7 +896,7 @@ public class AggregationManager {
                 List<Future<List<String>>> futures = executorService.invokeAll(delAggTablTasks);
                 for (Future<List<String>> resultFuture : futures) {
                     try {
-                        List<String> ids = resultFuture.get(50, TimeUnit.MILLISECONDS);
+                        List<String> ids = resultFuture.get(500, TimeUnit.MILLISECONDS);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1391,32 +1418,6 @@ public class AggregationManager {
     }
 
 
-    public void updateAggEntityConfig(AggEntityConfig esdClassConfig) throws JDSException {
-        Class sourceClazz = classManager.checkInterface(esdClassConfig.getSourceClassName());
-        if (sourceClazz != null) {
-            String className = sourceClazz.getName();
-            CustomViewFactory.getInstance().reLoad();
-            String oDomainId = esdClassConfig.getDomainId();
-            String domainId = getRealDomainId(className, false);
-            if (oDomainId != null && !oDomainId.equals(domainId)) {
-                domainId = getRealDomainId(className, true);
-            }
-            String uKey = className + "[" + domainId + "]";
-            String content = JSON.toJSONString(esdClassConfig);
-            aggEntityConfigCache.put(uKey, content);
-            aggEntityConfigMap.put(uKey, esdClassConfig);
-            Folder dsmFolder = aggClassConfigFolder.createChildFolder(domainId, JDSServer.getInstance().getAdminUser().getId());
-            String folerPath = formartPackagePath(className);
-            String simClassName = formartClassName(className);
-            String fileName = simClassName + ".entity";
-            Folder packageFolder = this.getVfsClient().mkDir(dsmFolder.getPath() + folerPath);
-            FileInfo fileInfo = packageFolder.createFile(fileName, className, null);
-            this.getVfsClient().saveFileAsContent(fileInfo.getPath(), content, VFSConstants.Default_Encoding);
-        }
-
-
-    }
-
     public DomainInst updateDomainInst(DomainInst dsmInst, boolean autocommit) throws JDSException {
         if (dsmInst != null) {
 
@@ -1641,12 +1642,17 @@ public class AggregationManager {
                 String fileName = simClassName + ".entity";
                 FileInfo fileInfo = packageFolder.createFile(fileName, className, null);
                 String content = JSON.toJSONString(aggEntityConfig);
+                String uKey = className + "[" + domainId + "]";
+                aggEntityConfigCache.put(uKey, content);
+                aggEntityConfigMap.put(uKey, aggEntityConfig);
                 getVfsClient().saveFileAsContent(fileInfo.getPath(), content, VFSConstants.Default_Encoding);
             } catch (JDSException e) {
                 e.printStackTrace();
             }
             return aggEntityConfig;
         }
+
+
     }
 
     class SaveApiEntityConfigTask<T extends ApiClassConfig> implements Callable<ApiClassConfig> {

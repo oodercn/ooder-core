@@ -1225,7 +1225,6 @@ public class ESDClientImpl implements ESDClient {
             }
             path = formartPath(path, projectName);
             ProjectVersion version = this.getProjectVersionByName(projectName);
-
             if (!path.startsWith(version.getPath())) {
                 throw new JDSException("删除文件存在越权路径，禁止删除本工程以外数据！" + path);
             }
@@ -1233,6 +1232,7 @@ public class ESDClientImpl implements ESDClient {
         }
 
         for (String path : realPaths) {
+            getVfsClient().clearCache(path);
             Folder folder = getVfsClient().getFolderByPath(path);
             try {
                 if (folder != null) {
@@ -1244,7 +1244,6 @@ public class ESDClientImpl implements ESDClient {
                         }
                     }
                     getVfsClient().deleteFolder(folder.getID());
-
                 } else {
                     FileInfo fileInfo = getVfsClient().getFileByPath(path);
                     if (fileInfo != null) {
