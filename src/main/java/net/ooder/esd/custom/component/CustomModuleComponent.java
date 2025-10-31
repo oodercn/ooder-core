@@ -234,13 +234,30 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                         }
                     }
                 }
-                TreeListItem group = customToolsBar.getProperties().getGroup();
-                if (group != null && group.getSub() != null && group.getSub().size() > 0) {
-                    if (currComponent.getParent() != null) {
-                        currComponent.getParent().addChildren(customToolsBar);
-                    } else {
+                PositionType positionType = toolBarBean.getPosition() == null ? PositionType.inner : toolBarBean.getPosition();
+                switch (positionType) {
+                    case inner:
+                        TreeListItem group = customToolsBar.getProperties().getGroup();
+                        if (group != null && group.getSub() != null && group.getSub().size() > 0) {
+                            if (currComponent.getParent() != null) {
+                                currComponent.getParent().addChildren(customToolsBar);
+                            } else {
+                                currComponent.addChildren(customToolsBar);
+                            }
+                        }
+                        break;
+                    case module:
+                        mainComponent.addChildren(customToolsBar);
+                        break;
+                    case top:
+                        if (this.getTopModule() != null) {
+                            this.getTopModule().getComponent().getMainBoxComponent().addChildren(customToolsBar);
+                        } else {
+                            mainComponent.addChildren(customToolsBar);
+                        }
+                        break;
+                    default:
                         currComponent.addChildren(customToolsBar);
-                    }
                 }
             }
 
@@ -508,7 +525,6 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                 bcMap.put("margin", "10px 0px 0px 0px");
                 bcs.setITEMS(bcMap);
                 menuBar.setCS(bcs);
-
                 net.ooder.esd.tool.properties.CS cs = toolBarComponent.getCS();
                 if (cs == null) {
                     cs = new net.ooder.esd.tool.properties.CS();
@@ -522,28 +538,11 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                 toolBarComponent.setCS(cs);
                 toolBarComponent.addChildren(menuBar);
                 blockComponent.addChildren(toolBarComponent);
-
             } else {
                 mainComponent.addChildren(menuBar);
             }
-
         }
-
     }
-
-//    @Override
-//    @JSONField(serialize = false)
-//    public Component getMainBoxComponent() {
-//        Component component = super.getMainBoxComponent();
-//        if (component == null) {
-//            component = new BlockComponent(Dock.fill, euModule.getName() + DefaultTopBoxfix);
-//        }
-//
-//        if (component instanceof BlockComponent) {
-//            ((BlockComponent) component).getProperties().setBorderType(BorderType.none);
-//        }
-//        return component;
-//    }
 
     @JSONField(serialize = false)
     public BlockComponent getMainComponent() {

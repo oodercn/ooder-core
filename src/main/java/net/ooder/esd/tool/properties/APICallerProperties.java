@@ -139,6 +139,7 @@ public class APICallerProperties extends DataProperties {
             this.desc = name;
         }
 
+
         try {
             CustomAnnotation customAnnotation = AnnotationUtil.getMethodAnnotation(methodBean.getSourceMethod(), CustomAnnotation.class);
             FieldAnnotation fieldAnnotation = AnnotationUtil.getMethodAnnotation(methodBean.getSourceMethod(), FieldAnnotation.class);
@@ -261,7 +262,7 @@ public class APICallerProperties extends DataProperties {
                 }
             }
 
-
+            this.caption = this.desc;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

@@ -176,7 +176,7 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                 TreeListItem menuItem = itemMap.get(menuId);
                 String caption = type.caption();
                 if (menuItem == null) {
-                    if (!showCaption) {
+                    if (showCaption != null && !showCaption) {
                         caption = "";
                     }
                     menuItem = new TreeListItem(menuId, caption, type.imageClass(), type.caption(), type.itemType(), type.iconColor(), type.itemColor(), type.fontColor());
