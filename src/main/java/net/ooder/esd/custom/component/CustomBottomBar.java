@@ -2,23 +2,20 @@ package net.ooder.esd.custom.component;
 
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.EsbBeanAnnotation;
 import net.ooder.common.JDSConstants;
 import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
-import net.ooder.annotation.EsbBeanAnnotation;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
-import net.ooder.esd.annotation.menu.CustomMenuType;
-import net.ooder.esd.annotation.ui.CustomMenuItem;
-import net.ooder.esd.bean.TreeListItem;
-import net.ooder.esd.bean.bar.DynBar;
 import net.ooder.esd.annotation.event.ActionTypeEnum;
 import net.ooder.esd.annotation.event.FieldEventEnum;
+import net.ooder.esd.annotation.menu.CustomMenuType;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.BottomBarMenuBean;
+import net.ooder.esd.bean.bar.DynBar;
 import net.ooder.esd.custom.action.CustomConditionAction;
 import net.ooder.esd.custom.action.ShowPageAction;
-import net.ooder.esd.util.json.APICallSerialize;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.APICallerComponent;
 import net.ooder.esd.tool.component.StatusButtonsComponent;
@@ -27,7 +24,7 @@ import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Condition;
 import net.ooder.esd.tool.properties.form.StatusButtonsProperties;
 import net.ooder.esd.tool.properties.item.CmdItem;
-
+import net.ooder.esd.util.json.APICallSerialize;
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.jds.core.esb.task.ExcuteObj;
 
@@ -119,7 +116,7 @@ public class CustomBottomBar extends StatusButtonsComponent implements DynBar<Dy
     }
 
 
-    public    List<CmdItem> addMenu(CustomMenu... formTypes) {
+    public List<CmdItem> addMenu(CustomMenu... formTypes) {
         List<CmdItem> treeListItems = new ArrayList<>();
         for (CustomMenu type : formTypes) {
             if (!type.type().equals("")) {
@@ -142,7 +139,7 @@ public class CustomBottomBar extends StatusButtonsComponent implements DynBar<Dy
                         menuItem.setImageClass(type.imageClass());
                     }
                 }
-                if (!treeListItems.contains(menuItem)){
+                if (!treeListItems.contains(menuItem)) {
                     treeListItems.add(menuItem);
                 }
                 fillActions(type);
@@ -157,75 +154,72 @@ public class CustomBottomBar extends StatusButtonsComponent implements DynBar<Dy
 
     public void addComponentMenu(APICallerComponent component, Map<String, Object> paramsMap, List<Condition> conditions) {
         String expression = component.getProperties().getExpression();
-
         if (conditions == null) {
             conditions = new ArrayList<>();
         }
-
         List<Condition> conditionList = new ArrayList<>();
         conditionList.addAll(conditions);
-
         if (expression == null || expression.equals("") || parExpression(expression)) {
-            APICallerProperties properties = component.getProperties();
-            String caption = properties.getDesc();
-            String imageClass = properties.getImageClass();
-            String menuId = component.getAlias() + ComboInputType.button.name();
-            CmdItem menuItem = itemMap.get(menuId);
-            if (properties.getBindMenu() != null && properties.getBindMenu().size() > 0) {
-                Set<CustomMenuItem> items = properties.getBindMenu();
-                for (CustomMenuItem item : items) {
-                    this.addMenu(item.getMenu());
-                }
-            } else {
-                if (menuItem == null) {
-                    menuItem = new CmdItem(menuId, caption, imageClass, properties.getIconColor(), properties.getItemColor(), properties.getFontColor());
-                    menuItem.setItemType(this.getProperties().getItemType());
-                    this.getProperties().addItem(menuItem);
-                    itemMap.put(menuId, menuItem);
+            if (!apis.contains(component)) {
+                this.apis.add(component);
+                APICallerProperties properties = component.getProperties();
+                String caption = properties.getDesc();
+                String imageClass = properties.getImageClass();
+                String menuId = component.getAlias() + ComboInputType.button.name();
+                CmdItem menuItem = itemMap.get(menuId);
+                if (properties.getBindMenu() != null && properties.getBindMenu().size() > 0) {
+                    Set<CustomMenuItem> items = properties.getBindMenu();
+                    for (CustomMenuItem item : items) {
+                        this.addMenu(item.getMenu());
+                    }
                 } else {
-                    if (caption != null && !caption.equals("")) {
-                        menuItem.setCaption(caption);
-                    }
-                    if (expression != null && !expression.equals("")) {
-                        menuItem.setExpression(expression);
-                    }
-                    if (imageClass != null && !imageClass.equals("")) {
-                        menuItem.setImageClass(imageClass);
-                    }
-                }
-                if (paramsMap != null) {
-                    if (menuItem.getTagVar() == null) {
-                        menuItem.setTagVar(paramsMap);
+                    if (menuItem == null) {
+                        menuItem = new CmdItem(menuId, caption, imageClass, properties.getIconColor(), properties.getItemColor(), properties.getFontColor());
+                        menuItem.setItemType(this.getProperties().getItemType());
+                        this.getProperties().addItem(menuItem);
+                        itemMap.put(menuId, menuItem);
                     } else {
-                        menuItem.getTagVar().putAll(paramsMap);
+                        if (caption != null && !caption.equals("")) {
+                            menuItem.setCaption(caption);
+                        }
+                        if (expression != null && !expression.equals("")) {
+                            menuItem.setExpression(expression);
+                        }
+                        if (imageClass != null && !imageClass.equals("")) {
+                            menuItem.setImageClass(imageClass);
+                        }
                     }
-                }
-                Set<Action> actions = component.getActions();
-                if (actions != null && actions.size() > 0) {
-                    for (Action action : actions) {
+                    if (paramsMap != null) {
+                        if (menuItem.getTagVar() == null) {
+                            menuItem.setTagVar(paramsMap);
+                        } else {
+                            menuItem.getTagVar().putAll(paramsMap);
+                        }
+                    }
+                    Set<Action> actions = component.getActions();
+                    if (actions != null && actions.size() > 0) {
+                        for (Action action : actions) {
+                            Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
+                            conditionList.add(condition);
+                            action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
+                            action.setConditions(conditionList);
+                            action.set_return(false);
+                            this.addAction(action);
+                        }
+                    } else {
+                        Action action = new Action(FieldEventEnum.onClick);
+                        action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
+                        action.setType(ActionTypeEnum.control);
+                        action.setTarget(component.getAlias());
+                        action.setDesc(caption);
+                        action.setMethod("invoke");
+                        action.setRedirection("other:callback:call");
                         Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                         conditionList.add(condition);
-                        action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
                         action.setConditions(conditionList);
                         action.set_return(false);
                         this.addAction(action);
                     }
-                } else {
-                    if (!apis.contains(component)) {
-                        this.apis.add(component);
-                    }
-                    Action action = new Action(FieldEventEnum.onClick);
-                    action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
-                    action.setType(ActionTypeEnum.control);
-                    action.setTarget(component.getAlias());
-                    action.setDesc(caption);
-                    action.setMethod("invoke");
-                    action.setRedirection("other:callback:call");
-                    Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
-                    conditionList.add(condition);
-                    action.setConditions(conditionList);
-                    action.set_return(false);
-                    this.addAction(action);
                 }
             }
 

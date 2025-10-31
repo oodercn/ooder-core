@@ -523,39 +523,35 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
     public void addMenu(APICallerComponent component) {
         String expression = component.getProperties().getExpression();
         if (expression == null || expression.equals("") || parExpression(expression)) {
-            String caption = component.getProperties().getDesc();
-            String imageClass = component.getProperties().getImageClass();
-            Set<CustomMenuItem> items = component.getProperties().getBindMenu();
-            if (items != null && items.size() > 0) {
-                for (CustomMenuItem item : items) {
-                    this.addMenu(item.getMenu());
-                }
-                if (!apis.contains(component)) {
-                    this.apis.add(component);
-                }
 
-            } else {
-                String menuId = component.getAlias() + ComboInputType.button.name();
-                TreeListItem menuItem = itemMap.get(menuId);
-                if (menuItem == null) {
-                    menuItem = createListItem(menuId, caption, imageClass);
-
-                    this.getProperties().addItem(menuItem);
-                    itemMap.put(menuId, menuItem);
+            if (!apis.contains(component)) {
+                this.apis.add(component);
+                String caption = component.getProperties().getDesc();
+                String imageClass = component.getProperties().getImageClass();
+                Set<CustomMenuItem> items = component.getProperties().getBindMenu();
+                if (items != null && items.size() > 0) {
+                    for (CustomMenuItem item : items) {
+                        this.addMenu(item.getMenu());
+                    }
                 } else {
-                    if (caption != null && !caption.equals("")) {
-                        menuItem.setCaption(caption);
-                    }
-                    if (expression != null && !expression.equals("")) {
-                        menuItem.setExpression(expression);
-                    }
-                    if (imageClass != null && !imageClass.equals("")) {
-                        menuItem.setImageClass(imageClass);
-                    }
-                }
+                    String menuId = component.getAlias() + ComboInputType.button.name();
+                    TreeListItem menuItem = itemMap.get(menuId);
+                    if (menuItem == null) {
+                        menuItem = createListItem(menuId, caption, imageClass);
 
-                if (!apis.contains(component)) {
-                    this.apis.add(component);
+                        this.getProperties().addItem(menuItem);
+                        itemMap.put(menuId, menuItem);
+                    } else {
+                        if (caption != null && !caption.equals("")) {
+                            menuItem.setCaption(caption);
+                        }
+                        if (expression != null && !expression.equals("")) {
+                            menuItem.setExpression(expression);
+                        }
+                        if (imageClass != null && !imageClass.equals("")) {
+                            menuItem.setImageClass(imageClass);
+                        }
+                    }
                     Set<Action> actions = component.getActions();
                     if (actions != null && actions.size() > 0) {
                         for (Action action : actions) {

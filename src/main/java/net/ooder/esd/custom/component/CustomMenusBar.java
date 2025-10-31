@@ -307,27 +307,21 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
         if (conditions == null) {
             conditions = new ArrayList<>();
         }
-
         List<Condition> conditionList = new ArrayList<>();
         conditionList.addAll(conditions);
         String expression = component.getProperties().getExpression();
-
-
         if (expression == null || expression.equals("") || this.parExpression(expression)) {
-            String caption = component.getProperties().getDesc();
-            String imageClass = component.getProperties().getImageClass();
-            Set<CustomMenuItem> items = component.getProperties().getBindMenu();
-            if (items != null && items.size() > 0) {
-                List<CustomMenu> customMenuList = new ArrayList<>();
-                for (CustomMenuItem item : items) {
-                    customMenuList.add(item.getMenu());
-                }
-                List<TreeListItem> listItem = this.addMenu(customMenuList.toArray(new CustomMenu[]{}));
-                if (component.getActions() == null && component.getActions().isEmpty()) {
-                    if (!apis.contains(component)) {
-                        this.apis.add(component);
+            if (!apis.contains(component)) {
+                this.apis.add(component);
+                String caption = component.getProperties().getDesc();
+                String imageClass = component.getProperties().getImageClass();
+                Set<CustomMenuItem> items = component.getProperties().getBindMenu();
+                if (items != null && items.size() > 0) {
+                    List<CustomMenu> customMenuList = new ArrayList<>();
+                    for (CustomMenuItem item : items) {
+                        customMenuList.add(item.getMenu());
                     }
-                } else {
+                    List<TreeListItem> listItem = this.addMenu(customMenuList.toArray(new CustomMenu[]{}));
                     for (TreeListItem item : listItem) {
                         for (Action action : component.getActions()) {
                             if (this.parentId != null && !this.parentId.equals("")) {
@@ -341,74 +335,77 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
                             }
                         }
                     }
-                }
 
-            } else {
-                String menuId = component.getAlias() + "_" + ComboInputType.button.name();
-                TreeListItem menuItem = itemMap.get(menuId);
-                if (menuItem == null) {
-                    menuItem = new TreeListItem(menuId, caption, imageClass, component.getProperties().getTips(), component.getProperties().getMenuType());
-                    this.getProperties().addItem(menuItem);
-                    itemMap.put(menuId, menuItem);
+
                 } else {
-                    menuItem.setTips(component.getProperties().getTips());
-                    if (caption != null && !caption.equals("")) {
-                        menuItem.setCaption(caption);
+                    String menuId = component.getAlias() + "_" + ComboInputType.button.name();
+                    TreeListItem menuItem = itemMap.get(menuId);
+                    if (menuItem == null) {
+                        menuItem = new TreeListItem(menuId, caption, imageClass, component.getProperties().getTips(), component.getProperties().getMenuType());
+                        this.getProperties().addItem(menuItem);
+                        itemMap.put(menuId, menuItem);
+                    } else {
+                        menuItem.setTips(component.getProperties().getTips());
+                        if (caption != null && !caption.equals("")) {
+                            menuItem.setCaption(caption);
+                        }
+                        if (expression != null && !expression.equals("")) {
+                            menuItem.setExpression(expression);
+                        }
+                        if (imageClass != null && !imageClass.equals("")) {
+                            menuItem.setImageClass(imageClass);
+                        }
                     }
-                    if (expression != null && !expression.equals("")) {
-                        menuItem.setExpression(expression);
+                    if (paramsMap != null) {
+                        menuItem.getTagVar().putAll(paramsMap);
                     }
-                    if (imageClass != null && !imageClass.equals("")) {
-                        menuItem.setImageClass(imageClass);
-                    }
-                }
-                if (paramsMap != null) {
-                    menuItem.getTagVar().putAll(paramsMap);
-                }
-                Set<Action> actions = component.getActions();
-                if (actions != null && actions.size() > 0) {
-                    for (Action action : actions) {
+                    Set<Action> actions = component.getActions();
+                    if (actions != null && actions.size() > 0) {
+                        for (Action action : actions) {
+                            if (this.parentId != null && !this.parentId.equals("")) {
+                                Condition condition = new Condition("{args[2].id}", SymbolType.equal, menuId);
+                                conditionList.add(condition);
+                                action.setEventKey(MenuEventEnum.onMenuSelected);
+                            } else {
+                                Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
+                                conditionList.add(condition);
+                                action.setEventKey(MenuEventEnum.onMenuBtnClick);
+                            }
+                            action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
+                            action.updateArgs("{page." + component.getAlias() + "}", 3);
+                            action.setConditions(conditionList);
+                            this.addAction(action);
+                        }
+                    } else {
+                        Action action = new Action(MenuEventEnum.onMenuSelected);
+                        action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
+                        action.setType(ActionTypeEnum.control);
+                        action.setTarget(component.getAlias());
+                        action.setDesc(caption);
+                        action.setMethod("invoke");
+                        action.setRedirection("other:callback:call");
+                        action.set_return(false);
+
                         if (this.parentId != null && !this.parentId.equals("")) {
                             Condition condition = new Condition("{args[2].id}", SymbolType.equal, menuId);
                             conditionList.add(condition);
+                            action.setConditions(conditionList);
                             action.setEventKey(MenuEventEnum.onMenuSelected);
+                            this.addAction(action);
                         } else {
                             Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
                             conditionList.add(condition);
+                            action.setConditions(conditionList);
                             action.setEventKey(MenuEventEnum.onMenuBtnClick);
+                            this.addAction(action);
                         }
-                        action.setDesc(action.getDesc().equals("") ? caption : action.getDesc());
-                        action.updateArgs("{page." + component.getAlias() + "}", 3);
-                        action.setConditions(conditionList);
-                        this.addAction(action);
-                    }
-                } else if (!apis.contains(component)) {
-                    this.apis.add(component);
-                    Action action = new Action(MenuEventEnum.onMenuSelected);
-                    action.setArgs(Arrays.asList(new String[]{"{page." + component.getAlias() + ".invoke()}"}));
-                    action.setType(ActionTypeEnum.control);
-                    action.setTarget(component.getAlias());
-                    action.setDesc(caption);
-                    action.setMethod("invoke");
-                    action.setRedirection("other:callback:call");
-                    action.set_return(false);
-
-                    if (this.parentId != null && !this.parentId.equals("")) {
-                        Condition condition = new Condition("{args[2].id}", SymbolType.equal, menuId);
-                        conditionList.add(condition);
-                        action.setConditions(conditionList);
-                        action.setEventKey(MenuEventEnum.onMenuSelected);
-                        this.addAction(action);
-                    } else {
-                        Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
-                        conditionList.add(condition);
-                        action.setConditions(conditionList);
-                        action.setEventKey(MenuEventEnum.onMenuBtnClick);
-                        this.addAction(action);
                     }
                 }
             }
+
         }
+
+
         return component;
     }
 
