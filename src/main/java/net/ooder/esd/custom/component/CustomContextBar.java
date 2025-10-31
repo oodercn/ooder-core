@@ -429,7 +429,7 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
 
 
     TreeListItem createListItem(String menuId, String caption, String imageClass) {
-        TreeListItem menuItem = new TreeListItem(menuId, caption, imageClass);
+        TreeListItem menuItem = new TreeListItem(menuId, caption, imageClass, caption, new HashMap<>());
         menuItem.setItemClass(itemClass);
         menuItem.setItemStyle(itemStyle);
         return menuItem;
@@ -539,6 +539,7 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
                 TreeListItem menuItem = itemMap.get(menuId);
                 if (menuItem == null) {
                     menuItem = createListItem(menuId, caption, imageClass);
+
                     this.getProperties().addItem(menuItem);
                     itemMap.put(menuId, menuItem);
                 } else {

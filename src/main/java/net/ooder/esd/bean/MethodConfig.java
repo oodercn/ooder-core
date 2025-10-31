@@ -1863,6 +1863,17 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
         return publicMethod;
     }
 
+    public String getTips() {
+        String tips = caption;
+        if (fieldBean != null && fieldBean.getTips() != null) {
+            tips = fieldBean.getTips();
+        }
+        if (this.getCustomMethodInfo() != null && this.getCustomMethodInfo().getTipsBean() != null) {
+            tips = this.getCustomMethodInfo().getTipsBean().getTips();
+        }
+        return tips;
+    }
+
 
     public String getParentEuPackage() {
         return parentEuPackage;

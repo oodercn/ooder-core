@@ -623,6 +623,7 @@ public class APIFactory {
 
 
     public List<APICallerProperties> getMethodConfigByConfig(APIConfig config, String pattern) {
+
         List<APICallerProperties> methodConfigs = new ArrayList<APICallerProperties>();
         for (RequestMethodBean methodBean : config.getMethods()) {
             if (pattern != null && !pattern.equals("")) {

@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Set;
 
 @AnnotationType(clazz = Tips.class)
-
 public class TipsBean implements CustomBean {
 
     String mask;

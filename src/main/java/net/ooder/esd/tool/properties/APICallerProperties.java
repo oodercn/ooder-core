@@ -11,6 +11,7 @@ import net.ooder.esd.annotation.field.APIEventAnnotation;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomFieldBean;
+import net.ooder.esd.custom.CustomMethodInfo;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.list.DataProperties;
 import net.ooder.esd.util.DSMAnnotationUtil;
@@ -106,11 +107,11 @@ public class APICallerProperties extends DataProperties {
     public APICallerProperties clone() {
         APICallerProperties apiCallerProperties = JSON.parseObject(JSON.toJSONString(this), APICallerProperties.class);
         return apiCallerProperties;
-
     }
 
 
-    public void update(RequestMethodBean methodBean) {
+    private void update(RequestMethodBean methodBean) {
+
         Set<RequestParamBean> paramSet = methodBean.getParamSet();
         this.methodName = methodBean.getMethodName();
         this.sourceClassName = methodBean.getClassName();
@@ -131,7 +132,6 @@ public class APICallerProperties extends DataProperties {
             }
         }
         metaInfo = metaInfo + ")";
-
         if (methodBean.getMethodChinaName() != null) {
             this.desc = methodBean.getMethodChinaName().cname();
             metaInfo = metaInfo + "[" + methodBean.getMethodChinaName().cname() + "]";
@@ -143,10 +143,12 @@ public class APICallerProperties extends DataProperties {
         try {
             CustomAnnotation customAnnotation = AnnotationUtil.getMethodAnnotation(methodBean.getSourceMethod(), CustomAnnotation.class);
             FieldAnnotation fieldAnnotation = AnnotationUtil.getMethodAnnotation(methodBean.getSourceMethod(), FieldAnnotation.class);
+            Tips tipsAnn = AnnotationUtil.getMethodAnnotation(methodBean.getSourceMethod(), Tips.class);
             ModuleAnnotation annotation = AnnotationUtil.getMethodAnnotation(methodBean.getSourceMethod(), ModuleAnnotation.class);
             if (annotation != null) {
                 if (!annotation.caption().equals("")) {
                     this.desc = annotation.caption();
+                    this.tips=desc;
                 }
 
                 if (!annotation.imageClass().equals("")) {
@@ -163,6 +165,7 @@ public class APICallerProperties extends DataProperties {
             if (customAnnotation != null) {
                 if (!customAnnotation.caption().equals("")) {
                     this.desc = customAnnotation.caption();
+                    this.tips=desc;
                 }
 
                 if (!customAnnotation.imageClass().equals("")) {
@@ -178,6 +181,9 @@ public class APICallerProperties extends DataProperties {
                 if (!customAnnotation.fontColor().equals(FontColorEnum.NONE)) {
                     this.fontColor = customAnnotation.fontColor();
                 }
+            }
+            if (tipsAnn != null) {
+                this.tips = tipsAnn.tips();
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -291,8 +297,11 @@ public class APICallerProperties extends DataProperties {
 
         if (methodBean.getCaption() != null && !methodBean.getCaption().equals("")) {
             this.desc = methodBean.getCaption();
+
+
         }
 
+        this.tips = methodBean.getTips();
         this.queryURL = methodBean.getUrl();
 
         RequestMethodBean requestMethodBean = methodBean.getRequestMethodBean();
