@@ -178,7 +178,7 @@ public class AggregationManager {
         String aggClassName = "AggEntityConfig[" + className + "]";
         AggEntityConfig esdClassConfig = (AggEntityConfig) actionContext.get(aggClassName);
 
-        if (esdClassConfig != null && reload) {
+        if (esdClassConfig == null || reload) {
             Class clazz = classManager.checkInterface(className);
             if (clazz != null) {
                 className = clazz.getName();
@@ -1019,7 +1019,7 @@ public class AggregationManager {
     public void delAggEntityClass(String className, String projectName, boolean clear) throws JDSException {
 
         Class clazz = classManager.checkInterface(className);
-        if (clazz != null ) {
+        if (clazz != null) {
 
             String realClassName = clazz.getName();
             Set<String> classNameSet = new HashSet<>();
