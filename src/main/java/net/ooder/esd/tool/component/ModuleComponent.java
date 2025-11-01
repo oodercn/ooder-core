@@ -45,7 +45,6 @@ import net.ooder.esd.tool.properties.list.ListFieldProperties;
 import net.ooder.esd.tool.properties.list.TreeListProperties;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.esd.util.json.ComponentsMapDeserializer;
-import net.ooder.esd.util.json.MvelDSMRoot;
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.jds.core.esb.task.ExcuteObj;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -1451,8 +1450,12 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                 panelBean.setDock(Dock.fill);
             }
             panelComponent = new PanelComponent(euModule.getName() + ComponentType.PANEL.name() + DefaultBoxfix, new PanelProperties(panelBean));
-
         }
+        if (panelComponent != null && panelBean.getRefreshBtn() != null && panelBean.getRefreshBtn()) {
+            Action action = new Action(CustomPageAction.RELOAD, PanelEventEnum.onRefresh);
+            panelComponent.addAction(action);
+        }
+
         return panelComponent;
     }
 
@@ -1550,7 +1553,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                     if (target != null && !target.equals("dock") && !target.equals(this.getClassName()) && moduleAction.contains(action.getType())) {
                         if (target.startsWith("@{")) {
                             Map context = JDSActionContext.getActionContext().getContext();
-                            target = (String) TemplateRuntime.eval(target,this, context);
+                            target = (String) TemplateRuntime.eval(target, this, context);
                         }
 
                         if (!required.contains(target)) {
@@ -1994,7 +1997,6 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
         if (mainBlock == null) {
             mainBlock = new BlockComponent(Dock.fill, this.getEuModule().getName() + DefaultTopBoxfix);
-            this.addChildren(mainBlock);
         }
 
         if (mainBlock instanceof BlockComponent) {

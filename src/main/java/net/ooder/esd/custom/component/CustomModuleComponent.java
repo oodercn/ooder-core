@@ -323,6 +323,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                     } else {
                         mainComponent.addChildren(component);
                     }
+
                     modulePanelComponent.addChildren(mainComponent);
                     this.addChildren(modulePanelComponent);
                     break;
