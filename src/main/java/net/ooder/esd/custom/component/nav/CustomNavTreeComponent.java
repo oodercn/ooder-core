@@ -71,9 +71,11 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
     private CustomTabsComponent createTabsComponent(TabsViewBean tabsViewBean, Map valueMap) {
         CustomTabsComponent tabComponent = new CustomTabsComponent(tabsViewBean, valueMap);
         tabComponent.getProperties().getItems().clear();
-        Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onIniPanelView);
-        showAction.updateArgs(tabComponent.getAlias(), 4);
-        tabComponent.addAction(showAction);
+        if (tabsViewBean.getAutoReload()!=null && tabsViewBean.getAutoReload()){
+            Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onIniPanelView);
+            showAction.updateArgs(tabComponent.getAlias(), 4);
+            tabComponent.addAction(showAction);
+        }
         return tabComponent;
     }
 
@@ -124,6 +126,7 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
         action.setTarget(tabsComponent.getAlias());
         action.setArgs(Arrays.asList(new String[]{"{args[1]}"}));
         treeComponent.addAction(action);
+
         Action tabclickItemAction = new Action(TreeViewEventEnum.onItemSelected);
         tabclickItemAction.setDesc("添加点击事件");
         tabclickItemAction.addCondition(condition);
