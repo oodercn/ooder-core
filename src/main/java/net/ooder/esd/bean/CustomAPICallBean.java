@@ -52,7 +52,6 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
 
     public Boolean checkRequired;
 
-
     public Class<? extends Enum> enumClass;
 
     public Boolean isAllform;

@@ -7,8 +7,6 @@ import net.ooder.annotation.UserSpace;
 import net.ooder.config.ResultModel;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomAnnotation;
-import net.ooder.esd.annotation.event.ToolBarEvent;
-import net.ooder.esd.annotation.event.ToolBarEventEnum;
 import net.ooder.esd.annotation.field.APIEventAnnotation;
 import net.ooder.esd.annotation.field.ComboInputAnnotation;
 import net.ooder.esd.annotation.ui.ComboInputType;
@@ -22,7 +20,7 @@ public class CodeEditorTools {
 
     @MethodChinaName(cname = "")
     @APIEventAnnotation(
-            bindAction = {@CustomAction(script = "page.content.showFindWnd()")}
+            bindAction = {@CustomAction(script = "page.content.showFindWnd()", params = {"{arg[0]}"})}
     )
     @RequestMapping(method = RequestMethod.POST, value = "searchreplaceAction")
     @ComboInputAnnotation(inputType = ComboInputType.button)
@@ -38,7 +36,7 @@ public class CodeEditorTools {
     @RequestMapping(method = RequestMethod.POST, value = "jumptoAction")
     @ComboInputAnnotation(inputType = ComboInputType.button)
     @APIEventAnnotation(
-            bindAction = {@CustomAction(script = "page.content.showJumpToWnd()")}
+            bindAction = {@CustomAction(script = "page.content.showJumpToWnd()", params = {"{arg[0]}"})}
     )
     @CustomAnnotation(index = 2, caption = "跳到行", tips = "跳到行", imageClass = "spafont spa-icon-jumpto")
     public @ResponseBody
