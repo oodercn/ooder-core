@@ -201,7 +201,7 @@ public class AggregationManager {
                                     esdClassConfig = createAggEntityConfig(className, domainId);
                                     esdClassConfig.setDomainId(domainId);
                                     aggEntityConfigMap.put(uKey, esdClassConfig);
-                                    SaveAggEntityConfigTask task=new SaveAggEntityConfigTask(esdClassConfig);
+                                    SaveAggEntityConfigTask task = new SaveAggEntityConfigTask(esdClassConfig);
                                     new Thread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -467,8 +467,6 @@ public class AggregationManager {
             }
         }
     }
-
-
 
 
     public void updateAggEntityConfig(AggEntityConfig esdClassConfig) throws JDSException {
@@ -941,6 +939,7 @@ public class AggregationManager {
             List<String> esdClassList = new ArrayList<>();
             for (String esdClassName : classNameList) {
                 delAggEntityClass(esdClassName, projectName, clear);
+                log.info("del class:[" + esdClassName + "]");
             }
             return esdClassList;
         }

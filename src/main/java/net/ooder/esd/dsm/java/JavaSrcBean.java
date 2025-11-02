@@ -74,10 +74,13 @@ public class JavaSrcBean {
                 initFile(javaFile, dsmInst);
             } else {
                 byte[] bytes = EsbBeanFactory.getInstance().getJavaSource(className);
-                IOUtility.writeBytesToNewFile(bytes, javaFile);
+                if (bytes != null) {
+                    IOUtility.writeBytesToNewFile(bytes, javaFile);
+                } else {
+                    throw new JDSException(className + " source not exits");
+                }
             }
-
-        } catch (IOException e) {
+        } catch (Throwable e) {
             throw new JDSException(e);
         }
     }
