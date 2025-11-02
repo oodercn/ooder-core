@@ -12,6 +12,7 @@ import net.ooder.common.JDSException;
 import net.ooder.common.util.StringUtility;
 import net.ooder.config.BPDProjectConfig;
 import net.ooder.context.JDSActionContext;
+import net.ooder.context.JDSContext;
 import net.ooder.esb.config.formula.FormulaInst;
 import net.ooder.esb.config.formula.ModuleFormulaInst;
 import net.ooder.esd.annotation.ui.ComponentType;
@@ -42,6 +43,7 @@ import net.ooder.jds.core.esb.util.ValueStack;
 import net.ooder.org.PersonNotFoundException;
 import net.ooder.server.JDSServer;
 import net.ooder.server.OrgManagerFactory;
+import net.ooder.server.context.MinServerActionContextImpl;
 import net.ooder.template.JDSScopesHashModel;
 import net.ooder.vfs.*;
 import net.ooder.vfs.ct.CtVfsFactory;
@@ -567,7 +569,8 @@ public class ProjectCacheManager {
                 }
             }
             if (canSave) {
-                DSMFactory.getInstance().saveCustomViewBean(customViewBean);
+                new Thread(new SyncSaveView(customViewBean)).start();
+                //  DSMFactory.getInstance().saveCustomViewBean(customViewBean);
             }
         }
 
@@ -579,6 +582,33 @@ public class ProjectCacheManager {
         } catch (Throwable e) {
             e.printStackTrace();
             logger.error(e);
+        }
+    }
+
+    class SyncSaveView implements Runnable {
+
+        private MinServerActionContextImpl autoruncontext;
+        CustomViewBean customViewBean;
+
+        SyncSaveView(CustomViewBean customViewBean) {
+            JDSContext context = JDSActionContext.getActionContext();
+            autoruncontext = new MinServerActionContextImpl(context.getHttpRequest(), context.getOgnlContext());
+            autoruncontext.setParamMap(context.getContext());
+            if (context.getSessionId() != null) {
+                autoruncontext.setSessionId(context.getSessionId());
+                autoruncontext.getSession().put("sessionHandle", context.getSession().get("sessionHandle"));
+            }
+            autoruncontext.setSessionMap(context.getSession());
+            this.customViewBean = customViewBean;
+        }
+
+        @Override
+        public void run() {
+            try {
+                DSMFactory.getInstance().saveCustomViewBean(customViewBean);
+            } catch (JDSException e) {
+                e.printStackTrace();
+            }
         }
     }
 

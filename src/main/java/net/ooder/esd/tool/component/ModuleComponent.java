@@ -1457,6 +1457,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             BtnBean btnBean = panelBean.getBtnBean();
             if (btnBean.getRefreshBtn() != null && btnBean.getRefreshBtn()) {
                 Action action = new Action(CustomPageAction.RELOAD, PanelEventEnum.onRefresh);
+                action.setTarget(this.getClassName());
                 panelComponent.addAction(action);
             } else if (btnBean.getInfoBtn() != null && btnBean.getInfoBtn()) {
                 //todo

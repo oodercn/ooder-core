@@ -24,7 +24,7 @@ public class FullNavTreeComponent<M extends LayoutComponent> extends CustomNavTr
         this.fillMenuAction(bean.getTreeViewBean(), getTreeComponent());
         APICallerComponent component = (APICallerComponent) this.findComponentByAlias("RELOAD");
         if (component != null && (component.getProperties().getAutoRun() == null || !component.getProperties().getAutoRun())) {
-            Action action = new Action(CustomFormAction.RELOAD, TreeViewEventEnum.onRender);
+            Action action = new Action(CustomFormAction.RELOAD, TreeViewEventEnum.afterShow);
             this.addAction(action);
         }
     }
