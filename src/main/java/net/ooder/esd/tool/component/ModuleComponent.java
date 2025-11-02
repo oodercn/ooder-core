@@ -20,6 +20,7 @@ import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.bar.DynBar;
 import net.ooder.esd.bean.bar.MenuDynBar;
+import net.ooder.esd.bean.nav.BtnBean;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.CustomMethodInfo;
@@ -1451,11 +1452,17 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             }
             panelComponent = new PanelComponent(euModule.getName() + ComponentType.PANEL.name() + DefaultBoxfix, new PanelProperties(panelBean));
         }
-        if (panelComponent != null && panelBean.getRefreshBtn() != null && panelBean.getRefreshBtn()) {
-            Action action = new Action(CustomPageAction.RELOAD, PanelEventEnum.onRefresh);
-            panelComponent.addAction(action);
-        }
 
+        if (panelComponent != null && panelBean.getBtnBean() != null) {
+            BtnBean btnBean = panelBean.getBtnBean();
+            if (btnBean.getRefreshBtn() != null && btnBean.getRefreshBtn()) {
+                Action action = new Action(CustomPageAction.RELOAD, PanelEventEnum.onRefresh);
+                panelComponent.addAction(action);
+            } else if (btnBean.getInfoBtn() != null && btnBean.getInfoBtn()) {
+                //todo
+
+            }
+        }
         return panelComponent;
     }
 

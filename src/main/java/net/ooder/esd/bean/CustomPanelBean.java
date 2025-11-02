@@ -48,15 +48,6 @@ public class CustomPanelBean implements CustomBean {
 
     Boolean noFrame;
 
-
-    Boolean optBtn;
-
-    Boolean refreshBtn;
-
-    Boolean infoBtn;
-
-    Boolean closeBtn;
-
     HAlignType hAlign;
 
     ToggleIconType toggleIcon;
@@ -77,7 +68,6 @@ public class CustomPanelBean implements CustomBean {
 
 
     public void update(Component component) {
-
         if (component instanceof PanelComponent) {
             this.init((PanelProperties) component.getProperties());
         } else {
@@ -216,37 +206,6 @@ public class CustomPanelBean implements CustomBean {
         this.xpath = xpath;
     }
 
-    public Boolean getOptBtn() {
-        return optBtn;
-    }
-
-    public void setOptBtn(Boolean optBtn) {
-        this.optBtn = optBtn;
-    }
-
-    public Boolean getRefreshBtn() {
-        return refreshBtn;
-    }
-
-    public void setRefreshBtn(Boolean refreshBtn) {
-        this.refreshBtn = refreshBtn;
-    }
-
-    public Boolean getInfoBtn() {
-        return infoBtn;
-    }
-
-    public void setInfoBtn(Boolean infoBtn) {
-        this.infoBtn = infoBtn;
-    }
-
-    public Boolean getCloseBtn() {
-        return closeBtn;
-    }
-
-    public void setCloseBtn(Boolean closeBtn) {
-        this.closeBtn = closeBtn;
-    }
 
     public CustomDivBean getDivBean() {
         return divBean;

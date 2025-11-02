@@ -4,10 +4,10 @@ package net.ooder.esd.bean.view;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.AnnotationType;
-import net.ooder.annotation.DynLoad;
-import net.ooder.common.JDSException;
 import net.ooder.annotation.CustomBean;
+import net.ooder.annotation.DynLoad;
 import net.ooder.annotation.SimpleCustomBean;
+import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.*;
 import net.ooder.esd.annotation.event.*;
 import net.ooder.esd.annotation.field.BlockFieldAnnotation;
@@ -19,14 +19,10 @@ import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.CustomMethodInfo;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.java.JavaSrcBean;
-import net.ooder.esd.tool.component.Component;
-import net.ooder.esd.tool.component.ComponentList;
-import net.ooder.esd.tool.component.DialogComponent;
-import net.ooder.esd.tool.component.PanelComponent;
 import net.ooder.esd.tool.DSMProperties;
-import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.esd.tool.properties.ModuleProperties;
+import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.Action;
+import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
@@ -493,8 +489,13 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
             if (dialogBean == null && moduleComponent != null && moduleComponent.getModulePanelComponent() != null) {
                 dialogBean = new DialogBean(moduleComponent.getDialogComponent());
             } else {
-                dialogBean = new DialogBean();
-                AnnotationUtil.fillDefaultValue(DialogAnnotation.class, dialogBean);
+                if (this.getMethodConfig() != null && this.getMethodConfig().getMethod() != null) {
+                    Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(this.getMethodConfig().getMethod(), true);
+                    dialogBean = new DialogBean(annotations);
+                } else {
+                    dialogBean = new DialogBean();
+                    AnnotationUtil.fillDefaultValue(DialogAnnotation.class, dialogBean);
+                }
             }
         }
 
@@ -1022,7 +1023,13 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
                 Component component = moduleComponent.getCurrComponent();
                 blockBean = new CustomBlockBean(component);
             } else {
-                blockBean = new CustomBlockBean();
+                if (this.getMethodConfig() != null && this.getMethodConfig().getMethod() != null) {
+                    Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(this.getMethodConfig().getMethod(), true);
+                    blockBean = new CustomBlockBean(annotations);
+                } else {
+                    blockBean = new CustomBlockBean();
+                    AnnotationUtil.fillDefaultValue(BlockAnnotation.class, panelBean);
+                }
             }
             if (this.getViewBean() != null) {
                 ContainerBean containerBean = this.getViewBean().getContainerBean();
@@ -1383,11 +1390,14 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         }
         if (panelBean == null && moduleComponent != null && moduleComponent.getModulePanelComponent() != null) {
             panelBean = new CustomPanelBean(moduleComponent.getModulePanelComponent());
-        } else if (moduleComponent.getCurrComponent() != null) {
-            panelBean = new CustomPanelBean(moduleComponent.getCurrComponent());
         } else {
-            panelBean = new CustomPanelBean();
-            AnnotationUtil.fillDefaultValue(PanelAnnotation.class, panelBean);
+            if (this.getMethodConfig() != null && this.getMethodConfig().getMethod() != null) {
+                Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(this.getMethodConfig().getMethod(), true);
+                panelBean = new CustomPanelBean(annotations);
+            } else {
+                panelBean = new CustomPanelBean();
+                AnnotationUtil.fillDefaultValue(PanelAnnotation.class, panelBean);
+            }
         }
         if (this.getViewBean() != null) {
             ContainerBean containerBean = this.getViewBean().getContainerBean();
