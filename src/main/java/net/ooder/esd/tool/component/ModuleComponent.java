@@ -2005,7 +2005,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
         if (mainBlock == null) {
             mainBlock = new BlockComponent(Dock.fill, this.getEuModule().getName() + DefaultTopBoxfix);
-            this.components.put(this.getEuModule().getName() + DefaultTopBoxfix, mainBlock);
+            this.addChildren(mainBlock);
         }
 
         if (mainBlock instanceof BlockComponent) {

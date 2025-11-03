@@ -14,6 +14,7 @@ import net.ooder.esd.bean.CustomRefBean;
 import net.ooder.esd.bean.MethodChinaBean;
 import net.ooder.esd.bean.RepositoryBean;
 import net.ooder.esd.bean.TreeListItem;
+import net.ooder.esd.custom.component.CustomModuleComponent;
 import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
@@ -22,8 +23,6 @@ import net.ooder.esd.dsm.domain.CustomDomain;
 import net.ooder.esd.dsm.repository.database.proxy.DSMColProxy;
 import net.ooder.esd.dsm.repository.database.proxy.DSMTableProxy;
 import net.ooder.esd.engine.enums.MenuBarBean;
-import net.ooder.esd.tool.component.Component;
-import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.item.GalleryItem;
 import net.ooder.esd.util.DSMAnnotationUtil;
 import net.ooder.esd.util.OODUtil;
@@ -131,7 +130,7 @@ public class ESDClass {
     private static final String[] customClassName = new String[]{"toString", "compareTo", "equals", "getCachedSize", "setCachedSize"};
 
     static {
-        Class[] skipClass = new Class[]{TreeListItem.class, GalleryItem.class, ModuleComponent.class, Component.class, NavTabListItem.class};
+        Class[] skipClass = new Class[]{TreeListItem.class, GalleryItem.class, CustomModuleComponent.class, NavTabListItem.class};
         for (Class clazz : skipClass) {
             while (clazz != null && !clazz.equals(Object.class)) {
                 skipClassSet.add(clazz);
@@ -172,7 +171,9 @@ public class ESDClass {
         this.ctClass = ctClass;
         this.allCtFields = new ArrayList<>();
         for (Field field : ctClass.getDeclaredFields()) {
-            if (!Modifier.isStatic(field.getModifiers()) && !field.getName().startsWith("this$")) {
+            if (!Modifier.isStatic(field.getModifiers())
+                    && !skipClassSet.contains(field.getDeclaringClass())
+                    && !field.getName().startsWith("this$")) {
                 allCtFields.add(field);
             }
         }
@@ -190,7 +191,9 @@ public class ESDClass {
         this.allCtMethods = new ArrayList<>();
         List<String> methodNames = new ArrayList<>();
         for (Method method : ctClass.getDeclaredMethods()) {
-            if (!Modifier.isStatic(method.getModifiers())) {
+            if (!Modifier.isStatic(method.getModifiers())
+                    && !skipClassSet.contains(method.getDeclaringClass())
+                    ) {
                 allCtMethods.add(method);
                 methodNames.add(method.getName());
             }

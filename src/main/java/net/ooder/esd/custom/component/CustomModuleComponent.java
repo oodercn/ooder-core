@@ -316,6 +316,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
 
                 case panel:
                     PanelComponent modulePanelComponent = this.getModulePanelComponent();
+
                     if (component instanceof PanelComponent && component.getChildren() != null) {
                         for (Component childComponent : component.getChildren()) {
                             mainComponent.addChildren(childComponent);
@@ -323,9 +324,9 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                     } else {
                         mainComponent.addChildren(component);
                     }
-
-                    modulePanelComponent.addChildren(mainComponent);
                     this.addChildren(modulePanelComponent);
+                    modulePanelComponent.addChildren(mainComponent);
+
                     break;
                 case block:
                     BlockComponent blockPanelComponent = this.getBlockPanelComponent();
@@ -342,8 +343,6 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
 
                     mainComponent.setProperties(blockPanelComponent.getProperties());
                     this.addChildren(mainComponent);
-                    //      blockPanelComponent.addChildren(mainComponent);
-                    //    this.addChildren(blockPanelComponent);
                     break;
                 case div:
                     DivComponent divComponent = this.getDivComponent();

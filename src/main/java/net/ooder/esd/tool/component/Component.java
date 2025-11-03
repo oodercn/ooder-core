@@ -227,7 +227,6 @@ public class Component<T extends Properties, K extends EventKey> {
                     component.setAlias(component.typeKey.name() + components.length);
                 }
                 Component oldComponent = this.getComponentByAlias(component.getAlias());
-
                 if (oldComponent == null && this.getModuleComponent() != null) {
                     oldComponent = this.getModuleComponent().findComponentByAlias(component.getAlias());
                 }
@@ -238,7 +237,6 @@ public class Component<T extends Properties, K extends EventKey> {
 
                 children.add(component);
                 component.setParent(this);
-
                 if (this.getModuleComponent() != null) {
                     ComponentList componentList = component.getChildrenRecursivelyList();
                     for (Component childComponent : componentList) {
