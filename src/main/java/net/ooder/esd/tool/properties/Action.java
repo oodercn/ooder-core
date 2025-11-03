@@ -163,7 +163,7 @@ public class Action<K extends EventKey> implements CustomBean {
             String[] argArr = new String[]{script, null, null, null};
             args.addAll(Arrays.asList(argArr));
             args.addAll(params);
-            this.id = customAction.getClass().getSimpleName() + "_" + customAction.name() + "_" + method;
+            this.id = customAction.getClass().getSimpleName() + "_" + customAction.name() + "_" + method + "_" + eventEnum;
         } else {
             this.id = type + "_" + method;
             this.type = customAction.type();
