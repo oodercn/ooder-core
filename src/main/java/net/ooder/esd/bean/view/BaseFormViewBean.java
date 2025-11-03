@@ -219,7 +219,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
 
             try {
                 String taskIds = this.getXpath() + "[" + System.currentTimeMillis() + "]";
-                ExecutorService service=   RemoteConnectionManager.getConntctionService(taskIds);
+                ExecutorService service=   RemoteConnectionManager.createConntctionService(taskIds);
 
                 List<Future<FieldFormConfig>> futures = service.invokeAll(tasks);
                 for (Future<FieldFormConfig> resultFuture : futures) {

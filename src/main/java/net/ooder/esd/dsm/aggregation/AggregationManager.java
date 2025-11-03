@@ -223,17 +223,21 @@ public class AggregationManager {
     }
 
 
-    private AggEntityConfig createAggEntityConfig(String className, String domainId) throws JDSException {
+    private AggEntityConfig createAggEntityConfig(String className, String domainId) {
         String uKey = className + "[" + domainId + "]";
+
         AggEntityConfig esdClassConfig = aggEntityConfigMap.get(uKey);
         if (esdClassConfig == null) {
             ESDClass esdClass = classManager.getAggEntityByName(className, true);
             if (esdClass != null) {
+                esdClass.initField();
                 esdClassConfig = new AggEntityConfig(esdClass, domainId);
                 esdClassConfig.setDomainId(domainId);
                 esdClassConfig.setSourceClassName(className);
                 aggEntityConfigMap.put(uKey, esdClassConfig);
                 aggEntityConfigCache.put(uKey, JSON.toJSONString(esdClassConfig));
+
+
             }
         }
         return esdClassConfig;

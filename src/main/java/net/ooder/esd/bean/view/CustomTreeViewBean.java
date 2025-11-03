@@ -825,7 +825,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
         }
         try {
 
-            ExecutorService executorService = RemoteConnectionManager.getConntctionService(this.getId() + viewClassName);
+            ExecutorService executorService = RemoteConnectionManager.createConntctionService(this.getId() + viewClassName);
             List<Future<List<CustomTreeViewBean>>> futures = executorService.invokeAll(tasks);
             for (Future<List<CustomTreeViewBean>> resultFuture : futures) {
                 try {

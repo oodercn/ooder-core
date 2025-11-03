@@ -15,6 +15,7 @@ import net.ooder.esd.custom.DataComponent;
 import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.custom.properties.NavTabsProperties;
 import net.ooder.esd.dsm.DSMFactory;
+import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.properties.AbsUIProperties;
 import net.ooder.esd.tool.properties.Action;
@@ -101,7 +102,6 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
                             contextMap.putAll(childMethodConfig.getTagVar());
                             if (childTabViewBean.getConstructorBean() != null && childTabViewBean.getTabItem() != null) {
                                 Object object = childTabViewBean.getConstructorBean().invok(childTabViewBean.getTabItem());
-
                                 Set<RequestParamBean> paramBeanSet = childMethodConfig.getParamSet();
                                 for (RequestParamBean paramBean : paramBeanSet) {
                                     if (paramBean.getParamClass().isEnum()) {
@@ -158,6 +158,22 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
                         }
                     }
 
+                } else {
+                    NavTabListItem tabListItem = new NavTabListItem(childTabViewBean, valueMap);
+                    String euClassname = tabListItem.getEuClassName();
+                    String projectName = DSMFactory.getInstance().getDefaultProjectName();
+                    EUModule realModule = ESDFacrory.getAdminESDClient().getModule(euClassname, projectName);
+                    ModuleComponent moduleComponent = new ModuleComponent();
+                    if (realModule == null) {
+                        realModule = ESDFacrory.getAdminESDClient().createModule(euClassname, projectName);
+                        moduleComponent = realModule.getComponent();
+                    } else {
+                        moduleComponent.setClassName(euClassname);
+                    }
+                    moduleComponent.setAlias(tabListItem.getName());
+                    moduleComponent.setTarget(tabListItem.getId());
+                    moduleComponent.getModuleVar().putAll(tabListItem.getTagVar());
+                    this.addChildren(moduleComponent);
                 }
             }
         }
@@ -176,7 +192,7 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
         } catch (JDSException e) {
             e.printStackTrace();
         }
-        if (childTabViewBeans.size()>0){
+        if (childTabViewBeans.size() > 0) {
             this.getProperties().setValue(childTabViewBeans.get(0).getId());
         }
 

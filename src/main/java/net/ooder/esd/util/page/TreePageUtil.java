@@ -22,6 +22,7 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.web.RemoteConnectionManager;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -204,8 +205,9 @@ public class TreePageUtil {
             }
         taskId = taskId + "_" + classSet.toString() + "_" + objs.size();
         try {
-            //RemoteConnectionManager.initConnection(taskId, tasks.size());
-            List<Future<T>> futures = RemoteConnectionManager.getConntctionService(taskId).invokeAll(tasks);
+            RemoteConnectionManager.initConnection(taskId, tasks.size());
+            ExecutorService executorService = RemoteConnectionManager.createConntctionService(taskId);
+            List<Future<T>> futures =executorService.invokeAll(tasks);
             for (Future<T> resultFuture : futures) {
                 try {
                     T item = resultFuture.get(200, TimeUnit.MILLISECONDS);
@@ -243,7 +245,7 @@ public class TreePageUtil {
                     e.printStackTrace();
                 }
             }
-            RemoteConnectionManager.getConntctionService(taskId).shutdownNow();
+            executorService.shutdownNow();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

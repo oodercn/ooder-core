@@ -13,6 +13,8 @@ import net.ooder.esd.annotation.View;
 import net.ooder.esd.bean.CustomRefBean;
 import net.ooder.esd.bean.MethodChinaBean;
 import net.ooder.esd.bean.RepositoryBean;
+import net.ooder.esd.bean.TreeListItem;
+import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
@@ -20,6 +22,9 @@ import net.ooder.esd.dsm.domain.CustomDomain;
 import net.ooder.esd.dsm.repository.database.proxy.DSMColProxy;
 import net.ooder.esd.dsm.repository.database.proxy.DSMTableProxy;
 import net.ooder.esd.engine.enums.MenuBarBean;
+import net.ooder.esd.tool.component.Component;
+import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.properties.item.GalleryItem;
 import net.ooder.esd.util.DSMAnnotationUtil;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.web.*;
@@ -121,7 +126,20 @@ public class ESDClass {
         this.caption = caption;
     }
 
+    static Set<Class> skipClassSet = new HashSet<>();
+
     private static final String[] customClassName = new String[]{"toString", "compareTo", "equals", "getCachedSize", "setCachedSize"};
+
+    static {
+        Class[] skipClass = new Class[]{TreeListItem.class, GalleryItem.class, ModuleComponent.class, Component.class, NavTabListItem.class};
+        for (Class clazz : skipClass) {
+            while (clazz != null && !clazz.equals(Object.class)) {
+                skipClassSet.add(clazz);
+                clazz = clazz.getSuperclass();
+            }
+        }
+
+    }
 
     public ESDClass(DSMTableProxy tableProxy) {
         this.projectVersionName = tableProxy.getProjectVersionName();
@@ -162,6 +180,7 @@ public class ESDClass {
         for (Field field : ctClass.getFields()) {
             if (field.getDeclaringClass().equals(ctClass)
                     && !field.getName().startsWith("this$")
+                    && !skipClassSet.contains(field.getDeclaringClass())
                     && !field.getDeclaringClass().equals(Object.class)
                     ) {
                 allCtFields.add(field);
@@ -180,6 +199,7 @@ public class ESDClass {
         for (Method method : ctClass.getMethods()) {
             if (!Modifier.isStatic(method.getModifiers())
                     && !methodNames.contains(method.getName())
+                    && !skipClassSet.contains(method.getDeclaringClass())
                     && !method.getDeclaringClass().equals(ctClass)
                     && !method.getDeclaringClass().equals(Enum.class)
                     && !method.getDeclaringClass().equals(Object.class)) {
@@ -276,10 +296,9 @@ public class ESDClass {
             }
 
         }
-        //initField();
-        //  log.info("end new ESDClass---end= " + className + "[" + className + "] times=" + (System.currentTimeMillis() - start));
+        //  initField();
+        // log.info("end new ESDClass---end= " + className + "[" + className + "] times=" + (System.currentTimeMillis() - start));
     }
-
 
     public void initField() {
         long start = System.currentTimeMillis();
@@ -293,9 +312,7 @@ public class ESDClass {
                 fieldTasks.add(new InitFieldTask<>(field, index, this));
                 index++;
             }
-
             List<CustomFieldInfo> fields = this.invokFieldTasks(className, fieldTasks);
-
             for (CustomFieldInfo fieldInfo : fields) {
                 Field field = fieldInfo.field;
                 if (fieldInfo.isSerialize()) {
@@ -315,7 +332,6 @@ public class ESDClass {
                 if (fieldInfo.isCaptionField()) {
                     this.captionField = fieldInfo;
                 }
-
             }
 
             List<Callable<CustomMethodInfo>> methodTasks = new ArrayList<>();
@@ -330,7 +346,6 @@ public class ESDClass {
             }
 
             List<CustomMethodInfo> methodInfos = this.invokMethodTasks(className, methodTasks);
-
             for (CustomMethodInfo methodInfo : methodInfos) {
                 if (methodInfo.isSerialize()) {
                     if (MethodUtil.isGetMethod(methodInfo.getInnerMethod()) || methodInfo.isModule()) {
@@ -375,9 +390,7 @@ public class ESDClass {
                 }
             }
 
-            log.info("end new ESDClass---fillallCtMethods= " + className + "[" + className + "] times=" + (System.currentTimeMillis() - start));
-
-
+            log.info("end init ESDClass- " + className + "[ method:" + allCtMethods.size() + " field:" + allCtFields.size() + "] times=" + (System.currentTimeMillis() - start));
             Set<String> keySet = fieldMap.keySet();
             for (String fieldName : keySet) {
                 ESDField field = fieldMap.get(fieldName);
@@ -397,15 +410,13 @@ public class ESDClass {
 
     }
 
-    ;
-
-
     private List<CustomFieldInfo> invokFieldTasks(String taskName, List<Callable<CustomFieldInfo>> esdTasks) {
         List<Future<CustomFieldInfo>> domainFutures = null;
         List<CustomFieldInfo> customFieldInfos = new ArrayList<>();
+        ExecutorService executorService = RemoteConnectionManager.createConntctionService(taskName);
         try {
+            taskName = "[field init]:" + taskName;
             RemoteConnectionManager.initConnection(taskName, esdTasks.size());
-            ExecutorService executorService = RemoteConnectionManager.getConntctionService(taskName);
             domainFutures = executorService.invokeAll(esdTasks);
             for (Future<CustomFieldInfo> resultFuture : domainFutures) {
                 try {
@@ -417,9 +428,11 @@ public class ESDClass {
                     e.printStackTrace();
                 }
             }
-            executorService.shutdownNow();
-        } catch (InterruptedException e) {
+
+        } catch (Throwable e) {
             e.printStackTrace();
+        } finally {
+            executorService.shutdown();
         }
         return customFieldInfos;
     }
@@ -429,8 +442,10 @@ public class ESDClass {
         List<Future<CustomMethodInfo>> domainFutures = null;
         List<CustomMethodInfo> customMethodInfos = new ArrayList<>();
         try {
+            taskName = "[method init]:" + taskName;
             RemoteConnectionManager.initConnection(taskName, esdTasks.size());
-            ExecutorService executorService = RemoteConnectionManager.getConntctionService(taskName);
+            ExecutorService executorService = RemoteConnectionManager.createConntctionService(taskName);
+
             domainFutures = executorService.invokeAll(esdTasks);
             for (Future<CustomMethodInfo> resultFuture : domainFutures) {
                 try {
@@ -442,8 +457,8 @@ public class ESDClass {
                     e.printStackTrace();
                 }
             }
-            executorService.shutdownNow();
-        } catch (InterruptedException e) {
+            executorService.shutdown();
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return customMethodInfos;

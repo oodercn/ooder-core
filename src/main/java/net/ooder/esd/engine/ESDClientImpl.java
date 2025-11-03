@@ -959,6 +959,7 @@ public class ESDClientImpl implements ESDClient {
         String path = classToPath(className, versionName);
         EUModule module = null;
         try {
+
             PackagePathType packagePathType = PackagePathType.startPath(StringUtility.replace(className, ".", "/"));
             if (packagePathType != null && packagePathType.getApiType() != null && packagePathType.getApiType().getDefaultProjectName() != null) {
                 path = classToPath(className, packagePathType.getApiType().getDefaultProjectName());

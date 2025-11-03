@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 public class BuildFactory {
@@ -145,7 +146,9 @@ public class BuildFactory {
                     start = end;
                 }
                 RemoteConnectionManager.initConnection(taskId, syncLoadClassTasks.size());
-                List<Future<List<ESDClass>>> futures = RemoteConnectionManager.getConntctionService(taskId).invokeAll(syncLoadClassTasks);
+
+                ExecutorService executorService = RemoteConnectionManager.createConntctionService(taskId);
+                List<Future<List<ESDClass>>> futures = executorService.invokeAll(syncLoadClassTasks);
                 for (Future<List<ESDClass>> resultFuture : futures) {
                     try {
                         List<ESDClass> result = resultFuture.get();
@@ -155,9 +158,10 @@ public class BuildFactory {
                         e.printStackTrace();
                     }
                 }
+                executorService.shutdown();
             }
 
-            RemoteConnectionManager.getConntctionService(taskId).shutdown();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -213,7 +217,8 @@ public class BuildFactory {
             if (taskId == null) {
                 taskId = DSMFactory.DefaultDsmName;
             }
-            List<Future<List<JavaSrcBean>>> projectFutures = RemoteConnectionManager.getConntctionService(taskId).invokeAll(buildTasks);
+            ExecutorService executorService = RemoteConnectionManager.createConntctionService(taskId);
+            List<Future<List<JavaSrcBean>>> projectFutures =executorService.invokeAll(buildTasks);
             for (Future<List<JavaSrcBean>> resultFuture : projectFutures) {
                 try {
                     List<JavaSrcBean> result = resultFuture.get();
@@ -224,7 +229,7 @@ public class BuildFactory {
                     e.printStackTrace();
                 }
             }
-            RemoteConnectionManager.getConntctionService(taskId).shutdownNow();
+            executorService.shutdownNow();
         } catch (Exception e) {
             e.printStackTrace();
         }

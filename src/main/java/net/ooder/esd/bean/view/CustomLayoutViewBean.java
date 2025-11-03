@@ -96,7 +96,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
             }
             List<Future<CustomModuleBean>> futures = null;
             try {
-                ExecutorService service = RemoteConnectionManager.getConntctionService(this.getXpath());
+                ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
                 futures = service.invokeAll(tasks);
                 for (Future<CustomModuleBean> resultFuture : futures) {
                     try {

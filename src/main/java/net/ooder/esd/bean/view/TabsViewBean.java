@@ -135,7 +135,7 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
             }
             List<Future<CustomModuleBean>> futures = null;
             try {
-                ExecutorService service = RemoteConnectionManager.getConntctionService(this.getXpath());
+                ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
                 futures = service.invokeAll(tasks);
                 for (Future<CustomModuleBean> resultFuture : futures) {
                     try {

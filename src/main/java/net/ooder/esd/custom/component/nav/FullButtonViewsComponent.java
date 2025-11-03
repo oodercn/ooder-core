@@ -51,12 +51,12 @@ public class FullButtonViewsComponent extends CustomModuleComponent<CustomButton
             showAction.updateArgs(currComponent.getAlias(), 4);
             ButtonViewsDataBean dataBean = (ButtonViewsDataBean) methodConfig.getDataBean();
             CustomButtonViewsViewBean viewBean = (CustomButtonViewsViewBean) methodConfig.getView();
-            if (viewBean != null && viewBean.getAutoReload() != null && viewBean.getAutoReload()) {
-                currComponent.addAction(showAction);
-            } else {
-                showAction.setEventKey(TabsEventEnum.onIniPanelView);
-                currComponent.addAction(showAction);
-            }
+//            if (viewBean != null && viewBean.getAutoReload() != null && viewBean.getAutoReload()) {
+//                currComponent.addAction(showAction);
+//            } else {
+//                showAction.setEventKey(TabsEventEnum.onIniPanelView);
+//                currComponent.addAction(showAction);
+//            }
             if (dataBean != null && dataBean.getCs() != null) {
                 currComponent.setCS(dataBean.getCs());
             }

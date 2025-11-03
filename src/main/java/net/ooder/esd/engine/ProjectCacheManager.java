@@ -11,6 +11,7 @@ import net.ooder.common.FolderType;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.StringUtility;
 import net.ooder.config.BPDProjectConfig;
+import net.ooder.config.ResultModel;
 import net.ooder.context.JDSActionContext;
 import net.ooder.context.JDSContext;
 import net.ooder.esb.config.formula.FormulaInst;
@@ -20,6 +21,7 @@ import net.ooder.esd.annotation.ui.EUFileType;
 import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.custom.CustomViewFactory;
+import net.ooder.esd.custom.DataComponent;
 import net.ooder.esd.custom.component.CustomDynLoadView;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
@@ -57,6 +59,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 
@@ -509,6 +512,7 @@ public class ProjectCacheManager {
                 }
             }
         }
+
         return euModule;
     }
 
@@ -535,10 +539,8 @@ public class ProjectCacheManager {
         if (moduleComponent instanceof CustomDynLoadView) {
             return;
         }
-
         moduleComponent.setModuleType(euModule.getFiletype());
         MethodConfig methodConfig = moduleComponent.getMethodAPIBean();
-
         if (methodConfig != null && dynBuild) {
             DSMProperties dsmProperties = moduleComponent.getProperties().getDsmProperties();
             if (dsmProperties == null) {
@@ -698,7 +700,8 @@ public class ProjectCacheManager {
                     start = end;
                 }
                 RemoteConnectionManager.initConnection(taskId, syncLoadProjectTasks.size());
-                List<Future<List<INProject>>> futures = RemoteConnectionManager.getConntctionService(taskId).invokeAll(syncLoadProjectTasks);
+                ExecutorService executorService = RemoteConnectionManager.createConntctionService(taskId);
+                List<Future<List<INProject>>> futures = executorService.invokeAll(syncLoadProjectTasks);
                 for (Future<List<INProject>> resultFuture : futures) {
                     try {
                         projectList = resultFuture.get();
@@ -708,9 +711,10 @@ public class ProjectCacheManager {
                         e.printStackTrace();
                     }
                 }
+                executorService.shutdown();
             }
 
-            RemoteConnectionManager.getConntctionService(taskId).shutdown();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

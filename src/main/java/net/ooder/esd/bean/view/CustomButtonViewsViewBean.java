@@ -83,7 +83,7 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
                 }
             }
             try {
-                ExecutorService service = RemoteConnectionManager.getConntctionService(this.getXpath());
+                ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
                 List<Future<CustomModuleBean>> futures = service.invokeAll(tasks);
                 for (Future<CustomModuleBean> resultFuture : futures) {
                     try {

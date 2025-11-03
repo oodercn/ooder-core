@@ -60,6 +60,7 @@ public class CustomButtonViewsComponent extends ButtonViewsComponent {
         if (tabsViewBean.getLazyAppend() == null || tabsViewBean.getLazyAppend()) {
             Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onItemSelected);
             showAction.updateArgs(this.getAlias(), 4);
+            this.addAction(showAction);
             if (tabsViewBean != null && tabsViewBean.getAutoReload() != null && tabsViewBean.getAutoReload()) {
                 this.addAction(showAction);
             } else {

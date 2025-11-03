@@ -288,7 +288,7 @@ public class AggEntityConfig {
         return rootClass;
     }
 
-    void initClass(ESDClass esdClass) {
+    void  initClass(ESDClass esdClass) {
         List<CustomMethodInfo> esdMethods = new ArrayList<>();
         esdMethods.addAll(esdClass.getMethodsList());
         // esdMethods.addAll(esdClass.getOtherMethodsList());
