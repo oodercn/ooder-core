@@ -38,7 +38,7 @@ public class CodeEditorTools {
     @APIEventAnnotation(
             bindAction = {@CustomAction(script = "page.content.showJumpToWnd()", params = {"{arg[0]}"})}
     )
-    @CustomAnnotation(index = 2, caption = "跳到行", tips = "跳到行", imageClass = "spafont spa-icon-jumpto")
+    @CustomAnnotation(index = 2, caption = "跳到行", tips = "跳到行", imageClass = "ri-arrow-right-up-line")
     public @ResponseBody
     ResultModel<Boolean> jumptoAction(String content, String path) {
         ResultModel<Boolean> result = new ResultModel<Boolean>();
@@ -52,7 +52,7 @@ public class CodeEditorTools {
     @APIEventAnnotation(
             bindAction = {@CustomAction(script = "page.content.reindent()")}
     )
-    @CustomAnnotation(index = 3, caption = "调整缩进", tips = "调整缩进", imageClass = "fas-indent")
+    @CustomAnnotation(index = 3, caption = "调整缩进", tips = "调整缩进", imageClass = "ri-indent-increase")
     public @ResponseBody
     ResultModel<Boolean> reindentAction(String content, String path) {
         ResultModel<Boolean> result = new ResultModel<Boolean>();
