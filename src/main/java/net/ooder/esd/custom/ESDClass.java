@@ -51,7 +51,7 @@ public class ESDClass {
     private String rootClassName;
 
     private String viewServiceClassName;
-    //
+
     //Repostitory Entity
     private String entityClassName;
 
