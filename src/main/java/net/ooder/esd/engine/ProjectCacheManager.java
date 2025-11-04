@@ -11,7 +11,6 @@ import net.ooder.common.FolderType;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.StringUtility;
 import net.ooder.config.BPDProjectConfig;
-import net.ooder.config.ResultModel;
 import net.ooder.context.JDSActionContext;
 import net.ooder.context.JDSContext;
 import net.ooder.esb.config.formula.FormulaInst;
@@ -21,7 +20,6 @@ import net.ooder.esd.annotation.ui.EUFileType;
 import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.custom.CustomViewFactory;
-import net.ooder.esd.custom.DataComponent;
 import net.ooder.esd.custom.component.CustomDynLoadView;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
@@ -40,6 +38,7 @@ import net.ooder.esd.tool.component.APICallerComponent;
 import net.ooder.esd.tool.component.ComponentList;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ModuleFunction;
+import net.ooder.esd.util.json.MvelDSMRoot;
 import net.ooder.jds.core.esb.util.ActionContext;
 import net.ooder.jds.core.esb.util.ValueStack;
 import net.ooder.org.PersonNotFoundException;
@@ -577,7 +576,7 @@ public class ProjectCacheManager {
         }
 
         String json = JSONObject.toJSONString(moduleComponent, true);
-        json = (String) TemplateRuntime.eval(json, moduleComponent, JDSActionContext.getActionContext().getContext());
+        json = (String) TemplateRuntime.eval(json,MvelDSMRoot.getInstance(), JDSActionContext.getActionContext().getContext());
         try {
             moduleCache.put(path, euModule);
             this.getVfsClient().saveFileAsContent(path, json, VFSConstants.Default_Encoding);
