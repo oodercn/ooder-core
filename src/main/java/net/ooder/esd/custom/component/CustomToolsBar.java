@@ -451,7 +451,12 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
             if (showCaption != null && !showCaption) {
                 caption = "";
             }
-            TreeListItem menuItem = new TreeListItem(menuId, caption, methodConfig.getImageClass(), methodConfig.getTips(), methodConfig.getFieldBean().getInputType());
+            ComboInputType inputType = ComboInputType.button;
+            if (methodConfig.getFieldBean() != null && methodConfig.getFieldBean().getInputType() != null) {
+                inputType = methodConfig.getFieldBean().getInputType();
+            }
+
+            TreeListItem menuItem = new TreeListItem(menuId, caption, methodConfig.getImageClass(), methodConfig.getTips(), inputType);
             this.getGroup().addChild(menuItem);
             Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
             List<Action> actions = eventEnum.getActions();
