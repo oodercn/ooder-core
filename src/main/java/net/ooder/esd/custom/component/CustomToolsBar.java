@@ -139,7 +139,6 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
 
     @Override
     public List<TreeListItem> filter(Object rowData) {
-
         List<TreeListItem> menuTypes = new ArrayList<TreeListItem>();
         List<TreeListItem> items = this.getGroup().getSub();
         List<ExcuteObj> tasks = new ArrayList<ExcuteObj>();
@@ -448,6 +447,10 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
         for (ToolBarEventBean eventEnum : extAPIEvent) {
             MethodConfig methodConfig = findMethod(eventEnum);
             String menuId = methodConfig.getMethodName() + ComboInputType.button.name();
+            String caption = methodConfig.getCaption();
+            if (showCaption != null && !showCaption) {
+                caption = "";
+            }
             TreeListItem menuItem = new TreeListItem(menuId, caption, methodConfig.getImageClass(), methodConfig.getTips(), methodConfig.getFieldBean().getInputType());
             this.getGroup().addChild(menuItem);
             Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);

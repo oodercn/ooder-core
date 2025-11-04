@@ -1173,10 +1173,13 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         UrlPath urlPath = new UrlPathData(PAGECTXNAME, RequestPathTypeEnum.FORM, "");
         component.getProperties().addRequestData(urlPath);
         if (toolBar != null) {
-            if (!methodAPIBean.isModule()) {
-                toolBar.addMenu(component);
-            } else {
-                toolBar.addMenu(methodAPIBean.getEUClassName(), component);
+            ToolBarEvent toolBarEvent = AnnotationUtil.getMethodAnnotation(methodAPIBean.getMethod(), ToolBarEvent.class);
+            if (toolBarEvent == null) {
+                if (!methodAPIBean.isModule()) {
+                    toolBar.addMenu(component);
+                } else {
+                    toolBar.addMenu(methodAPIBean.getEUClassName(), component);
+                }
             }
         }
 
@@ -1256,9 +1259,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                 List<APICallerComponent> components = menuDynBar.getApis();
                 addApi(components);
             } else {
-
                 DSMProperties dsmProperties = this.getProperties().getDsmProperties();
-
                 String domainId = null;
                 if (dsmProperties != null) {
                     domainId = dsmProperties.getDomainId();

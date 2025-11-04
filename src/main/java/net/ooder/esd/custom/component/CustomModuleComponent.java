@@ -234,6 +234,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                         }
                     }
                 }
+
                 PositionType positionType = toolBarBean.getPosition() == null ? PositionType.inner : toolBarBean.getPosition();
                 switch (positionType) {
                     case inner:
