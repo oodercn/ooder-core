@@ -10,7 +10,6 @@ import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.CustomMenu;
 import net.ooder.esd.annotation.MenuBarMenu;
 import net.ooder.esd.annotation.event.MenuBarEvent;
-import net.ooder.esd.annotation.event.ToolBarEvent;
 import net.ooder.esd.annotation.menu.CustomMenuType;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.MenuBarEventBean;
@@ -98,6 +97,7 @@ public class MenuBarBean<T extends Enum> implements CustomBean, Comparable<MenuB
     @JSONField(serialize = false)
     public List<T> enumItems;
 
+    LinkedHashSet<MenuBarEventBean> extAPIEvent = new LinkedHashSet<>();
 
     Set<String> customMenuServiceClass = new LinkedHashSet<>();
 
@@ -252,7 +252,7 @@ public class MenuBarBean<T extends Enum> implements CustomBean, Comparable<MenuB
                         for (MethodConfig methodAPIBean : methodAPIBeans) {
                             MenuBarEvent menuBarEvent = AnnotationUtil.getMethodAnnotation(methodAPIBean.getMethod(), MenuBarEvent.class);
                             if (menuBarEvent != null) {
-                                MenuBare toolBarMenuBean = new MenuBarEventBean<>(menuBarEvent, methodAPIBean.getSourceClassName(), methodAPIBean.getMethodName());
+                                MenuBarEventBean toolBarMenuBean = new MenuBarEventBean<>(menuBarEvent, methodAPIBean.getSourceClassName(), methodAPIBean.getMethodName());
                                 this.extAPIEvent.add(toolBarMenuBean);
                             }
                         }
@@ -541,6 +541,15 @@ public class MenuBarBean<T extends Enum> implements CustomBean, Comparable<MenuB
 
     public void setMenus(CustomMenu[] menus) {
         this.menus = menus;
+    }
+
+
+    public LinkedHashSet<MenuBarEventBean> getExtAPIEvent() {
+        return extAPIEvent;
+    }
+
+    public void setExtAPIEvent(LinkedHashSet<MenuBarEventBean> extAPIEvent) {
+        this.extAPIEvent = extAPIEvent;
     }
 
     public Set<String> getCustomMenuServiceClass() {

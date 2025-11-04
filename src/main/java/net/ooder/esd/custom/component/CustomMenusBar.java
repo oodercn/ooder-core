@@ -3,6 +3,7 @@ package net.ooder.esd.custom.component;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.EsbBeanAnnotation;
 import net.ooder.common.JDSConstants;
+import net.ooder.common.JDSException;
 import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
 import net.ooder.esd.annotation.CustomAction;
@@ -16,12 +17,12 @@ import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ui.SymbolType;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.ToolBarEventBean;
-import net.ooder.esd.bean.ToolBarMenuBean;
 import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.bean.bar.MenuDynBar;
+import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.action.CustomConditionAction;
 import net.ooder.esd.custom.action.ShowPageAction;
-import net.ooder.esd.engine.EUModule;
+import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.APICallerComponent;
 import net.ooder.esd.tool.component.MenuBarComponent;
@@ -65,7 +66,6 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
 
     @Override
     public boolean initMenuClass(Class bindClazz) {
-
         return true;
     }
 
@@ -73,17 +73,6 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
         super(alias, new MenuBarProperties());
         this.id = alias;
         this.caption = alias;
-    }
-
-    public CustomMenusBar(EUModule euModule, MenuBarBean menuBarBean, String target, Object value) {
-        super(menuBarBean.getId(), new MenuBarProperties(menuBarBean));
-        this.id = menuBarBean.getId();
-        this.parentId = menuBarBean.getParentId();
-        this.index = menuBarBean.getIndex();
-        this.showCaption = menuBarBean.getShowCaption();
-        this.caption = menuBarBean.getCaption();
-        this.imageClass = menuBarBean.getImageClass();
-        this.menuType = menuBarBean.getMenuType();
     }
 
     public CustomMenusBar(MenuBarBean menuBarBean) {
@@ -95,14 +84,17 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
         this.caption = menuBarBean.getCaption();
         this.imageClass = menuBarBean.getImageClass();
         this.menuType = menuBarBean.getMenuType();
+        fillChildCustomAction(menuBarBean);
     }
 
 
     public CustomMenusBar(String id, String caption, String imageClass, Integer index) {
         super(id, new MenuBarProperties());
+
         this.id = alias;
         this.caption = caption;
         this.imageClass = imageClass;
+
     }
 
 
@@ -423,6 +415,7 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
         return result;
 
     }
+
     void fillChildCustomAction(MenuBarBean menuBean) {
         Set<ToolBarEventBean> extAPIEvent = menuBean.getExtAPIEvent();
         for (ToolBarEventBean eventEnum : extAPIEvent) {
@@ -438,7 +431,7 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
             }
 
             TreeListItem menuItem = new TreeListItem(menuId, caption, methodConfig.getImageClass(), methodConfig.getTips(), inputType);
-            this.getGroup().addChild(menuItem);
+            this.getProperties().addItem(menuItem);
             Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
             List<Action> actions = eventEnum.getActions();
             for (Action action : actions) {
@@ -502,6 +495,25 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
         return menuTypes;
     }
 
+    @JSONField(serialize = false)
+    public MethodConfig findMethod(ToolBarEventBean toolBarEventBean) {
+        String soruceClassName = toolBarEventBean.getSourceClassName();
+        String methodName = toolBarEventBean.getMethodName();
+        if (soruceClassName != null) {
+            try {
+                ApiClassConfig config = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(soruceClassName);
+                if (config != null) {
+                    MethodConfig methodConfig = config.getMethodByName(methodName);
+                    if (methodConfig != null) {
+                        return methodConfig;
+                    }
+                }
+            } catch (JDSException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 
     @Override
     public Integer getIndex() {

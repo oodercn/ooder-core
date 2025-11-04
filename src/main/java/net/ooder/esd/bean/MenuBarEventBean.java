@@ -4,7 +4,8 @@ import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.action.CustomLoadClassAction;
-import net.ooder.esd.annotation.event.*;
+import net.ooder.esd.annotation.event.MenuBarEvent;
+import net.ooder.esd.annotation.event.MenuBarEventEnum;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Event;
 import net.ooder.web.util.AnnotationUtil;
@@ -43,6 +44,18 @@ public class MenuBarEventBean<T extends Action> extends Event<T, MenuBarEventEnu
         this.methodName = methodName;
     }
 
+
+//
+//    public MenuBarEventBean(CustomToolbarEvent customToolbarEvent) {
+//        this.eventKey = customToolbarEvent.getEventEnum();
+//        this.desc = customToolbarEvent.getName();
+//        this.eventId = eventKey.name() + "|" + eventKey.getEvent();
+//        this.expression = customToolbarEvent.getExpression();
+//        CustomAction[] actionSet = customToolbarEvent.getActions();
+//        addAction(actionSet);
+//
+//    }
+
     public MenuBarEventBean(MenuBarEvent event, Constructor constructor) {
         this.sourceClassName = constructor.getDeclaringClass().getName();
         this.methodName = constructor.getName();
@@ -59,7 +72,6 @@ public class MenuBarEventBean<T extends Action> extends Event<T, MenuBarEventEnu
         this.methodName = methodName;
         this.initEvent(event);
     }
-
 
 
     void initEvent(MenuBarEvent event) {
