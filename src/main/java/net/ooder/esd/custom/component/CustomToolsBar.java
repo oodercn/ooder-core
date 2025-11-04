@@ -3,26 +3,33 @@ package net.ooder.esd.custom.component;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.EsbBeanAnnotation;
 import net.ooder.common.JDSConstants;
+import net.ooder.common.JDSException;
 import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
 import net.ooder.esd.annotation.event.ActionTypeEnum;
 import net.ooder.esd.annotation.event.ToolBarEventEnum;
+import net.ooder.esd.annotation.event.TreeEvent;
 import net.ooder.esd.annotation.menu.CustomMenuType;
 import net.ooder.esd.annotation.menu.GridMenu;
 import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ui.SymbolType;
+import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.ToolBarMenuBean;
+import net.ooder.esd.bean.TreeEventBean;
 import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.bean.bar.MenuDynBar;
+import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.action.CustomConditionAction;
 import net.ooder.esd.custom.action.ShowPageAction;
+import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.APICallerComponent;
+import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ToolBarComponent;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Condition;
@@ -31,6 +38,7 @@ import net.ooder.esd.tool.properties.ToolBarProperties;
 import net.ooder.esd.util.json.APICallSerialize;
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.jds.core.esb.task.ExcuteObj;
+import net.ooder.web.util.AnnotationUtil;
 
 import java.util.*;
 
@@ -227,6 +235,17 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
             }
         }
         return treeListItems;
+    }
+
+
+
+    public void addExtEvent(MethodConfig methodConfig, APICallerComponent apiCallerComponent) {
+        if (!methodConfig.isModule()) {
+            addMenu(apiCallerComponent);
+        } else {
+            addMenu(methodConfig.getEUClassName(), apiCallerComponent);
+        }
+
     }
 
     public void addMenu(APICallerComponent component) {
@@ -474,6 +493,9 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
         }
         return menuTypes;
     }
+
+
+
 
 
     @Override

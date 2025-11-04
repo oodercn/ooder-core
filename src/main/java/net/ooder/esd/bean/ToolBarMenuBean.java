@@ -5,14 +5,19 @@ import com.alibaba.fastjson.annotation.JSONField;
 import javassist.NotFoundException;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.CustomMenu;
+import net.ooder.esd.annotation.event.ToolBarEvent;
+import net.ooder.esd.annotation.event.TreeEvent;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.field.CustomListBean;
 import net.ooder.esd.bean.field.FieldBaseBean;
+import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.custom.component.CustomToolsBar;
+import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.ToolBarComponent;
@@ -87,6 +92,8 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
     String alias;
 
     CustomListBean customListBean;
+
+    LinkedHashSet<ToolBarEventBean> extAPIEvent = new LinkedHashSet<>();
 
 
     public ToolBarMenuBean() {
@@ -184,10 +191,6 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
         this.disabled = annotation.disabled();
         this.iconFontSize = annotation.iconFontSize();
         this.dock = annotation.dock();
-        this.position = annotation.position();
-
-
-        this.autoFontColor = annotation.autoFontColor();
         this.autoIconColor = annotation.autoIconColor();
         this.autoItemColor = annotation.autoItemColor();
 
@@ -213,6 +216,36 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
 
         }
         return alias;
+    }
+
+
+    @JSONField(serialize = false)
+    private void initExtEvent() {
+        Set<Class> bindClassList = new HashSet<>();
+
+        if (this.getMenuClasses() != null && getMenuClasses().length > 0) {
+            bindClassList.addAll(Arrays.asList(getMenuClasses()));
+        }
+        for (Class bindClass : bindClassList) {
+            if (!bindClass.equals(Void.class)) {
+                try {
+                    ApiClassConfig config = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(bindClass.getName());
+                    if (config != null) {
+                        List<MethodConfig> methodAPIBeans = config.getAllMethods();
+                        for (MethodConfig methodAPIBean : methodAPIBeans) {
+                            ToolBarEvent toolBarEvent = AnnotationUtil.getMethodAnnotation(methodAPIBean.getMethod(), ToolBarEvent.class);
+                            if (toolBarEvent != null) {
+                                ToolBarEventBean toolBarMenuBean = new ToolBarEventBean<>(toolBarEvent, methodAPIBean.getSourceClassName(), methodAPIBean.getMethodName());
+                                this.extAPIEvent.add(toolBarMenuBean);
+                            }
+                        }
+
+                    }
+                } catch (JDSException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public PositionType getPosition() {
@@ -467,6 +500,13 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
         return annotationBeans;
     }
 
+    public LinkedHashSet<ToolBarEventBean> getExtAPIEvent() {
+        return extAPIEvent;
+    }
+
+    public void setExtAPIEvent(LinkedHashSet<ToolBarEventBean> extAPIEvent) {
+        this.extAPIEvent = extAPIEvent;
+    }
 
     @JSONField(serialize = false)
     public Set<Class> getOtherClass() {
