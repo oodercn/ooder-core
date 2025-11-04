@@ -10,15 +10,14 @@ import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
 import net.ooder.esd.annotation.event.ActionTypeEnum;
 import net.ooder.esd.annotation.event.ToolBarEventEnum;
-import net.ooder.esd.annotation.event.TreeEvent;
 import net.ooder.esd.annotation.menu.CustomMenuType;
 import net.ooder.esd.annotation.menu.GridMenu;
 import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ui.SymbolType;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.ToolBarEventBean;
 import net.ooder.esd.bean.ToolBarMenuBean;
-import net.ooder.esd.bean.TreeEventBean;
 import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.bean.bar.MenuDynBar;
 import net.ooder.esd.custom.ApiClassConfig;
@@ -29,7 +28,6 @@ import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.APICallerComponent;
-import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ToolBarComponent;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Condition;
@@ -38,7 +36,6 @@ import net.ooder.esd.tool.properties.ToolBarProperties;
 import net.ooder.esd.util.json.APICallSerialize;
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.jds.core.esb.task.ExcuteObj;
-import net.ooder.web.util.AnnotationUtil;
 
 import java.util.*;
 
@@ -59,8 +56,8 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
 
     public Boolean showCaption = true;
 
-
     public Integer index = 100;
+
     @JSONField(serializeUsing = APICallSerialize.class)
     List<APICallerComponent> apis = new ArrayList<>();
 
@@ -81,6 +78,7 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
         super(toolBarBean.getAlias(), new ToolBarProperties(toolBarBean));
         this.showCaption = toolBarBean.getShowCaption();
         this.id = toolBarBean.getId();
+        fillChildCustomAction(toolBarBean);
     }
 
     public CustomToolsBar() {
@@ -238,16 +236,6 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
     }
 
 
-
-    public void addExtEvent(MethodConfig methodConfig, APICallerComponent apiCallerComponent) {
-        if (!methodConfig.isModule()) {
-            addMenu(apiCallerComponent);
-        } else {
-            addMenu(methodConfig.getEUClassName(), apiCallerComponent);
-        }
-
-    }
-
     public void addMenu(APICallerComponent component) {
         this.addComponentMenu(component, null);
     }
@@ -277,7 +265,6 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
                 for (CustomMenuItem item : customItems) {
                     this.addMenu(item.getMenu());
                 }
-
                 if (!apis.contains(component)) {
                     this.apis.add(component);
                 }
@@ -456,6 +443,41 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
     }
 
 
+    void fillChildCustomAction(ToolBarMenuBean menuBean) {
+        Set<ToolBarEventBean> extAPIEvent = menuBean.getExtAPIEvent();
+        for (ToolBarEventBean eventEnum : extAPIEvent) {
+            MethodConfig methodConfig = findMethod(eventEnum);
+            String menuId = methodConfig.getMethodName() + ComboInputType.button.name();
+            TreeListItem menuItem = new TreeListItem(menuId, caption, methodConfig.getImageClass(), methodConfig.getTips(), methodConfig.getFieldBean().getInputType());
+            this.getGroup().addChild(menuItem);
+            Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
+            List<Action> actions = eventEnum.getActions();
+            for (Action action : actions) {
+                if (!action.getConditions().contains(condition)) {
+                    action.getConditions().add(condition);
+                }
+                if (methodConfig != null) {
+                    if (action.getType().equals(ActionTypeEnum.control)) {
+                        action.setTarget(this.getAlias());
+                    } else if (action.getMethod().equals("call")) {
+                        APICallerComponent apiCallerComponent = (APICallerComponent) this.getModuleComponent().findComponentByAlias(methodConfig.getMethodName());
+                        if (apiCallerComponent == null) {
+                            apiCallerComponent = new APICallerComponent(methodConfig);
+                            this.addChildren(apiCallerComponent);
+                        }
+                        action.updateArgs("{page." + apiCallerComponent.getAlias() + "}", 3);
+                    } else if (methodConfig.isModule()) {
+                        action.updateArgs(methodConfig.getEUClassName(), 3);
+                    }
+                }
+                action.setId(methodConfig.getMethodName() + "_" + action.getEventKey().getEvent() + "_" + action.getEventValue());
+                this.addAction(action, true, eventEnum.getEventReturn());
+            }
+        }
+
+    }
+
+
     public List<Action> fillActions(CustomMenu type) {
         List<Action> actions = new ArrayList<>();
         CustomAction[] actionTypes = type.actions();
@@ -495,8 +517,25 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
     }
 
 
-
-
+    @JSONField(serialize = false)
+    public MethodConfig findMethod(ToolBarEventBean toolBarEventBean) {
+        String soruceClassName = toolBarEventBean.getSourceClassName();
+        String methodName = toolBarEventBean.getMethodName();
+        if (soruceClassName != null) {
+            try {
+                ApiClassConfig config = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(soruceClassName);
+                if (config != null) {
+                    MethodConfig methodConfig = config.getMethodByName(methodName);
+                    if (methodConfig != null) {
+                        return methodConfig;
+                    }
+                }
+            } catch (JDSException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 
     @Override
     public int compareTo(MenuDynBar o) {

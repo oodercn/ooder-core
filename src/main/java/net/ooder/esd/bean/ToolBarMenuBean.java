@@ -9,7 +9,6 @@ import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.CustomMenu;
 import net.ooder.esd.annotation.event.ToolBarEvent;
-import net.ooder.esd.annotation.event.TreeEvent;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.field.CustomListBean;
@@ -74,7 +73,6 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
 
     public Dock dock;
 
-
     Boolean autoIconColor = false;
 
     Boolean autoItemColor = false;
@@ -82,7 +80,6 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
     Boolean autoFontColor = false;
     @JSONField(serialize = false)
     public CustomMenu[] menus;
-
 
     @JSONField(serialize = false)
     public List<T> enumItems;
@@ -95,9 +92,7 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
 
     LinkedHashSet<ToolBarEventBean> extAPIEvent = new LinkedHashSet<>();
 
-
     public ToolBarMenuBean() {
-
 
     }
 
@@ -135,14 +130,16 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
         AnnotationUtil.fillDefaultValue(ToolBarMenu.class, this);
         for (Annotation annotation : annotations) {
             if (annotation instanceof ToolBarMenu) {
-                fillData((ToolBarMenu) annotation);
+                initToolBar((ToolBarMenu) annotation);
             }
         }
+        initExtEvent();
         this.customListBean = new CustomListBean(esdField, annotations);
     }
 
     public ToolBarMenuBean(ToolBarMenu annotation) {
         this.initToolBar(annotation);
+        initExtEvent();
     }
 
     public ToolBarMenuBean(Class clazz, ToolBarMenu annotation) {
@@ -155,7 +152,6 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
         if (menuClasses.length == 0) {
             menuClasses = new Class[]{clazz};
         }
-
         Class menuClass = menuClasses[0];
         String name = "";
         if (menuClass != null && !menuClass.equals(Void.class)) {
@@ -172,11 +168,10 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
         } catch (NotFoundException e) {
             e.printStackTrace();
         }
-
+        initExtEvent();
     }
 
     void initToolBar(ToolBarMenu annotation) {
-
         this.menuClasses = annotation.menuClasses();
         this.menus = annotation.menus();
         this.lazy = annotation.lazy();
@@ -222,7 +217,6 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
     @JSONField(serialize = false)
     private void initExtEvent() {
         Set<Class> bindClassList = new HashSet<>();
-
         if (this.getMenuClasses() != null && getMenuClasses().length > 0) {
             bindClassList.addAll(Arrays.asList(getMenuClasses()));
         }
