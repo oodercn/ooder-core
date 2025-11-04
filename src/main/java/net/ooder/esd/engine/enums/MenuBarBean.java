@@ -9,12 +9,19 @@ import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.CustomMenu;
 import net.ooder.esd.annotation.MenuBarMenu;
+import net.ooder.esd.annotation.event.MenuBarEvent;
+import net.ooder.esd.annotation.event.ToolBarEvent;
 import net.ooder.esd.annotation.menu.CustomMenuType;
 import net.ooder.esd.annotation.ui.*;
+import net.ooder.esd.bean.MenuBarEventBean;
+import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.ToolBarEventBean;
 import net.ooder.esd.bean.TreeListItem;
+import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.custom.component.CustomMenusBar;
 import net.ooder.esd.dsm.BuildFactory;
+import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.manager.editor.MenuActionService;
 import net.ooder.esd.tool.component.MenuBarComponent;
 import net.ooder.esd.tool.properties.MenuBarProperties;
@@ -229,6 +236,35 @@ public class MenuBarBean<T extends Enum> implements CustomBean, Comparable<MenuB
             }
         }
     }
+
+    @JSONField(serialize = false)
+    private void initExtEvent() {
+        Set<Class> bindClassList = new HashSet<>();
+        if (this.getMenuClasses() != null && getMenuClasses().length > 0) {
+            bindClassList.addAll(Arrays.asList(getMenuClasses()));
+        }
+        for (Class bindClass : bindClassList) {
+            if (!bindClass.equals(Void.class)) {
+                try {
+                    ApiClassConfig config = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(bindClass.getName());
+                    if (config != null) {
+                        List<MethodConfig> methodAPIBeans = config.getAllMethods();
+                        for (MethodConfig methodAPIBean : methodAPIBeans) {
+                            MenuBarEvent menuBarEvent = AnnotationUtil.getMethodAnnotation(methodAPIBean.getMethod(), MenuBarEvent.class);
+                            if (menuBarEvent != null) {
+                                MenuBare toolBarMenuBean = new MenuBarEventBean<>(menuBarEvent, methodAPIBean.getSourceClassName(), methodAPIBean.getMethodName());
+                                this.extAPIEvent.add(toolBarMenuBean);
+                            }
+                        }
+
+                    }
+                } catch (JDSException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 
     public String getAlias() {
         if (alias == null || alias.equals("")) {

@@ -14,6 +14,9 @@ import net.ooder.esd.annotation.menu.GridMenu;
 import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ui.SymbolType;
+import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.ToolBarEventBean;
+import net.ooder.esd.bean.ToolBarMenuBean;
 import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.bean.bar.MenuDynBar;
 import net.ooder.esd.custom.action.CustomConditionAction;
@@ -420,7 +423,48 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
         return result;
 
     }
+    void fillChildCustomAction(MenuBarBean menuBean) {
+        Set<ToolBarEventBean> extAPIEvent = menuBean.getExtAPIEvent();
+        for (ToolBarEventBean eventEnum : extAPIEvent) {
+            MethodConfig methodConfig = findMethod(eventEnum);
+            String menuId = methodConfig.getMethodName() + ComboInputType.button.name();
+            String caption = methodConfig.getCaption();
+            if (showCaption != null && !showCaption) {
+                caption = "";
+            }
+            ComboInputType inputType = ComboInputType.button;
+            if (methodConfig.getFieldBean() != null && methodConfig.getFieldBean().getInputType() != null) {
+                inputType = methodConfig.getFieldBean().getInputType();
+            }
 
+            TreeListItem menuItem = new TreeListItem(menuId, caption, methodConfig.getImageClass(), methodConfig.getTips(), inputType);
+            this.getGroup().addChild(menuItem);
+            Condition condition = new Condition("{args[1].id}", SymbolType.equal, menuId);
+            List<Action> actions = eventEnum.getActions();
+            for (Action action : actions) {
+                if (!action.getConditions().contains(condition)) {
+                    action.getConditions().add(condition);
+                }
+                if (methodConfig != null) {
+                    if (action.getType().equals(ActionTypeEnum.control)) {
+                        action.setTarget(this.getAlias());
+                    } else if (action.getMethod().equals("call")) {
+                        APICallerComponent apiCallerComponent = (APICallerComponent) this.getModuleComponent().findComponentByAlias(methodConfig.getMethodName());
+                        if (apiCallerComponent == null) {
+                            apiCallerComponent = new APICallerComponent(methodConfig);
+                            this.addChildren(apiCallerComponent);
+                        }
+                        action.updateArgs("{page." + apiCallerComponent.getAlias() + "}", 3);
+                    } else if (methodConfig.isModule()) {
+                        action.updateArgs(methodConfig.getEUClassName(), 3);
+                    }
+                }
+                action.setId(methodConfig.getMethodName() + "_" + action.getEventKey().getEvent() + "_" + action.getEventValue());
+                this.addAction(action, true, eventEnum.getEventReturn());
+            }
+        }
+
+    }
 
     public List<Action> fillActions(CustomMenu type) {
         List<Action> actions = new ArrayList<>();
