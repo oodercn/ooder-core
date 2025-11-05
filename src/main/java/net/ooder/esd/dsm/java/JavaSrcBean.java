@@ -66,8 +66,12 @@ public class JavaSrcBean {
         }
         File javaFile = new File(javaPackage.getPackageFile(), javaName);
         try {
+            JarLoader jarLoader = EsbBeanFactory.getJarLoadManager().get(className);
             if (clazz.getClassLoader() instanceof JarLoader) {
-                JarLoader jarLoader = (JarLoader) clazz.getClassLoader();
+                jarLoader = (JarLoader) clazz.getClassLoader();
+            }
+            if (jarLoader != null) {
+                jarLoader = (JarLoader) clazz.getClassLoader();
                 byte[] bytes = jarLoader.loadJava(className);
                 IOUtility.writeBytesToNewFile(bytes, javaFile);
                 javaPackage.upload(javaName, new FileInputStream(javaFile));
