@@ -117,6 +117,7 @@
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.ftl</include>
+                    <include>**/*.java</include>
                 </includes>
             </resource>
         </resources>

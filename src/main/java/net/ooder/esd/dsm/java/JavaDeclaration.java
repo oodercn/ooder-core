@@ -1,13 +1,6 @@
 package net.ooder.esd.dsm.java;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import net.ooder.common.util.ClassUtility;
-import net.ooder.common.util.IOUtility;
-import net.ooder.annotation.MethodChinaName;
-import net.ooder.annotation.EsbBeanAnnotation;
-import net.ooder.esd.annotation.ModuleAnnotation;
-import net.ooder.esd.annotation.field.APIEventAnnotation;
-import net.ooder.web.util.MethodUtil;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
@@ -16,6 +9,13 @@ import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.ConstructorDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
+import net.ooder.annotation.EsbBeanAnnotation;
+import net.ooder.annotation.MethodChinaName;
+import net.ooder.common.util.ClassUtility;
+import net.ooder.common.util.IOUtility;
+import net.ooder.esd.annotation.ModuleAnnotation;
+import net.ooder.esd.annotation.field.APIEventAnnotation;
+import net.ooder.web.util.MethodUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -48,6 +48,8 @@ public class JavaDeclaration {
     List<MethodDeclaration> methods;
     @JSONField(serialize = false)
     PackageDeclaration javaPackage;
+    @JSONField(serialize = false)
+    TypeDeclaration declaration;
 
     boolean init = false;
 
@@ -68,15 +70,25 @@ public class JavaDeclaration {
         init = true;
         imports = new NodeList<>();
         compilationUnit = StaticJavaParser.parse(javaSrcBean.getFile());
-        methods = compilationUnit.findAll(MethodDeclaration.class);
-        constructors = compilationUnit.findAll(ConstructorDeclaration.class);
+        for (TypeDeclaration type : compilationUnit.getTypes()) {
+            classDeclarationMap.put(type.getNameAsString(), type);
+            if (type.getNameAsString().equals(javaSrcBean.getName())) {
+                if (type.isTopLevelType() && !type.isNestedType()) {
+                    declaration = type;
+                }
+            }
+        }
+
+        constructors = declaration.getConstructors();
+        methods = declaration.getMethods();
+//
+//        methods = compilationUnit.findAll(MethodDeclaration.class);
+//        constructors = compilationUnit.findAll(ConstructorDeclaration.class);
         if (!compilationUnit.getPackageDeclaration().isPresent()) {
             compilationUnit.setPackageDeclaration(javaSrcBean.getPackageName());
         }
         javaPackage = compilationUnit.getPackageDeclaration().get();
-        for (TypeDeclaration type : compilationUnit.getTypes()) {
-            classDeclarationMap.put(type.getNameAsString(), type);
-        }
+
 
         for (ImportDeclaration importDeclaration : compilationUnit.getImports()) {
             imports.add(importDeclaration);
@@ -89,16 +101,6 @@ public class JavaDeclaration {
 
     @JSONField(serialize = false)
     public TypeDeclaration getTypeDeclaration() {
-        TypeDeclaration declaration = classDeclarationMap.get(javaSrcBean.getName());
-        if (declaration == null) {
-            Set<String> keySet = classDeclarationMap.keySet();
-            for (String key : keySet) {
-                declaration = classDeclarationMap.get(key);
-                if (declaration.isTopLevelType() && !declaration.isNestedType()) {
-                    return declaration;
-                }
-            }
-        }
         return declaration;
     }
 
@@ -115,7 +117,7 @@ public class JavaDeclaration {
         IOUtility.copy(input, output);
         IOUtility.shutdownStream(input);
         IOUtility.shutdownStream(output);
-        if (!this.getTypeDeclaration().getName().asString().equals(javaSrcBean.getName())) {
+        if (!declaration.getName().asString().equals(javaSrcBean.getName())) {
             javaSrcBean.getFile().delete();
         }
         javaSrcBean.initFile(javaFile, null);

@@ -341,7 +341,7 @@ public class BuildFactory {
         TypeDeclaration typeDeclaration = javaDeclaration.getTypeDeclaration();
         if (!typeDeclaration.getName().equals(srcBean.getName()) || !javaDeclaration.getJavaPackage().getName().equals(srcBean.getPackageName())) {
             javaDeclaration.getJavaPackage().setName(srcBean.getPackageName());
-            List<ConstructorDeclaration> constructorDeclarations = javaDeclaration.getConstructors();
+            List<ConstructorDeclaration> constructorDeclarations = typeDeclaration.getConstructors();
             for (ConstructorDeclaration md : constructorDeclarations) {
                 md.setName(srcBean.getName());
             }

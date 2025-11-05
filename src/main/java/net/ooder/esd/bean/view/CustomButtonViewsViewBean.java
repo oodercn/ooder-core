@@ -2,6 +2,7 @@ package net.ooder.esd.bean.view;
 
 
 import com.alibaba.fastjson.JSON;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.CaselessStringKeyHashMap;
 import net.ooder.esd.annotation.ButtonViewsAnnotation;
@@ -33,10 +34,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-
+@AnnotationType(clazz = ButtonViewsAnnotation.class)
 public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent, ButtonViewsListItem> {
 
     ModuleViewType moduleViewType = ModuleViewType.NAVBUTTONVIEWSCONFIG;
+
+    Boolean noFoldBar;
 
     Set<CustomTabsEvent> event = new HashSet<>();
 
@@ -149,6 +152,7 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
     }
 
 
+
     void init(Class<? extends TabItem> clazz) {
         ButtonViewsAnnotation tabsAnnotation = AnnotationUtil.getClassAnnotation(clazz, ButtonViewsAnnotation.class);
         if (tabsAnnotation != null) {
@@ -160,7 +164,13 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
 
     }
 
+    public Boolean getNoFoldBar() {
+        return noFoldBar;
+    }
 
+    public void setNoFoldBar(Boolean noFoldBar) {
+        this.noFoldBar = noFoldBar;
+    }
     @Override
     public ComponentType getComponentType() {
         return ComponentType.BUTTONVIEWS;
