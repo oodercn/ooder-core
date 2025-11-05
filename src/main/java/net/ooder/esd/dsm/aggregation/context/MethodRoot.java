@@ -4,16 +4,17 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
 import net.ooder.annotation.SimpleCustomBean;
 import net.ooder.common.util.ClassUtility;
+import net.ooder.esd.annotation.event.CustomTabsEvent;
 import net.ooder.esd.annotation.ui.AppendType;
+import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.EmbedType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
-import net.ooder.esd.annotation.event.CustomTabsEvent;
-import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.bean.CustomAPICallBean;
 import net.ooder.esd.bean.data.CustomDataBean;
-import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.bean.field.CustomFieldBean;
 import net.ooder.esd.bean.field.combo.CustomModuleRefFieldBean;
+import net.ooder.esd.bean.view.CustomModuleBean;
+import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
@@ -26,6 +27,7 @@ import net.ooder.web.util.MethodUtil;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MethodRoot {
@@ -50,7 +52,7 @@ public class MethodRoot {
     }
 
     public void update(CustomModuleBean moduleBean, Component component) {
-        List<JavaSrcBean> javaSrcBeans=new ArrayList<>();
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         ModuleComponent moduleComponent = moduleBean.getModuleComponent();
         List<RequestParamBean> paramBeans = new ArrayList<>();
         ModuleComponent parentModuleComponent = null;
@@ -62,8 +64,10 @@ public class MethodRoot {
             euClassName = moduleComponent.getClassName();
             List<Component> components = moduleComponent.findComponents(ComponentType.HIDDENINPUT, null);
             for (Component childcomponent : components) {
-                RequestParamBean requestParamBean = new RequestParamBean(childcomponent.getAlias(), String.class, null);
-                paramBeans.add(requestParamBean);
+                if (!Arrays.asList(DSMFactory.SkipParams).contains(childcomponent.getAlias())) {
+                    RequestParamBean requestParamBean = new RequestParamBean(childcomponent.getAlias(), String.class, null);
+                    paramBeans.add(requestParamBean);
+                }
             }
         }
 
@@ -148,13 +152,13 @@ public class MethodRoot {
 
         if (moduleBean.getMethodConfig() != null) {
             CustomFieldBean fieldBean = moduleBean.getMethodConfig().getFieldBean();
-            if (fieldBean == null ) {
-                if  (moduleBean.getIndex() > 0){
+            if (fieldBean == null) {
+                if (moduleBean.getIndex() > 0) {
                     fieldBean = new CustomFieldBean();
                     fieldBean.setIndex(moduleBean.getIndex());
                     annotationBeans.add(fieldBean);
                 }
-            }else{
+            } else {
                 annotationBeans.add(fieldBean);
             }
 

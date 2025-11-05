@@ -900,8 +900,10 @@ public class ViewManager {
         List<Component> components = moduleComponent.findComponents(ComponentType.HIDDENINPUT, null);
         List<RequestParamBean> paramBeans = new ArrayList<>();
         for (Component component : components) {
-            RequestParamBean requestParamBean = new RequestParamBean(component.getAlias(), String.class, null);
-            paramBeans.add(requestParamBean);
+            if (!Arrays.asList(DSMFactory.SkipParams).contains(component.getAlias())) {
+                RequestParamBean requestParamBean = new RequestParamBean(component.getAlias(), String.class, null);
+                paramBeans.add(requestParamBean);
+            }
         }
         MenuBarBean menuBarBean = new MenuBarBean(menuBarComponent);
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();

@@ -6,7 +6,6 @@ import net.ooder.common.util.StringUtility;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.tool.properties.item.UIItem;
-import net.ooder.web.util.OgnlUtil;
 import ognl.OgnlContext;
 import ognl.OgnlException;
 import ognl.OgnlRuntime;
@@ -54,7 +53,7 @@ public class ESDEnumsUtil {
         for (Enum enumItem : enums) {
             try {
                 if (enumItem != null) {
-                    OgnlContext context = OgnlUtil.getOgnlContext();
+                    OgnlContext context = JDSActionContext.getActionContext().getOgnlContext();
                     T item = (T) OgnlRuntime.callConstructor(context, clazz.getName(), new Object[]{enumItem});
                     if (item != null) {
                         item.setIndex(index);
