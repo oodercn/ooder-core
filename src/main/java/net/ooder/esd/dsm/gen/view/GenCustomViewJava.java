@@ -18,7 +18,6 @@ import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.ViewInst;
 import net.ooder.jds.core.esb.EsbUtil;
 
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,18 +50,16 @@ public class GenCustomViewJava extends BaseAggCallabel {
 
         GenJava javaGen = GenJava.getInstance(viewRoot.getDsmBean().getProjectVersionName());
         chrome.printLog("开始通用模型视图：" + className, true);
+        String simClassName = className.substring(className.lastIndexOf(".") + 1);
+        String packageName = className.substring(0, className.lastIndexOf("."));
         DomainInst domainInst = (DomainInst) viewRoot.getDsmBean();
         ViewInst defaultView = domainInst.getViewInst();
         ModuleViewType moduleViewType = viewBean.getModuleViewType();
-        String baseUrl = defaultView.getProjectVersionName() + "." + defaultView.getSpace();
-        if (moduleName.startsWith(baseUrl + ".")) {
-            moduleName = moduleName.substring((baseUrl + ".").length()).toLowerCase();
-        }
-
+        // packageName = defaultView.getProjectVersionName() + "." + packageName;
         JavaRoot javaRoot = BuildFactory.getInstance().buildJavaRoot(viewRoot, viewBean, moduleName, className);
         List<JavaSrcBean> srcFiles = new ArrayList<>();
         List<JavaTemp> viewTemps = BuildFactory.getInstance().getTempManager().getCustomViewTemps(moduleViewType.getDefaultView());
-        String simClassName = className.substring(className.lastIndexOf(".") + 1);
+
         for (JavaTemp javatemp : viewTemps) {
             if (javatemp.getRangeType() != null && javatemp.getRangeType().equals(RangeType.MODULEVIEW)) {
                 boolean canGen = true;
@@ -73,9 +70,9 @@ public class GenCustomViewJava extends BaseAggCallabel {
                 if (canGen) {
                     String genClassName = StringUtility.replace(javatemp.getNamePostfix(), "**", simClassName);
                     javaRoot.setClassName(genClassName);
-                    String packageName = baseUrl;
+
                     if (moduleName != null && !moduleName.equals("")) {
-                        packageName = baseUrl + "." + moduleName;
+                        packageName = packageName + "." + moduleName;
                     }
                     if (javatemp.getPackagePostfix() != null && !javatemp.getPackagePostfix().equals("") && !javatemp.getPackagePostfix().equals("..")) {
                         packageName = packageName + "." + javatemp.getPackagePostfix();

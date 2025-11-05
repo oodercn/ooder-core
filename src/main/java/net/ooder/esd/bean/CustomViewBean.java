@@ -3,6 +3,7 @@ package net.ooder.esd.bean;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.util.TypeUtils;
+import net.ooder.annotation.Aggregation;
 import net.ooder.annotation.CustomBean;
 import net.ooder.annotation.UserSpace;
 import net.ooder.common.JDSConstants;
@@ -1283,17 +1284,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
     @JSONField(serialize = false)
     private Object getService(RequestMethodBean methodBean, Map<String, Object> allParamsMap, OgnlContext onglContext) throws ClassNotFoundException, OgnlException {
         Class clazz = ClassUtility.loadClass(methodBean.getClassName());
-        Object service = null;
-        if (clazz.getInterfaces().length > 0) {
-            service = EsbUtil.parExpression(clazz.getInterfaces()[0]);
-        } else {
-            service = EsbUtil.parExpression(clazz);
-        }
-
-        if (service == null && !clazz.isInterface()) {
-            service = OgnlRuntime.callConstructor(onglContext, clazz.getName(), new Object[]{});
-        }
-
+        Object service = getRealService(clazz);
         if (service != null) {
             for (Field field : clazz.getDeclaredFields()) {
                 if (allParamsMap.get(field.getName()) != null) {
@@ -1307,6 +1298,29 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         return service;
     }
 
+    Object getRealService(Class clazz) throws OgnlException {
+        Object service = null;
+        if (clazz.getInterfaces().length > 0) {
+            service = EsbUtil.parExpression(clazz.getInterfaces()[0]);
+        } else {
+            service = EsbUtil.parExpression(clazz);
+        }
+
+        if (service == null) {
+            if (clazz.isInterface()) {
+                Aggregation aggregation = (Aggregation) clazz.getAnnotation(Aggregation.class);
+                if (aggregation != null && !aggregation.rootClass().equals(Void.class) && !aggregation.rootClass().equals(clazz)) {
+                    clazz = aggregation.rootClass();
+                    service = getRealService(clazz);
+                }
+            } else {
+                service = OgnlRuntime.callConstructor(JDSActionContext.getActionContext().getOgnlContext(), clazz.getName(), new Object[]{});
+            }
+
+        }
+
+        return service;
+    }
 
     public Object invokMethod(RequestMethodBean methodBean, Map<String, Object> allParamsMap) throws ClassNotFoundException, OgnlException {
         Object object = null;
