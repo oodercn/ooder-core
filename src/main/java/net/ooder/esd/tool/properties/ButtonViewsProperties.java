@@ -71,7 +71,6 @@ public class ButtonViewsProperties extends NavTabsProperties<ButtonViewsListItem
                 this.addItem(navItemProperties);
             }
         }else{
-
             for (ButtonViewsListItem item : tabsViewBean.getTabItems()) {
                 this.addItem(item);
             }
