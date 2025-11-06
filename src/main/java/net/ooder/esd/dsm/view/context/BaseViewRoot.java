@@ -117,9 +117,10 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
         this.serviceClassName = simClassName;
         List<ESDClass> esdClasses = repositoryInst.getAggBeans(UserSpace.VIEW, AggregationType.ENTITY);
         for (ESDClass esdClass : esdClasses) {
-            if (esdClass.getName().equals(simClassName) && moduleName.equals(moduleName)) {
+            Class entityClass = esdClass.getAggregationBean().getEntityClass();
+            if (entityClass != null && entityClass.getSimpleName().equals(simClassName)) {
                 serviceClass = esdClass.getCtClass();
-                imports.add(serviceClass.getName());
+                imports.add(serviceClass.getPackage().getName() + ".*");
                 serviceClassName = serviceClass.getName();
             }
         }

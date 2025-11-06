@@ -1,29 +1,28 @@
 package net.ooder.esd.dsm.gen.view;
 
+import net.ooder.annotation.UserSpace;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.context.JDSActionContext;
 import net.ooder.context.JDSContext;
-import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.bean.view.BaseTabsViewBean;
-import net.ooder.esd.bean.view.CustomModuleBean;
+import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.view.BaseTabsViewBean;
+import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaSrcBean;
-import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.DSMProperties;
+import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.server.context.MinServerActionContextImpl;
-import net.ooder.server.httpproxy.core.HttpRequest;
 import net.ooder.web.RequestParamBean;
-import net.ooder.annotation.UserSpace;
 import ognl.OgnlContext;
 
 import java.util.ArrayList;
@@ -57,7 +56,7 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
         if (!childRealPath.toLowerCase().endsWith("." + childSimClass.toLowerCase())) {
             this.childRealPath = childRealPath.toLowerCase() + "." + childSimClass;
         }
-        this.autoruncontext = new MinServerActionContextImpl(context.getHttpRequest(),context.getOgnlContext());
+        this.autoruncontext = new MinServerActionContextImpl(context.getHttpRequest(), context.getOgnlContext());
         autoruncontext.getParamMap().putAll(context.getPagectx());
         autoruncontext.getParamMap().putAll(context.getContext());
 
@@ -80,7 +79,7 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
         CustomModuleBean cModuleBean = null;
         if (!childComponent.getKey().equals(ComponentType.MODULE.getType())) {
             String target = childComponent.getTarget();
-            TabListItem currListItem =  this.tabsViewBean.findTabItem(target, tabsViewBean.getTabItems());
+            TabListItem currListItem = this.tabsViewBean.findTabItem(target, tabsViewBean.getTabItems());
             DomainInst domainInst = DSMFactory.getInstance().getDefaultDomain(moduleComponent.getProjectName(), UserSpace.VIEW);
             DSMProperties dsmProperties = moduleComponent.getProperties().getDsmProperties();
             String domainId = domainInst.getDomainId();
@@ -142,7 +141,9 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
         if (currListItem.getBindClass() != null && currListItem.getBindClass().length > 0) {
             for (Class clazz : currListItem.getBindClass()) {
                 try {
-                    classList.add(ClassUtility.loadClass(clazz.getName()));
+                    if (clazz != null) {
+                        classList.add(ClassUtility.loadClass(clazz.getName()));
+                    }
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }

@@ -330,9 +330,11 @@ public class TabListItem<T extends Enum> extends UIItem<T> {
 
     public String toEnumsStr() {
         StringBuffer enumBuffer = new StringBuffer();
-        if (this.getBindClass() != null && this.getBindClass().length > 0) {
+        if (this.getBindClass() != null && this.getBindClass().length > 0 && this.getBindClass()[0] != null) {
             for (Class clazz : this.getBindClass()) {
-                enumBuffer.append(clazz.getName() + ".class,");
+                if (clazz != null) {
+                    enumBuffer.append(clazz.getName() + ".class,");
+                }
             }
 //        } else if (this.getBindClassName() != null && !this.getBindClassName().equals("")&& !this.getBindClassName().equals(Void.class.getName()) && !getBindClassName().equals(Enum.class.getName())) {
 //            enumBuffer.append(this.getBindClassName() + ".class");

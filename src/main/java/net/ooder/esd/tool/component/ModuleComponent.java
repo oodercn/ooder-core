@@ -1657,7 +1657,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         Component ctxComponent = null;
         if (childs != null && childs.size() > 0) {
             for (Component component : childs) {
-                if (component.getAlias().equals(PAGECTXNAME)) {
+                if (component.getAlias().toUpperCase().equals(PAGECTXNAME)) {
                     ctxComponent = component;
                 }
             }
@@ -1738,7 +1738,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         for (Component component : allComponents) {
             String alias = component.getAlias();
             ComponentType componentType = ComponentType.fromType(component.getKey());
-            if (!alias.equals(PAGECTXNAME) && !componentType.isBar() && !alias.endsWith(DefaultTopBoxfix)) {
+            if (!alias.toUpperCase().equals(PAGECTXNAME) && !componentType.isBar() && !alias.endsWith(DefaultTopBoxfix)) {
                 if (!Arrays.asList(skipComponents).contains(componentType)) {
                     childComponents.add(component);
                 } else if (component.getProperties() instanceof ContainerProperties) {
@@ -1764,7 +1764,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
     public M getCurrComponent() {
         String curAlias = this.getCurrComponentAlias();
-        if (curAlias.endsWith(DefaultTopBoxfix) || curAlias.equals(PAGECTXNAME) || curAlias.endsWith("BottomBlock")) {
+        if (curAlias.endsWith(DefaultTopBoxfix) || curAlias.toUpperCase().equals(PAGECTXNAME) || curAlias.endsWith("BottomBlock")) {
             currComponent = null;
         } else if (currComponent == null) {
             List<Component> componentList = this.findComponentsByAlias(curAlias);
@@ -2044,7 +2044,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                         ComponentType type = ComponentType.fromType(component.getKey());
                         if (Arrays.asList(moduleViewType.getComponentTypes()).contains(type)
                                 && !component.getAlias().equals(blackBoxName)
-                                && !component.getAlias().equals(PAGECTXNAME)) {
+                                && !component.getAlias().toUpperCase().equals(PAGECTXNAME)) {
                             currComponentAlias = component.getAlias();
                             this.setCurrComponent((M) component);
                         }

@@ -29,7 +29,7 @@ public class ComponentsMapDeserializer extends MapDeserializer {
             String alias = componenobj.getString("alias");
             String classType = componenobj.getString("key");
             JSONObject propertyJson = componenobj.getJSONObject("properties");
-            if (alias != null && alias.equals(ModuleComponent.PAGECTXNAME)) {
+            if (alias != null && alias.toUpperCase().equals(ModuleComponent.PAGECTXNAME)) {
                 Component component = JSONObject.parseObject(componenobj.toJSONString(), (Class<Component>) ComponentType.fromType(classType).getClazz());
                 CtxBaseComponent ctxcomponent = new CtxBaseComponent(component.getChildren());
                 componentMap.put(key, ctxcomponent);

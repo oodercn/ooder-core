@@ -12,11 +12,13 @@ import net.ooder.context.JDSContext;
 import net.ooder.esd.annotation.*;
 import net.ooder.esd.annotation.event.CustomTreeEvent;
 import net.ooder.esd.annotation.event.TreeEvent;
-import net.ooder.esd.annotation.event.TreeViewEventEnum;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.menu.TreeMenu;
 import net.ooder.esd.annotation.menu.TreeRowMenu;
-import net.ooder.esd.annotation.ui.*;
+import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.ui.ModuleViewType;
+import net.ooder.esd.annotation.ui.PosType;
+import net.ooder.esd.annotation.ui.SelModeType;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.bar.ContextMenuBar;
 import net.ooder.esd.bean.bar.ToolsBar;
@@ -30,9 +32,10 @@ import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldTreeConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
-import net.ooder.esd.tool.component.*;
-import net.ooder.esd.tool.properties.Action;
-import net.ooder.esd.tool.properties.Condition;
+import net.ooder.esd.tool.component.Component;
+import net.ooder.esd.tool.component.LayoutComponent;
+import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.TreeViewComponent;
 import net.ooder.esd.tool.properties.TreeViewProperties;
 import net.ooder.esd.tool.properties.item.CmdItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
@@ -334,6 +337,9 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
             this.updateContainerBean(treeViewComponent);
 
             List<TreeListItem> treeListItems = treeViewProperties.getItems();
+            if (treeListItems == null) {
+                treeListItems = ESDEnumsUtil.getEnumItems(TreeEnums.class, TreeListItem.class);
+            }
             if (treeListItems.size() == 1 && treeListItems.get(0).getEnumName().toLowerCase().equals(treeViewComponent.getAlias().toLowerCase())) {
                 treeListItems = treeListItems.get(0).getSub();
             }
@@ -347,7 +353,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                 }
             }
 
-            if (treeListItems != null && treeListItems.size() > 0) {
+            if (treeListItems != null && treeListItems.size() > 0 && treeListItems.get(0) != null) {
                 try {
                     for (TreeListItem listItem : treeListItems) {
                         listItem.updateEnumName(listItem.getId());
@@ -365,7 +371,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                             this.getViewJavaSrcBean().getViewClassList().add(dicClass.getName());
                         }
 
-                        if ((listItem.getBindClass().length > 0 && !listItem.getBindClass()[0].equals(Void.class)) || listItem.getEntityClass() != null) {
+                        if ((listItem.getBindClass().length > 0 && listItem.getBindClass()[0] != null && listItem.getBindClass()[0].equals(Void.class)) || listItem.getEntityClass() != null) {
                             ChildTreeViewBean childTreeViewBean = null;
                             if (listItem.getGroupName() != null && !listItem.getGroupName().equals("")) {
                                 childTreeViewBean = this.getChildTreeByGroup(listItem.getGroupName());

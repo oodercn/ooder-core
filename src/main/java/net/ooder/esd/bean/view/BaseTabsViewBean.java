@@ -652,7 +652,9 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
             }
             if (itemBean.getBindClass() != null) {
                 for (Class clazz : itemBean.getBindClass()) {
-                    classSet.add(clazz);
+                    if (clazz != null) {
+                        classSet.add(clazz);
+                    }
                 }
             }
         }
