@@ -41,7 +41,6 @@ public class NavTabListItem extends TabListItem {
 
     public NavTabListItem(FieldModuleConfig itemConfig) {
         this.init(itemConfig);
-
     }
 
 
@@ -110,11 +109,15 @@ public class NavTabListItem extends TabListItem {
         this.tabindex = itemConfig.getIndex();
         this.index = itemConfig.getIndex();
         if (euClassName == null) {
-            String url = itemConfig.getUrl();
-            if (url.startsWith("/")) {
-                url = url.substring(1);
+            if (itemConfig.getMethodConfig() != null) {
+                euClassName = itemConfig.getEuClassName();
+            } else {
+                String url = itemConfig.getUrl();
+                if (url.startsWith("/")) {
+                    url = url.substring(1);
+                }
+                euClassName = StringUtility.replace(url, "/", ".");
             }
-            euClassName = StringUtility.replace(url, "/", ".");
         }
         this.id = itemConfig.getId();
         if (tagVar == null) {

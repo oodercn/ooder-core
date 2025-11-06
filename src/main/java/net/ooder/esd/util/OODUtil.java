@@ -3,10 +3,11 @@ package net.ooder.esd.util;
 import net.ooder.common.util.StringUtility;
 import net.ooder.esd.bean.field.CustomBlockFieldBean;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OODUtil {
-    static String[] skipChars = new String[]{"get", "oodui"};
+    static String[] skipChars = new String[]{"get", "oodui", "ood_ui_"};
 
     static Map<String, String> aliasMap = new HashMap<>();
 
@@ -17,15 +18,15 @@ public class OODUtil {
                 String[] nameArr = StringUtility.split(name, ".");
                 neName = formatAliasPath(nameArr, firstCharUpperCase);
             } else {
-                if (name.endsWith(CustomBlockFieldBean.skipStr)) {
-                    name = name.substring(0, name.length() - CustomBlockFieldBean.skipStr.length());
+                neName = StringUtility.formatJavaName(name, firstCharUpperCase);
+                if (neName.endsWith(CustomBlockFieldBean.skipStr)) {
+                    neName = neName.substring(0, neName.length() - CustomBlockFieldBean.skipStr.length());
                 }
                 for (String skipChar : skipChars) {
-                    if (name.toLowerCase().startsWith(skipChar)) {
-                        name = name.substring(skipChar.length());
+                    if (neName.toLowerCase().startsWith(skipChar)) {
+                        neName = neName.substring(skipChar.length());
                     }
                 }
-                neName = StringUtility.formatJavaName(name, firstCharUpperCase);
             }
         }
         aliasMap.put(name + firstCharUpperCase, neName);
