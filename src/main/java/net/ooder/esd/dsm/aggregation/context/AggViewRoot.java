@@ -1,18 +1,18 @@
 package net.ooder.esd.dsm.aggregation.context;
 
+import net.ooder.annotation.Aggregation;
+import net.ooder.annotation.AggregationType;
+import net.ooder.annotation.CustomBean;
+import net.ooder.annotation.MethodChinaName;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.common.util.StringUtility;
 import net.ooder.config.ListResultModel;
 import net.ooder.config.ResultModel;
 import net.ooder.config.TreeListResultModel;
-import net.ooder.annotation.CustomBean;
-import net.ooder.annotation.MethodChinaName;
 import net.ooder.esd.annotation.*;
-import net.ooder.esd.annotation.field.APIEventAnnotation;
 import net.ooder.esd.annotation.event.CustomCallBack;
-import net.ooder.esd.annotation.FormAnnotation;
-import net.ooder.esd.annotation.GridAnnotation;
+import net.ooder.esd.annotation.field.APIEventAnnotation;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ui.ModuleViewType;
@@ -28,9 +28,6 @@ import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.esd.tool.properties.fchart.Categories;
 import net.ooder.esd.tool.properties.fchart.LineData;
-
-import net.ooder.annotation.Aggregation;
-import net.ooder.annotation.AggregationType;
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.web.util.MethodUtil;
 import net.ooder.web.util.PageUtil;
@@ -187,16 +184,6 @@ public class AggViewRoot implements JavaRoot {
             }
         }
 
-//        if (moduleBean.getModuleComponent() != null) {
-//            String viewClassName = moduleBean.getModuleComponent().getClassName();
-//            try {
-//                if (viewClassName != null && ClassUtility.loadClass(viewClassName) != null) {
-//                    imports.add(viewClassName);
-//                }
-//            } catch (Throwable e) {
-//                //e.printStackTrace();
-//            }
-//        }
 
         for (Package pack : Package.getPackages()) {
             for (String packName : innerPacks) {

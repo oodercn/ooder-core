@@ -1,6 +1,10 @@
 package net.ooder.esd.dsm.repository;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.Aggregation;
+import net.ooder.annotation.AggregationType;
+import net.ooder.annotation.ESDEntity;
+import net.ooder.annotation.UserSpace;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.custom.ESDClass;
@@ -12,10 +16,6 @@ import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.repository.database.ref.TableRef;
 import net.ooder.esd.dsm.repository.entity.EntityRef;
 import net.ooder.esd.util.json.CaseEnumsSerializer;
-import net.ooder.annotation.Aggregation;
-import net.ooder.annotation.AggregationType;
-import net.ooder.annotation.ESDEntity;
-import net.ooder.annotation.UserSpace;
 
 import java.util.*;
 
@@ -72,7 +72,7 @@ public class RepositoryInst extends DSMInst implements Comparable<RepositoryInst
                 ESDEntity entity = (ESDEntity) clazz.getAnnotation(ESDEntity.class);
                 if (entity != null) {
                     ESDClass esdClass = BuildFactory.getInstance().getClassManager().getRepositoryClass(className, true);
-                    if (!entityList.contains(esdClass)){
+                    if (!entityList.contains(esdClass)) {
                         entityList.add(esdClass);
                     }
 
@@ -191,15 +191,18 @@ public class RepositoryInst extends DSMInst implements Comparable<RepositoryInst
             String className = srcBean.getClassName();
             try {
                 Class clazz = ClassUtility.loadClass(className);
-                Aggregation aggregation = (Aggregation) clazz.getAnnotation(Aggregation.class);
-                if (aggregation != null && aggregation.rootClass() != null && (aggregationType == null || aggregation.type().equals(aggregationType))) {
-                    if (aggregation.userSpace().length == 0 || userSpace == null || Arrays.asList(aggregation.userSpace()).contains(userSpace)) {
-                        ESDClass esdClass = BuildFactory.getInstance().getClassManager().getRepositoryClass(className, true);
-                        if (!entityList.contains(esdClass)) {
-                            entityList.add(esdClass);
+                if (clazz != null) {
+                    Aggregation aggregation = (Aggregation) clazz.getAnnotation(Aggregation.class);
+                    if (aggregation != null && aggregation.rootClass() != null && (aggregationType == null || aggregation.type().equals(aggregationType))) {
+                        if (aggregation.userSpace().length == 0 || userSpace == null || Arrays.asList(aggregation.userSpace()).contains(userSpace)) {
+                            ESDClass esdClass = BuildFactory.getInstance().getClassManager().getRepositoryClass(className, true);
+                            if (!entityList.contains(esdClass)) {
+                                entityList.add(esdClass);
+                            }
                         }
                     }
                 }
+
             } catch (ClassNotFoundException e) {
 
             } catch (JDSException e) {

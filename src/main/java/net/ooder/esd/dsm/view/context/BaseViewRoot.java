@@ -1,16 +1,11 @@
 package net.ooder.esd.dsm.view.context;
 
-import net.ooder.annotation.AggregationType;
-import net.ooder.annotation.AnnotationType;
-import net.ooder.annotation.IconEnumstype;
+import net.ooder.annotation.*;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.common.util.StringUtility;
 import net.ooder.config.ListResultModel;
 import net.ooder.config.ResultModel;
-
-import net.ooder.annotation.MethodChinaName;
-import net.ooder.annotation.EsbBeanAnnotation;
 import net.ooder.esd.annotation.GridAnnotation;
 import net.ooder.esd.annotation.ModuleAnnotation;
 import net.ooder.esd.annotation.ViewType;
@@ -18,7 +13,7 @@ import net.ooder.esd.annotation.field.APIEventAnnotation;
 import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.view.GridViewAnnotation;
 import net.ooder.esd.bean.CustomViewBean;
-import net.ooder.esd.util.ESDEnumsUtil;
+import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.DSMInst;
 import net.ooder.esd.dsm.JavaRoot;
@@ -27,6 +22,7 @@ import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
 import net.ooder.esd.dsm.repository.RepositoryInst;
 import net.ooder.esd.dsm.view.ViewInst;
+import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.web.AggregationBean;
 import net.ooder.web.util.MethodUtil;
@@ -68,6 +64,10 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
 
     public String className;
 
+    public Class serviceClass;
+
+    public String serviceClassName;
+
     public String cnName;
 
     public String uidFiled;
@@ -99,6 +99,8 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
         this.viewBean = viewBean;
         this.dsmBean = viewRoot.getDsmBean();
         this.repositoryInst = viewRoot.getDsmBean().getRepositoryInst();
+
+
         this.moduleName = moduleName;
         this.cnName = dsmBean.getDesc();
         this.space = dsmBean.getSpace();
@@ -112,6 +114,16 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
         this.packageName = fullClassName.substring(0, fullClassName.lastIndexOf("."));
         this.simClassName = OODUtil.formatJavaName(fullClassName.substring(fullClassName.lastIndexOf(".") + 1), true);
         this.className = simClassName;
+        this.serviceClassName = simClassName;
+        List<ESDClass> esdClasses = repositoryInst.getAggBeans(UserSpace.VIEW, AggregationType.ENTITY);
+        for (ESDClass esdClass : esdClasses) {
+            if (esdClass.getName().equals(simClassName) && moduleName.equals(moduleName)) {
+                serviceClass = esdClass.getCtClass();
+                imports.add(serviceClass.getName());
+                serviceClassName = serviceClass.getName();
+            }
+        }
+
         this.baseUrl = StringUtility.replace(packageName, ".", "/");
         try {
             aggEntityConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(viewBean.getSourceClassName(), true);
@@ -165,6 +177,7 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
         this.imports.remove(packageName + ".*");
 
     }
+
 
     public abstract Class[] getCustomClass();
 
@@ -252,24 +265,23 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
                 }
             }
         }
-
-//        try {
-//            for (String javaTempId : javaTempIds) {
-//                JavaTemp javaTemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaTempId);
-//                if (javaTemp != null && javaTemp.getRangeType().equals(RangeType.moduleview) && javaTemp.getViewType().equals(getViewType())) {
-//                    if (javaTemp.getNamePostfix() == null || javaTemp.getNamePostfix().equals("**")) {
-//                        if (javaTemp.getPackagePostfix() == null || javaTemp.getPackagePostfix().equals("..")) {
-//                            imports.add(repositoryPackageName + ".*");
-//                        } else {
-//                            imports.add(repositoryPackageName + "." + javaTemp.getPackagePostfix() + ".*");
-//                        }
-//                    }
-//                }
-//            }
-//        } catch (JDSException e) {
-//            e.printStackTrace();
-//        }
         return imports;
+    }
+
+    public String getServiceClassName() {
+        return serviceClassName;
+    }
+
+    public void setServiceClassName(String serviceClassName) {
+        this.serviceClassName = serviceClassName;
+    }
+
+    public Class getServiceClass() {
+        return serviceClass;
+    }
+
+    public void setServiceClass(Class serviceClass) {
+        this.serviceClass = serviceClass;
     }
 
     public AggEntityConfig getAggEntityConfig() {
