@@ -435,21 +435,23 @@ public class AggregationManager {
 
     public void deleteApiClassConfig(ApiClassConfig apiClassConfig) throws JDSException {
         if (apiClassConfig != null) {
-            deleteApiClassConfig(apiClassConfig.getServiceClass(), false);
+            deleteApiClassConfig(apiClassConfig.getServiceClass());
         }
+        CustomViewFactory.getInstance().reLoad();
     }
 
     public void deleteApiClassConfig(Set<String> classNames) throws JDSException {
         for (String esdClassName : classNames) {
             try {
-                deleteApiClassConfig(esdClassName, false);
+                deleteApiClassConfig(esdClassName);
             } catch (JDSException e) {
                 e.printStackTrace();
             }
         }
+        CustomViewFactory.getInstance().reLoad();
     }
 
-    public void deleteApiClassConfig(String className, boolean clear) throws JDSException {
+    public void deleteApiClassConfig(String className) throws JDSException {
         Class clazz = classManager.checkInterface(className);
         if (clazz != null) {
             className = clazz.getName();
@@ -630,7 +632,7 @@ public class AggregationManager {
         } catch (Throwable e) {
             apiConfigCache.remove(uKey);
             try {
-                this.deleteApiClassConfig(className, true);
+                this.deleteApiClassConfig(className);
             } catch (JDSException e1) {
                 e1.printStackTrace();
             }
@@ -852,6 +854,7 @@ public class AggregationManager {
                 updateDomainInst(bean, true);
             }
         }
+        CustomViewFactory.getInstance().reLoad();
     }
 
     public void delAggTable(String domainId, Set<String> esdClassNames, String projectName, boolean clear) throws JDSException {
@@ -1027,7 +1030,7 @@ public class AggregationManager {
         return domainId;
     }
 
-    public void delAggEntity(String clazzName) throws JDSException {
+    private void delAggEntity(String clazzName) throws JDSException {
         String domainId = getRealDomainId(clazzName, true);
         String configKey = clazzName + "[" + domainId + "]";
         aggEntityConfigMap.remove(configKey);
@@ -1047,10 +1050,11 @@ public class AggregationManager {
 
 
     public void delAggEntityClass(String className, String projectName, boolean clear) throws JDSException {
-
         Class clazz = classManager.checkInterface(className);
         if (clazz != null) {
-
+            if (projectName == null) {
+                projectName = DSMFactory.getInstance().getDefaultProjectName();
+            }
             String realClassName = clazz.getName();
             Set<String> classNameSet = new HashSet<>();
             classNameSet.add(className);
@@ -1077,7 +1081,7 @@ public class AggregationManager {
                             }
                         }
                     }
-                    this.deleteApiClassConfig(className, clear);
+                    this.deleteApiClassConfig(className);
 
                 }
             }

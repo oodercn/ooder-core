@@ -211,8 +211,8 @@ public class DSMFactory {
             buildFactory.registerClass(clazz);
             String className = clazz.getName();
             try {
-                aggregationManager.deleteApiClassConfig(className, false);
-                aggregationManager.delAggEntity(className);
+                // aggregationManager.deleteApiClassConfig(className, false);
+                aggregationManager.delAggEntityClass(className, null, true);
             } catch (JDSException e) {
                 e.printStackTrace();
             }

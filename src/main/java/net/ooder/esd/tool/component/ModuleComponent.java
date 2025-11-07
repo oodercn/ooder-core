@@ -1725,6 +1725,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         this.moduleBean = null;
         this.navComponent = null;
         this.moduleViewType = null;
+        this.getProperties().setDsmProperties(null);
         this.getProperties().setCurrComponentAlias(null);
 
 

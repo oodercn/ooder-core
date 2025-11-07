@@ -22,6 +22,7 @@ import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
 import net.ooder.esd.dsm.repository.RepositoryInst;
 import net.ooder.esd.dsm.view.ViewInst;
+import net.ooder.esd.manager.editor.MenuActionService;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.web.AggregationBean;
@@ -40,6 +41,7 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
             ModuleAnnotation.class,
             ToolBarMenu.class,
             ResultModel.class,
+            MenuActionService.class,
             GridViewAnnotation.class,
             ListResultModel.class,
             JDSException.class,
@@ -99,8 +101,6 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
         this.viewBean = viewBean;
         this.dsmBean = viewRoot.getDsmBean();
         this.repositoryInst = viewRoot.getDsmBean().getRepositoryInst();
-
-
         this.moduleName = moduleName;
         this.cnName = dsmBean.getDesc();
         this.space = dsmBean.getSpace();
@@ -150,9 +150,7 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
         } catch (JDSException e) {
             e.printStackTrace();
         }
-
         Set<Class> classes = new HashSet<>();
-
         if (this.getCustomClass() != null && this.getCustomClass().length > 0) {
             classes.addAll(Arrays.asList(this.getCustomClass()));
         }

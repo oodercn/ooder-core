@@ -37,6 +37,8 @@ import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.java.ViewJavaSrcBean;
 import net.ooder.esd.dsm.view.field.*;
+import net.ooder.esd.engine.ESDFacrory;
+import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.*;
@@ -1629,10 +1631,17 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         if (childs != null) {
             for (Component component : childs) {
                 if (component instanceof ModuleComponent) {
-                    Component currComponent = ((ModuleComponent) component).getCurrComponent();
-                    if (currComponent != null) {
-                        components.add(currComponent);
+                    ModuleComponent moduleComponent = (ModuleComponent) component;
+                    try {
+                        EUModule module = ESDFacrory.getAdminESDClient().getModule(moduleComponent.getClassName(), moduleComponent.getProjectName());
+                        Component currComponent = module.getComponent();
+                        if (currComponent != null) {
+                            components.add(currComponent);
+                        }
+                    } catch (JDSException e) {
+                        e.printStackTrace();
                     }
+
                 } else {
                     components.add(component.clone());
                 }
