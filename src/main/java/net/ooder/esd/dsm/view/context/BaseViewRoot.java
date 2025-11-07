@@ -120,7 +120,7 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
             if (entityClass != null && entityClass.getSimpleName().equals(simClassName)) {
                 serviceClass = esdClass.getCtClass();
                 imports.add(serviceClass.getPackage().getName() + ".*");
-                serviceClassName = serviceClass.getName();
+                serviceClassName = serviceClass.getSimpleName();
             }
         }
 

@@ -259,8 +259,8 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
     }
 
 
-    protected void initTabItems(TabListItem layoutItem, String projectName) throws JDSException {
-        String euClassName = layoutItem.getEuClassName();
+    protected void initTabItems(TabListItem tabListItem, String projectName) throws JDSException {
+        String euClassName = tabListItem.getEuClassName();
         if (euClassName != null) {
             EUModule euModule = ESDFacrory.getAdminESDClient().getModule(euClassName, projectName);
             if (euModule == null) {
@@ -274,8 +274,8 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
                     moduleBeans.add(customModuleBean);
                 }
                 FieldModuleConfig config = new FieldModuleConfig(customModuleBean);
-                itemConfigMap.put(config.getId(), config);
-                itemNames.add(config.getId());
+                itemConfigMap.put(tabListItem.getId(), config);
+                itemNames.add(tabListItem.getId());
             }
         }
     }

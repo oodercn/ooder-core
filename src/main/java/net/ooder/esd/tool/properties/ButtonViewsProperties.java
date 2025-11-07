@@ -6,8 +6,8 @@ import net.ooder.esd.annotation.ui.BorderType;
 import net.ooder.esd.annotation.ui.HAlignType;
 import net.ooder.esd.annotation.ui.VAlignType;
 import net.ooder.esd.bean.MethodConfig;
-import net.ooder.esd.bean.view.CustomButtonViewsViewBean;
 import net.ooder.esd.bean.nav.TabItemBean;
+import net.ooder.esd.bean.view.CustomButtonViewsViewBean;
 import net.ooder.esd.custom.properties.ButtonViewsListItem;
 import net.ooder.esd.custom.properties.NavTabsProperties;
 import net.ooder.esd.dsm.DSMFactory;
@@ -47,11 +47,11 @@ public class ButtonViewsProperties extends NavTabsProperties<ButtonViewsListItem
         Map<String, Object> tagMap = new HashMap<>();
         Set<RequestParamBean> paramBeans = methodConfig.getParamSet();
         for (RequestParamBean paramBean : paramBeans) {
-           if (!Arrays.asList(DSMFactory.SkipParams).contains(paramBean.getParamName())){
-               Object obj = valueMap.get(paramBean.getParamName());
-               if (obj != null && !obj.equals("")) {
-                   tagMap.put(paramBean.getParamName(), obj);
-               }
+            if (!Arrays.asList(DSMFactory.SkipParams).contains(paramBean.getParamName())) {
+                Object obj = valueMap.get(paramBean.getParamName());
+                if (obj != null && !obj.equals("")) {
+                    tagMap.put(paramBean.getParamName(), obj);
+                }
             }
         }
 
@@ -64,23 +64,23 @@ public class ButtonViewsProperties extends NavTabsProperties<ButtonViewsListItem
 
         List<FieldModuleConfig> moduleList = tabsViewBean.getNavItems();
 
-        if (moduleList!=null && moduleList.size()>0){
+        if (moduleList != null && moduleList.size() > 0) {
             for (FieldModuleConfig itemInfo : moduleList) {
                 ButtonViewsListItem navItemProperties = new ButtonViewsListItem(itemInfo);
                 navItemProperties.getTagVar().putAll(itemInfo.getTagVar());
                 this.addItem(navItemProperties);
             }
-        }else{
-            for (ButtonViewsListItem item : tabsViewBean.getTabItems()) {
-                this.addItem(item);
-            }
-
+        } else {
             if (tabsViewBean.getItemBeans() != null && !tabsViewBean.getItemBeans().isEmpty()) {
                 List<ButtonViewsListItem> tabItemBeans = new ArrayList<>();
                 for (TabItemBean item : tabsViewBean.getItemBeans()) {
                     tabItemBeans.add(new ButtonViewsListItem(item));
                 }
                 this.setItems(tabItemBeans);
+            }
+
+            for (ButtonViewsListItem item : tabsViewBean.getTabItems()) {
+                this.addItem(item);
             }
 
             if (this.getItems() == null || this.getItems().isEmpty()) {
