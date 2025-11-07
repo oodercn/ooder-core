@@ -131,6 +131,11 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
             cModuleBean.setJavaSrcBeans(aggRootBuild.getAllSrcBean());
             cModuleBean.reBindMethod(customViewBean.getMethodConfig());
             DSMFactory.getInstance().saveCustomViewBean(customViewBean);
+        } else {
+            if (childComponent.getModuleComponent() != null && childComponent.getModuleComponent().getMethodAPIBean() != null) {
+                cModuleBean = childComponent.getModuleComponent().getMethodAPIBean().getModuleBean();
+            }
+
         }
         return cModuleBean;
     }
