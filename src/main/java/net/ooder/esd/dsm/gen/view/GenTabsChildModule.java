@@ -77,7 +77,7 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
         String cEuClassName = cPackageName + "." + cSimClass;
         String projectName = moduleComponent.getProjectName();
         CustomModuleBean cModuleBean = null;
-        if (!childComponent.getKey().equals(ComponentType.MODULE.getType())) {
+        if (!childComponent.getKey().equals(ComponentType.MODULE.getClassName())) {
             String target = childComponent.getTarget();
             TabListItem currListItem = this.tabsViewBean.findTabItem(target, tabsViewBean.getTabItems());
             DomainInst domainInst = DSMFactory.getInstance().getDefaultDomain(moduleComponent.getProjectName(), UserSpace.VIEW);
