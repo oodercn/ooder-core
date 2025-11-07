@@ -1634,8 +1634,10 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
                     ModuleComponent moduleComponent = (ModuleComponent) component;
                     try {
                         EUModule module = ESDFacrory.getAdminESDClient().getModule(moduleComponent.getClassName(), moduleComponent.getProjectName());
-                        Component currComponent = module.getComponent();
-                        if (currComponent != null) {
+                        if (module.getComponent() != null) {
+                            Component currComponent = module.getComponent().clone();
+                            currComponent.setTarget(component.getTarget());
+                            currComponent.setAlias(component.getAlias());
                             components.add(currComponent);
                         }
                     } catch (JDSException e) {
