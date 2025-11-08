@@ -45,17 +45,6 @@ public class MenuBarEventBean<T extends Action> extends Event<T, MenuBarEventEnu
     }
 
 
-//
-//    public MenuBarEventBean(CustomToolbarEvent customToolbarEvent) {
-//        this.eventKey = customToolbarEvent.getEventEnum();
-//        this.desc = customToolbarEvent.getName();
-//        this.eventId = eventKey.name() + "|" + eventKey.getEvent();
-//        this.expression = customToolbarEvent.getExpression();
-//        CustomAction[] actionSet = customToolbarEvent.getActions();
-//        addAction(actionSet);
-//
-//    }
-
     public MenuBarEventBean(MenuBarEvent event, Constructor constructor) {
         this.sourceClassName = constructor.getDeclaringClass().getName();
         this.methodName = constructor.getName();
