@@ -658,7 +658,7 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
                 }
             }
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
 

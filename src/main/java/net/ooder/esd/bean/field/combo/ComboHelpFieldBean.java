@@ -2,6 +2,7 @@ package net.ooder.esd.bean.field.combo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.ComboHelpAnnotation;
 import net.ooder.esd.annotation.field.ListAnnotation;
@@ -85,7 +86,7 @@ public class ComboHelpFieldBean extends ComboxFieldBean<CustomHelpComponent> {
         if (listBean != null) {
             classes.addAll(listBean.getOtherClass());
         }
-        return classes;
+        return ClassUtility.checkBase(classes);
     }
 
 

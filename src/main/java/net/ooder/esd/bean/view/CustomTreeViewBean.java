@@ -611,7 +611,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
             e.printStackTrace();
         }
         classSet.add(this.getClass());
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     public ChildTreeViewBean getChildTreeBean(ConstructorBean constructorBean) {

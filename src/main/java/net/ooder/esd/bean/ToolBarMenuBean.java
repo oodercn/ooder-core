@@ -6,6 +6,7 @@ import javassist.NotFoundException;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.common.JDSException;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.CustomMenu;
 import net.ooder.esd.annotation.event.ToolBarEvent;
@@ -516,6 +517,6 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
             classes.add(bindService);
         }
 
-        return classes;
+        return ClassUtility.checkBase(classes);
     }
 }

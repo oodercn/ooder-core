@@ -6,6 +6,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.common.JDSException;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.config.ListResultModel;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.CustomListAnnotation;
@@ -188,7 +189,7 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
         if (enumClass != null && !enumClass.equals(Enum.class)) {
             classes.add(enumClass);
         }
-        return classes;
+        return ClassUtility.checkBase(classes);
     }
 
     @JSONField(serialize = false)

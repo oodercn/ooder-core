@@ -2,6 +2,7 @@ package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.LayoutAnnotation;
 import net.ooder.esd.annotation.TabsAnnotation;
 import net.ooder.esd.annotation.ui.PosType;
@@ -93,7 +94,7 @@ public abstract class NavComboBaseViewBean<U extends TabListItem> extends NavBas
             classSet.addAll(tabsViewBean.getOtherClass());
         }
         classSet.addAll(layoutViewBean.getOtherClass());
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
 

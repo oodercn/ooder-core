@@ -3,6 +3,7 @@ package net.ooder.esd.bean.field.combo;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.ModuleRefFieldAnnotation;
 import net.ooder.esd.annotation.ui.*;
@@ -156,7 +157,7 @@ public class CustomModuleRefFieldBean implements FieldComponentBean<Component> {
             }
 
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     public Dock getDock() {

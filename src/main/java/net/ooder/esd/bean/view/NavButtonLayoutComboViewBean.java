@@ -130,7 +130,7 @@ public class NavButtonLayoutComboViewBean extends NavComboBaseViewBean<ButtonLay
         }
 
 
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     public CustomButtonLayoutViewBean getButtonLayoutViewBean() {

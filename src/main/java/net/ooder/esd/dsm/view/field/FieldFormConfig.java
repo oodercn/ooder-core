@@ -7,6 +7,7 @@ import net.ooder.common.JDSConstants;
 import net.ooder.common.JDSException;
 import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.context.JDSActionContext;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomAnnotation;
@@ -377,7 +378,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
 
         }
 
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
 

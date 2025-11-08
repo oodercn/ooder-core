@@ -164,7 +164,7 @@ public class CustomModuleEmbedFieldBean  implements FieldComponentBean<ModuleCom
             }
 
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     @Override

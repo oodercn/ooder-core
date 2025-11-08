@@ -569,7 +569,7 @@ public class NavGroupViewBean extends NavBaseViewBean<GroupItemBean, GalleryItem
                 classSet.add(itemBean.getBindService());
             }
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     @Override

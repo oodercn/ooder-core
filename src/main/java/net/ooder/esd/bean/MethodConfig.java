@@ -1732,14 +1732,9 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
     public Set<Class> getOtherClass() {
         Set<Class> classSet = new HashSet<>();
         if (this.getView() != null) {
-            Set<Class> vclass = this.getView().getOtherClass();
-            for (Class viewClass : vclass) {
-                if (viewClass != null && !viewClass.getName().startsWith("java.lang")) {
-                    classSet.add(viewClass);
-                }
-            }
+            classSet.addAll( this.getView().getOtherClass());
         } else {
-            if (this.getViewClassName() != null && !getViewClassName().startsWith("java.lang")) {
+            if (this.getViewClassName() != null) {
                 try {
                     Class viewClass = ClassUtility.loadClass(this.getViewClassName());
                     if (viewClass != null) {
@@ -1750,7 +1745,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
                 }
             }
         }
-        return classSet;
+        return   ClassUtility.checkBase(classSet);
     }
 
 

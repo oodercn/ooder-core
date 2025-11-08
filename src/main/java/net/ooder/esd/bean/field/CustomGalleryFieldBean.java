@@ -3,6 +3,7 @@ package net.ooder.esd.bean.field;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.ListMenu;
 import net.ooder.esd.annotation.field.GalleryFieldAnnotation;
@@ -165,7 +166,7 @@ public class CustomGalleryFieldBean extends BaseWidgetBean<CustomGalleryViewBean
             classSet.addAll(listMenuBean.getOtherClass());
         }
 
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     public CustomGalleryFieldBean fillData(GalleryFieldAnnotation annotation) {

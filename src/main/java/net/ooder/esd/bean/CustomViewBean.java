@@ -1237,7 +1237,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
     @JSONField(serialize = false)
     public Set<Class> getOtherClass() {
         Set<Class> classSet = new HashSet<>();
-        Set<Class> checkClassSet = new HashSet<>();
         if (this.getViewClassName() != null) {
             try {
                 Class viewClass = ClassUtility.loadClass(this.getViewClassName());
@@ -1276,14 +1275,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
             classSet.addAll(Arrays.asList(this.getMenuBar().getMenuClasses()));
         }
 
-
-        for (Class viewClass : classSet) {
-            if (viewClass != null && !viewClass.getName().startsWith("java.lang")) {
-                checkClassSet.add(viewClass);
-            }
-        }
-
-        return checkClassSet;
+        return  ClassUtility.checkBase(classSet);
     }
 
     public String toAnnotationStr() {

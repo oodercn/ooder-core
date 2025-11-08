@@ -5,6 +5,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.common.JDSException;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomAnnotation;
 import net.ooder.esd.annotation.RightContextMenu;
 import net.ooder.esd.annotation.ui.ComboInputType;
@@ -296,7 +297,7 @@ public class FieldGridConfig implements ESDFieldConfig {
             }
         }
 
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
 

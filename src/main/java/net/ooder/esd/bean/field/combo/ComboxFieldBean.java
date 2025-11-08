@@ -2,6 +2,7 @@ package net.ooder.esd.bean.field.combo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.ComboBoxAnnotation;
 import net.ooder.esd.annotation.ui.ComboInputType;
@@ -101,7 +102,7 @@ public class ComboxFieldBean<M extends ComboInputComponent> extends ComboInputFi
             classSet.addAll(listBean.getOtherClass());
         }
 
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
 

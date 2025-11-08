@@ -3,6 +3,7 @@ package net.ooder.esd.bean.field.base;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.JavaEditorAnnotation;
 import net.ooder.esd.annotation.field.ToolBarMenu;
@@ -96,7 +97,7 @@ public class JavaEditorFieldBean extends FieldBaseBean<JavaEditorComponent> {
         if (toolBar != null) {
             classSet.addAll(toolBar.getOtherClass());
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     @JSONField(serialize = false)

@@ -2,6 +2,7 @@ package net.ooder.esd.bean.field.combo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.ComboDateAnnotation;
 import net.ooder.esd.annotation.field.DatePickerAnnotation;
@@ -91,7 +92,7 @@ public class ComboDateFieldBean extends ComboInputFieldBean {
         if (tiemPickBean!=null){
             classSet.addAll(tiemPickBean.getOtherClass());
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     @JSONField(serialize = false)

@@ -3,6 +3,7 @@ package net.ooder.esd.bean;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomMenu;
 import net.ooder.esd.annotation.ListMenu;
 import net.ooder.esd.tool.properties.list.ListFieldProperties;
@@ -115,7 +116,7 @@ public class ListMenuBean<T extends ListFieldProperties> implements CustomBean {
                 classes.add(menuClass);
             }
         }
-        return classes;
+        return ClassUtility.checkBase(classes);
     }
 
     public String getSourceClassName() {

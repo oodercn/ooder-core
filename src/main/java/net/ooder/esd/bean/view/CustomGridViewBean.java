@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.common.JDSException;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.common.util.StringUtility;
 import net.ooder.esd.annotation.*;
 import net.ooder.esd.annotation.event.CustomGridEvent;
@@ -414,7 +415,7 @@ public class CustomGridViewBean extends CustomViewBean<FieldGridConfig, UIItem, 
             classSet.addAll(fieldGridConfig.getOtherClass());
         }
 
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     public List<ChildGridViewBean> getChildGridViewBean(Constructor constructor) {

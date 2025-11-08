@@ -6,6 +6,7 @@ import net.ooder.annotation.CustomBean;
 import net.ooder.annotation.ResponseType;
 import net.ooder.annotation.SimpleCustomBean;
 import net.ooder.common.EventKey;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.*;
 import net.ooder.esd.annotation.event.*;
 import net.ooder.esd.annotation.field.APIEventAnnotation;
@@ -417,7 +418,7 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
             classes.add(enumClass);
         }
 
-        return classes;
+        return ClassUtility.checkBase(classes);
     }
 
     public Action getActionById(String actionId) {

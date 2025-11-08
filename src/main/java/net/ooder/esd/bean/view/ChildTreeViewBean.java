@@ -587,7 +587,7 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
             classSet.add(this.getCustomItems());
         }
         classSet.add(this.getClass());
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
 

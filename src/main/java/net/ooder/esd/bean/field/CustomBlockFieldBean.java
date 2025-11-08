@@ -2,6 +2,7 @@ package net.ooder.esd.bean.field;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.BlockFieldAnnotation;
 import net.ooder.esd.annotation.ui.*;
@@ -100,7 +101,7 @@ public class CustomBlockFieldBean extends BaseWidgetBean<CustomBlockFormViewBean
         if (viewBean != null) {
             otherClass.addAll(viewBean.getOtherClass());
         }
-        return otherClass;
+        return ClassUtility.checkBase(otherClass);
     }
 
     void initProperties(BlockProperties properties) {

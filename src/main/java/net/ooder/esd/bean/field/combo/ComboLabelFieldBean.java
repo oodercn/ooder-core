@@ -2,6 +2,7 @@ package net.ooder.esd.bean.field.combo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.ComboLabelAnnotation;
 import net.ooder.esd.annotation.field.LabelAnnotation;
@@ -83,7 +84,7 @@ public class ComboLabelFieldBean extends ComboInputFieldBean {
             classSet.addAll(labelFieldBean.getOtherClass());
         }
 
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     public LabelFieldBean getLabelFieldBean() {

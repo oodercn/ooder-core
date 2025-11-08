@@ -4,6 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
 import net.ooder.common.database.bpm.DefaultColEnum;
 import net.ooder.common.util.CaselessStringKeyHashMap;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.common.util.StringUtility;
 import net.ooder.annotation.CustomBean;
 import net.ooder.annotation.SimpleCustomBean;
@@ -578,7 +579,7 @@ public class AggEntityConfig {
                 }
             }
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     @JSONField(serialize = false)

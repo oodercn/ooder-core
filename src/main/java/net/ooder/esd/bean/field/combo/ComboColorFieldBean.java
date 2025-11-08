@@ -2,6 +2,7 @@ package net.ooder.esd.bean.field.combo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.ColorPickerAnnotation;
 import net.ooder.esd.annotation.field.ComboColorAnnotation;
@@ -93,7 +94,7 @@ public class ComboColorFieldBean extends ComboInputFieldBean {
             classSet.addAll(colorPickBean.getOtherClass());
         }
 
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
 

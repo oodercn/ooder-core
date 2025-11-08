@@ -3,6 +3,7 @@ package net.ooder.esd.bean.view;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.*;
 import net.ooder.esd.annotation.event.CustomGridEvent;
 import net.ooder.esd.annotation.event.CustomMGridEvent;
@@ -393,7 +394,7 @@ public class CustomMGridViewBean extends CustomViewBean<FieldGridConfig, UIItem,
         if (contextMenuBean != null && contextMenuBean.getMenuClass() != null) {
             classSet.addAll(Arrays.asList(contextMenuBean.getMenuClass()));
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     public List<ChildGridViewBean> getChildGridViewBean(Constructor constructor) {

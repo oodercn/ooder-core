@@ -2,6 +2,7 @@ package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.NavGalleryAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
@@ -78,7 +79,7 @@ public class NavGalleryComboViewBean extends NavComboBaseViewBean<GalleryNavItem
         if (galleryViewBean != null) {
             classSet.addAll(galleryViewBean.getOtherClass());
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
 

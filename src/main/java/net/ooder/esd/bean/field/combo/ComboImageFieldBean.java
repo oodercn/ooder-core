@@ -2,6 +2,7 @@ package net.ooder.esd.bean.field.combo;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.ComboImageAnnotation;
 import net.ooder.esd.annotation.field.ImageAnnotation;
@@ -89,7 +90,7 @@ public class ComboImageFieldBean extends ComboInputFieldBean<CustomComboInputCom
             classSet.addAll(imageFieldBean.getOtherClass());
         }
 
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
     @JSONField(serialize = false)
     public List<CustomBean> getAnnotationBeans() {

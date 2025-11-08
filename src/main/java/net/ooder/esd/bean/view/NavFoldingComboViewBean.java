@@ -3,6 +3,7 @@ package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.NavFoldingTreeAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
@@ -98,7 +99,7 @@ public class NavFoldingComboViewBean extends NavComboBaseViewBean {
                 classSet.addAll(treeViewBean.getOtherClass());
             }
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     public List<CustomTreeViewBean> getTreeViewBeans() {

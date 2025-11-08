@@ -3,6 +3,7 @@ package net.ooder.esd.bean.field;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.ListMenu;
 import net.ooder.esd.annotation.field.TitleBlockFieldAnnotation;
@@ -155,7 +156,7 @@ public class CustomTitleBlockFieldBean extends BaseWidgetBean<CustomTitleBlockVi
         if (listMenuBean != null) {
             classSet.addAll(listMenuBean.getOtherClass());
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     public CustomTitleBlockFieldBean fillData(TitleBlockFieldAnnotation annotation) {

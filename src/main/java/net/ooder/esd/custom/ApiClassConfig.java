@@ -6,6 +6,7 @@ import net.ooder.common.JDSConstants;
 import net.ooder.common.JDSException;
 import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.ModuleAnnotation;
 import net.ooder.esd.annotation.event.*;
 import net.ooder.esd.annotation.field.APIEventAnnotation;
@@ -99,7 +100,7 @@ public class ApiClassConfig {
         for (MethodConfig methodConfig : allMethods) {
             classSet.addAll(methodConfig.getOtherClass());
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     void initESDClass(ESDClass esdServiceClass, APIConfig config) {

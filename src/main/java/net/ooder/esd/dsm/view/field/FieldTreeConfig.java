@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomAnnotation;
 import net.ooder.esd.bean.CustomRefBean;
 import net.ooder.esd.bean.MethodConfig;
@@ -164,7 +165,7 @@ public class FieldTreeConfig<T> implements ESDFieldConfig {
         if (this.getEnumClass() != null) {
             classSet.add(this.getEnumClass());
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     @Override

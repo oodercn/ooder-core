@@ -506,7 +506,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
                 classSet.addAll(Arrays.asList(layoutListItem.getBindClass()));
             }
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     public String getTop() {

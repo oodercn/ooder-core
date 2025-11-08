@@ -211,7 +211,7 @@ public class CustomFChartFieldBean extends BaseWidgetBean<CustomFChartViewBean, 
         if (viewBean != null) {
             classSet.addAll(viewBean.getOtherClass());
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
 

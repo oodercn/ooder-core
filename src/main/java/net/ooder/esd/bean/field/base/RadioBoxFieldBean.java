@@ -2,6 +2,7 @@ package net.ooder.esd.bean.field.base;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.RadioBoxAnnotation;
 import net.ooder.esd.annotation.ui.BorderType;
@@ -117,7 +118,7 @@ public class RadioBoxFieldBean extends FieldBaseBean<RadioBoxComponent> {
             classSet.addAll(listBean.getOtherClass());
         }
 
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
 

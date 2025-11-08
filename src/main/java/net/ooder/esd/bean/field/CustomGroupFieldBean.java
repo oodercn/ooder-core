@@ -169,7 +169,7 @@ public class CustomGroupFieldBean implements FieldComponentBean<GroupComponent> 
             }
 
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
     public Boolean getIniFold() {

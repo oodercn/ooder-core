@@ -3,6 +3,7 @@ package net.ooder.esd.bean.view;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.BottomBarMenu;
 import net.ooder.esd.annotation.MenuBarMenu;
 import net.ooder.esd.annotation.RightContextMenu;
@@ -289,7 +290,7 @@ public class CustomButtonLayoutViewBean extends CustomViewBean<FieldGalleryConfi
         if (contextMenuBean != null && contextMenuBean.getMenuClass() != null) {
             classSet.addAll(Arrays.asList(contextMenuBean.getMenuClass()));
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
 

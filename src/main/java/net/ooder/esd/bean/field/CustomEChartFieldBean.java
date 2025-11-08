@@ -1,5 +1,6 @@
 package net.ooder.esd.bean.field;
 
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.EChartFieldAnnotation;
 import net.ooder.esd.annotation.Widget;
@@ -153,7 +154,7 @@ public class CustomEChartFieldBean extends BaseWidgetBean<CustomEChartViewBean, 
         if (viewBean != null) {
             classSet.addAll(viewBean.getOtherClass());
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
 }

@@ -2,6 +2,7 @@ package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.*;
 import net.ooder.esd.annotation.action.CustomGalleryAction;
 import net.ooder.esd.annotation.event.*;
@@ -134,7 +135,7 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
         if (contextMenuBean != null && contextMenuBean.getMenuClass() != null) {
             classSet.addAll(Arrays.asList(contextMenuBean.getMenuClass()));
         }
-        return classSet;
+        return ClassUtility.checkBase(classSet);
     }
 
 
