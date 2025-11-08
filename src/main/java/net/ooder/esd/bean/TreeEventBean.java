@@ -86,6 +86,10 @@ public class TreeEventBean<T extends Action> extends Event<T, TreeViewEventEnum>
             action.reSet(event);
             this.addAction(new CustomAction[]{action});
         }
+
+        if (!event._return()) {
+            this.eventReturn = "{false}";
+        }
         addAction(event.actions());
         addAction(event.customActions());
         addAction(event.localActions());

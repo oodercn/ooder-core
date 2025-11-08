@@ -76,6 +76,9 @@ public class MenuBarEventBean<T extends Action> extends Event<T, MenuBarEventEnu
             action.reSet(event);
             this.addAction(new CustomAction[]{action});
         }
+        if (!event._return()) {
+            this.eventReturn = "{false}";
+        }
         addAction(event.actions());
     }
 

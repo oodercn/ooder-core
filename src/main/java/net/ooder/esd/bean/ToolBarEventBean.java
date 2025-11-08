@@ -86,6 +86,9 @@ public class ToolBarEventBean<T extends Action> extends Event<T, ToolBarEventEnu
             action.reSet(event);
             this.addAction(new CustomAction[]{action});
         }
+        if (!event._return()) {
+            this.eventReturn = "{false}";
+        }
         addAction(event.actions());
     }
 
