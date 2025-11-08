@@ -1732,9 +1732,14 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
     public Set<Class> getOtherClass() {
         Set<Class> classSet = new HashSet<>();
         if (this.getView() != null) {
-            classSet.addAll(this.getView().getOtherClass());
+            Set<Class> vclass = this.getView().getOtherClass();
+            for (Class viewClass : vclass) {
+                if (viewClass != null && !viewClass.getName().startsWith("java.lang")) {
+                    classSet.add(viewClass);
+                }
+            }
         } else {
-            if (this.getViewClassName() != null && !this.getViewClassName().equals("void")) {
+            if (this.getViewClassName() != null && !getViewClassName().startsWith("java.lang")) {
                 try {
                     Class viewClass = ClassUtility.loadClass(this.getViewClassName());
                     if (viewClass != null) {

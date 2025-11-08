@@ -136,7 +136,8 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
         tabclickItemAction.setArgs(Arrays.asList(new String[]{"{args[1].id}"}));
         treeComponent.addAction(tabclickItemAction);
         TreeViewProperties properties = treeComponent.getProperties();
-        if (properties.getItems() != null && properties.getItems().size() > 0 && properties.getFristId() != null) {
+        if (properties.getItems() != null && properties.getItems().size() > 0 && properties.getFristId() != null
+                && navTreeViewBean.getTreeViewBean().getLazyLoad() && !navTreeViewBean.getTreeViewBean().getLazyLoad()) {
             Action clickItemAction = new Action(TreeViewEventEnum.onRender);
             clickItemAction.setType(ActionTypeEnum.control);
             clickItemAction.setTarget(treeComponent.getAlias());
