@@ -174,6 +174,7 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
     void fillChildCustomAction(ChildTreeViewBean childTreeViewBean, Component currComponent) {
         String groupName = childTreeViewBean.getGroupName();
         Condition condition = new Condition("{args[1].groupName}", SymbolType.equal, groupName);
+
         Set<TreeEventBean> extAPIEvent = childTreeViewBean.getExtAPIEvent();
         for (TreeEventBean eventEnum : extAPIEvent) {
             MethodConfig methodConfig = childTreeViewBean.findMethod(eventEnum);

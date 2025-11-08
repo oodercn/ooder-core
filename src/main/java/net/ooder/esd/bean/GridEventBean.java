@@ -40,7 +40,7 @@ public class GridEventBean<T extends Action> extends Event<T, GridEventEnum> imp
     public GridEventBean(CustomGridEvent gridEventEnum) {
         this.eventKey = gridEventEnum.getEventEnum();
         this.desc = gridEventEnum.getName();
-        this.eventId = eventKey.name() + "|" + eventKey.getEvent();
+        this.eventId = eventKey.name() + "_" + eventKey.getEvent();
         this.expression = gridEventEnum.getExpression();
         CustomAction[] actionSet = gridEventEnum.getActions();
         addAction(actionSet);
@@ -51,7 +51,7 @@ public class GridEventBean<T extends Action> extends Event<T, GridEventEnum> imp
         this.eventKey = event.eventEnum();
         this.desc = event.desc();
         this.expression = event.expression();
-        this.eventId = eventKey.name() + "|" + eventKey.getEvent();
+        this.eventId = eventKey.name() + "_" + eventKey.getEvent();
         if (!event._return()) {
             this.eventReturn = "{false}";
         }

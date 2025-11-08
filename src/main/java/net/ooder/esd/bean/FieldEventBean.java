@@ -40,7 +40,7 @@ public class FieldEventBean<T extends Action> extends Event<T, FieldEventEnum> i
     public FieldEventBean(CustomFieldEvent fieldEvent) {
         this.eventKey = fieldEvent.getEventEnum();
         this.desc = fieldEvent.getName();
-        this.eventId = eventKey.name() + "|" + eventKey.getEvent();
+        this.eventId = eventKey.name() + "_" + eventKey.getEvent();
         this.expression = fieldEvent.getExpression();
         CustomAction[] actionSet = fieldEvent.getActions();
         addAction(actionSet);
@@ -51,7 +51,7 @@ public class FieldEventBean<T extends Action> extends Event<T, FieldEventEnum> i
         this.eventKey = event.eventEnum();
         this.desc = event.desc();
         this.expression = event.expression();
-        this.eventId = eventKey.name() + "|" + eventKey.getEvent();
+        this.eventId = eventKey.name() + "_" + eventKey.getEvent();
         if (!event._return()) {
             this.eventReturn = "{false}";
         }

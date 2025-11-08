@@ -45,7 +45,7 @@ public class ViewEntityRef {
             this.refBean = methodInfo.getRefBean();
             this.fkField = methodInfo.getId();
             this.domainId = methodInfo.getDomainId();
-            this.refId = className + pkField + "|" + otherClassName + fkField;
+            this.refId = className + pkField + "_" + otherClassName + fkField;
             this.methodName = methodInfo.getName();
 
         } catch (JDSException e) {

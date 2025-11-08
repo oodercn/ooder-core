@@ -48,7 +48,7 @@ public class TreeEventBean<T extends Action> extends Event<T, TreeViewEventEnum>
     public TreeEventBean(CustomTreeEvent customTreeEvent) {
         this.eventKey = customTreeEvent.getEventEnum();
         this.desc = customTreeEvent.getName();
-        this.eventId = eventKey.name() + "|" + eventKey.getEvent();
+        this.eventId = eventKey.name() + "_" + eventKey.getEvent();
         this.expression = customTreeEvent.getExpression();
         CustomAction[] actionSet = customTreeEvent.getActions();
         addAction(actionSet);
@@ -73,12 +73,11 @@ public class TreeEventBean<T extends Action> extends Event<T, TreeViewEventEnum>
     }
 
 
-
     void initEvent(TreeEvent event) {
         this.eventKey = event.eventEnum();
         this.desc = event.desc();
         this.expression = event.expression();
-        this.eventId = eventKey.name() + "|" + eventKey.getEvent();
+        this.eventId = eventKey.name() + "_" + eventKey.getEvent() + "_" + sourceClassName + "_" + methodName;
         if (!event.pageAction().equals(CustomLoadClassAction.none)) {
             this.className = event.className();
             this.childName = event.childName();
@@ -167,6 +166,17 @@ public class TreeEventBean<T extends Action> extends Event<T, TreeViewEventEnum>
 
     public void setEventId(String eventId) {
         this.eventId = eventId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && obj instanceof TreeEventBean) {
+            TreeEventBean treeEventBean = (TreeEventBean) obj;
+            if (treeEventBean.getEventId() != null && eventId != null) {
+                return treeEventBean.getEventId().equals(eventId);
+            }
+        }
+        return super.equals(obj);
     }
 
     @Override

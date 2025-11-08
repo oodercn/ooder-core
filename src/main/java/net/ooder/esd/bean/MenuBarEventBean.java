@@ -78,7 +78,7 @@ public class MenuBarEventBean<T extends Action> extends Event<T, MenuBarEventEnu
         this.eventKey = event.eventEnum();
         this.desc = event.desc();
         this.expression = event.expression();
-        this.eventId = eventKey.name() + "|" + eventKey.getEvent();
+        this.eventId = eventKey.name() + "_" + eventKey.getEvent() + "_" + sourceClassName + "_" + methodName;
         if (!event.pageAction().equals(CustomLoadClassAction.none)) {
             this.className = event.className();
             this.childName = event.childName();
@@ -100,6 +100,18 @@ public class MenuBarEventBean<T extends Action> extends Event<T, MenuBarEventEnu
                 actions.add((T) action);
             }
         }
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && obj instanceof ToolBarEventBean) {
+            ToolBarEventBean toolBarEventBean = (ToolBarEventBean) obj;
+            if (toolBarEventBean.getEventId() != null && eventId != null) {
+                return toolBarEventBean.getEventId().equals(eventId);
+            }
+        }
+        return super.equals(obj);
     }
 
     public String getClassName() {

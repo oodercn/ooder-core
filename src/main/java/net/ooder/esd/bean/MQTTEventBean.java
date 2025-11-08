@@ -38,7 +38,7 @@ public class MQTTEventBean extends Event implements CustomBean {
         this.eventKey = event.event();
         this.desc = event.desc();
         this.event=event;
-        this.eventId = event.event().getEvent() + "|" + event.event();
+        this.eventId = event.event().getEvent() + "_" + event.event();
         CustomAction[] actionSet = event.actions();
         addAction(actionSet);
 

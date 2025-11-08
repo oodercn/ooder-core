@@ -40,7 +40,7 @@ public class GalleryEventBean<T extends Action> extends Event<T, GalleryEventEnu
     public GalleryEventBean(CustomGalleryEvent galleryEventEnum) {
         this.eventKey = galleryEventEnum.getEventEnum();
         this.desc = galleryEventEnum.getName();
-        this.eventId = eventKey.name() + "|" + eventKey.getEvent();
+        this.eventId = eventKey.name() + "_" + eventKey.getEvent() + "_" + sourceClassName + "_" + methodName;
         this.expression = galleryEventEnum.getExpression();
         CustomAction[] actionSet = galleryEventEnum.getActions();
         addAction(actionSet);
@@ -51,7 +51,7 @@ public class GalleryEventBean<T extends Action> extends Event<T, GalleryEventEnu
         this.eventKey = event.eventEnum();
         this.desc = event.desc();
         this.expression = event.expression();
-        this.eventId = eventKey.name() + "|" + eventKey.getEvent();
+        this.eventId = eventKey.name() + "_" + eventKey.getEvent();
         if (!event._return()) {
             this.eventReturn = "{false}";
         }
@@ -80,6 +80,7 @@ public class GalleryEventBean<T extends Action> extends Event<T, GalleryEventEnu
     public void setExpression(String expression) {
         this.expression = expression;
     }
+
 
 
     public String getDomainId() {
