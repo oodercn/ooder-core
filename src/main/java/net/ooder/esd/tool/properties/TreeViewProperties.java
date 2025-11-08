@@ -46,12 +46,10 @@ public class TreeViewProperties<T extends TreeListItem> extends TreeBarPropertie
             if (items.size() > 0) {
                 T itemProperties = items.get(0);
                 fristId = getFristId(itemProperties);
-
             } else {
                 fristId = this.getId();
             }
         }
-
         return fristId;
     }
 

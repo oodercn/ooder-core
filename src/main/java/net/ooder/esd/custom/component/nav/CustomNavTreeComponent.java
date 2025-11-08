@@ -71,7 +71,7 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
     private CustomTabsComponent createTabsComponent(TabsViewBean tabsViewBean, Map valueMap) {
         CustomTabsComponent tabComponent = new CustomTabsComponent(tabsViewBean, valueMap);
         tabComponent.getProperties().getItems().clear();
-        if (tabsViewBean.getAutoReload()!=null && tabsViewBean.getAutoReload()){
+        if (tabsViewBean.getAutoReload() != null && tabsViewBean.getAutoReload()) {
             Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onIniPanelView);
             showAction.updateArgs(tabComponent.getAlias(), 4);
             tabComponent.addAction(showAction);
@@ -134,11 +134,9 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
         tabclickItemAction.setTarget(tabsComponent.getAlias());
         tabclickItemAction.setMethod("fireItemClickEvent");
         tabclickItemAction.setArgs(Arrays.asList(new String[]{"{args[1].id}"}));
-
         treeComponent.addAction(tabclickItemAction);
-
         TreeViewProperties properties = treeComponent.getProperties();
-        if (properties.getItems() != null && properties.getItems().size() > 0) {
+        if (properties.getItems() != null && properties.getItems().size() > 0 && properties.getFristId() != null) {
             Action clickItemAction = new Action(TreeViewEventEnum.onRender);
             clickItemAction.setType(ActionTypeEnum.control);
             clickItemAction.setTarget(treeComponent.getAlias());
