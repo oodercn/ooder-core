@@ -40,7 +40,7 @@ public class MenuEventBean<T extends Action> extends Event<T, MenuEventEnum> imp
         this.eventKey = event.eventEnum();
         this.desc = event.desc();
         this.expression = event.expression();
-        this.eventId = eventKey.name() + "|" + eventKey.getEvent();
+        this.eventId = eventKey.name() + "_" + eventKey.getEvent();
         addAction(event.actions());
     }
 

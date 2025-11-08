@@ -47,7 +47,7 @@ public class TabsEventBean<T extends Action> extends Event<T, TabsEventEnum> imp
     public TabsEventBean(CustomTabsEvent customTabsEvent) {
         this.eventKey = customTabsEvent.getEventEnum();
         this.desc = customTabsEvent.getName();
-        this.eventId = eventKey.name() + "|" + eventKey.getEvent();
+        this.eventId = eventKey.name() + "_" + eventKey.getEvent();
         this.expression = customTabsEvent.getExpression();
         CustomAction[] actionSet = customTabsEvent.getActions();
         addAction(actionSet);
@@ -68,7 +68,7 @@ public class TabsEventBean<T extends Action> extends Event<T, TabsEventEnum> imp
         this.eventKey = event.eventEnum();
         this.desc = event.desc();
         this.expression = event.expression();
-        this.eventId = eventKey.name() + "|" + eventKey.getEvent();
+        this.eventId = eventKey.name() + "_" + eventKey.getEvent();
         addAction(event.actions());
         addAction(event.customActions());
     }

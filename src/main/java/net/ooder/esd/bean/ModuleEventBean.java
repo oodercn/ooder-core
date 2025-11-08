@@ -39,7 +39,7 @@ public class ModuleEventBean extends Event<Action, ModuleEventEnum> implements C
         this.desc = event.desc();
         this.event = event;
         this.eventName = eventName;
-        this.eventId = eventName.name() + "|" + event.event().getType();
+        this.eventId = eventName.name() + "_" + event.event().getType();
         CustomAction[] actionSet = event.actions();
         addAction(actionSet);
 
