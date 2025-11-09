@@ -186,7 +186,12 @@ public class DomainInst extends DSMInst implements Comparable<DomainInst> {
     @JSONField(serialize = false)
     @Override
     public List<JavaSrcBean> getJavaSrcBeans() {
-        return this.getRootPackage().listAllFile();
+        List<JavaSrcBean> javaSrcBeans=new ArrayList<>();
+        javaSrcBeans.addAll(this.getRootPackage().listAllFile());
+        if (this.getViewInst()!=null){
+            javaSrcBeans.addAll(this.getViewInst().getJavaSrcBeans());
+        }
+        return javaSrcBeans;
     }
 
 

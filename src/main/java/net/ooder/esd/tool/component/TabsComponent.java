@@ -93,7 +93,9 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
                 if (childTabViewBean.getLazyAppend() != null && !childTabViewBean.getLazyAppend()) {
                     EUModule childModule = childMethodConfig.getModule(valueMap, DSMFactory.getInstance().getDefaultProjectName());
                     Component dataComponent = childModule.getComponent().getCurrComponent().clone();
-                    dataComponent.setAlias(childTabViewBean.getId() + "_" + this.typeKey.name());
+                    String euClassname = childModule.getComponent().getClassName();
+                    String simClassName = euClassname.substring(euClassname.lastIndexOf(".") + 1);
+                    dataComponent.setAlias(simClassName);
                     dataComponent.setTarget(childTabViewBean.getId());
                     if (dataComponent != null && dataComponent instanceof DataComponent) {
                         ResultModel resultModel = null;
@@ -134,7 +136,6 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
 
                                 }
                             }
-
                             JDSActionContext.getActionContext().getContext().put(CustomViewFactory.MethodBeanKey, childMethodConfig);
                             resultModel = (ResultModel) childMethodConfig.getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), contextMap);
                         } catch (Exception e) {
@@ -143,7 +144,6 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
                         if (resultModel != null) {
                             ((DataComponent) dataComponent).setData(resultModel.get());
                         }
-
                     }
 
                     this.addChildren(dataComponent);
@@ -173,7 +173,7 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
                     } else {
                         moduleComponent.setClassName(euClassname);
                     }
-                    String simClassName=euClassname.substring(euClassname.lastIndexOf("."));
+                    String simClassName = euClassname.substring(euClassname.lastIndexOf(".") + 1);
                     moduleComponent.setAlias(simClassName);
                     moduleComponent.setTarget(tabListItem.getId());
                     moduleComponent.getModuleVar().putAll(tabListItem.getTagVar());
