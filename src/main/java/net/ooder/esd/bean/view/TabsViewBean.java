@@ -133,16 +133,14 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
                 GenTabsChildModule genChildModule = new GenTabsChildModule(moduleComponent, childComponent, this);
                 tasks.add(genChildModule);
             }
-            List<Future<CustomModuleBean>> futures = null;
             try {
                 ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
-                futures = service.invokeAll(tasks);
+                List<Future<CustomModuleBean>> futures = service.invokeAll(tasks);
                 for (Future<CustomModuleBean> resultFuture : futures) {
                     try {
                         CustomModuleBean cModuleBean = resultFuture.get();
                         if (navModuleBeans != null && !navModuleBeans.contains(cModuleBean)) {
                             navModuleBeans.add(cModuleBean);
-
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

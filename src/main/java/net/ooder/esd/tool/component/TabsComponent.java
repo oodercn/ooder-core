@@ -115,7 +115,7 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
                             } else {
                                 String euClassName = childTabViewBean.getClassName();
                                 String value = null;
-                                if (euClassName.indexOf(CustomViewFactory.INMODULE__) > -1) {
+                                if (euClassName != null && euClassName.indexOf(CustomViewFactory.INMODULE__) > -1) {
                                     String[] nameArr = euClassName.split(CustomViewFactory.INMODULE__);
                                     value = nameArr[1];
                                 }
@@ -140,7 +140,10 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        ((DataComponent) dataComponent).setData(resultModel.get());
+                        if (resultModel != null) {
+                            ((DataComponent) dataComponent).setData(resultModel.get());
+                        }
+
                     }
 
                     this.addChildren(dataComponent);

@@ -22,12 +22,12 @@ public class FullNavTreeComponent<M extends LayoutComponent> extends CustomNavTr
         this.fillPopTreeAction(bean);
         this.addChildNav(bean);
         this.fillMenuAction(bean.getTreeViewBean(), getTreeComponent());
-        APICallerComponent component = (APICallerComponent) this.findComponentByAlias("RELOAD");
+        APICallerComponent component = (APICallerComponent) this.findComponentByAlias(CustomFormAction.RELOAD.name());
         if (component != null && (component.getProperties().getAutoRun() == null || !component.getProperties().getAutoRun())) {
             Action action = new Action(CustomFormAction.RELOAD, TreeViewEventEnum.afterShow);
             this.addAction(action);
-//            action = new Action(CustomFormAction.RELOAD, TreeViewEventEnum.onRender);
-//            this.addAction(action);
+            action = new Action(CustomFormAction.RELOAD, TreeViewEventEnum.onRender);
+            this.addAction(action);
         }
     }
 

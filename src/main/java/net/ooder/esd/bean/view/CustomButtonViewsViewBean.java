@@ -108,7 +108,6 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
             this.setTabItems(tabItems);
             buttonViewsProperties.setItems(tabItems);
         }
