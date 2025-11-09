@@ -134,7 +134,7 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
 
                                 }
                             }
-                            ;
+
                             JDSActionContext.getActionContext().getContext().put(CustomViewFactory.MethodBeanKey, childMethodConfig);
                             resultModel = (ResultModel) childMethodConfig.getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), contextMap);
                         } catch (Exception e) {
@@ -173,7 +173,8 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
                     } else {
                         moduleComponent.setClassName(euClassname);
                     }
-                    moduleComponent.setAlias(tabListItem.getName());
+                    String simClassName=euClassname.substring(euClassname.lastIndexOf("."));
+                    moduleComponent.setAlias(simClassName);
                     moduleComponent.setTarget(tabListItem.getId());
                     moduleComponent.getModuleVar().putAll(tabListItem.getTagVar());
                     this.addChildren(moduleComponent);
