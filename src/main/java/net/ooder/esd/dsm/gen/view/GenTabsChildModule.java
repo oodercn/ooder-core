@@ -72,20 +72,37 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
     @Override
     public CustomModuleBean call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
-        String cSimClass = OODUtil.formatJavaName(childComponent.getAlias(), true);
-        String cPackageName = parentClassName.toLowerCase();
-        String cEuClassName = cPackageName + "." + cSimClass;
         String projectName = moduleComponent.getProjectName();
         CustomModuleBean cModuleBean = null;
-        if (!childComponent.getKey().equals(ComponentType.MODULE.getClassName())) {
-            String target = childComponent.getTarget();
-            TabListItem currListItem = this.tabsViewBean.findTabItem(target, tabsViewBean.getTabItems());
-            DomainInst domainInst = DSMFactory.getInstance().getDefaultDomain(moduleComponent.getProjectName(), UserSpace.VIEW);
-            DSMProperties dsmProperties = moduleComponent.getProperties().getDsmProperties();
-            String domainId = domainInst.getDomainId();
+        CustomViewBean customViewBean = null;
+        String cEuClassName = null;
+
+        String target = childComponent.getTarget();
+        TabListItem currListItem = this.tabsViewBean.findTabItem(target, tabsViewBean.getTabItems());
+        DomainInst domainInst = DSMFactory.getInstance().getDefaultDomain(moduleComponent.getProjectName(), UserSpace.VIEW);
+        DSMProperties dsmProperties = moduleComponent.getProperties().getDsmProperties();
+        String domainId = domainInst.getDomainId();
+
+        if (childComponent instanceof ModuleComponent) {
+            ModuleComponent cmoduleComponent = (ModuleComponent) childComponent;
+            cEuClassName = cmoduleComponent.getClassName();
+            if (cmoduleComponent != null && cmoduleComponent.getMethodAPIBean() != null) {
+                cModuleBean = cmoduleComponent.getMethodAPIBean().getModuleBean();
+            } else {
+                customViewBean = DSMFactory.getInstance().getViewManager().getDefaultViewBean(cmoduleComponent, domainId);
+                customViewBean.setDomainId(domainId);
+                cModuleBean = createModuleBean(cmoduleComponent);
+                cmoduleComponent.setClassName(cEuClassName);
+            }
+        } else {
+
+            String cSimClass = OODUtil.formatJavaName(childComponent.getAlias(), true);
+            String cPackageName = parentClassName.toLowerCase();
+            cEuClassName = cPackageName + "." + cSimClass;
+
             ModuleViewType comModuleViewType = ModuleViewType.getModuleViewByCom(ComponentType.fromType(childComponent.getKey()));
             ModuleComponent cmoduleComponent = new ModuleComponent(childComponent);
-            CustomViewBean customViewBean = tabsViewBean.getItemViewBean(currListItem, moduleComponent.getProjectName());
+            customViewBean = tabsViewBean.getItemViewBean(currListItem, moduleComponent.getProjectName());
             if (customViewBean == null || !customViewBean.getModuleViewType().equals(comModuleViewType)) {
                 DSMProperties cdsmProperties = new DSMProperties();
                 ModuleProperties cmoduleProperties = new ModuleProperties();
@@ -115,6 +132,10 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
             customViewBean.setXpath(childRealPath);
             cModuleBean = createModuleBean(cmoduleComponent);
             cmoduleComponent.setClassName(cEuClassName);
+
+        }
+
+        if (customViewBean != null) {
             AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, cEuClassName, projectName);
             List<JavaSrcBean> serviceList = aggRootBuild.getAggServiceRootBean();
             if (serviceList == null || serviceList.isEmpty()) {
@@ -131,12 +152,9 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
             cModuleBean.setJavaSrcBeans(aggRootBuild.getAllSrcBean());
             cModuleBean.reBindMethod(customViewBean.getMethodConfig());
             DSMFactory.getInstance().saveCustomViewBean(customViewBean);
-        } else {
-            if (childComponent.getModuleComponent() != null && childComponent.getModuleComponent().getMethodAPIBean() != null) {
-                cModuleBean = childComponent.getModuleComponent().getMethodAPIBean().getModuleBean();
-            }
-
         }
+
+
         return cModuleBean;
     }
 

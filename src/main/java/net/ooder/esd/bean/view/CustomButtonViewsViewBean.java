@@ -91,7 +91,7 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
                 for (Future<CustomModuleBean> resultFuture : futures) {
                     try {
                         CustomModuleBean cModuleBean = resultFuture.get();
-                        if (navModuleBeans != null && !navModuleBeans.contains(cModuleBean)) {
+                        if (navModuleBeans != null && cModuleBean != null && !navModuleBeans.contains(cModuleBean)) {
                             navModuleBeans.add(cModuleBean);
                             AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(cModuleBean.getViewBean(), cModuleBean.getEuClassName(), cModuleBean.getPackageName());
                             if (aggRootBuild != null) {
@@ -151,7 +151,6 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
     }
 
 
-
     void init(Class<? extends TabItem> clazz) {
         ButtonViewsAnnotation tabsAnnotation = AnnotationUtil.getClassAnnotation(clazz, ButtonViewsAnnotation.class);
         if (tabsAnnotation != null) {
@@ -170,6 +169,7 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
     public void setNoFoldBar(Boolean noFoldBar) {
         this.noFoldBar = noFoldBar;
     }
+
     @Override
     public ComponentType getComponentType() {
         return ComponentType.BUTTONVIEWS;
