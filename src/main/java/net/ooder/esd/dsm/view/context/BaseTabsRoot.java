@@ -129,7 +129,6 @@ public abstract class BaseTabsRoot<T extends BaseTabsViewBean, M extends TabList
 
 
         if (domainInst != null) {
-
             if (this.getRepositoryImpls().size() > 0) {
                 Set<String> domainJavaTempIds = domainInst.getJavaTempIds();
                 for (String javaTempId : domainJavaTempIds) {

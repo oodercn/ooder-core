@@ -3,6 +3,7 @@ package net.ooder.esd.dsm;
 public interface JavaRoot {
 
     String[] innerPacks = new String[]{"api", "service", "module", "view", "dic"};
+    String[] resiotoryPacks = new String[]{"api", "service", "module", "dic"};
     String[] domainPacks = new String[]{"domain", "resiotory", "view"};
 
     public String getSpace();

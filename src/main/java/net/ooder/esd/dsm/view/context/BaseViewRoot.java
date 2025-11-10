@@ -2,7 +2,6 @@ package net.ooder.esd.dsm.view.context;
 
 import net.ooder.annotation.*;
 import net.ooder.common.JDSException;
-import net.ooder.common.util.ClassUtility;
 import net.ooder.common.util.StringUtility;
 import net.ooder.config.ListResultModel;
 import net.ooder.config.ResultModel;
@@ -20,6 +19,7 @@ import net.ooder.esd.dsm.JavaRoot;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
+import net.ooder.esd.dsm.java.JavaPackage;
 import net.ooder.esd.dsm.repository.RepositoryInst;
 import net.ooder.esd.dsm.view.ViewInst;
 import net.ooder.esd.manager.editor.MenuActionService;
@@ -211,20 +211,33 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
     protected Set<String> getPackageClassImpls() {
         Set<String> imports = new HashSet<>();
         String basePackage = dsmBean.getPackageName();
-        for (Package pack : Package.getPackages()) {
-            for (String packName : innerPacks) {
-                if (pack.getName().startsWith(basePackage + "." + packName)) {
-                    imports.add(pack.getName() + ".*");
+//           for (Package pack : Package.getPackages()) {
+//            for (String packName : innerPacks) {
+//                if (pack.getName().startsWith(basePackage + "." + packName)) {
+//                    imports.add(pack.getName() + ".*");
+//                }
+//            }
+//        }
+//
+
+        List<JavaPackage> javaPackages = dsmBean.getRootPackage().listAllChildren();
+        // this.imports.add(basePackage + ".*");
+        for (JavaPackage javaPackage : javaPackages) {
+            for (String packName : resiotoryPacks) {
+                if (javaPackage.listFiles().size() > 0 && javaPackage.getPackageName().startsWith(basePackage + "." + packName)) {
+                    imports.add(javaPackage.getPackageName() + ".*");
                 }
             }
+
         }
+
+
         return imports;
     }
 
 
     protected Set<String> getRepositoryImpls() {
         Set<String> imports = new HashSet<>();
-        Set<String> javaTempIds = repositoryInst.getJavaTempIds();
         String repositoryPackageName = repositoryInst.getPackageName();
         DomainInst domainInst = null;
         if (dsmBean instanceof DomainInst) {
@@ -240,7 +253,6 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
             }
         }
 
-
         if (moduleName.equals("")) {
             moduleName = simClassName.toLowerCase();
         }
@@ -251,18 +263,28 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
             repositoryPackageName = repositoryPackageName + "." + moduleName.toLowerCase();
         }
 
-        for (String innerPack : innerPacks) {
-            String rInnerPackageName = repositoryPackageName + "." + innerPack;
-            if (Package.getPackage(rInnerPackageName) != null) {
-                imports.add(rInnerPackageName + ".*");
-            }
 
-            for (Package pack : ClassUtility.getAllDynPacks()) {
-                if (pack.getName().startsWith(repositoryPackageName + "." + innerPack)) {
-                    imports.add(pack.getName() + ".*");
-                }
+        List<JavaPackage> javaPackages = dsmBean.getRootPackage().listAllChildren();
+        for (JavaPackage javaPackage : javaPackages) {
+            if (javaPackage.listFiles().size() > 0 && javaPackage.getPackageName().startsWith(repositoryPackageName)) {
+                this.imports.add(javaPackage.getPackageName() + ".*");
             }
         }
+
+
+//       // Set<String> javaTempIds = repositoryInst.getJavaTempIds();
+//        for (String innerPack : innerPacks) {
+//            String rInnerPackageName = repositoryPackageName + "." + innerPack;
+//            if (Package.getPackage(rInnerPackageName) != null) {
+//                imports.add(rInnerPackageName + ".*");
+//            }
+//
+//            for (Package pack : ClassUtility.getAllDynPacks()) {
+//                if (pack.getName().startsWith(repositoryPackageName + "." + innerPack)) {
+//                    imports.add(pack.getName() + ".*");
+//                }
+//            }
+//        }
         return imports;
     }
 

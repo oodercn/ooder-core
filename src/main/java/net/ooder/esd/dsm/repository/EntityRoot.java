@@ -1,28 +1,21 @@
 package net.ooder.esd.dsm.repository;
 
+import net.ooder.annotation.*;
 import net.ooder.common.JDSException;
-import net.ooder.common.database.dao.DAO;
-import net.ooder.common.util.ClassUtility;
-import net.ooder.common.util.java.DynamicClassLoader;
-import net.ooder.annotation.MethodChinaName;
-import net.ooder.annotation.EsbBeanAnnotation;
 import net.ooder.esd.annotation.CustomAnnotation;
 import net.ooder.esd.annotation.ModuleAnnotation;
 import net.ooder.esd.annotation.field.APIEventAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.dsm.BuildFactory;
-import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.JavaRoot;
 import net.ooder.esd.dsm.enums.RangeType;
+import net.ooder.esd.dsm.java.JavaPackage;
 import net.ooder.esd.dsm.repository.config.EntityConfig;
 import net.ooder.esd.dsm.repository.config.FieldEntityConfig;
 import net.ooder.esd.dsm.repository.entity.EntityRef;
 import net.ooder.esd.dsm.repository.entity.EntityRefProxy;
 import net.ooder.esd.dsm.temp.JavaTemp;
-import net.ooder.annotation.Aggregation;
-import net.ooder.annotation.ESDEntity;
-import net.ooder.annotation.Ref;
 import net.ooder.web.util.MethodUtil;
 
 import java.util.*;
@@ -121,44 +114,54 @@ public class EntityRoot implements JavaRoot {
         }
 
         String[] innerPacks = new String[]{"api", "service", "module", "view", "dic"};
-
         String basePackage = repositoryInst.getPackageName() + "." + esdClass.getSourceClass().getEntityClass().getName().toLowerCase();
 
-        for (Package pack : Package.getPackages()) {
+        List<JavaPackage> javaPackages = repositoryInst.getRootPackage().listAllChildren();
+        this.imports.add(basePackage + ".*");
+        for (JavaPackage javaPackage : javaPackages) {
             for (String packName : innerPacks) {
-                if (pack.getName().startsWith(basePackage + "." + packName)) {
-                    this.imports.add(pack.getName() + ".*");
+                if (javaPackage.getPackageName().startsWith(basePackage + "." + packName)) {
+                    this.imports.add(javaPackage.getPackageName() + ".*");
                 }
             }
         }
 
 
-        Map<String, Class> classMap = new HashMap<>();
-        classMap.putAll(ClassUtility.getDynClassMap());
-
-        Set<Map.Entry<String, Class>> dynClassSet = classMap.entrySet();
-        for (Map.Entry<String, Class> classEntry : dynClassSet) {
-            Class dynClass = classEntry.getValue();
-            if (dynClass.getPackage().getName().startsWith(basePackage)) {
-                this.imports.add(dynClass.getPackage().getName() + ".*");
-            }
-        }
+//
+//        for (Package pack : Package.getPackages()) {
+//            for (String packName : innerPacks) {
+//                if (pack.getName().startsWith(basePackage + "." + packName)) {
+//                    this.imports.add(pack.getName() + ".*");
+//                }
+//            }
+//        }
 
 
-        if (sourceClass.getCtClass().getClassLoader() instanceof DynamicClassLoader) {
-            DynamicClassLoader dynamicClassLoader = (DynamicClassLoader) sourceClass.getCtClass().getClassLoader();
-            for (Package pack : dynamicClassLoader.getPackages()) {
-                if (pack.getName().startsWith(basePackage)) {
-                    this.imports.add(pack.getName() + ".*");
-                }
-            }
-        } else {
-            for (Package pack : Package.getPackages()) {
-                if (pack.getName().startsWith(basePackage)) {
-                    this.imports.add(pack.getName() + ".*");
-                }
-            }
-        }
+//        Map<String, Class> classMap = new HashMap<>();
+//        classMap.putAll(ClassUtility.getDynClassMap());
+//        Set<Map.Entry<String, Class>> dynClassSet = classMap.entrySet();
+//        for (Map.Entry<String, Class> classEntry : dynClassSet) {
+//            Class dynClass = classEntry.getValue();
+//            if (dynClass.getPackage().getName().startsWith(basePackage)) {
+//                this.imports.add(dynClass.getPackage().getName() + ".*");
+//            }
+//        }
+//
+//
+//        if (sourceClass.getCtClass().getClassLoader() instanceof DynamicClassLoader) {
+//            DynamicClassLoader dynamicClassLoader = (DynamicClassLoader) sourceClass.getCtClass().getClassLoader();
+//            for (Package pack : dynamicClassLoader.getPackages()) {
+//                if (pack.getName().startsWith(basePackage)) {
+//                    this.imports.add(pack.getName() + ".*");
+//                }
+//            }
+//        } else {
+//            for (Package pack : Package.getPackages()) {
+//                if (pack.getName().startsWith(basePackage)) {
+//                    this.imports.add(pack.getName() + ".*");
+//                }
+//            }
+//        }
 
 
         try {
@@ -166,7 +169,6 @@ public class EntityRoot implements JavaRoot {
             for (String javaTempId : javaTempIds) {
                 JavaTemp javaTemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaTempId);
                 RangeType rangeType = javaTemp.getRangeType();
-
                 if (javaTemp != null && Arrays.asList(rangeTypes).contains(rangeType)) {
                     if (javaTemp.getPackagePostfix() == null || javaTemp.getPackagePostfix().equals("..")) {
                         this.imports.add(basePackage + ".*");

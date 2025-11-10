@@ -1275,7 +1275,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
             classSet.addAll(Arrays.asList(this.getMenuBar().getMenuClasses()));
         }
 
-        return  ClassUtility.checkBase(classSet);
+        return ClassUtility.checkBase(classSet);
     }
 
     public String toAnnotationStr() {
@@ -1557,7 +1557,9 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
                             methodConfig = config.getMethodByItem(menuItem);
                         } else {
                             AggEntityConfig entityConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(bindClassName, false);
-                            methodConfig = entityConfig.getMethodByItem(menuItem);
+                            if (entityConfig != null) {
+                                methodConfig = entityConfig.getMethodByItem(menuItem);
+                            }
                         }
                         if (methodConfig != null) {
                             return methodConfig;
@@ -1582,7 +1584,9 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
                             methodConfig = config.getMethodByItem(menuItem);
                         } else {
                             AggEntityConfig entityConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(bindClassName, false);
-                            methodConfig = entityConfig.getMethodByItem(menuItem);
+                            if (entityConfig != null) {
+                                methodConfig = entityConfig.getMethodByItem(menuItem);
+                            }
                         }
                         if (methodConfig != null) {
                             return methodConfig;

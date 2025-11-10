@@ -91,6 +91,10 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
             } else {
                 customViewBean = DSMFactory.getInstance().getViewManager().getDefaultViewBean(cmoduleComponent, domainId);
                 customViewBean.setDomainId(domainId);
+
+                if (customViewBean.getMethodConfig()==null){
+                    customViewBean.updateModule(cmoduleComponent);
+                }
                 cModuleBean = createModuleBean(cmoduleComponent);
                 cmoduleComponent.setClassName(cEuClassName);
             }
@@ -149,6 +153,8 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
                 }
             }
 
+
+
             cModuleBean.setJavaSrcBeans(aggRootBuild.getAllSrcBean());
             cModuleBean.reBindMethod(customViewBean.getMethodConfig());
             DSMFactory.getInstance().saveCustomViewBean(customViewBean);
@@ -198,6 +204,7 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
 
     protected CustomModuleBean createModuleBean(ModuleComponent cmoduleComponent) {
         CustomModuleBean cModuleBean = new CustomModuleBean(cmoduleComponent);
+
         cModuleBean.reBindMethod(cmoduleComponent.getMethodAPIBean());
         cmoduleComponent.setModuleBean(cModuleBean);
         Component childComponent = cmoduleComponent.getCurrComponent();

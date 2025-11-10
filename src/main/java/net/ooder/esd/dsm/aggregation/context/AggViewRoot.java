@@ -23,6 +23,7 @@ import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMInst;
 import net.ooder.esd.dsm.JavaRoot;
+import net.ooder.esd.dsm.java.JavaPackage;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ModuleProperties;
@@ -111,8 +112,6 @@ public class AggViewRoot implements JavaRoot {
 
 
     public AggViewRoot(DSMInst dsmBean, String className, CustomModuleBean moduleBean) {
-
-
         this.dsmBean = dsmBean;
         this.className = className;
         this.packageName = className.substring(0, className.lastIndexOf("."));
@@ -157,22 +156,6 @@ public class AggViewRoot implements JavaRoot {
             imports.add(clazz.getName());
         }
 
-
-        Set<String> basePackages = new HashSet();
-        Map<String, Class> classMap = new HashMap<>();
-        classMap.putAll(ClassUtility.getDynClassMap());
-
-        Set<Map.Entry<String, Class>> dynClassSet = classMap.entrySet();
-        for (Map.Entry<String, Class> classEntry : dynClassSet) {
-            Class dynClass = classEntry.getValue();
-            for (String basePackage : basePackages) {
-                if (dynClass.getPackage().getName().startsWith(basePackage)) {
-                    this.imports.add(dynClass.getPackage().getName() + ".*");
-                }
-            }
-
-        }
-
         if (moduleBean.getViewBean() != null && moduleBean.getViewBean().getViewClassName() != null) {
             Set<Class> otherClass = moduleBean.getViewBean().getOtherClass();
             if (otherClass != null) {
@@ -183,47 +166,75 @@ public class AggViewRoot implements JavaRoot {
                 }
             }
         }
+        String basePackage =packageName.substring(0, className.lastIndexOf("."));
 
-
-        for (Package pack : Package.getPackages()) {
-            for (String packName : innerPacks) {
-                for (String basePackage : basePackages) {
-                    if (pack.getName().startsWith(basePackage + "." + packName)) {
-                        this.imports.add(pack.getName() + ".*");
-                    }
-                }
+        List<JavaPackage> javaPackages = dsmBean.getRootPackage().listAllChildren();
+        this.imports.add(basePackage + ".*");
+        for (JavaPackage javaPackage : javaPackages) {
+            if (javaPackage.listFiles().size()>0 &&javaPackage.getPackageName().startsWith(basePackage)) {
+                this.imports.add(javaPackage.getPackageName() + ".*");
             }
+
         }
 
 
-        for (Package pack : ClassUtility.getAllDynPacks()) {
-            for (String basePackage : basePackages) {
-                if (pack.getName().startsWith(basePackage)) {
-                    this.imports.add(pack.getName() + ".*");
-                }
-            }
-        }
 
-
-        try {
-            Set<String> javaTempIds = dsmBean.getJavaTempIds();
-            for (String javaTempId : javaTempIds) {
-                JavaTemp javaTemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaTempId);
-                if (javaTemp != null && javaTemp.getAggregationType() != null && javaTemp.getAggregationType().equals(AggregationType.MODULE)) {
-                    for (String basePackage : basePackages) {
-                        if (javaTemp.getPackagePostfix() == null || javaTemp.getPackagePostfix().equals("..")) {
-                            this.imports.add(basePackage + ".*");
-                        } else {
-                            this.imports.add(basePackage + "." + javaTemp.getPackagePostfix() + ".*");
-                        }
-                    }
-                }
-            }
-            this.imports.remove(packageName + ".*");
-        } catch (JDSException e) {
-            e.printStackTrace();
-        }
-
+//        Set<String> basePackages1 = new HashSet();
+//        Map<String, Class> classMap = new HashMap<>();
+//        classMap.putAll(ClassUtility.getDynClassMap());
+//
+//        Set<Map.Entry<String, Class>> dynClassSet = classMap.entrySet();
+//        for (Map.Entry<String, Class> classEntry : dynClassSet) {
+//            Class dynClass = classEntry.getValue();
+//            for (String basePackage : basePackages) {
+//                if (dynClass.getPackage().getName().startsWith(basePackage)) {
+//                    this.imports.add(dynClass.getPackage().getName() + ".*");
+//                }
+//            }
+//
+//        }
+//
+//
+//
+//        for (Package pack : Package.getPackages()) {
+//            for (String packName : innerPacks) {
+//                for (String basePackage : basePackages) {
+//                    if (pack.getName().startsWith(basePackage + "." + packName)) {
+//                        this.imports.add(pack.getName() + ".*");
+//                    }
+//                }
+//            }
+//        }
+//
+//
+//        for (Package pack : ClassUtility.getAllDynPacks()) {
+//            for (String basePackage : basePackages) {
+//                if (pack.getName().startsWith(basePackage)) {
+//                    this.imports.add(pack.getName() + ".*");
+//                }
+//            }
+//        }
+//
+//
+//        try {
+//            Set<String> javaTempIds = dsmBean.getJavaTempIds();
+//            for (String javaTempId : javaTempIds) {
+//                JavaTemp javaTemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaTempId);
+//                if (javaTemp != null && javaTemp.getAggregationType() != null && javaTemp.getAggregationType().equals(AggregationType.MODULE)) {
+//                    for (String basePackage : basePackages) {
+//                        if (javaTemp.getPackagePostfix() == null || javaTemp.getPackagePostfix().equals("..")) {
+//                            this.imports.add(basePackage + ".*");
+//                        } else {
+//                            this.imports.add(basePackage + "." + javaTemp.getPackagePostfix() + ".*");
+//                        }
+//                    }
+//                }
+//            }
+//
+//        } catch (JDSException e) {
+//            e.printStackTrace();
+//        }
+        this.imports.remove(packageName + ".*");
     }
 
     @Override
