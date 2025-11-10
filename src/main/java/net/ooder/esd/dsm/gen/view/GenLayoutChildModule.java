@@ -116,7 +116,6 @@ public class GenLayoutChildModule implements Callable<CustomModuleBean> {
 
             for (JavaSrcBean javaSrcBean : serviceList) {
                 if (javaSrcBean.getTarget() != null && javaSrcBean.getTarget().equals(target)) {
-
                     Class bindService = ClassUtility.loadClass(javaSrcBean.getClassName());
                     customViewBean.reBindService(bindService);
                 }

@@ -103,7 +103,9 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
                         CustomModuleBean cModuleBean = resultFuture.get();
                         if (navModuleBeans != null && !navModuleBeans.contains(cModuleBean)) {
                             navModuleBeans.add(cModuleBean);
-                            javaSrcBeans.addAll(cModuleBean.getJavaSrcBeans());
+                            if (cModuleBean.getJavaSrcBeans() != null) {
+                                javaSrcBeans.addAll(cModuleBean.getJavaSrcBeans());
+                            }
                         }
 
                     } catch (ExecutionException e) {
