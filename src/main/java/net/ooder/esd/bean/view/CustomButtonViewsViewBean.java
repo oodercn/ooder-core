@@ -80,9 +80,11 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
         List<GenTabsChildModule> tasks = new ArrayList<GenTabsChildModule>();
         if (components != null && components.size() > 0) {
             for (Component childComponent : components) {
-                if (!(childComponent instanceof ModulePlaceHolder)) {
+                ModuleViewType comModuleViewType = ModuleViewType.getModuleViewByCom(ComponentType.fromType(childComponent.getKey()));
+                if (!(childComponent instanceof ModulePlaceHolder) && !comModuleViewType.equals(ModuleViewType.NONE)) {
                     GenTabsChildModule genChildModule = new GenTabsChildModule(moduleComponent, childComponent, this);
                     tasks.add(genChildModule);
+
                 }
             }
             try {

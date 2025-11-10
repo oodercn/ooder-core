@@ -1,12 +1,13 @@
 package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.common.util.ClassUtility;
-import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.NavGalleryAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.LayoutType;
+import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.PosType;
 import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
@@ -14,7 +15,6 @@ import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.tool.component.LayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.item.GalleryNavItem;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.util.ArrayList;
@@ -32,7 +32,13 @@ public class NavGalleryComboViewBean extends NavComboBaseViewBean<GalleryNavItem
         AnnotationUtil.fillDefaultValue(NavGalleryAnnotation.class, this);
         layoutViewBean = new CustomLayoutViewBean(moduleComponent);
         galleryViewBean = (CustomGalleryViewBean) layoutViewBean.findComByPos(PosType.before);
-        tabsViewBean = (TabsViewBean) layoutViewBean.findComByPos(PosType.main);
+        CustomViewBean mainBean = (CustomViewBean) layoutViewBean.findComByPos(PosType.main);
+        if (mainBean instanceof TabsViewBean) {
+            tabsViewBean = (TabsViewBean) mainBean;
+        } else {
+            tabsViewBean = new TabsViewBean();
+        }
+
 
     }
 
@@ -64,7 +70,7 @@ public class NavGalleryComboViewBean extends NavComboBaseViewBean<GalleryNavItem
         if (bottomBar != null) {
             annotationBeans.add(bottomBar);
         }
-        if (galleryViewBean!=null){
+        if (galleryViewBean != null) {
             annotationBeans.add(galleryViewBean);
         }
 

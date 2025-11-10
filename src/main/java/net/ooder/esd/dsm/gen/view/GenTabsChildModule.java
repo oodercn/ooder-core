@@ -103,7 +103,6 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
             String cSimClass = OODUtil.formatJavaName(childComponent.getAlias(), true);
             String cPackageName = parentClassName.toLowerCase();
             cEuClassName = cPackageName + "." + cSimClass;
-
             ModuleViewType comModuleViewType = ModuleViewType.getModuleViewByCom(ComponentType.fromType(childComponent.getKey()));
             ModuleComponent cmoduleComponent = new ModuleComponent(childComponent);
             customViewBean = tabsViewBean.getItemViewBean(currListItem, moduleComponent.getProjectName());

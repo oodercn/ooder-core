@@ -91,8 +91,11 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         List<GenLayoutChildModule> tasks = new ArrayList<GenLayoutChildModule>();
         if (components != null && components.size() > 0) {
             for (Component childComponent : components) {
-                GenLayoutChildModule genChildModule = new GenLayoutChildModule(moduleComponent, childComponent, this);
-                tasks.add(genChildModule);
+                ModuleViewType comModuleViewType = ModuleViewType.getModuleViewByCom(ComponentType.fromType(childComponent.getKey()));
+                if (!comModuleViewType.equals(ModuleViewType.NONE)){
+                    GenLayoutChildModule genChildModule = new GenLayoutChildModule(moduleComponent, childComponent, this);
+                    tasks.add(genChildModule);
+                }
             }
             List<Future<CustomModuleBean>> futures = null;
             try {

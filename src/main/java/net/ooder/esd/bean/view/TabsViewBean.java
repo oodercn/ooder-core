@@ -17,10 +17,7 @@ import net.ooder.esd.custom.properties.NavTabsProperties;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
 import net.ooder.esd.dsm.java.JavaSrcBean;
-import net.ooder.esd.tool.component.Component;
-import net.ooder.esd.tool.component.LayoutComponent;
-import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.esd.tool.component.TabsComponent;
+import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -130,8 +127,11 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
         List<GenTabsChildModule> tasks = new ArrayList<GenTabsChildModule>();
         if (components != null && components.size() > 0) {
             for (Component childComponent : components) {
-                GenTabsChildModule genChildModule = new GenTabsChildModule(moduleComponent, childComponent, this);
-                tasks.add(genChildModule);
+                ModuleViewType comModuleViewType = ModuleViewType.getModuleViewByCom(ComponentType.fromType(childComponent.getKey()));
+                if (!(childComponent instanceof ModulePlaceHolder) && !comModuleViewType.equals(ModuleViewType.NONE)) {
+                    GenTabsChildModule genChildModule = new GenTabsChildModule(moduleComponent, childComponent, this);
+                    tasks.add(genChildModule);
+                }
             }
             try {
                 ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
