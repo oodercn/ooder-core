@@ -76,8 +76,11 @@ public class ContentBlockItem extends GalleryItem {
         return title;
     }
 
+
     public void setTitle(String title) {
         this.title = title;
     }
 
 }
+
+

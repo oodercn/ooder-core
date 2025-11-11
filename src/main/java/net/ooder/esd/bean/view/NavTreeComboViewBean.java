@@ -31,7 +31,13 @@ public class NavTreeComboViewBean extends NavComboBaseViewBean<TreeListItem> {
         AnnotationUtil.fillDefaultValue(NavTreeAnnotation.class, this);
         layoutViewBean = new CustomLayoutViewBean(moduleComponent);
         treeViewBean = (CustomTreeViewBean) layoutViewBean.findComByPos(PosType.before);
-        tabsViewBean = (TabsViewBean) layoutViewBean.findComByPos(PosType.main);
+        CustomViewBean mainBean = (CustomViewBean) layoutViewBean.findComByPos(PosType.main);
+        if (mainBean instanceof TabsViewBean) {
+            tabsViewBean = (TabsViewBean) mainBean;
+        } else {
+            tabsViewBean = new TabsViewBean();
+        }
+
 
     }
 

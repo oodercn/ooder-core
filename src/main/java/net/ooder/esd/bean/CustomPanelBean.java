@@ -89,7 +89,7 @@ public class CustomPanelBean implements CustomBean {
 
     public void init(PanelProperties bean) {
 
-        if (!bean.getCaption().equals("")) {
+        if (bean.getCaption() != null && !bean.getCaption().equals("")) {
             this.caption = bean.getCaption();
         }
         if (bean.getHtml() != null && !bean.getHtml().equals("")) {
