@@ -1252,7 +1252,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         }
         List<CustomBean> customBeans = this.getAnnotationBeans();
         for (CustomBean customBean : customBeans) {
-            if (customBean.getClass() != null) {
+            if (customBean != null && customBean.getClass() != null) {
                 classSet.add(customBean.getClass());
             }
 

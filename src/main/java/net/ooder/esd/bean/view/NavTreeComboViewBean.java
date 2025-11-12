@@ -2,18 +2,18 @@ package net.ooder.esd.bean.view;
 
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
-import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.NavTreeAnnotation;
 import net.ooder.esd.annotation.TreeAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.PosType;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.tool.component.LayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
 import net.ooder.esd.util.OODUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
@@ -156,7 +156,10 @@ public class NavTreeComboViewBean extends NavComboBaseViewBean<TreeListItem> {
         if (bottomBar != null) {
             annotationBeans.add(bottomBar);
         }
-        annotationBeans.add(treeViewBean);
+        if (treeViewBean != null) {
+            annotationBeans.add(treeViewBean);
+        }
+
         annotationBeans.add(this);
         return annotationBeans;
     }

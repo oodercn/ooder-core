@@ -447,8 +447,8 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
 
     @JSONField(serialize = false)
     public CustomViewBean getViewBean() {
-        if (getMethodConfig() != null) {
-            return getMethodConfig().getView();
+        if (methodConfig != null) {
+            return methodConfig.getView();
         }
         return null;
     }
@@ -499,7 +499,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
             }
         }
 
-        if (methodConfig != null) {
+        if ( this.getViewBean() != null) {
             ContainerBean containerBean = this.getViewBean().getContainerBean();
             if (containerBean != null) {
                 dialogBean.setContainerBean(containerBean);
@@ -1399,7 +1399,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
                 AnnotationUtil.fillDefaultValue(PanelAnnotation.class, panelBean);
             }
         }
-        if (this.getViewBean() != null) {
+        if (methodConfig != null) {
             ContainerBean containerBean = this.getViewBean().getContainerBean();
             if (containerBean != null && panelBean.getDivBean() != null) {
                 panelBean.getDivBean().setContainerBean(containerBean);
