@@ -1,5 +1,7 @@
 package net.ooder.esd.dsm.java;
 
+import net.ooder.annotation.AggregationType;
+import net.ooder.annotation.UserSpace;
 import net.ooder.common.JDSException;
 import net.ooder.common.logging.ChromeProxy;
 import net.ooder.common.logging.LogSetpLog;
@@ -7,11 +9,10 @@ import net.ooder.common.util.ClassUtility;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esb.config.manager.EsbBeanFactory;
 import net.ooder.esb.config.manager.ExpressionTempBean;
-import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.custom.ApiClassConfig;
-import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.dsm.BuildFactory;
@@ -25,9 +26,8 @@ import net.ooder.esd.dsm.repository.RepositoryInst;
 import net.ooder.esd.dsm.repository.RepositoryManager;
 import net.ooder.esd.dsm.view.ViewInst;
 import net.ooder.esd.dsm.view.ViewManager;
+import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
-import net.ooder.annotation.AggregationType;
-import net.ooder.annotation.UserSpace;
 import net.ooder.web.AggregationBean;
 
 import java.util.ArrayList;
@@ -182,6 +182,11 @@ public class AggRootBuild {
         }
 
         return childBeans;
+    }
+
+    public void update() throws JDSException {
+        this.reSetViewBean(customViewBean);
+        DSMFactory.getInstance().saveCustomViewBean(customViewBean);
     }
 
 
@@ -426,7 +431,7 @@ public class AggRootBuild {
     }
 
 
-    void reSetViewBean(CustomViewBean customViewBean) throws JDSException {
+    void reSetViewBean(CustomViewBean customViewBean) {
         ViewJavaSrcBean viewJavaSrcBean = customViewBean.getViewJavaSrcBean();
         if (viewJavaSrcBean == null) {
             viewJavaSrcBean = new ViewJavaSrcBean(packageName, euClassName);
