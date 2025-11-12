@@ -80,6 +80,9 @@ public class BaseNavTabsComponent extends CustomModuleComponent<CustomTabsCompon
         for (TabsEventBean eventEnum : extAPIEvent) {
             List<Action> actions = eventEnum.getActions();
             for (Action action : actions) {
+                if (action.getScript() != null && !action.getScript().equals("")) {
+                    action.updateArgs("{page." + this.getAlias() + "}", 3);
+                }
                 currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
         }

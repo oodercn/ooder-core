@@ -367,8 +367,10 @@ public class CustomTreeComponent<M extends TreeViewComponent> extends CustomModu
         for (TreeEventBean eventEnum : extAPIEvent) {
             List<Action> actions = eventEnum.getActions();
             for (Action action : actions) {
-                action.updateArgs("{page." + this.getAlias() + "}", 3);
-                action.setId(view.getGroupName() + "_" + eventEnum.getEventKey().getEvent() + "_" + action.getEventValue());
+                if (action.getScript() != null && !action.getScript().equals("")) {
+                    action.updateArgs("{page." + this.getAlias() + "}", 3);
+                    action.setId(view.getGroupName() + "_" + eventEnum.getEventKey().getEvent() + "_" + action.getEventValue());
+                }
                 currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
         }

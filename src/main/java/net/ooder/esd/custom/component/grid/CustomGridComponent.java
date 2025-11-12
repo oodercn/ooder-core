@@ -165,6 +165,9 @@ public class CustomGridComponent<M extends TreeGridComponent> extends CustomModu
         for (GridEventBean eventEnum : extAPIEvent) {
             List<Action> actions = eventEnum.getActions();
             for (Action action : actions) {
+                if (action.getScript() != null && !action.getScript().equals("")) {
+                    action.updateArgs("{page." + this.getAlias() + "}", 3);
+                }
                 currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
         }

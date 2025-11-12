@@ -3,8 +3,8 @@ package net.ooder.esd.tool.component;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.esd.annotation.event.TreeViewEventEnum;
 import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.bean.view.CustomTreeViewBean;
 import net.ooder.esd.bean.TreeListItem;
+import net.ooder.esd.bean.view.CustomTreeViewBean;
 import net.ooder.esd.custom.DataComponent;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.TreeViewProperties;
@@ -31,7 +31,7 @@ public class TreeViewComponent extends Component<TreeViewProperties, TreeViewEve
 
     public TreeViewComponent() {
         super(ComponentType.TREEVIEW);
-        this.setProperties( new TreeViewProperties());
+        this.setProperties(new TreeViewProperties());
     }
 
     @Override

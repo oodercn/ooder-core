@@ -86,6 +86,7 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
         return treeBlockComponent;
     }
 
+
     public void addChildNav(NavTreeComboViewBean navTreeViewBean) {
         super.addChildLayoutNav(layoutComponent);
         Condition condition = new Condition("{args[1].euClassName}", SymbolType.nonempty, "");
@@ -323,6 +324,7 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
                 this.fillLazyLoadAction(viewBean);
                 super.fillToolBar(viewBean, currComponent);
                 this.fillHelpBar(viewBean, currComponent);
+                this.fillCustomAction(viewBean, currComponent);
 
             }
         } catch (JDSException e) {
@@ -532,7 +534,6 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
     }
 
     protected void fillTreeAction(CustomTreeViewBean customTreeViewBean, Component currComponent) {
-
         Set<CustomTreeEvent> customFormEvents = customTreeViewBean.getEvent();
         for (CustomTreeEvent eventType : customFormEvents) {
             for (CustomAction actionType : eventType.getActions(false)) {
@@ -591,6 +592,20 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
         }
         super.fillAction(customTreeViewBean);
 
+    }
+
+    protected void fillCustomAction(CustomTreeViewBean view, Component currComponent) {
+        Set<TreeEventBean> extAPIEvent = view.getExtAPIEvent();
+        for (TreeEventBean eventEnum : extAPIEvent) {
+            List<Action> actions = eventEnum.getActions();
+            for (Action action : actions) {
+                if (action.getScript() != null && !action.getScript().equals("")) {
+                    action.updateArgs("{page." + this.getAlias() + "}", 3);
+                    action.setId(view.getGroupName() + "_" + eventEnum.getEventKey().getEvent() + "_" + action.getEventValue());
+                }
+                currComponent.addAction(action, true, eventEnum.getEventReturn());
+            }
+        }
     }
 
 

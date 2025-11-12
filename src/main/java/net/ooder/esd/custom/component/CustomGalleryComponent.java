@@ -151,7 +151,9 @@ public class CustomGalleryComponent extends CustomModuleComponent<GalleryCompone
         for (GalleryEventBean eventEnum : extAPIEvent) {
             List<Action> actions = eventEnum.getActions();
             for (Action action : actions) {
-                action.updateArgs("{page." + this.getAlias() + "}", 3);
+                if (action.getScript() != null && !action.getScript().equals("")) {
+                    action.updateArgs("{page." + this.getAlias() + "}", 3);
+                }
                 currComponent.addAction(action, true, eventEnum.getEventReturn());
             }
         }
