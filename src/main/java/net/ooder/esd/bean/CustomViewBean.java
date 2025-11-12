@@ -1378,7 +1378,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         if (enumClass == null) {
             String viewClassName = this.getViewClassName();
             try {
-                if (viewClassName != null) {
+                if (viewClassName != null && ClassUtility.loadClass(viewClassName) != null) {
                     Class clazz = ClassUtility.loadClass(viewClassName);
                     EnumsClass enums = AnnotationUtil.getClassAnnotation(clazz, EnumsClass.class);
                     if (enums != null && enums.clazz() != null && !enums.equals(Enum.class)) {

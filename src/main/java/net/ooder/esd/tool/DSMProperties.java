@@ -3,6 +3,7 @@ package net.ooder.esd.tool;
 import net.ooder.annotation.UserSpace;
 import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.ui.ModuleViewType;
+import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
@@ -37,6 +38,13 @@ public class DSMProperties {
             this.realPath = methodConfig.getView().getXpath();
         }
 
+    }
+
+    public DSMProperties(CustomViewBean viewBean) {
+        this.moduleViewType = viewBean.getModuleViewType();
+        this.sourceMethodName = viewBean.getMethodName();
+        this.sourceClassName = viewBean.getSourceClassName();
+        this.realPath = viewBean.getXpath();
     }
 
     public DSMProperties(MethodConfig methodConfig, String projectName) {

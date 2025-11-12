@@ -83,13 +83,8 @@ public class GenLayoutChildModule implements Callable<CustomModuleBean> {
             ModuleComponent cmoduleComponent = new ModuleComponent(childComponent);
             CustomViewBean customViewBean = layoutViewBean.getItemViewBean(currListItem, moduleComponent.getProjectName());
             if (customViewBean == null || !customViewBean.getModuleViewType().equals(comModuleViewType)) {
-                DSMProperties cdsmProperties = new DSMProperties();
+                DSMProperties    cdsmProperties = new DSMProperties(customViewBean);
                 ModuleProperties cmoduleProperties = new ModuleProperties();
-                DSMProperties dsmProperties = moduleComponent.getProperties().getDsmProperties();
-                if (dsmProperties != null) {
-                    cdsmProperties.setDomainId(dsmProperties.getDomainId());
-                }
-                cdsmProperties.setRealPath(childRealPath);
                 cmoduleProperties.setMethodName(OODUtil.getGetMethodName(childComponent.getAlias()));
                 cmoduleProperties.setDsmProperties(cdsmProperties);
                 cmoduleComponent.setProperties(cmoduleProperties);
@@ -98,7 +93,12 @@ public class GenLayoutChildModule implements Callable<CustomModuleBean> {
                 customViewBean.setDomainId(domainId);
             } else {
                 DSMProperties cdsmProperties = cmoduleComponent.getProperties().getDsmProperties();
-                cdsmProperties.setRealPath(childRealPath);
+                if (cdsmProperties==null){
+                    cdsmProperties = new DSMProperties(customViewBean);
+                    cdsmProperties.setRealPath(childRealPath);
+                    cmoduleComponent.getProperties().setDsmProperties(cdsmProperties);
+                }
+
                 cmoduleComponent.setClassName(cEuClassName);
                 customViewBean.updateModule(cmoduleComponent);
             }
