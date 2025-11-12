@@ -200,8 +200,11 @@ public class AggRootBuild {
         chrome.printLog("创建关联视图模型...", true);
         ViewManager viewManager = DSMFactory.getInstance().getViewManager();
         CustomModuleBean customModuleBean = customViewBean.getModuleBean();
-        if (customModuleBean == null && customViewBean.getMethodConfig() != null) {
-            customModuleBean = customViewBean.getMethodConfig().getModuleBean();
+        if (customModuleBean == null){
+            if (customViewBean.getMethodConfig() != null) {
+                customModuleBean = customViewBean.getMethodConfig().getModuleBean();
+            }
+
         }
         AggViewRoot viewRoot = new AggViewRoot(domainInst, euClassName, customModuleBean);
         javaViewBeans = viewManager.genCustomViewJava(viewRoot, customViewBean, euClassName, false, chrome);

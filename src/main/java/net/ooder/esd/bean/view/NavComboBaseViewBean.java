@@ -10,8 +10,8 @@ import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.NavBaseViewBean;
 import net.ooder.esd.dsm.java.JavaSrcBean;
-import net.ooder.esd.tool.component.TabsComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.TabsComponent;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.web.util.AnnotationUtil;
@@ -30,7 +30,6 @@ public abstract class NavComboBaseViewBean<U extends TabListItem> extends NavBas
 
     public NavComboBaseViewBean() {
 
-
         if (tabsViewBean == null) {
             tabsViewBean = AnnotationUtil.fillDefaultValue(TabsAnnotation.class, new TabsViewBean());
         }
@@ -42,11 +41,11 @@ public abstract class NavComboBaseViewBean<U extends TabListItem> extends NavBas
 
     @Override
     public List<JavaSrcBean> updateModule(ModuleComponent parentModuleComponent) {
-        if (layoutViewBean!=null){
+        if (layoutViewBean != null) {
             AnnotationUtil.fillDefaultValue(LayoutAnnotation.class, layoutViewBean);
         }
 
-        if (tabsViewBean!=null){
+        if (tabsViewBean != null) {
             AnnotationUtil.fillDefaultValue(TabsAnnotation.class, tabsViewBean);
         }
 
@@ -85,6 +84,13 @@ public abstract class NavComboBaseViewBean<U extends TabListItem> extends NavBas
         return annotationBeans;
     }
 
+    @Override
+    public CustomModuleBean getModuleBean() {
+        if (moduleBean == null) {
+            moduleBean = this.layoutViewBean.getModuleBean();
+        }
+        return moduleBean;
+    }
 
     @Override
     @JSONField(serialize = false)

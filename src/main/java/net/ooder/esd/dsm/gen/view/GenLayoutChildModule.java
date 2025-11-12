@@ -82,15 +82,30 @@ public class GenLayoutChildModule implements Callable<CustomModuleBean> {
             ModuleViewType comModuleViewType = ModuleViewType.getModuleViewByCom(ComponentType.fromType(childComponent.getKey()));
             ModuleComponent cmoduleComponent = new ModuleComponent(childComponent);
             CustomViewBean customViewBean = layoutViewBean.getItemViewBean(currListItem, moduleComponent.getProjectName());
-            if (customViewBean == null || !customViewBean.getModuleViewType().equals(comModuleViewType)) {
-                DSMProperties    cdsmProperties = new DSMProperties(customViewBean);
+            if (customViewBean == null ) {
+                DSMProperties cdsmProperties = new DSMProperties();
                 ModuleProperties cmoduleProperties = new ModuleProperties();
+                DSMProperties dsmProperties = moduleComponent.getProperties().getDsmProperties();
+                if (dsmProperties != null) {
+                    cdsmProperties.setDomainId(dsmProperties.getDomainId());
+                }
+                cdsmProperties.setRealPath(childRealPath);
                 cmoduleProperties.setMethodName(OODUtil.getGetMethodName(childComponent.getAlias()));
                 cmoduleProperties.setDsmProperties(cdsmProperties);
                 cmoduleComponent.setProperties(cmoduleProperties);
                 cmoduleComponent.setClassName(cEuClassName);
                 customViewBean = DSMFactory.getInstance().getViewManager().getDefaultViewBean(cmoduleComponent, domainId);
                 customViewBean.setDomainId(domainId);
+            } else if(!customViewBean.getModuleViewType().equals(comModuleViewType)){
+                ModuleProperties cmoduleProperties = new ModuleProperties();
+                DSMProperties cdsmProperties = new DSMProperties(customViewBean);
+                cmoduleProperties.setMethodName(OODUtil.getGetMethodName(childComponent.getAlias()));
+                cmoduleProperties.setDsmProperties(cdsmProperties);
+                cmoduleComponent.setProperties(cmoduleProperties);
+                cmoduleComponent.setClassName(cEuClassName);
+                customViewBean = DSMFactory.getInstance().getViewManager().getDefaultViewBean(cmoduleComponent, domainId);
+                customViewBean.setDomainId(domainId);
+
             } else {
                 DSMProperties cdsmProperties = cmoduleComponent.getProperties().getDsmProperties();
                 if (cdsmProperties==null){
@@ -98,14 +113,12 @@ public class GenLayoutChildModule implements Callable<CustomModuleBean> {
                     cdsmProperties.setRealPath(childRealPath);
                     cmoduleComponent.getProperties().setDsmProperties(cdsmProperties);
                 }
-
                 cmoduleComponent.setClassName(cEuClassName);
                 customViewBean.updateModule(cmoduleComponent);
             }
             customViewBean.setXpath(childRealPath);
             cModuleBean = createModuleBean(cmoduleComponent);
             cmoduleComponent.setClassName(cEuClassName);
-
             AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, cEuClassName, projectName);
 
             List<JavaSrcBean> serviceList = aggRootBuild.getAggServiceRootBean();

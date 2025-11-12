@@ -170,10 +170,10 @@ public class CustomViewFactory {
                     JDSActionContext.getActionContext().getContext().put(CustomViewFactory.MethodBeanKey, methodConfig);
 
                     T component = constructor.newInstance(new Object[]{module, methodConfig, valueMap});
-                    ModuleProperties properties = new ModuleProperties(customClass, methodConfig, module.getProjectVersion().getProjectName());
+                    ModuleProperties properties = new ModuleProperties(methodConfig.getModuleBean());
                     component.setProperties(properties);
                     String json = JSONObject.toJSONString(component);
-                    String obj = (String) TemplateRuntime.eval(json, MvelDSMRoot.getInstance(),perContext(oTopModule, component.getEuModule()));
+                    String obj = (String) TemplateRuntime.eval(json, MvelDSMRoot.getInstance(), perContext(oTopModule, component.getEuModule()));
                     T moduleComponent = JSONObject.parseObject(obj, customClass);
                     moduleComponent.setProperties(properties);
                     moduleComponent.setCache(false);

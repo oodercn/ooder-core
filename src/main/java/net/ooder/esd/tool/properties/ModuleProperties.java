@@ -2,10 +2,10 @@ package net.ooder.esd.tool.properties;
 
 
 import net.ooder.esd.annotation.ui.AppendType;
+import net.ooder.esd.annotation.ui.Dock;
 import net.ooder.esd.annotation.ui.EmbedType;
 import net.ooder.esd.annotation.ui.PanelType;
-import net.ooder.esd.annotation.ui.Dock;
-import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.properties.item.TabListItem;
 
@@ -44,23 +44,31 @@ public class ModuleProperties extends TabListItem {
         super(enumType);
     }
 
+    public ModuleProperties(CustomModuleBean moduleBean) {
+        this.init(moduleBean);
+    }
+//
+//    public ModuleProperties(MethodConfig methodConfig) {
+//        if (methodConfig.getModuleBean() != null) {
+//            this.init(methodConfig.getModuleBean());
+//        }
+//    }
 
-    public ModuleProperties(Class viewClass, MethodConfig methodConfig, String projectName) {
-        this.viewClass = viewClass.getName();
-        this.src = methodConfig.getUrl();
-        this.dynLoad = methodConfig.getModuleBean().getDynLoad();
-        this.caption = methodConfig.getModuleBean().getCaption();
-        this.rotate = methodConfig.getModuleBean().getRotate();
-        this.panelType = methodConfig.getModuleBean().getPanelType();
-        this.imageClass = methodConfig.getModuleBean().getImageClass();
-        this.target = methodConfig.getModuleBean().getTarget();
-        this.name = methodConfig.getModuleBean().getName();
-        this.childname = methodConfig.getModuleBean().getChildname();
-        if (methodConfig.getModuleBean().getBindService() != null && !methodConfig.getModuleBean().getBindService().equals(Void.class) && !methodConfig.getModuleBean().getBindService().equals(Enum.class)) {
-            this.bindService = methodConfig.getModuleBean().getBindService();
+    void init(CustomModuleBean moduleBean) {
+        this.viewClass = moduleBean.getViewBean().getViewClassName();
+        this.dynLoad = moduleBean.getDynLoad();
+        this.caption = moduleBean.getCaption();
+        this.rotate = moduleBean.getRotate();
+        this.panelType = moduleBean.getPanelType();
+        this.imageClass = moduleBean.getImageClass();
+        this.target = moduleBean.getTarget();
+        this.name = moduleBean.getName();
+        this.childname = moduleBean.getChildname();
+        if (moduleBean.getBindService() != null && !moduleBean.getBindService().equals(Void.class) && !moduleBean.getBindService().equals(Enum.class)) {
+            this.bindService = moduleBean.getBindService();
             this.bindClass = new Class[]{bindService};
         }
-        dsmProperties = new DSMProperties(methodConfig, projectName);
+        dsmProperties = new DSMProperties(moduleBean);
     }
 
     public String getSrc() {

@@ -5,6 +5,7 @@ import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 
@@ -45,6 +46,13 @@ public class DSMProperties {
         this.sourceMethodName = viewBean.getMethodName();
         this.sourceClassName = viewBean.getSourceClassName();
         this.realPath = viewBean.getXpath();
+    }
+
+    public DSMProperties(CustomModuleBean moduleBean) {
+        this.moduleViewType = moduleBean.getModuleViewType();
+        this.sourceMethodName = moduleBean.getMethodName();
+        this.sourceClassName = moduleBean.getSourceClassName();
+        this.realPath = moduleBean.getPath();
     }
 
     public DSMProperties(MethodConfig methodConfig, String projectName) {

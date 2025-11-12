@@ -1,5 +1,7 @@
 package net.ooder.esd.dsm;
 
+import com.github.javaparser.ast.body.ConstructorDeclaration;
+import com.github.javaparser.ast.body.TypeDeclaration;
 import net.ooder.annotation.Aggregation;
 import net.ooder.annotation.EsbBeanAnnotation;
 import net.ooder.common.JDSConstants;
@@ -30,8 +32,6 @@ import net.ooder.web.APIConfigFactory;
 import net.ooder.web.RemoteConnectionManager;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.MethodUtil;
-import com.github.javaparser.ast.body.ConstructorDeclaration;
-import com.github.javaparser.ast.body.TypeDeclaration;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +51,8 @@ public class BuildFactory {
     private static Map<String, BuildFactory> managerMap = new HashMap<String, BuildFactory>();
 
     private Map<CustomViewBean, AggRootBuild> aggRootBuildMap = new HashMap<>();
+
+    private Map<String, AggRootBuild> classRootBuildMap = new HashMap<>();
 
     private final ESDClassManager classManager;
 
@@ -84,6 +86,7 @@ public class BuildFactory {
 
     public void clear() {
         aggRootBuildMap.clear();
+        classRootBuildMap.clear();
         classManager.clear();
 
     }
@@ -93,7 +96,6 @@ public class BuildFactory {
         this.space = space;
         this.classManager = ESDClassManager.getInstance(space);
         this.tempManager = JavaTempManager.getInstance(space);
-
 
 
     }
@@ -203,7 +205,6 @@ public class BuildFactory {
                     }
                 }
             }
-
             return esdClassList;
         }
 
@@ -218,7 +219,7 @@ public class BuildFactory {
                 taskId = DSMFactory.DefaultDsmName;
             }
             ExecutorService executorService = RemoteConnectionManager.createConntctionService(taskId);
-            List<Future<List<JavaSrcBean>>> projectFutures =executorService.invokeAll(buildTasks);
+            List<Future<List<JavaSrcBean>>> projectFutures = executorService.invokeAll(buildTasks);
             for (Future<List<JavaSrcBean>> resultFuture : projectFutures) {
                 try {
                     List<JavaSrcBean> result = resultFuture.get();
@@ -293,14 +294,26 @@ public class BuildFactory {
         return javaPackage;
     }
 
+    public AggRootBuild getAggRootBuild(String euClassName) throws JDSException {
+        AggRootBuild aggRootBuild = classRootBuildMap.get(euClassName);
+        return aggRootBuild;
+    }
+
+    public void clear(String euClassName) throws JDSException {
+        AggRootBuild aggRootBuild = classRootBuildMap.remove(euClassName);
+    }
 
     public AggRootBuild getAggRootBuild(CustomViewBean customViewBean, String className, String projectName) throws JDSException {
-        AggRootBuild aggRootBuild = aggRootBuildMap.get(customViewBean);
+        AggRootBuild aggRootBuild = classRootBuildMap.get(className);
         if (aggRootBuild == null) {
-            aggRootBuild = new AggRootBuild(customViewBean, className, projectName);
-            aggRootBuildMap.put(customViewBean, aggRootBuild);
-        } else {
-            aggRootBuild.setCustomViewBean(customViewBean);
+            aggRootBuild = aggRootBuildMap.get(customViewBean);
+            if (aggRootBuild == null) {
+                aggRootBuild = new AggRootBuild(customViewBean, className, projectName);
+                aggRootBuildMap.put(customViewBean, aggRootBuild);
+            } else {
+                aggRootBuild.setCustomViewBean(customViewBean);
+            }
+            classRootBuildMap.put(className, aggRootBuild);
         }
         return aggRootBuild;
     }
