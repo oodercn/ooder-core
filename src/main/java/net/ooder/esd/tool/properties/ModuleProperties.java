@@ -5,6 +5,7 @@ import net.ooder.esd.annotation.ui.AppendType;
 import net.ooder.esd.annotation.ui.Dock;
 import net.ooder.esd.annotation.ui.EmbedType;
 import net.ooder.esd.annotation.ui.PanelType;
+import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.properties.item.TabListItem;
@@ -46,16 +47,19 @@ public class ModuleProperties extends TabListItem {
 
     public ModuleProperties(CustomModuleBean moduleBean) {
         this.init(moduleBean);
+        if (moduleBean.getViewBean() != null) {
+            this.viewClass = moduleBean.getViewBean().getViewClassName();
+        }
     }
-//
-//    public ModuleProperties(MethodConfig methodConfig) {
-//        if (methodConfig.getModuleBean() != null) {
-//            this.init(methodConfig.getModuleBean());
-//        }
-//    }
+
+
+    public ModuleProperties(Class viewClass, MethodConfig methodConfig) {
+        this.init(methodConfig.getModuleBean());
+        this.viewClass = viewClass.getName();
+    }
 
     void init(CustomModuleBean moduleBean) {
-        this.viewClass = moduleBean.getViewBean().getViewClassName();
+
         this.dynLoad = moduleBean.getDynLoad();
         this.caption = moduleBean.getCaption();
         this.rotate = moduleBean.getRotate();
