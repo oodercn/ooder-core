@@ -177,6 +177,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         this.initMethod(methodInfo.getInnerMethod());
         this.sourceClassName = methodInfo.getInnerMethod().getDeclaringClass().getName();
         this.domainId = methodInfo.getDomainId();
+
         this.sourceMethodName = methodInfo.getMethodName();
         this.methodName = methodInfo.getMethodName();
         this.alias = OODUtil.formatJavaName(methodName, true);
@@ -202,10 +203,6 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
             if (methodConfig.getMethod() != null) {
                 this.initMethod(methodConfig.getMethod());
             }
-
-//            else {
-//                this.bindService = methodConfig.getSourceClass().getCtClass();
-//            }
             this.methodConfig = methodConfig;
             this.sourceClassName = methodConfig.getSourceClassName();
             this.domainId = methodConfig.getDomainId();
@@ -225,8 +222,8 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         this.target = component.getTarget();
         this.alias = component.getAlias();
         this.index = component.getProperties().getTabindex() == null ? 1 : component.getProperties().getTabindex();
+        this.getMethodConfig();
         ModuleComponent parentModuleComponent = component.getModuleComponent();
-
         this.packageName = parentModuleComponent.getClassName().substring(0, parentModuleComponent.getClassName().lastIndexOf("."));
         if (euClassName == null) {
             this.euClassName = packageName + "." + OODUtil.formatJavaName(component.getAlias(), true);
@@ -243,10 +240,12 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
             dsmProperties.setDomainId(parentModuleProperties.getDsmProperties().getDomainId());
         }
 
+
         dsmProperties.setRealPath(component.getPath());
         moduleProperties.setMethodName(this.methodName);
         moduleProperties.setDsmProperties(dsmProperties);
         simModuleComponent.setProperties(moduleProperties);
+
         this.update(simModuleComponent);
     }
 
@@ -427,8 +426,8 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
     }
 
     public String getEuClassName() {
-        if (euClassName == null && this.getMethodConfig() != null) {
-            euClassName = this.getMethodConfig().getEUClassName();
+        if (euClassName == null && methodConfig != null) {
+            euClassName = methodConfig.getEUClassName();
         }
         return euClassName;
     }
@@ -489,8 +488,9 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
             if (dialogBean == null && moduleComponent != null && moduleComponent.getModulePanelComponent() != null) {
                 dialogBean = new DialogBean(moduleComponent.getDialogComponent());
             } else {
-                if (this.getMethodConfig() != null && this.getMethodConfig().getMethod() != null) {
-                    Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(this.getMethodConfig().getMethod(), true);
+
+                if (methodConfig != null && methodConfig.getMethod() != null) {
+                    Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true);
                     dialogBean = new DialogBean(annotations);
                 } else {
                     dialogBean = new DialogBean();
@@ -1023,8 +1023,8 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
                 Component component = moduleComponent.getCurrComponent();
                 blockBean = new CustomBlockBean(component);
             } else {
-                if (this.getMethodConfig() != null && this.getMethodConfig().getMethod() != null) {
-                    Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(this.getMethodConfig().getMethod(), true);
+                if (methodConfig != null && methodConfig.getMethod() != null) {
+                    Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true);
                     blockBean = new CustomBlockBean(annotations);
                 } else {
                     blockBean = new CustomBlockBean();
@@ -1391,8 +1391,8 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         if (panelBean == null && moduleComponent != null && moduleComponent.getModulePanelComponent() != null) {
             panelBean = new CustomPanelBean(moduleComponent.getModulePanelComponent());
         } else {
-            if (this.getMethodConfig() != null && this.getMethodConfig().getMethod() != null) {
-                Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(this.getMethodConfig().getMethod(), true);
+            if (methodConfig != null && methodConfig.getMethod() != null) {
+                Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true);
                 panelBean = new CustomPanelBean(annotations);
             } else {
                 panelBean = new CustomPanelBean();
