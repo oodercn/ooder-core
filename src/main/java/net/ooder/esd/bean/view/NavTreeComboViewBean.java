@@ -77,7 +77,6 @@ public class NavTreeComboViewBean extends NavComboBaseViewBean<TreeListItem> {
         if (treeViewBean == null) {
             treeViewBean = new CustomTreeViewBean(methodAPIBean);
         }
-
         layoutViewBean = fillLayoutBean(layoutViewBean);
     }
 

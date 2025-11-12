@@ -250,6 +250,14 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
         this.rootClassName = methodAPIBean.getSourceClassName();
         this.viewClassName = methodAPIBean.getViewClassName();
         this.patentId = id;
+
+
+        TreeEvent treeEvent = AnnotationUtil.getMethodAnnotation(methodAPIBean.getMethod(), TreeEvent.class);
+        if (treeEvent != null) {
+            TreeEventBean treeEventBean = new TreeEventBean(treeEvent);
+            this.extAPIEvent.add(treeEventBean);
+        }
+
         if (methodAPIBean.getViewClass() != null) {
             Class clazz = methodAPIBean.getViewClass().getCtClass();
             init(clazz);
