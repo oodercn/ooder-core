@@ -92,7 +92,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         if (components != null && components.size() > 0) {
             for (Component childComponent : components) {
                 ModuleViewType comModuleViewType = ModuleViewType.getModuleViewByCom(ComponentType.fromType(childComponent.getKey()));
-                if (!comModuleViewType.equals(ModuleViewType.NONE)){
+                if (!comModuleViewType.equals(ModuleViewType.NONE)) {
                     GenLayoutChildModule genChildModule = new GenLayoutChildModule(moduleComponent, childComponent, this);
                     tasks.add(genChildModule);
                 }
@@ -351,7 +351,9 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         if (currListItem.getBindClass() != null && currListItem.getBindClass().length > 0) {
             for (Class clazz : currListItem.getBindClass()) {
                 try {
-                    classList.add(ClassUtility.loadClass(clazz.getName()));
+                    if (clazz != null && clazz.equals(Void.class)) {
+                        classList.add(ClassUtility.loadClass(clazz.getName()));
+                    }
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -370,7 +372,8 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
                     }
 
                     Class clazz = ClassUtility.loadClass(srcBean.getClassName());
-                    if (!classList.contains(clazz)) {
+
+                    if (clazz != null && !classList.contains(clazz)) {
                         classList.add(clazz);
                     }
                 }
