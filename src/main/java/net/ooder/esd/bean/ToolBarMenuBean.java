@@ -189,6 +189,7 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
         this.dock = annotation.dock();
         this.autoIconColor = annotation.autoIconColor();
         this.autoItemColor = annotation.autoItemColor();
+        this.position = annotation.position();
 
 
     }

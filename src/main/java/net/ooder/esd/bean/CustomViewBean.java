@@ -1435,8 +1435,8 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         } else {
             MethodConfig methodConfig = getMethodConfig();
             CustomModuleBean moduleBean = this.getModuleBean();
-            if (moduleBean != null && moduleBean.getEuClassName() != null && moduleBean.getViewBean() != null) {
-                CustomView view = moduleBean.getViewBean();
+            if (moduleBean != null && moduleBean.getEuClassName() != null ) {
+                CustomView view = methodConfig.getView();
                 if (view != null && view.equals(this) || (moduleBean.getEuClassName().equals(methodConfig.getEUClassName()))) {
                     path = moduleBean.getEuClassName();
                 } else {

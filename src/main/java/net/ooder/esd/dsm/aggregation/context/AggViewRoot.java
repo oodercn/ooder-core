@@ -18,6 +18,9 @@ import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.UIType;
 import net.ooder.esd.annotation.view.*;
+import net.ooder.esd.bean.CustomView;
+import net.ooder.esd.bean.CustomViewBean;
+import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.dsm.BuildFactory;
@@ -156,16 +159,21 @@ public class AggViewRoot implements JavaRoot {
             imports.add(clazz.getName());
         }
 
-        if (moduleBean.getViewBean() != null && moduleBean.getViewBean().getViewClassName() != null) {
-            Set<Class> otherClass = moduleBean.getViewBean().getOtherClass();
-            if (otherClass != null) {
-                for (Class other : otherClass) {
-                    if (other != null) {
-                        imports.add(other.getPackage().getName() + ".*");
+        MethodConfig methodConfig=moduleBean.getMethodConfig();
+        if (methodConfig!=null){
+            CustomViewBean viewBean=methodConfig.getView();
+            if (viewBean!= null && viewBean.getViewClassName() != null) {
+                Set<Class> otherClass = viewBean.getOtherClass();
+                if (otherClass != null) {
+                    for (Class other : otherClass) {
+                        if (other != null) {
+                            imports.add(other.getPackage().getName() + ".*");
+                        }
                     }
                 }
             }
         }
+
         String basePackage =packageName.substring(0, className.lastIndexOf("."));
 
         List<JavaPackage> javaPackages = dsmBean.getRootPackage().listAllChildren();

@@ -95,7 +95,8 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
                         CustomModuleBean cModuleBean = resultFuture.get();
                         if (navModuleBeans != null && cModuleBean != null && !navModuleBeans.contains(cModuleBean)) {
                             navModuleBeans.add(cModuleBean);
-                            AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(cModuleBean.getViewBean(), cModuleBean.getEuClassName(), cModuleBean.getPackageName());
+                            MethodConfig methodConfig=cModuleBean.getMethodConfig();
+                            AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(methodConfig.getView(), cModuleBean.getEuClassName(), cModuleBean.getPackageName());
                             if (aggRootBuild != null) {
                                 javaSrcBeans.addAll(aggRootBuild.getAllSrcBean());
                             }

@@ -8,6 +8,7 @@ import net.ooder.annotation.CustomBean;
 import net.ooder.annotation.DynLoad;
 import net.ooder.annotation.SimpleCustomBean;
 import net.ooder.common.JDSException;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.*;
 import net.ooder.esd.annotation.event.*;
 import net.ooder.esd.annotation.field.BlockFieldAnnotation;
@@ -152,6 +153,8 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
     public LinkedHashSet<ModuleOnPropChangeEventEnum> onModulePropChange = new LinkedHashSet();
 
 
+    ContainerBean containerBean;
+
     @JSONField(serialize = false)
     ModuleComponent moduleComponent;
 
@@ -254,6 +257,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         this.reBindMethod(moduleComponent.getMethodAPIBean());
         this.moduleComponent = moduleComponent;
         moduleComponent.setModuleBean(this);
+
         this.euClassName = moduleComponent.getClassName();
         this.moduleViewType = moduleComponent.getModuleViewType();
         if (moduleViewType.equals(ModuleViewType.LAYOUTCONFIG)) {
@@ -264,15 +268,13 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         if (currComponent != null) {
             this.alias = currComponent.getAlias();
         }
-
-
         this.init(moduleComponent.getProperties());
         if (moduleComponent.getMethodAPIBean() != null) {
-            MethodConfig sourceMethod = moduleComponent.getMethodAPIBean();
-            this.methodName = sourceMethod.getMethodName();
-            this.sourceMethodName = sourceMethod.getMethodName();
-            this.sourceClassName = sourceMethod.getSourceClassName();
-            this.domainId = sourceMethod.getDomainId();
+            this.methodConfig = moduleComponent.getMethodAPIBean();
+            this.methodName = methodConfig.getMethodName();
+            this.sourceMethodName = methodConfig.getMethodName();
+            this.sourceClassName = methodConfig.getSourceClassName();
+            this.domainId = methodConfig.getDomainId();
             this.alias = methodName;
         }
 
@@ -445,13 +447,13 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         this.cssStyle = cssStyle;
     }
 
-    @JSONField(serialize = false)
-    public CustomViewBean getViewBean() {
-        if (methodConfig != null) {
-            return methodConfig.getView();
-        }
-        return null;
-    }
+//    @JSONField(serialize = false)
+//    public CustomViewBean getViewBean() {
+//        if (methodConfig != null) {
+//            return methodConfig.getView();
+//        }
+//        return null;
+//    }
 
     @JSONField(serialize = false)
     public MethodConfig getMethodConfig() {
@@ -467,6 +469,27 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
             }
         }
         return methodConfig;
+    }
+
+
+    @JSONField(serialize = false)
+    public Method getMethod() {
+        if (sourceClassName != null && methodName != null) {
+            Class clazz = null;
+            try {
+                clazz = ClassUtility.loadClass(sourceClassName);
+                Method[] methods = clazz.getMethods();
+                for (Method cmethod : methods) {
+                    if (cmethod.getName().equals(methodName)) {
+                        return cmethod;
+                    }
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return null;
     }
 
     public void setMethodConfig(MethodConfig methodConfig) {
@@ -499,8 +522,9 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
             }
         }
 
-        if ( this.getViewBean() != null) {
-            ContainerBean containerBean = this.getViewBean().getContainerBean();
+
+        if (this.methodConfig != null) {
+            ContainerBean containerBean = methodConfig.getView().getContainerBean();
             if (containerBean != null) {
                 dialogBean.setContainerBean(containerBean);
             }
@@ -516,6 +540,11 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
     @JSONField(serialize = false)
     public List<CustomBean> getUIAnnotationBeans() {
         List<CustomBean> annotationBeans = new ArrayList<>();
+
+        if (methodConfig != null) {
+            containerBean = methodConfig.getView().getContainerBean();
+        }
+
         if (panelType != null) {
             switch (panelType) {
                 case dialog:
@@ -523,8 +552,10 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
                         annotationBeans.addAll(this.getDialogBean().getAllAnnotationBeans());
                     } else {
                         annotationBeans.add(new SimpleCustomBean(DialogAnnotation.class));
-                        if (this.getViewBean() != null && this.getViewBean().getContainerBean() != null) {
-                            annotationBeans.addAll(this.getViewBean().getContainerBean().getAnnotationBeans());
+                        if (this.methodConfig != null) {
+                            if (containerBean != null) {
+                                annotationBeans.addAll(containerBean.getAnnotationBeans());
+                            }
                         }
                     }
                     break;
@@ -544,8 +575,8 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
                     }
                     break;
             }
-        } else if (this.getViewBean() != null && this.getViewBean().getContainerBean() != null) {
-            annotationBeans.addAll(this.getViewBean().getContainerBean().getAnnotationBeans());
+        } else if (containerBean != null) {
+            annotationBeans.addAll(containerBean.getAnnotationBeans());
         }
 
         if (this.getViewConfig() != null) {
@@ -1031,12 +1062,11 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
                     AnnotationUtil.fillDefaultValue(BlockAnnotation.class, panelBean);
                 }
             }
-            if (this.getViewBean() != null) {
-                ContainerBean containerBean = this.getViewBean().getContainerBean();
-                if (containerBean != null) {
-                    blockBean.setContainerBean(containerBean);
-                }
+
+            if (getContainerBean() != null) {
+                blockBean.setContainerBean(getContainerBean());
             }
+
         }
         return blockBean;
     }
@@ -1391,7 +1421,8 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         if (panelBean == null && moduleComponent != null && moduleComponent.getModulePanelComponent() != null) {
             panelBean = new CustomPanelBean(moduleComponent.getModulePanelComponent());
         } else {
-            if (methodConfig != null && methodConfig.getMethod() != null) {
+            Method method = getMethod();
+            if (method != null) {
                 Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true);
                 panelBean = new CustomPanelBean(annotations);
             } else {
@@ -1400,7 +1431,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
             }
         }
         if (methodConfig != null) {
-            ContainerBean containerBean = this.getViewBean().getContainerBean();
+            ContainerBean containerBean =getContainerBean();
             if (containerBean != null && panelBean.getDivBean() != null) {
                 panelBean.getDivBean().setContainerBean(containerBean);
             }
@@ -1617,6 +1648,17 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
 
     public void setIndex(Integer index) {
         this.index = index;
+    }
+
+    public ContainerBean getContainerBean() {
+        if (containerBean == null && methodConfig != null) {
+            containerBean = methodConfig.getView().getContainerBean();
+        }
+        return containerBean;
+    }
+
+    public void setContainerBean(ContainerBean containerBean) {
+        this.containerBean = containerBean;
     }
 
     @Override

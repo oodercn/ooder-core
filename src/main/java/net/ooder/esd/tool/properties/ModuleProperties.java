@@ -47,8 +47,9 @@ public class ModuleProperties extends TabListItem {
 
     public ModuleProperties(CustomModuleBean moduleBean) {
         this.init(moduleBean);
-        if (moduleBean.getViewBean() != null) {
-            this.viewClass = moduleBean.getViewBean().getViewClassName();
+        MethodConfig methodConfig=moduleBean.getMethodConfig();
+        if (methodConfig!= null) {
+            this.viewClass = methodConfig.getView().getViewClassName();
         }
     }
 
