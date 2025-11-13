@@ -474,13 +474,14 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
     @JSONField(serialize = false)
     public Method getMethod() {
         if (sourceClassName != null && methodName != null) {
-            Class clazz = null;
             try {
-                clazz = ClassUtility.loadClass(sourceClassName);
-                Method[] methods = clazz.getMethods();
-                for (Method cmethod : methods) {
-                    if (cmethod.getName().equals(methodName)) {
-                        return cmethod;
+                Class clazz = ClassUtility.loadClass(sourceClassName);
+                if (clazz != null) {
+                    Method[] methods = clazz.getMethods();
+                    for (Method cmethod : methods) {
+                        if (cmethod.getName().equals(methodName)) {
+                            return cmethod;
+                        }
                     }
                 }
             } catch (ClassNotFoundException e) {
