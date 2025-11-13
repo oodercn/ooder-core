@@ -152,7 +152,6 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
 
     public LinkedHashSet<ModuleOnPropChangeEventEnum> onModulePropChange = new LinkedHashSet();
 
-
     ContainerBean containerBean;
 
     @JSONField(serialize = false)
@@ -512,8 +511,8 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
                 dialogBean = new DialogBean(moduleComponent.getDialogComponent());
             } else {
 
-                if (methodConfig != null && methodConfig.getMethod() != null) {
-                    Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true);
+                if (this.getMethod() != null) {
+                    Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(this.getMethod(), true);
                     dialogBean = new DialogBean(annotations);
                 } else {
                     dialogBean = new DialogBean();
@@ -523,11 +522,9 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         }
 
 
-        if (this.methodConfig != null) {
-            ContainerBean containerBean = methodConfig.getView().getContainerBean();
-            if (containerBean != null) {
-                dialogBean.setContainerBean(containerBean);
-            }
+        ContainerBean containerBean = this.getContainerBean();
+        if (containerBean != null) {
+            dialogBean.setContainerBean(containerBean);
         }
 
         return dialogBean;
@@ -540,11 +537,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
     @JSONField(serialize = false)
     public List<CustomBean> getUIAnnotationBeans() {
         List<CustomBean> annotationBeans = new ArrayList<>();
-
-        if (methodConfig != null) {
-            containerBean = methodConfig.getView().getContainerBean();
-        }
-
+        containerBean = this.getContainerBean();
         if (panelType != null) {
             switch (panelType) {
                 case dialog:
@@ -552,10 +545,8 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
                         annotationBeans.addAll(this.getDialogBean().getAllAnnotationBeans());
                     } else {
                         annotationBeans.add(new SimpleCustomBean(DialogAnnotation.class));
-                        if (this.methodConfig != null) {
-                            if (containerBean != null) {
-                                annotationBeans.addAll(containerBean.getAnnotationBeans());
-                            }
+                        if (containerBean != null) {
+                            annotationBeans.addAll(containerBean.getAnnotationBeans());
                         }
                     }
                     break;
@@ -1423,20 +1414,18 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         } else {
             Method method = getMethod();
             if (method != null) {
-                Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true);
+                Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(method, true);
                 panelBean = new CustomPanelBean(annotations);
             } else {
                 panelBean = new CustomPanelBean();
                 AnnotationUtil.fillDefaultValue(PanelAnnotation.class, panelBean);
             }
         }
-        if (methodConfig != null) {
-            ContainerBean containerBean =getContainerBean();
-            if (containerBean != null && panelBean.getDivBean() != null) {
-                panelBean.getDivBean().setContainerBean(containerBean);
-            }
-        }
 
+        ContainerBean containerBean = getContainerBean();
+        if (containerBean != null && panelBean.getDivBean() != null) {
+            panelBean.getDivBean().setContainerBean(containerBean);
+        }
         return panelBean;
     }
 
