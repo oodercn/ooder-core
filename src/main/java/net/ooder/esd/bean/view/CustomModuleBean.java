@@ -224,7 +224,6 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         this.target = component.getTarget();
         this.alias = component.getAlias();
         this.index = component.getProperties().getTabindex() == null ? 1 : component.getProperties().getTabindex();
-        this.getMethodConfig();
         ModuleComponent parentModuleComponent = component.getModuleComponent();
         this.packageName = parentModuleComponent.getClassName().substring(0, parentModuleComponent.getClassName().lastIndexOf("."));
         if (euClassName == null) {
@@ -241,13 +240,10 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         if (parentModuleProperties.getDsmProperties() != null) {
             dsmProperties.setDomainId(parentModuleProperties.getDsmProperties().getDomainId());
         }
-
-
         dsmProperties.setRealPath(component.getPath());
         moduleProperties.setMethodName(this.methodName);
         moduleProperties.setDsmProperties(dsmProperties);
         simModuleComponent.setProperties(moduleProperties);
-
         this.update(simModuleComponent);
     }
 
@@ -256,7 +252,6 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         this.reBindMethod(moduleComponent.getMethodAPIBean());
         this.moduleComponent = moduleComponent;
         moduleComponent.setModuleBean(this);
-
         this.euClassName = moduleComponent.getClassName();
         this.moduleViewType = moduleComponent.getModuleViewType();
         if (moduleViewType.equals(ModuleViewType.LAYOUTCONFIG)) {
@@ -427,9 +422,6 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
     }
 
     public String getEuClassName() {
-        if (euClassName == null && methodConfig != null) {
-            euClassName = methodConfig.getEUClassName();
-        }
         return euClassName;
     }
 
@@ -446,13 +438,6 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         this.cssStyle = cssStyle;
     }
 
-//    @JSONField(serialize = false)
-//    public CustomViewBean getViewBean() {
-//        if (methodConfig != null) {
-//            return methodConfig.getView();
-//        }
-//        return null;
-//    }
 
     @JSONField(serialize = false)
     public MethodConfig getMethodConfig() {
@@ -490,10 +475,6 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
 
         }
         return null;
-    }
-
-    public void setMethodConfig(MethodConfig methodConfig) {
-        this.methodConfig = methodConfig;
     }
 
 
@@ -1046,19 +1027,18 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
                 Component component = moduleComponent.getCurrComponent();
                 blockBean = new CustomBlockBean(component);
             } else {
-                if (methodConfig != null && methodConfig.getMethod() != null) {
-                    Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true);
+                Method method = this.getMethod();
+                if (method != null) {
+                    Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(method, true);
                     blockBean = new CustomBlockBean(annotations);
                 } else {
                     blockBean = new CustomBlockBean();
                     AnnotationUtil.fillDefaultValue(BlockAnnotation.class, panelBean);
                 }
             }
-
             if (getContainerBean() != null) {
                 blockBean.setContainerBean(getContainerBean());
             }
-
         }
         return blockBean;
     }

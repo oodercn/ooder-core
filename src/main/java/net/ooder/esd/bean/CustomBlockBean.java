@@ -2,19 +2,19 @@ package net.ooder.esd.bean;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.BlockAnnotation;
 import net.ooder.esd.annotation.Widget;
 import net.ooder.esd.annotation.ui.BorderType;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.Dock;
-import net.ooder.esd.tool.component.BlockComponent;
 import net.ooder.esd.annotation.ui.SideBarStatusType;
+import net.ooder.esd.tool.component.BlockComponent;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.properties.BlockProperties;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -35,6 +35,15 @@ public class CustomBlockBean implements ComponentBean {
     String xpath;
     CustomWidgetBean widgetBean;
     ContainerBean containerBean;
+
+    public CustomBlockBean() {
+
+    }
+
+    public CustomBlockBean(Annotation... annotations) {
+        AnnotationUtil.fillDefaultValue(BlockAnnotation.class, this);
+        init(annotations);
+    }
 
 
     public CustomBlockBean(Component component) {
@@ -77,10 +86,6 @@ public class CustomBlockBean implements ComponentBean {
         return AnnotationUtil.fillBean(annotation, this);
     }
 
-    public CustomBlockBean(Annotation... annotations) {
-        AnnotationUtil.fillDefaultValue(BlockAnnotation.class, this);
-        init(annotations);
-    }
 
     void init(Annotation... annotations) {
         for (Annotation annotation : annotations) {
@@ -97,7 +102,6 @@ public class CustomBlockBean implements ComponentBean {
     public CustomBlockBean(Set<Annotation> annotations) {
         AnnotationUtil.fillDefaultValue(BlockAnnotation.class, this);
         init(annotations.toArray(new Annotation[]{}));
-
     }
 
     @Override
@@ -118,7 +122,6 @@ public class CustomBlockBean implements ComponentBean {
     @JSONField(serialize = false)
     public Set<Class> getOtherClass() {
         Set<Class> classes = new HashSet<>();
-
         return classes;
     }
 
@@ -160,9 +163,6 @@ public class CustomBlockBean implements ComponentBean {
         this.containerBean = containerBean;
     }
 
-    public CustomBlockBean() {
-
-    }
 
     @Override
     public String getXpath() {
