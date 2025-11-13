@@ -37,8 +37,6 @@ public class NavTreeComboViewBean extends NavComboBaseViewBean<TreeListItem> {
         } else {
             tabsViewBean = new TabsViewBean();
         }
-
-
     }
 
 

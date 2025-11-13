@@ -258,6 +258,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
             this.extAPIEvent.add(treeEventBean);
         }
 
+
         if (methodAPIBean.getViewClass() != null) {
             Class clazz = methodAPIBean.getViewClass().getCtClass();
             init(clazz);
@@ -774,7 +775,6 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
     void init(Class<? extends TreeListItem> clazz) {
         this.name = clazz.getSimpleName();
         this.viewClassName = clazz.getName();
-
         EnumsClass enums = AnnotationUtil.getClassAnnotation(clazz, EnumsClass.class);
         if (enums != null && enums.clazz() != null) {
             this.setEnumClass(enums.clazz());
