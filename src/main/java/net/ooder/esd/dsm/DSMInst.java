@@ -175,13 +175,19 @@ public abstract class DSMInst {
                 return srcBean;
             }
         }
+
+        File javaFile = new File(filePath);
+        if (javaFile.exists()) {
+            JavaSrcBean srcBean = new JavaSrcBean(javaFile, this, null);
+            return srcBean;
+        }
+
         return null;
     }
 
 
     @JSONField(serialize = false)
     public JavaSrcBean getJavaSrcByClassName(String className) {
-
         JavaSrcBean javaSrcBean = null;
         for (JavaSrcBean srcBean : getJavaSrcBeans()) {
             if (srcBean.getClassName() != null && srcBean.getClassName().equals(className)) {
@@ -204,7 +210,7 @@ public abstract class DSMInst {
             }
         }
 
-        if (javaSrcBean==null){
+        if (javaSrcBean == null) {
 
         }
 
@@ -213,7 +219,6 @@ public abstract class DSMInst {
     }
 
     private JavaSrcBean reLoadJavaFile(String className) {
-
         String javaPackageName = className.substring(0, className.lastIndexOf("."));
         JavaPackage javaPackage = this.getPackageByName(javaPackageName);
         if (javaPackage != null) {

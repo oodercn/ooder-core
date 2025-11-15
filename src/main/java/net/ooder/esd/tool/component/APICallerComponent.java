@@ -60,7 +60,7 @@ public class APICallerComponent extends Component<APICallerProperties, APIEventE
         this.addEvent(apiCallBean.getCallback());
         this.addAction(apiCallBean.getCallbackAction(), APIEventEnum.callback);
         this.addEvent(apiCallBean.getAfterInvoke());
-        this.addAction(apiCallBean.getAfterInvokAction(), APIEventEnum.afterInvoke);
+        this.addAction(apiCallBean.getAfterInvokeAction(), APIEventEnum.afterInvoke);
     }
 
 

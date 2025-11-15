@@ -79,7 +79,7 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
 
     public LinkedHashSet<CustomCallBack> afterInvoke = new LinkedHashSet<>();
 
-    public Set<Action> afterInvokAction = new LinkedHashSet<>();
+    public Set<Action> afterInvokeAction = new LinkedHashSet<>();
 
 
     //调用出错
@@ -182,7 +182,7 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
                     callbackAction.addAll(event.getActions());
                     break;
                 case afterInvoke:
-                    afterInvokAction.addAll(event.getActions());
+                    afterInvokeAction.addAll(event.getActions());
                     break;
                 case onError:
                     onErrorAction.addAll(event.getActions());
@@ -549,12 +549,12 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
             }
         }
 
-        if (apiEventAnnotation.afterInvokAction().length > 0) {
-            if (afterInvokAction == null) {
-                afterInvokAction = new LinkedHashSet<>();
+        if (apiEventAnnotation.afterInvokeAction().length > 0) {
+            if (afterInvokeAction == null) {
+                afterInvokeAction = new LinkedHashSet<>();
             }
-            for (CustomAction customAction : apiEventAnnotation.afterInvokAction()) {
-                afterInvokAction.add(new Action(customAction, APIEventEnum.afterInvoke));
+            for (CustomAction customAction : apiEventAnnotation.afterInvokeAction()) {
+                afterInvokeAction.add(new Action(customAction, APIEventEnum.afterInvoke));
             }
         }
 
@@ -1159,12 +1159,12 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
         this.afterInvoke = afterInvoke;
     }
 
-    public Set<Action> getAfterInvokAction() {
-        return afterInvokAction;
+    public Set<Action> getAfterInvokeAction() {
+        return afterInvokeAction;
     }
 
-    public void setAfterInvokAction(Set<Action> afterInvokAction) {
-        this.afterInvokAction = afterInvokAction;
+    public void setAfterInvokeAction(Set<Action> afterInvokeAction) {
+        this.afterInvokeAction = afterInvokeAction;
     }
 
     @Override
