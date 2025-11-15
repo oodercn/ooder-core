@@ -503,7 +503,6 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
 
         if (bottomBar != null && bottomBar.getProperties().getItems() != null && bottomBar.getProperties().getItems().size() > 0) {
             blockComponent.addChildren(bottomBar);
-            //   mainComponent.addChildren(blockComponent);
             PositionType positionType = barMenuBean.getPosition() == null ? PositionType.inner : barMenuBean.getPosition();
 
             switch (positionType) {
@@ -521,7 +520,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                     }
                     break;
                 default:
-                    this.getCurrComponent().addChildren(blockComponent);
+                    mainComponent.addChildren(blockComponent);
             }
 
 

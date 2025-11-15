@@ -50,6 +50,8 @@ public class BottomBarMenuBean<T extends Enum> implements CustomBean {
 
     StatusItemType itemType;
 
+    StatusItemType align;
+
     PositionType position;
 
     Boolean connected;
@@ -96,22 +98,6 @@ public class BottomBarMenuBean<T extends Enum> implements CustomBean {
 
     }
 
-    public void update(StatusButtonsComponent statusButtonsComponent) {
-        AnnotationUtil.fillDefaultValue(BottomBarMenu.class, this);
-        StatusButtonsProperties statusButtonsProperties = statusButtonsComponent.getProperties();
-        List<CmdItem> cmdItems = statusButtonsProperties.getItems();
-        enumItems = new ArrayList<>();
-
-        if (cmdItems != null) {
-            for (CmdItem cmdItem : cmdItems) {
-                if (cmdItem.getEnumItem() != null) {
-                    enumItems.add((T) cmdItem.getEnumItem());
-                }
-
-            }
-        }
-        OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(statusButtonsProperties), Map.class), this, false, false);
-    }
 
     public BottomBarMenuBean(StatusButtonsComponent statusButtonsComponent) {
         this.update(statusButtonsComponent);
@@ -148,12 +134,37 @@ public class BottomBarMenuBean<T extends Enum> implements CustomBean {
         return alias;
     }
 
+    public void update(StatusButtonsComponent statusButtonsComponent) {
+        AnnotationUtil.fillDefaultValue(BottomBarMenu.class, this);
+        StatusButtonsProperties statusButtonsProperties = statusButtonsComponent.getProperties();
+        List<CmdItem> cmdItems = statusButtonsProperties.getItems();
+        enumItems = new ArrayList<>();
+
+        if (cmdItems != null) {
+            for (CmdItem cmdItem : cmdItems) {
+                if (cmdItem.getEnumItem() != null) {
+                    enumItems.add((T) cmdItem.getEnumItem());
+                }
+
+            }
+        }
+        OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(statusButtonsProperties), Map.class), this, false, false);
+    }
+
     public String getId() {
 
         if (id == null || id.equals("")) {
             id = this.getAlias();
         }
         return id;
+    }
+
+    public StatusItemType getAlign() {
+        return align;
+    }
+
+    public void setAlign(StatusItemType align) {
+        this.align = align;
     }
 
 
