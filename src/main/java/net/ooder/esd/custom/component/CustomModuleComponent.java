@@ -476,7 +476,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                         }
                     }
                 }
-                initBarLayout();
+                initBarLayout(view);
             } catch (JDSException e) {
                 e.printStackTrace();
             }
@@ -485,8 +485,8 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
 
     }
 
-    private void initBarLayout() {
-        CustomViewBean<FieldFormConfig, UIItem, ? extends Component> viewBean = (CustomViewBean<FieldFormConfig, UIItem, ? extends Component>) methodAPIBean.getView();
+    private void initBarLayout(CustomViewBean viewBean) {
+        //CustomViewBean<FieldFormConfig, UIItem, ? extends Component> viewBean = (CustomViewBean<FieldFormConfig, UIItem, ? extends Component>) methodAPIBean.getView();
         BottomBarMenuBean barMenuBean = viewBean.getBottomBar();
         if (barMenuBean != null) {
             bottomBar = this.getBottomBar(barMenuBean);
@@ -502,7 +502,28 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
 
         if (bottomBar != null && bottomBar.getProperties().getItems() != null && bottomBar.getProperties().getItems().size() > 0) {
             blockComponent.addChildren(bottomBar);
-            mainComponent.addChildren(blockComponent);
+            //   mainComponent.addChildren(blockComponent);
+            PositionType positionType = barMenuBean.getPosition() == null ? PositionType.inner : barMenuBean.getPosition();
+
+            switch (positionType) {
+                case inner:
+                    this.getCurrComponent().addChildren(blockComponent);
+                    break;
+                case module:
+                    mainComponent.addChildren(blockComponent);
+                    break;
+                case top:
+                    if (this.getTopModule() != null) {
+                        this.getTopModule().getComponent().getMainBoxComponent().addChildren(blockComponent);
+                    } else {
+                        mainComponent.addChildren(blockComponent);
+                    }
+                    break;
+                default:
+                    this.getCurrComponent().addChildren(blockComponent);
+            }
+
+
         }
 
 
@@ -513,8 +534,8 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
 
         if (menuBar != null && menuBar.getProperties().getItems() != null && menuBar.getProperties().getItems().size() > 0) {
             if (barMenuBean != null && barMenuBean.getBarDock() != null && barMenuBean.getBarDock().equals(Dock.top)) {
-                BlockComponent toolBarComponent = new BlockComponent(Dock.right, barMenuBean.getAlias() + "Bar");
-                toolBarComponent.getProperties().setBorderType(BorderType.none);
+                BlockComponent menuBarComponent = new BlockComponent(Dock.right, barMenuBean.getAlias() + "Bar");
+                menuBarComponent.getProperties().setBorderType(BorderType.none);
                 net.ooder.esd.tool.properties.CS bcs = menuBar.getCS();
                 if (bcs == null) {
                     bcs = new net.ooder.esd.tool.properties.CS();
@@ -526,7 +547,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                 bcMap.put("margin", "10px 0px 0px 0px");
                 bcs.setITEMS(bcMap);
                 menuBar.setCS(bcs);
-                net.ooder.esd.tool.properties.CS cs = toolBarComponent.getCS();
+                net.ooder.esd.tool.properties.CS cs = menuBarComponent.getCS();
                 if (cs == null) {
                     cs = new net.ooder.esd.tool.properties.CS();
                 }
@@ -536,9 +557,9 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                 }
                 itemcMap.put("margin", "10px 0px 0px 0px");
                 cs.setPANEL(itemcMap);
-                toolBarComponent.setCS(cs);
-                toolBarComponent.addChildren(menuBar);
-                blockComponent.addChildren(toolBarComponent);
+                menuBarComponent.setCS(cs);
+                menuBarComponent.addChildren(menuBar);
+                blockComponent.addChildren(menuBarComponent);
             } else {
                 mainComponent.addChildren(menuBar);
             }
