@@ -496,6 +496,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
         BlockComponent blockComponent = new BlockComponent(Dock.center, barMenuBean.getAlias() + "Block");
         blockComponent.getProperties().setComboType(ComponentType.STATUSBUTTONS);
         blockComponent.getProperties().setBorderType(BorderType.none);
+        blockComponent.getProperties().setOverflow(OverflowType.hidden);
         blockComponent.getProperties().setHeight((barMenuBean.getHeight() == null || barMenuBean.getHeight().equals("")) ? "3em" : barMenuBean.getHeight());
         blockComponent.getProperties().setDock((barMenuBean.getBarDock() == null || barMenuBean.getBarDock().equals(Dock.fill)) ? Dock.bottom : barMenuBean.getBarDock());
         blockComponent.getProperties().setBorderType(barMenuBean.getBarBorderType());
