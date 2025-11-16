@@ -122,7 +122,7 @@ public class ComboInputProperties extends InputProperties {
         this.setType(comboInputFieldBean.getInputType());
         if (comboInputFieldBean instanceof ComboxFieldBean) {
             CustomListBean customListBean = ((ComboxFieldBean) comboInputFieldBean).getListBean().getCustomListBean();
-            if (customFieldBean != null) {
+            if (customListBean != null) {
                 this.setFilter(customListBean.getFilter());
                 List<TreeListItem> items = customListBean.getItems();
                 for (TreeListItem item : items) {
