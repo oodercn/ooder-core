@@ -99,6 +99,7 @@ public class FieldBean implements CustomBean {
     }
 
     public FieldBean(Set<Annotation> annotations) {
+        AnnotationUtil.fillDefaultValue(FieldAnnotation.class, this);
         for (Annotation annotation : annotations) {
             if (annotation instanceof FieldAnnotation) {
                 fillData((FieldAnnotation) annotation);
@@ -414,15 +415,12 @@ public class FieldBean implements CustomBean {
         this.customContextMenuService = customContextMenuService;
     }
 
+
     public FieldBean fillData(FieldAnnotation annotation) {
         return AnnotationUtil.fillBean(annotation, this);
     }
 
     public String toAnnotationStr() {
-
-
-
-
         return AnnotationUtil.toAnnotationStr(this);
     }
 }

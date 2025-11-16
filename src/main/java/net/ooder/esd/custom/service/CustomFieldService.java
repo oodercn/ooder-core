@@ -12,12 +12,11 @@ import net.ooder.esd.annotation.ui.ComboType;
 import net.ooder.esd.annotation.ui.RequestPathEnum;
 import net.ooder.esd.annotation.ui.ResponsePathEnum;
 import net.ooder.esd.bean.TreeListItem;
-import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.Component;
+import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.FieldProperties;
 import net.ooder.esd.tool.properties.form.ComboInputProperties;
 import net.ooder.esd.util.ESDEnumsUtil;
-
 import net.ooder.jds.core.esb.EsbUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +43,7 @@ public class CustomFieldService {
         objectMap.putAll(moduleComponent.getValueMap());
         try {
             moduleComponent = moduleComponent.getRealModuleComponent();
-            if (fieldName!=null){
+            if (fieldName != null) {
                 Component currComponent = moduleComponent.findComponentByAlias(fieldName);
                 Object fieldValue = JDSActionContext.getActionContext().getContext().get(currComponent.getAlias());
                 FieldProperties currProperties = (FieldProperties) currComponent.getProperties();
@@ -143,17 +142,16 @@ public class CustomFieldService {
                     ComboInputType inputType = ((ComboInputProperties) fieldProperties).getType();
                     ComboType comboType = inputType.getComboType();
                     if (comboType.equals(ComboType.number)) {
-                        if (value==null||value.equals("")){
-                            value=0;
-                        }else{
-                            value =TypeUtils.cast(value, Float.class, null);
+                        if (value == null || value.equals("")) {
+                            value = 0;
+                        } else {
+                            value = TypeUtils.cast(value, Float.class, null);
                         }
                     }
                 }
                 objectMap.put(childComponent.getAlias(), value);
                 objectMap.put(childComponent.getTarget(), value);
             }
-
 
 
             for (Component childComponent : comboInputComponents) {
@@ -186,6 +184,9 @@ public class CustomFieldService {
                         }
 
                     }
+                } else {
+                    String expression = itemProperties.getExpression();
+                    itemProperties.setValue(EsbUtil.parExpression(expression));
                 }
             }
             components.addAll(comboInputComponents);
@@ -210,7 +211,7 @@ public class CustomFieldService {
             FieldProperties itemProperties = (FieldProperties) component.getProperties();
             if (itemProperties instanceof ComboInputProperties) {
                 ComboInputProperties comboInputProperties = (ComboInputProperties) itemProperties;
-                Class<? extends Enum>  enumClass = comboInputProperties.getEnumClass();
+                Class<? extends Enum> enumClass = comboInputProperties.getEnumClass();
                 String filter = comboInputProperties.getFilter();
                 if (filter != null && !filter.equals("") && !enumClass.equals(Enum.class)) {
                     List<TreeListItem> items = ESDEnumsUtil.getItems(enumClass, comboInputProperties.getFilter());
