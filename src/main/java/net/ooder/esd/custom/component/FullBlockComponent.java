@@ -117,25 +117,34 @@ public class FullBlockComponent<M extends CustomFieldBlockComponent> extends Cus
             }
 
         }
-        CustomFieldBlockComponent currComponent = new CustomFieldBlockComponent(euModule, methodConfig, valueMap);
-        if (currComponent.getProperties().getDock() == null) {
-            currComponent.getProperties().setDock(Dock.fill);
-        }
-        this.addChildLayoutNav(currComponent);
-        this.setCurrComponent((M) currComponent);
-
-        if (viewBean != null) {
-            fillFromAction(viewBean, currComponent);
-        }
-        APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(), mainComponent);
-        this.addChildren(apiCallerComponents);
-        this.fillToolBar(viewBean, currComponent);
-        ComponentList customComponentBeans = viewBean.getCustomComponentBeans();
-        if (customComponentBeans != null) {
-            for (Component component : customComponentBeans) {
-                this.getModuleComponent().addChildren(component);
+        if (methodConfig.getView() != null) {
+            CustomFieldBlockComponent currComponent = new CustomFieldBlockComponent(euModule, methodConfig, valueMap);
+            if (currComponent.getProperties().getDock() == null) {
+                currComponent.getProperties().setDock(Dock.fill);
             }
+            this.addChildLayoutNav(currComponent);
+            this.setCurrComponent((M) currComponent);
+
+            if (viewBean != null) {
+                fillFromAction(viewBean, currComponent);
+            }
+            APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(), mainComponent);
+            this.addChildren(apiCallerComponents);
+            this.fillToolBar(viewBean, currComponent);
+            ComponentList customComponentBeans = viewBean.getCustomComponentBeans();
+            if (customComponentBeans != null) {
+                for (Component component : customComponentBeans) {
+                    this.getModuleComponent().addChildren(component);
+                }
+            }
+        } else {
+            BlockComponent currComponent = new BlockComponent();
+            currComponent.setAlias(methodConfig.getMethodName());
+            this.addChildLayoutNav(currComponent);
+            this.setCurrComponent((M) currComponent);
+
         }
+
 
     }
 
