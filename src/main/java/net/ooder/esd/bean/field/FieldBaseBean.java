@@ -5,7 +5,9 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.RightContextMenu;
 import net.ooder.esd.annotation.Widget;
+import net.ooder.esd.annotation.event.FieldEvent;
 import net.ooder.esd.bean.ContainerBean;
+import net.ooder.esd.bean.FieldEventBean;
 import net.ooder.esd.bean.RightContextMenuBean;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.FieldComponent;
@@ -37,6 +39,7 @@ public abstract class FieldBaseBean<M extends FieldComponent> implements FieldCo
 
     CustomWidgetBean widgetBean;
 
+
     public List<JavaSrcBean> javaSrcBeans;
 
 
@@ -58,11 +61,12 @@ public abstract class FieldBaseBean<M extends FieldComponent> implements FieldCo
     public FieldBaseBean(Set<Annotation> annotations) {
         for (Annotation annotation : annotations) {
             if (annotation instanceof RightContextMenu) {
-                contextMenuBean = new RightContextMenuBean(this.getId(),(RightContextMenu) annotation);
+                contextMenuBean = new RightContextMenuBean(this.getId(), (RightContextMenu) annotation);
             }
             if (annotation instanceof Widget) {
                 this.widgetBean = new CustomWidgetBean((Widget) annotation);
             }
+
         }
         containerBean = new ContainerBean(annotations);
     }
@@ -122,7 +126,6 @@ public abstract class FieldBaseBean<M extends FieldComponent> implements FieldCo
     }
 
 
-
     public List<JavaSrcBean> getJavaSrcBeans() {
         if (javaSrcBeans == null) {
             javaSrcBeans = new ArrayList<>();
@@ -133,7 +136,6 @@ public abstract class FieldBaseBean<M extends FieldComponent> implements FieldCo
     public void setJavaSrcBeans(List<JavaSrcBean> javaSrcBeans) {
         this.javaSrcBeans = javaSrcBeans;
     }
-
 
     @Override
     public String getXpath() {

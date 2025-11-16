@@ -1,21 +1,26 @@
 package net.ooder.esd.bean.field;
 
 import com.alibaba.fastjson.JSON;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.FieldAnnotation;
-import net.ooder.esd.annotation.ui.PositionType;
 import net.ooder.esd.annotation.event.CustomFieldEvent;
 import net.ooder.esd.annotation.event.CustomHotKeyEvent;
 import net.ooder.esd.annotation.event.FieldEvent;
 import net.ooder.esd.annotation.event.FieldHotKeyEvent;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.HAlignType;
+import net.ooder.esd.annotation.ui.PositionType;
+import net.ooder.esd.bean.FieldEventBean;
+import net.ooder.esd.bean.HotKeyEventBean;
+import net.ooder.esd.custom.service.CustomFieldService;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.properties.Properties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
+import java.lang.annotation.Annotation;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -73,6 +78,10 @@ public class FieldBean implements CustomBean {
 
     String caption;
 
+    LinkedHashSet<HotKeyEventBean> extHotKeyEvent = new LinkedHashSet<>();
+
+    LinkedHashSet<FieldEventBean> extFieldEvent = new LinkedHashSet<>();
+
     List<ComponentType> bindTypes;
 
     PositionType innerPosition;
@@ -86,6 +95,39 @@ public class FieldBean implements CustomBean {
     }
 
 
+    private void init(Properties properties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+    }
+
+    public FieldBean(Set<Annotation> annotations) {
+        for (Annotation annotation : annotations) {
+            if (annotation instanceof FieldAnnotation) {
+                fillData((FieldAnnotation) annotation);
+            }
+            if (annotation instanceof FieldEvent) {
+                extFieldEvent.add(new FieldEventBean((FieldEvent) annotation));
+            }
+
+            if (annotation instanceof FieldHotKeyEvent) {
+                extHotKeyEvent.add(new HotKeyEventBean<>((FieldHotKeyEvent) annotation));
+            }
+        }
+
+        for (FieldEvent fieldEvent : event) {
+            extFieldEvent.add(new FieldEventBean(fieldEvent));
+        }
+
+        for (FieldHotKeyEvent hotKeyEvent : hotKeyEvent) {
+            extHotKeyEvent.add(new HotKeyEventBean(hotKeyEvent));
+        }
+
+        if (componentType != null && componentType.equals(ComponentType.RICHEDITOR)) {
+            this.setManualHeight(200);
+            this.colSpan = -1;
+        }
+    }
+
     public void update(Component component) {
         this.componentType = ComponentType.fromType(component.getKey());
         this.init(component.getProperties());
@@ -95,22 +137,6 @@ public class FieldBean implements CustomBean {
         AnnotationUtil.fillDefaultValue(FieldAnnotation.class, this);
         update(component);
     }
-
-
-    private void init(Properties properties) {
-
-        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
-        OgnlUtil.setProperties(valueMap, this, false, false);
-    }
-
-    public FieldBean(FieldAnnotation annotation) {
-        fillData(annotation);
-        if (componentType != null && componentType.equals(ComponentType.RICHEDITOR)) {
-            this.setManualHeight(200);
-            this.colSpan = -1;
-        }
-    }
-
 
     public String getExpression() {
         return expression;
@@ -217,6 +243,21 @@ public class FieldBean implements CustomBean {
         this.customHotKeyEvent = customHotKeyEvent;
     }
 
+    public LinkedHashSet<HotKeyEventBean> getExtHotKeyEvent() {
+        return extHotKeyEvent;
+    }
+
+    public void setExtHotKeyEvent(LinkedHashSet<HotKeyEventBean> extHotKeyEvent) {
+        this.extHotKeyEvent = extHotKeyEvent;
+    }
+
+    public LinkedHashSet<FieldEventBean> getExtFieldEvent() {
+        return extFieldEvent;
+    }
+
+    public void setExtFieldEvent(LinkedHashSet<FieldEventBean> extFieldEvent) {
+        this.extFieldEvent = extFieldEvent;
+    }
 
     public PositionType getInnerPosition() {
         return innerPosition;
@@ -305,6 +346,9 @@ public class FieldBean implements CustomBean {
     }
 
     public Class getServiceClass() {
+        if (serviceClass == null || serviceClass.equals(Void.class)) {
+            serviceClass = CustomFieldService.class;
+        }
         return serviceClass;
     }
 

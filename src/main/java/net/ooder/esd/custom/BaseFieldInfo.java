@@ -69,8 +69,6 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
 
     ComponentType[] bindTypes = new ComponentType[]{};
 
-    Set<FieldEventBean> fieldEvents = new HashSet<>();
-
     Set<GridEventBean> gridEvents = new HashSet<>();
 
     @JSONField(serialize = false)
@@ -97,7 +95,6 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
     ContainerBean containerBean;
 
     CustomUIBean uiBean;
-
 
     SearchFieldBean searchFieldBean;
 
@@ -265,18 +262,12 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
         DockAnnotation dockAnnotation = getAnnotation(DockAnnotation.class);
         UIAnnotation uiAnnotation = getAnnotation(UIAnnotation.class);
         ContainerAnnotation containerAnnotation = getAnnotation(ContainerAnnotation.class);
-
         GridEvent gridEvent = getAnnotation(GridEvent.class);
         if (gridEvent != null) {
             GridEventBean gridEventBean = new GridEventBean(gridEvent);
             gridEvents.add(gridEventBean);
         }
 
-        FieldEvent fieldEvent = getAnnotation(FieldEvent.class);
-        if (fieldEvent != null) {
-            FieldEventBean fieldEventBean = new FieldEventBean(fieldEvent);
-            fieldEvents.add(fieldEventBean);
-        }
 
         this.index = index;
         this.esdClass = esdClass;
@@ -303,10 +294,9 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
             this.height = Integer.toString(fieldAnnotation.manualHeight());
             this.width = Integer.toString(fieldAnnotation.manualWidth());
             this.serialize = fieldAnnotation.serialize();
-            this.fieldBean = new FieldBean(fieldAnnotation);
-        } else {
-            this.fieldBean = new FieldBean();
         }
+
+        this.fieldBean = new FieldBean(this.getAllAnnotation());
 
         if (gridItemAnnotation != null) {
             this.width = gridItemAnnotation.width();
@@ -419,17 +409,10 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
         }
 
         if (dynCheckClass != null) {
-            if (fieldBean == null) {
-                this.fieldBean = new FieldBean();
-            }
             this.fieldBean.setDynCheck(true);
-
         }
 
         if (dirtyMarkClass != null) {
-            if (fieldBean == null) {
-                this.fieldBean = new FieldBean();
-            }
             this.fieldBean.setDirtyMark(true);
         }
         if (captionClass != null) {
@@ -497,13 +480,6 @@ public abstract class BaseFieldInfo<M extends ComponentBean, N extends ComboBoxB
         return contextMenuBean;
     }
 
-    public Set<FieldEventBean> getFieldEvents() {
-        return fieldEvents;
-    }
-
-    public void setFieldEvents(Set<FieldEventBean> fieldEvents) {
-        this.fieldEvents = fieldEvents;
-    }
 
     public Set<GridEventBean> getGridEvents() {
         return gridEvents;

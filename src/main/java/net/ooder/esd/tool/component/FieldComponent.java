@@ -15,12 +15,13 @@ import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.RequestPathTypeEnum;
 import net.ooder.esd.annotation.ui.SymbolType;
 import net.ooder.esd.bean.ComponentBean;
-import net.ooder.esd.bean.view.CustomFormViewBean;
+import net.ooder.esd.bean.FieldEventBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.RightContextMenuBean;
 import net.ooder.esd.bean.field.CustomListBean;
 import net.ooder.esd.bean.field.FieldBean;
 import net.ooder.esd.bean.field.combo.ComboxFieldBean;
+import net.ooder.esd.bean.view.CustomFormViewBean;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.action.CustomAPICallAction;
 import net.ooder.esd.custom.action.SetCustomQueryDataAction;
@@ -34,6 +35,7 @@ import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Condition;
 import net.ooder.esd.tool.properties.FieldProperties;
 import net.ooder.esd.tool.properties.UrlPathData;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,7 +61,7 @@ public class FieldComponent<T extends FieldProperties, K extends EventKey> exten
 
             FieldBean fieldBean = field.getFieldBean();
             Class service = fieldBean.getServiceClass();
-            if (service != null && !service.equals(Void.class) && checkExpression(euModule, field)) {
+            if (checkExpression(euModule, field)) {
                 ApiClassConfig apiClassConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(service.getName());
                 if (apiClassConfig != null) {
                     this.getProperties().setExpression(fieldBean.getExpression());
@@ -133,7 +135,16 @@ public class FieldComponent<T extends FieldProperties, K extends EventKey> exten
 
     public void initEvent(EUModule euModule, FieldFormConfig field) {
         FieldBean fieldBean = field.getFieldBean();
+
+
         if (fieldBean != null && fieldBean.getServiceClass() != null) {
+
+            for (FieldEventBean fieldEvent : fieldBean.getExtFieldEvent()) {
+                List<Action> actionList = fieldEvent.getActions();
+                for (Action fieldAction : actionList) {
+                    this.addAction(fieldAction);
+                }
+            }
             try {
                 ApiClassConfig apiClassConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(fieldBean.getServiceClass().getName());
                 ModuleComponent moduleComponent = euModule.getComponent();
@@ -166,6 +177,7 @@ public class FieldComponent<T extends FieldProperties, K extends EventKey> exten
                         this.addAction(action);
                     }
                 }
+
 
                 for (CustomHotKeyEvent hotKeyEvent : fieldBean.getCustomHotKeyEvent()) {
                     for (CustomAction actionType : hotKeyEvent.getActions(false)) {
