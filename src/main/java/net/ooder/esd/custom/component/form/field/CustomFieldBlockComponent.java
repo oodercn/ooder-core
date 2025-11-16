@@ -122,10 +122,14 @@ public class CustomFieldBlockComponent extends BlockComponent {
                         labelBean.setLabelVAlign(VAlignType.middle);
                         fieldInfo.getFieldBean().setManualHeight(height * 2);
                         fieldInfo.getContainerBean().getUiBean().setHeight((height * 2) + "px");
+
                         if (fieldInfo.getComboConfig() != null) {
-                            ComboxFieldBean comboConfig = (ComboxFieldBean) fieldInfo.getComboConfig();
-                            comboConfig.setDropListHeight(200);
-                            comboConfig.setDropListWidth(width);
+                            ComboBoxBean comboConfig = fieldInfo.getComboConfig();
+                            if (comboConfig instanceof ComboxFieldBean) {
+                                ((ComboxFieldBean) comboConfig).setDropListHeight(200);
+                                ((ComboxFieldBean) comboConfig).setDropListWidth(width);
+                            }
+
                         }
 
                     } else {
@@ -139,7 +143,6 @@ public class CustomFieldBlockComponent extends BlockComponent {
                     fieldInfo.getContainerBean().getUiBean().setWidth(width + "px");
                 }
             }
-
 
 
             if (fieldInfo.getEsdField() != null && Component.class.isAssignableFrom(fieldInfo.getEsdField().getReturnType())) {
