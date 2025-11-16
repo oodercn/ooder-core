@@ -98,7 +98,7 @@ public class FieldComponent<T extends FieldProperties, K extends EventKey> exten
             Class clazz = field.getFieldBean().getServiceClass();
             if ((customListBean.getItemsExpression() != null && !customListBean.getItemsExpression().equals(""))
                     || (customListBean.getFilter() != null && !customListBean.getFilter().equals(""))) {
-                if (clazz != null && !clazz.equals(Void.class)) {
+                if (clazz != null) {
                     ApiClassConfig config = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(clazz.getName());
                     if (config != null) {
                         MethodConfig methodBean = config.getMethodByEvent(CustomFieldEvent.DYNRELOAD);
