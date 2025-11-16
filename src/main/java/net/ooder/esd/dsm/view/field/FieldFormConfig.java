@@ -2,17 +2,18 @@ package net.ooder.esd.dsm.view.field;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.ColType;
+import net.ooder.annotation.CustomBean;
 import net.ooder.common.JDSConstants;
 import net.ooder.common.JDSException;
 import net.ooder.common.logging.Log;
 import net.ooder.common.logging.LogFactory;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.context.JDSActionContext;
-import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomAnnotation;
-import net.ooder.esd.annotation.RightContextMenu;
 import net.ooder.esd.annotation.FieldAnnotation;
+import net.ooder.esd.annotation.RightContextMenu;
 import net.ooder.esd.annotation.event.CustomFieldEvent;
 import net.ooder.esd.annotation.event.CustomTabsEvent;
 import net.ooder.esd.annotation.ui.ComboInputType;
@@ -21,8 +22,7 @@ import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.field.*;
 import net.ooder.esd.bean.field.base.InputFieldBean;
-import net.ooder.esd.bean.field.LabelBean;
-  import net.ooder.esd.bean.field.combo.ComboBoxBean;
+import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;
 import net.ooder.esd.bean.field.combo.CustomModuleRefFieldBean;
 import net.ooder.esd.bean.field.combo.SimpleComboBean;
@@ -34,18 +34,16 @@ import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
 import net.ooder.esd.dsm.aggregation.context.MethodRoot;
 import net.ooder.esd.dsm.java.JavaSrcBean;
-import net.ooder.esd.util.json.FormFieldComboDeserializer;
-import net.ooder.esd.util.json.FormFieldDeserializer;
 import net.ooder.esd.tool.OODTypeMapping;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.Properties;
 import net.ooder.esd.tool.properties.form.ComboInputProperties;
 import net.ooder.esd.util.OODUtil;
+import net.ooder.esd.util.json.FormFieldComboDeserializer;
+import net.ooder.esd.util.json.FormFieldDeserializer;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.server.httpproxy.core.HttpRequest;
 import net.ooder.web.ConstructorBean;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.MethodUtil;
 import ognl.OgnlContext;
@@ -422,7 +420,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
         List<CustomBean> annotationBeans = new ArrayList<>();
         FieldAggConfig aggConfig = this.getInnerFieldAgg();
         if (fieldBean != null) {
-            annotationBeans.add(fieldBean);
+            annotationBeans.addAll(fieldBean.getAnnotationBeans());
         }
         if (labelBean != null) {
             annotationBeans.add(labelBean);
@@ -431,8 +429,8 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
             for (CustomBean customBean : tipsBean.getAnnotationBeans()) {
                 if (!annotationBeans.contains(customBean)) {
                     annotationBeans.add(customBean);
-                }
             }
+        }
         }
 
         if (containerBean != null) {
@@ -720,7 +718,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
         Class clazz = CustomViewConfigFactory.getInstance().getDefaultWidgetClass(componentType);
         MethodConfig methodConfig = this.getMethodConfig();
         try {
-         OgnlContext ognlContext= JDSActionContext.getActionContext().getOgnlContext();
+            OgnlContext ognlContext = JDSActionContext.getActionContext().getOgnlContext();
             if (clazz != null && ognlContext != null) {
                 if (component != null) {
                     ConstructorBean methodBean = getComponentConstructor(clazz, MethodConfig.class);
@@ -780,7 +778,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
 
     public N createDefaultCombo(ComboInputType inputType, Component component) {
         N comboBox = null;
-        OgnlContext ognlContext=JDSActionContext.getActionContext().getOgnlContext();
+        OgnlContext ognlContext = JDSActionContext.getActionContext().getOgnlContext();
         Class clazz = CustomViewConfigFactory.getInstance().getDefaultComboBoxClass(inputType);
         if (clazz != null && ognlContext != null) {
             try {

@@ -1,6 +1,7 @@
 package net.ooder.esd.bean.field;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.FieldAnnotation;
@@ -20,10 +21,7 @@ import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @AnnotationType(clazz = FieldAnnotation.class)
 public class FieldBean implements CustomBean {
@@ -114,12 +112,16 @@ public class FieldBean implements CustomBean {
             }
         }
 
-        for (FieldEvent fieldEvent : event) {
-            extFieldEvent.add(new FieldEventBean(fieldEvent));
-        }
+        if (event != null) {
+            for (FieldEvent fieldEvent : event) {
+                extFieldEvent.add(new FieldEventBean(fieldEvent));
+            }
 
-        for (FieldHotKeyEvent hotKeyEvent : hotKeyEvent) {
-            extHotKeyEvent.add(new HotKeyEventBean(hotKeyEvent));
+        }
+        if (hotKeyEvent != null) {
+            for (FieldHotKeyEvent hotKeyEvent : hotKeyEvent) {
+                extHotKeyEvent.add(new HotKeyEventBean(hotKeyEvent));
+            }
         }
 
         if (componentType != null && componentType.equals(ComponentType.RICHEDITOR)) {
@@ -136,6 +138,21 @@ public class FieldBean implements CustomBean {
     public FieldBean(Component component) {
         AnnotationUtil.fillDefaultValue(FieldAnnotation.class, this);
         update(component);
+    }
+
+
+    @JSONField(serialize = false)
+    public List<CustomBean> getAnnotationBeans() {
+        List<CustomBean> annotationBeans = new ArrayList<>();
+        for (FieldEventBean fieldEventBean : extFieldEvent) {
+            annotationBeans.add(fieldEventBean);
+        }
+
+        for (HotKeyEventBean hotKeyBean : extHotKeyEvent) {
+            annotationBeans.add(hotKeyBean);
+        }
+        annotationBeans.add(this);
+        return annotationBeans;
     }
 
     public String getExpression() {
@@ -402,6 +419,10 @@ public class FieldBean implements CustomBean {
     }
 
     public String toAnnotationStr() {
+
+
+
+
         return AnnotationUtil.toAnnotationStr(this);
     }
 }
