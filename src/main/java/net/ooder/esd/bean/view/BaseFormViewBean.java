@@ -201,7 +201,10 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                                 genChildModule = new GenFormChildModule(moduleComponent, component, config);
                             }
                         }
-                    } else {
+                    }
+
+
+                    if (genChildModule==null){
                         genChildModule = new GenFormChildModule(moduleComponent, component, config);
                     }
                     CustomFieldBean customFieldBean = config.createCustomBean();
@@ -211,6 +214,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                         tasks.add(genChildModule);
                     } else {
                         config.update(moduleComponent, component);
+                        fieldFormConfigs.add(config);
                     }
 
                 }
@@ -219,8 +223,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
 
             try {
                 String taskIds = this.getXpath() + "[" + System.currentTimeMillis() + "]";
-                ExecutorService service=   RemoteConnectionManager.createConntctionService(taskIds);
-
+                ExecutorService service = RemoteConnectionManager.createConntctionService(taskIds);
                 List<Future<FieldFormConfig>> futures = service.invokeAll(tasks);
                 for (Future<FieldFormConfig> resultFuture : futures) {
                     FieldFormConfig config = null;

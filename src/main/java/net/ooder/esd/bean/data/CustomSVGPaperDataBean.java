@@ -19,7 +19,7 @@ import net.ooder.web.util.AnnotationUtil;
         moduleType = ModuleViewType.SVGPAPERCONFIG
 )
 @AnnotationType(clazz = SVGPaperViewAnnotation.class)
-public class CustomSvgPaperDataBean extends CustomDataBean {
+public class CustomSVGPaperDataBean extends CustomDataBean {
 
 
     ModuleViewType moduleViewType = ModuleViewType.SVGPAPERCONFIG;
@@ -37,12 +37,12 @@ public class CustomSvgPaperDataBean extends CustomDataBean {
     Boolean cache = false;
 
 
-    public CustomSvgPaperDataBean() {
+    public CustomSVGPaperDataBean() {
 
     }
 
 
-    public CustomSvgPaperDataBean(MethodConfig methodConfig) {
+    public CustomSVGPaperDataBean(MethodConfig methodConfig) {
         super(methodConfig);
         SVGPaperViewAnnotation formAnnotation = AnnotationUtil.getMethodAnnotation(methodConfig.getMethod(), SVGPaperViewAnnotation.class);
         if (formAnnotation != null) {

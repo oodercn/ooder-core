@@ -44,6 +44,10 @@ public class GalleryProperties extends AbsListProperties<GalleryItem> {
     }
 
 
+    void init(){
+
+    }
+
     public void init(CustomGalleryViewBean galleryViewBean) {
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(galleryViewBean), Map.class), this, false, false);
         this.init(galleryViewBean.getContainerBean());

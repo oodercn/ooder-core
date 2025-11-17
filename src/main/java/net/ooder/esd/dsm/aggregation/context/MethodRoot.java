@@ -74,11 +74,16 @@ public class MethodRoot {
         if (parentModuleComponent != null) {
             String parentModuleClassName = parentModuleComponent.getClassName();
             String simClass = OODUtil.formatJavaName(component.getAlias(), true);
-            if (euClassName == null) {
-                euClassName = parentModuleClassName.toLowerCase() + "." + simClass;
-            } else if (!parentModuleClassName.equals(euClassName) && moduleBean.getSourceClassName() == null) {
-                euClassName = parentModuleClassName.toLowerCase() + "." + simClass;
+            if (!parentModuleClassName.equals("." + simClass)) {
+                if (euClassName == null) {
+                    euClassName = parentModuleClassName.toLowerCase() + "." + simClass;
+                } else if (!parentModuleClassName.equals(euClassName) && moduleBean.getSourceClassName() == null) {
+                    euClassName = parentModuleClassName.toLowerCase() + "." + simClass;
+                }
+            } else {
+                euClassName = parentModuleClassName;
             }
+
         }
 
         if (euClassName == null) {
