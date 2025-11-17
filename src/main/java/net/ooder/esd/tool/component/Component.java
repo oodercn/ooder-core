@@ -269,8 +269,8 @@ public class Component<T extends Properties, K extends EventKey> {
         for (Component component : components) {
             ComponentType type = ComponentType.fromType(component.getKey());
             if (customViewTypes.contains(type)) {
-                if (Arrays.asList(skipComponents).contains(type)) {
-                    List<Component> childComponent = component.getListGroupChild(components, groupTypes);
+                if (Arrays.asList(skipComponents).contains(type) && component.getChildren() != null && component.getChildren().size()>0) {
+                    List<Component> childComponent = component.getListGroupChild(component.getChildren(), groupTypes);
                     if (childComponent.size() > 0 || (component.getChildren() != null && component.getChildren().size() > 1)) {
                         viewComponents.add(component);
                     }

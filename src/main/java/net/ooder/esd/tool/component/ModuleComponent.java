@@ -967,32 +967,32 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     }
 
 
-    @JSONField(serialize = false)
-    public Component<PanelProperties, PanelEventEnum> getFristBoxComponent() {
-        if (components == null || components.isEmpty()) {
-            List<Component> componentList = this.getChildrenRecursivelyList();
-            for (Component childComponent : componentList) {
-                if (childComponent.getProperties() instanceof PanelProperties) {
-                    PanelProperties panelProperties = (PanelProperties) childComponent.getProperties();
-                    if (panelProperties.getVisibility() == null || (!panelProperties.getVisibility().equals(VisibilityType.hidden))) {
-                        return childComponent;
-                    }
-                }
-            }
-        } else {
-            Set<String> comKey = components.keySet();
-            for (String key : comKey) {
-                Component component = components.get(key);
-                if (component.getProperties() instanceof PanelProperties) {
-                    PanelProperties panelProperties = (PanelProperties) component.getProperties();
-                    if (panelProperties.getVisibility() == null || (!panelProperties.getVisibility().equals(VisibilityType.hidden))) {
-                        return component;
-                    }
-                }
-            }
-        }
-        return null;
-    }
+//    @JSONField(serialize = false)
+//    public Component<PanelProperties, PanelEventEnum> getFristBoxComponent() {
+//        if (components == null || components.isEmpty()) {
+//            List<Component> componentList = this.getChildrenRecursivelyList();
+//            for (Component childComponent : componentList) {
+//                if (childComponent.getProperties() instanceof PanelProperties) {
+//                    PanelProperties panelProperties = (PanelProperties) childComponent.getProperties();
+//                    if (panelProperties.getVisibility() == null || (!panelProperties.getVisibility().equals(VisibilityType.hidden))) {
+//                        return childComponent;
+//                    }
+//                }
+//            }
+//        } else {
+//            Set<String> comKey = components.keySet();
+//            for (String key : comKey) {
+//                Component component = this.getMainBoxComponent();
+//                if (component.getProperties() instanceof PanelProperties) {
+//                    PanelProperties panelProperties = (PanelProperties) component.getProperties();
+//                    if (panelProperties.getVisibility() == null || (!panelProperties.getVisibility().equals(VisibilityType.hidden))) {
+//                        return component;
+//                    }
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
 
     @JSONField(serialize = false)
@@ -1007,16 +1007,15 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                 moduleName = this.getCurrComponent().getAlias();
                 moduleName = OODUtil.formatJavaName(moduleName, true);
             }
-            component = this.components.get(moduleName + DefaultTopBoxfix);
-            if (component == null) {
-                if (moduleName.endsWith(CustomViewFactory.dynBuild)) {
-                    moduleName = moduleName.substring(0, moduleName.length() - CustomViewFactory.dynBuild.length());
-                    component = this.components.get(moduleName + DefaultTopBoxfix);
-                }
+            if (moduleName.endsWith(CustomViewFactory.dynBuild)) {
+                moduleName = moduleName.substring(0, moduleName.length() - CustomViewFactory.dynBuild.length());
+            } else if (!moduleName.endsWith(DefaultTopBoxfix)) {
+                moduleName = moduleName + DefaultTopBoxfix;
             }
+            component = this.components.get(moduleName);
         }
         if (component == null) {
-            component = this.getFristBoxComponent();
+            component = this.getMainBoxComponent();
         }
         return component;
 
@@ -1025,7 +1024,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
     @JSONField(serialize = false)
     public Component getLastBoxComponent() {
-        Component component = getFristBoxComponent();
+        Component component = getMainBoxComponent();
         if (component == null) {
             List<Component> uiComponents = new ArrayList<Component>();
             ComponentList componentList = this.getChildren();
@@ -1079,18 +1078,6 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             component = this.getTopComponentBox();
             if (component != null) {
                 title = component.getProperties().getDesc();
-            }
-        }
-
-
-        if (title == null || title.equals("")) {
-            component = this.getFristBoxComponent();
-            if (component != null && (component.getProperties() instanceof PanelProperties)) {
-                PanelProperties properties = (PanelProperties) component.getProperties();
-                title = properties.getCaption();
-                if (title == null || title.equals("")) {
-                    title = properties.getCaption();
-                }
             }
         }
 
@@ -1732,7 +1719,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     }
 
     private M deepCheckComponent() {
-        M deepComponent = (M) this.getTopComponentBox();
+        M deepComponent = (M) this.getMainBoxComponent();
         ViewGroupType[] viewGroupTypes = new ViewGroupType[]{ViewGroupType.LAYOUT, ViewGroupType.NAV, ViewGroupType.MODULE, ViewGroupType.VIEW, ViewGroupType.CHARTS, ViewGroupType.MOBILE};
         List<Component> allComponents = this.getListGroupChild(deepComponent.getChildren(), viewGroupTypes);
         List<Component> childComponents = new ArrayList<>();
@@ -1743,7 +1730,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             if (!alias.toUpperCase().equals(PAGECTXNAME) && !componentType.isBar() && !alias.endsWith(DefaultTopBoxfix)) {
                 if (!Arrays.asList(skipComponents).contains(componentType)) {
                     childComponents.add(component);
-                } else if (component.getProperties() instanceof ContainerProperties) {
+                } else if (component.getChildren() != null && component.getProperties() instanceof ContainerProperties) {
                     ContainerProperties containerProperties = (ContainerProperties) component.getProperties();
                     Integer colLayout = containerProperties.getConLayoutColumns();
                     if (component.getChildren().size() > 1) {
