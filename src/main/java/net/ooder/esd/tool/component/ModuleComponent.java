@@ -1732,10 +1732,11 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     }
 
     private M deepCheckComponent() {
-        M deepComponent = null;
+        M deepComponent = (M) this.getTopComponentBox();
         ViewGroupType[] viewGroupTypes = new ViewGroupType[]{ViewGroupType.LAYOUT, ViewGroupType.NAV, ViewGroupType.MODULE, ViewGroupType.VIEW, ViewGroupType.CHARTS, ViewGroupType.MOBILE};
-        List<Component> allComponents = this.getListGroupChild(viewGroupTypes);
+        List<Component> allComponents = this.getListGroupChild(deepComponent.getChildren(), viewGroupTypes);
         List<Component> childComponents = new ArrayList<>();
+
         for (Component component : allComponents) {
             String alias = component.getAlias();
             ComponentType componentType = ComponentType.fromType(component.getKey());
@@ -1754,11 +1755,15 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             }
         }
 
-        for (Component component : childComponents) {
-            if (deepComponent == null || component.getChildrenRecursivelyList().contains(deepComponent)) {
-                deepComponent = (M) component;
-            }
+        if (childComponents.size() == 1) {
+            deepComponent = (M) childComponents.get(0);
         }
+
+//        for (Component component : childComponents) {
+//            if (deepComponent.getChildrenRecursivelyList().contains(component)) {
+//                deepComponent = (M) component;
+//            }
+//        }
 
         return deepComponent;
     }

@@ -252,10 +252,12 @@ public class Component<T extends Properties, K extends EventKey> {
 
 
     @JSONField(serialize = false)
-    public List<Component> getListGroupChild(ViewGroupType... groupTypes) {
+    public List<Component> getListGroupChild(List<Component> components, ViewGroupType... groupTypes) {
 
         List<Component> viewComponents = new ArrayList<>();
-        List<Component> components = this.getChildrenRecursivelyList();
+        if (components == null) {
+            components = this.getChildrenRecursivelyList();
+        }
         Set<ComponentType> customViewTypes = new HashSet<>();
         for (ViewGroupType groupType : groupTypes) {
             List<ModuleViewType> moduleViewTypes = ModuleViewType.getModuleViewByGroup(groupType);
@@ -268,7 +270,7 @@ public class Component<T extends Properties, K extends EventKey> {
             ComponentType type = ComponentType.fromType(component.getKey());
             if (customViewTypes.contains(type)) {
                 if (Arrays.asList(skipComponents).contains(type)) {
-                    List<Component> childComponent = component.getListGroupChild(groupTypes);
+                    List<Component> childComponent = component.getListGroupChild(components, groupTypes);
                     if (childComponent.size() > 0 || (component.getChildren() != null && component.getChildren().size() > 1)) {
                         viewComponents.add(component);
                     }

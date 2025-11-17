@@ -155,8 +155,8 @@ public class Action<K extends EventKey> implements CustomBean {
             } else {
                 int k = 0;
                 while (k < eventEnum.getParams().length) {
-                    k++;
                     params.add("{args[" + k + "]}");
+                    k++;
                 }
             }
 
