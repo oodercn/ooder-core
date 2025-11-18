@@ -27,7 +27,6 @@ import net.ooder.esd.dsm.gen.view.GenFormChildModule;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.OODTypeMapping;
-import net.ooder.esd.tool.component.APICallerComponent;
 import net.ooder.esd.tool.component.BlockComponent;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
@@ -38,10 +37,7 @@ import net.ooder.web.RemoteConnectionManager;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -137,40 +133,39 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         int index = 0;
         if (components != null) {
             for (Component component : components) {
-                if (!(component instanceof APICallerComponent)) {
-                    FieldFormConfig config = findFieldByCom(component);
+                FieldFormConfig config = findFieldByCom(component);
+                CustomFieldBean customFieldBean = config.createCustomBean();
+                customFieldBean.setIndex(index);
+                index++;
+                ComponentType componentType = ComponentType.fromType(component.getKey());
+                if (componentType.isBar()) {
+                    genBar(moduleComponent, component);
+                } else if (Arrays.asList(ComponentType.getCustomConnComponents()).contains(componentType)) {
+                    genAPI(moduleComponent, component);
+                } else if (!skipType(component)) {
                     GenFormChildModule genChildModule = null;
-                    if (!skipType(component)) {
-                        ComponentType componentType = ComponentType.fromType(component.getKey());
-                        if (component.getChildren() != null && component.getChildren().size() == 1 && componentType.equals(ComponentType.BLOCK)) {
-                            component = component.getChildren().get(0);
-                            if (component instanceof ModuleComponent) {
-                                if (((ModuleComponent) component).getCurrComponent() != null) {
-                                    component = ((ModuleComponent) component).getCurrComponent().clone();
-                                    genChildModule = new GenFormChildModule(moduleComponent, component, config);
-                                }
-                            } else {
+                    if (component.getChildren() != null && component.getChildren().size() == 1 && componentType.equals(ComponentType.BLOCK)) {
+                        component = component.getChildren().get(0);
+                        if (component instanceof ModuleComponent) {
+                            if (((ModuleComponent) component).getCurrComponent() != null) {
+                                component = ((ModuleComponent) component).getCurrComponent().clone();
                                 genChildModule = new GenFormChildModule(moduleComponent, component, config);
                             }
+                        } else {
+                            genChildModule = new GenFormChildModule(moduleComponent, component, config);
                         }
                     }
-
                     if (genChildModule == null) {
                         genChildModule = new GenFormChildModule(moduleComponent, component, config);
                     }
 
-                    CustomFieldBean customFieldBean = config.createCustomBean();
-                    customFieldBean.setIndex(index);
-                    index++;
                     if (genChildModule != null) {
                         tasks.add(genChildModule);
                     } else {
                         config.update(moduleComponent, component);
                         fieldFormConfigs.add(config);
                     }
-
                 }
-
             }
 
             try {
@@ -199,9 +194,16 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         } catch (JDSException e) {
             e.printStackTrace();
         }
-
         return fieldFormConfigs;
+    }
 
+    private void genAPI(ModuleComponent moduleComponent, Component component) {
+
+        //todo
+    }
+
+    private void genBar(ModuleComponent moduleComponent, Component component) {
+        //todo
     }
 
     private boolean skipType(Component child) {
@@ -213,12 +215,13 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                 return true;
             } else if (alias.endsWith(ModuleComponent.DefaultTopBoxfix)) {
                 return true;
-            } else if (alias.indexOf("StatusBottom") > -1) {
-                return true;
             } else if (component.getProperties().getComboType() != null) {
                 return true;
             }
-
+        } else if (alias.indexOf("StatusBottom") > -1) {
+            return true;
+        } else if (alias.equals(ModuleComponent.PAGECTXNAME)) {
+            return true;
         }
         return false;
     }
