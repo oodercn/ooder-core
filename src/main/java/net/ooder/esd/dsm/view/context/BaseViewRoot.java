@@ -211,27 +211,6 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
 
     protected Set<String> getPackageClassImpls() {
         Set<String> imports = new HashSet<>();
-//        String basePackage = dsmBean.getPackageName();
-////           for (Package pack : Package.getPackages()) {
-////            for (String packName : innerPacks) {
-////                if (pack.getName().startsWith(basePackage + "." + packName)) {
-////                    imports.add(pack.getName() + ".*");
-////                }
-////            }
-////        }
-////
-//
-//        List<JavaPackage> javaPackages = dsmBean.getRootPackage().listChildren();
-//        // this.imports.add(basePackage + ".*");
-//        for (JavaPackage javaPackage : javaPackages) {
-//            for (String packName : resiotoryPacks) {
-//                if (javaPackage.listFiles().size() > 0 && javaPackage.getPackageName().startsWith(basePackage + "." + packName)) {
-//                    imports.add(javaPackage.getPackageName() + ".*");
-//                }
-//            }
-//
-//        }
-
 
         return imports;
     }
@@ -272,20 +251,6 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
             }
         }
 
-
-//       // Set<String> javaTempIds = repositoryInst.getJavaTempIds();
-//        for (String innerPack : innerPacks) {
-//            String rInnerPackageName = repositoryPackageName + "." + innerPack;
-//            if (Package.getPackage(rInnerPackageName) != null) {
-//                imports.add(rInnerPackageName + ".*");
-//            }
-//
-//            for (Package pack : ClassUtility.getAllDynPacks()) {
-//                if (pack.getName().startsWith(repositoryPackageName + "." + innerPack)) {
-//                    imports.add(pack.getName() + ".*");
-//                }
-//            }
-//        }
         return imports;
     }
 

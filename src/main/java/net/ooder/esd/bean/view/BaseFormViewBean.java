@@ -129,54 +129,6 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
             toolBarMenu = getToolBar().getEnumItems();
         }
     }
-//
-//      BottomBarMenuBean barMenuBean =  this.getBottomBar();
-//      if (barMenuBean!=null && barMenuBean.getEnumItems()!=null && barMenuBean.getEnumItems().size()>0){
-//          List<Enum> enums= barMenuBean.getEnumItems();
-//         for(Enum item:enums){
-//             if (item instanceof CustomFormMenu){
-//                 this.getBottombarMenu().add((CustomFormMenu) item);
-//             }
-//         }
-//      }
-//
-////        Component currComponent = moduleComponent.getCurrComponent();
-////        while (currComponent.getChildren() != null && currComponent.getChildren().size() == 1 && currComponent.getChildren().get(0) instanceof DivComponent) {
-////            currComponent = currComponent.getChildren().get(0);
-////        }
-////
-////        List<Component> components = moduleComponent.getChildren();
-////        if (components != null) {
-////            for (Component component : components) {
-////                ComponentType componentType = ComponentType.fromType(component.getKey());
-////                if (componentType.isBar()) {
-////                    ListFieldProperties listFieldProperties = (ListFieldProperties) component.getProperties();
-////                    List<TreeListItem> treeListItems = listFieldProperties.getItems();
-////                    String packageName = moduleComponent.getEuModule().getPackageName();
-////                    if (treeListItems != null && treeListItems.size() > 0) {
-////                        Class bindClass = listFieldProperties.getEnumClass();
-////                        if (bindClass == null) {
-////                            String bindClassName = packageName + "." + OODUtil.formatJavaName(this.name, true);
-////                            try {
-////                                DomainInst domainInst = DSMFactory.getInstance().getDomainInstById(this.getDomainId());
-////                                ViewInst viewInst = DSMFactory.getInstance().getViewManager().createDefaultView(domainInst);
-////                                DSMFactory.getInstance().getViewManager().genMenuJava(viewInst, (MenuBarComponent) component, bindClassName, null);
-////                                bindClass = ClassUtility.loadClass(bindClassName);
-////                                listFieldProperties.setEnumClass(bindClass);
-////                            } catch (Exception e) {
-////                                e.printStackTrace();
-////                            }
-////                        }
-////                        menuBar = this.getMenuBar();
-////                        if (menuBar == null) {
-////                            menuBar = new MenuBarBean((MenuBarProperties) listFieldProperties);
-////                        }
-////                        menuBar.setMenuClasses(new Class[]{bindClass});
-////                    }
-////                }
-////            }
-////        }
-//    }
 
 
     protected List<FieldFormConfig> genChildComponent(ModuleComponent moduleComponent, List<Component> components) {
@@ -203,10 +155,10 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                         }
                     }
 
-
-                    if (genChildModule==null){
+                    if (genChildModule == null) {
                         genChildModule = new GenFormChildModule(moduleComponent, component, config);
                     }
+
                     CustomFieldBean customFieldBean = config.createCustomBean();
                     customFieldBean.setIndex(index);
                     index++;
