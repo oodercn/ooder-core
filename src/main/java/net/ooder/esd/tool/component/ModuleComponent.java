@@ -1755,6 +1755,16 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         return deepComponent;
     }
 
+    public List<Component> moveComponent(Component source, Component... components) {
+        List<Component> componentList = Arrays.asList(components);
+        for (Component component : componentList) {
+            if (!component.getAlias().equals(source.getAlias())) {
+                source.addChildren(component);
+            }
+        }
+        return componentList;
+    }
+
     public M getCurrComponent() {
         String curAlias = this.getCurrComponentAlias();
         if (curAlias.endsWith(DefaultTopBoxfix) || curAlias.toUpperCase().equals(PAGECTXNAME) || curAlias.endsWith("BottomBlock")) {
