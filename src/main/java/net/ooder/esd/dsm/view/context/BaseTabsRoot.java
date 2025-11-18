@@ -1,8 +1,9 @@
 package net.ooder.esd.dsm.view.context;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import net.ooder.common.JDSException;
+import net.ooder.annotation.AggregationType;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.TabsAnnotation;
 import net.ooder.esd.annotation.field.TabItem;
 import net.ooder.esd.bean.view.BaseTabsViewBean;
@@ -16,7 +17,6 @@ import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.tool.properties.item.TabListItem;
-import net.ooder.annotation.AggregationType;
 import net.ooder.web.util.MethodUtil;
 
 import java.util.*;
@@ -63,7 +63,7 @@ public abstract class BaseTabsRoot<T extends BaseTabsViewBean, M extends TabList
         } catch (JDSException e) {
             e.printStackTrace();
         }
-
+        imports.remove(null);
 
     }
 
@@ -89,7 +89,9 @@ public abstract class BaseTabsRoot<T extends BaseTabsViewBean, M extends TabList
                     e.printStackTrace();
                 }
             }
-            imports.add(methodRoot.getModuleBean().getEuClassName());
+            if (methodRoot.getModuleBean().getEuClassName() != null) {
+                imports.add(methodRoot.getModuleBean().getEuClassName());
+            }
         }
         return imports;
     }

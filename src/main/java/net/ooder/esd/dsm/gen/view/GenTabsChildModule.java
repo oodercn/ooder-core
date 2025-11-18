@@ -92,7 +92,7 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
                 customViewBean = DSMFactory.getInstance().getViewManager().getDefaultViewBean(cmoduleComponent, domainId);
                 customViewBean.setDomainId(domainId);
 
-                if (customViewBean.getMethodConfig()==null){
+                if (customViewBean.getMethodConfig() == null) {
                     customViewBean.updateModule(cmoduleComponent);
                 }
                 cModuleBean = createModuleBean(cmoduleComponent);
@@ -146,12 +146,11 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
             }
             bindItem(serviceList, currListItem);
             for (JavaSrcBean javaSrcBean : serviceList) {
-                if (javaSrcBean.getTarget() != null && javaSrcBean.getTarget().equals(target)) {
+                if (javaSrcBean.getTarget() == null || javaSrcBean.getTarget().equals(target)) {
                     Class bindService = ClassUtility.loadClass(javaSrcBean.getClassName());
                     customViewBean.reBindService(bindService);
                 }
             }
-
 
 
             cModuleBean.setJavaSrcBeans(aggRootBuild.getAllSrcBean());

@@ -284,7 +284,10 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
             }
         }
 
-        javaSrcBeans.addAll(this.widgetConfig.getJavaSrcBeans());
+        if (widgetConfig.getJavaSrcBeans() != null) {
+            javaSrcBeans.addAll(widgetConfig.getJavaSrcBeans());
+        }
+
         if (componentType.equals(ComponentType.COMBOINPUT)) {
             ComboInputProperties comboInputProperties = (ComboInputProperties) component.getProperties();
             if (comboConfig == null) {
@@ -429,8 +432,8 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
             for (CustomBean customBean : tipsBean.getAnnotationBeans()) {
                 if (!annotationBeans.contains(customBean)) {
                     annotationBeans.add(customBean);
+                }
             }
-        }
         }
 
         if (containerBean != null) {

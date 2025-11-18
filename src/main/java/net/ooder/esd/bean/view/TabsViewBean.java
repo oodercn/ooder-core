@@ -139,8 +139,13 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
                 for (Future<CustomModuleBean> resultFuture : futures) {
                     try {
                         CustomModuleBean cModuleBean = resultFuture.get();
+
                         if (navModuleBeans != null && !navModuleBeans.contains(cModuleBean)) {
                             navModuleBeans.add(cModuleBean);
+                            if (cModuleBean.getJavaSrcBeans() != null) {
+                                javaSrcBeans.addAll(cModuleBean.getJavaSrcBeans());
+                            }
+
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

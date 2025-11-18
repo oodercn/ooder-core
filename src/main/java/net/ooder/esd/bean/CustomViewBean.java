@@ -1435,7 +1435,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         } else {
             MethodConfig methodConfig = getMethodConfig();
             CustomModuleBean moduleBean = this.getModuleBean();
-            if (moduleBean != null && moduleBean.getEuClassName() != null ) {
+            if (moduleBean != null && moduleBean.getEuClassName() != null) {
                 CustomView view = methodConfig.getView();
                 if (view != null && view.equals(this) || (moduleBean.getEuClassName().equals(methodConfig.getEUClassName()))) {
                     path = moduleBean.getEuClassName();
@@ -1637,7 +1637,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
                     ModuleComponent moduleComponent = (ModuleComponent) component;
                     try {
                         EUModule module = ESDFacrory.getAdminESDClient().getModule(moduleComponent.getClassName(), moduleComponent.getProjectName());
-                        if (module.getComponent() != null) {
+                        if (module != null && module.getComponent() != null) {
                             Component currComponent = module.getComponent().clone();
                             currComponent.setTarget(component.getTarget());
                             currComponent.setAlias(component.getAlias());

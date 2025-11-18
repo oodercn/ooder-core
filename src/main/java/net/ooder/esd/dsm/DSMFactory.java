@@ -212,7 +212,7 @@ public class DSMFactory {
             String className = clazz.getName();
             try {
                 // aggregationManager.deleteApiClassConfig(className, false);
-                aggregationManager.delAggEntityClass(className, null, true);
+                aggregationManager.delAggEntityClass(className, null, false);
             } catch (JDSException e) {
                 e.printStackTrace();
             }

@@ -173,6 +173,7 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
         this.imports.addAll(getCustomClassImpls(classes));
         this.imports.addAll(getRepositoryImpls());
         this.imports.remove(packageName + ".*");
+        this.imports.remove(null);
 
     }
 

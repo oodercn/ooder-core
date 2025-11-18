@@ -13,10 +13,8 @@ import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.custom.properties.ButtonViewsListItem;
-import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
-import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.ButtonViewsComponent;
@@ -95,13 +93,14 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
                         CustomModuleBean cModuleBean = resultFuture.get();
                         if (navModuleBeans != null && cModuleBean != null && !navModuleBeans.contains(cModuleBean)) {
                             navModuleBeans.add(cModuleBean);
-                            MethodConfig methodConfig = cModuleBean.getMethodConfig();
-                            if (methodConfig != null) {
-                                AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(methodConfig.getView(), methodConfig.getEUClassName(), moduleComponent.getProjectName());
-                                if (aggRootBuild != null) {
-                                    javaSrcBeans.addAll(aggRootBuild.getAllSrcBean());
-                                }
-                            }
+                            javaSrcBeans.addAll(cModuleBean.getJavaSrcBeans());
+//                            MethodConfig methodConfig = cModuleBean.getMethodConfig();
+//                            if (methodConfig != null) {
+//                                AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(methodConfig.getView(), methodConfig.getEUClassName(), moduleComponent.getProjectName());
+//                                if (aggRootBuild != null) {
+//                                    javaSrcBeans.addAll(aggRootBuild.getAllSrcBean());
+//                                }
+//                            }
                         }
                     } catch (ExecutionException e) {
                         e.printStackTrace();
