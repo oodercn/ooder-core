@@ -314,6 +314,8 @@ public class BuildFactory {
                 aggRootBuild.setCustomViewBean(customViewBean);
             }
             classRootBuildMap.put(className, aggRootBuild);
+        } else {
+            aggRootBuild.setCustomViewBean(customViewBean);
         }
         return aggRootBuild;
     }
