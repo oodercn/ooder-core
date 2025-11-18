@@ -1,24 +1,19 @@
 package net.ooder.esd.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.CustomBean;
 import net.ooder.common.util.CnToSpell;
 import net.ooder.common.util.StringUtility;
 import net.ooder.context.JDSActionContext;
-import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.TreeItem;
-import net.ooder.esd.annotation.ui.FontColorEnum;
-import net.ooder.esd.annotation.ui.IconColorEnum;
-import net.ooder.esd.annotation.ui.ItemColorEnum;
-import net.ooder.esd.annotation.ui.ComboInputType;
-import net.ooder.esd.annotation.ui.CustomImageType;
-import net.ooder.esd.annotation.ui.StatusItemType;
+import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.view.ChildTreeViewBean;
 import net.ooder.esd.bean.view.CustomTreeViewBean;
 import net.ooder.esd.custom.properties.CustomCmdBar;
+import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.tool.properties.item.CmdItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.ESDEnumsUtil;
-import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.util.*;
@@ -315,7 +310,9 @@ public class TreeListItem<T extends TreeListItem> extends TabListItem implements
 
         if (this.getBindClass() != null && this.getBindClass().length > 0) {
             for (Class clazz : this.getBindClass()) {
-                enumBuffer.append(clazz.getName() + ".class,");
+                if (clazz != null) {
+                    enumBuffer.append(clazz.getName() + ".class,");
+                }
             }
 //        } else if (this.getBindClassName() != null && !this.getBindClassName().equals("")&& !this.getBindClassName().equals(Void.class.getName()) && !getBindClassName().equals(Enum.class.getName())) {
 //            enumBuffer.append(this.getBindClassName() + ".class");
