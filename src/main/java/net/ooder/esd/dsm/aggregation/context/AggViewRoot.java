@@ -102,7 +102,7 @@ public class AggViewRoot implements JavaRoot {
             ModuleAnnotation.class,
             MethodChinaName.class,
             Controller.class,
-            SVGPagerViewAnnotation.class,
+            SVGPaperViewAnnotation.class,
             ToolBarMenu.class,
             RequestMapping.class,
             ResponseBody.class

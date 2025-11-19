@@ -2,20 +2,15 @@ package net.ooder.esd.bean.data;
 
 import net.ooder.annotation.AnnotationType;
 import net.ooder.esd.annotation.CustomClass;
-import net.ooder.esd.annotation.SVGPaperFormAnnotation;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
-import net.ooder.esd.annotation.view.BlockViewAnnotation;
-import net.ooder.esd.annotation.view.SVGPagerViewAnnotation;
 import net.ooder.esd.annotation.view.SVGPaperViewAnnotation;
 import net.ooder.esd.bean.MethodConfig;
-import net.ooder.esd.custom.component.FullBlockComponent;
 import net.ooder.esd.custom.component.FullSVGPaperComponent;
 import net.ooder.web.util.AnnotationUtil;
 
-@CustomClass(
-        clazz = FullSVGPaperComponent.class,
-        viewType = CustomViewType.NAV,
+@CustomClass(clazz = FullSVGPaperComponent.class,
+        viewType = CustomViewType.MODULE,
         moduleType = ModuleViewType.SVGPAPERCONFIG
 )
 @AnnotationType(clazz = SVGPaperViewAnnotation.class)

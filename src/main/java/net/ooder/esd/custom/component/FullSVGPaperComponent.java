@@ -4,28 +4,23 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
-import net.ooder.esd.annotation.ui.CustomMenuItem;
-import net.ooder.esd.annotation.ui.RequestPathTypeEnum;
-import net.ooder.esd.annotation.ui.ResponsePathTypeEnum;
-import net.ooder.esd.bean.bar.DynBar;
-import net.ooder.esd.annotation.event.ModuleEventEnum;
 import net.ooder.esd.annotation.action.CustomFormAction;
 import net.ooder.esd.annotation.event.CustomFormEvent;
+import net.ooder.esd.annotation.event.ModuleEventEnum;
 import net.ooder.esd.annotation.menu.CustomFormMenu;
-import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.annotation.ui.Dock;
-import net.ooder.esd.annotation.ui.SymbolType;
-import net.ooder.esd.bean.data.CustomFormDataBean;
-import net.ooder.esd.bean.view.CustomSVGPaperViewBean;
+import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.ToolBarMenuBean;
-import net.ooder.esd.bean.svg.CustomSVGPaperDataBean;
+import net.ooder.esd.bean.bar.DynBar;
+import net.ooder.esd.bean.data.CustomFormDataBean;
+import net.ooder.esd.bean.data.CustomSVGPaperDataBean;
+import net.ooder.esd.bean.view.CustomSVGPaperViewBean;
+import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.action.CustomAPICallAction;
 import net.ooder.esd.custom.component.form.field.CustomFieldSVGPaperComponent;
 import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.ProjectVersion;
-import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.manager.editor.PluginsFactory;
 import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.APICallerProperties;
@@ -146,7 +141,7 @@ public class FullSVGPaperComponent extends CustomModuleComponent<CustomFieldSVGP
         Set<CustomFormEvent> customFormEvents = view.getEvent();
         for (CustomFormEvent eventType : customFormEvents) {
             for (CustomAction actionType : eventType.getActions(false)) {
-                currComponent.addAction( new Action(actionType,eventType.getEventEnum()));
+                currComponent.addAction(new Action(actionType, eventType.getEventEnum()));
             }
         }
         List<CustomFormMenu> customFormMenus = view.getCustomMenu();
@@ -177,7 +172,7 @@ public class FullSVGPaperComponent extends CustomModuleComponent<CustomFieldSVGP
             if (serviceObjs != null) {
                 for (Class obj : serviceObjs) {
                     if (!obj.equals(Void.class)) {
-                        CustomToolsBar bar = PluginsFactory.getInstance().initMenuClass(obj,CustomToolsBar.class);
+                        CustomToolsBar bar = PluginsFactory.getInstance().initMenuClass(obj, CustomToolsBar.class);
                         if (customToolsBar == null) {
                             this.customToolsBar = bar;
                             List<APICallerComponent> components = customToolsBar.getApis();
@@ -215,10 +210,10 @@ public class FullSVGPaperComponent extends CustomModuleComponent<CustomFieldSVGP
 
                 CustomFormDataBean dataBean = (CustomFormDataBean) methodAPIBean.getDataBean();
                 if (dataBean.getAutoSave()) {
-                    CustomAPICallAction customAPICallAction = new CustomAPICallAction(saveAPI,ModuleEventEnum.onDestroy);
+                    CustomAPICallAction customAPICallAction = new CustomAPICallAction(saveAPI, ModuleEventEnum.onDestroy);
                     Condition condition = new Condition("{page." + this.getCurrComponent().getAlias() + ".isDirtied()}", SymbolType.equal, "{true}");
                     customAPICallAction.addCondition(condition);
-                    this.addAction( customAPICallAction);
+                    this.addAction(customAPICallAction);
                 }
                 apiCallerComponents.add(saveAPI);
             } else {
