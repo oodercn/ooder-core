@@ -27,6 +27,7 @@ public class JavaPackageManager {
     static Map<String, JavaPackageManager> managerMap = new HashMap<String, JavaPackageManager>();
 
     public static JavaPackageManager getInstance(String projectVersionName) {
+
         JavaPackageManager manager = managerMap.get(projectVersionName);
         if (manager == null) {
             synchronized (THREAD_LOCK) {
