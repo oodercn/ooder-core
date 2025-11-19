@@ -1515,7 +1515,7 @@ public class AggregationManager {
             if (domainId != null && !domainId.equals(project.getProjectName())) {
                 domainInst = this.getProjectDomainInstById(project.getId(), domainId);
             } else {
-                domainInst = this.getDomainInstByCat(projectName, UserSpace.USER);
+                domainInst = this.getDomainInstByCat(projectName, UserSpace.VIEW);
             }
 
 
