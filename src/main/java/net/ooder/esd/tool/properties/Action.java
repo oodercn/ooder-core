@@ -33,6 +33,8 @@ public class Action<K extends EventKey> implements CustomBean {
     K eventKey;
     String enumClassName;
     String enumValue;
+    String onOK;
+    String onKO;
     String expression;
     String script;
     List<String> args = new ArrayList();
@@ -76,6 +78,21 @@ public class Action<K extends EventKey> implements CustomBean {
         this.className = className;
     }
 
+    public String getOnOK() {
+        return onOK;
+    }
+
+    public void setOnOK(String onOK) {
+        this.onOK = onOK;
+    }
+
+    public String getOnKO() {
+        return onKO;
+    }
+
+    public void setOnKO(String onKO) {
+        this.onKO = onKO;
+    }
 
     public Action(CustomAction customAction, K eventEnum) {
         this.eventKey = eventEnum;

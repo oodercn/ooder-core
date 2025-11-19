@@ -1758,7 +1758,8 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     public List<Component> moveComponent(Component source, Component... components) {
         List<Component> componentList = Arrays.asList(components);
         for (Component component : componentList) {
-            if (!component.getAlias().equals(source.getAlias())) {
+            ComponentType componentType = ComponentType.fromType(component.getKey());
+            if (!Arrays.asList(ComponentType.getCustomAPIComponents()).contains(componentType) && !component.getAlias().toUpperCase().equals(PAGECTXNAME) && !component.getAlias().equals(source.getAlias())) {
                 source.addChildren(component);
             }
         }
