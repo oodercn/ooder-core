@@ -45,6 +45,7 @@ public class APIEventBean<T extends Action> extends Event<T, APIEventEnum> imple
         this.desc = event.desc();
         this.apiEventEnum = event.event();
         this.eventId = apiEventEnum.name() + "_" + eventKey.getEvent();
+        this.eventReturn=event.eventReturn();
         if (!event._return()) {
             this.eventReturn = "{false}";
         }

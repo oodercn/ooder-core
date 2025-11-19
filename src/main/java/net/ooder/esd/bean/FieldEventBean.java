@@ -52,6 +52,7 @@ public class FieldEventBean<T extends Action> extends Event<T, FieldEventEnum> i
         this.desc = event.desc();
         this.expression = event.expression();
         this.eventId = eventKey.name() + "_" + eventKey.getEvent();
+        this.eventReturn=event.eventReturn();
         if (!event._return()) {
             this.eventReturn = "{false}";
         }
