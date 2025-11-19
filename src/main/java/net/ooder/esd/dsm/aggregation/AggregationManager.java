@@ -1512,10 +1512,10 @@ public class AggregationManager {
                 projectName = DSMFactory.getInstance().getDefaultProjectName();
             }
             INProject project = projectCacheManager.getProjectByName(projectName);
-            if (!domainId.equals(project.getProjectName())) {
+            if (domainId != null && !domainId.equals(project.getProjectName())) {
                 domainInst = this.getProjectDomainInstById(project.getId(), domainId);
             } else {
-                domainInst = this.getDomainInstByCat(projectName, UserSpace.SYS);
+                domainInst = this.getDomainInstByCat(projectName, UserSpace.USER);
             }
 
 
