@@ -132,16 +132,15 @@ public class TabListItem<T extends Enum> extends UIItem<T> {
                     logger.error(e);
                 }
             }
-            if (bindClass.length == 0 && this.getEntityClass() != null) {
+            if (bindClass.length == 0 && this.getEntityClass() != null && !this.getEntityClass().equals(Void.class)) {
                 bindClass = new Class[]{this.getEntityClass()};
             }
-
         }
         return bindClass;
     }
 
     public String getBindClassName() {
-        if (bindClassName == null && bindClass != null && bindClass.length > 0 && bindClass[0] != null) {
+        if (bindClassName == null && bindClass != null && bindClass.length > 0 && bindClass[0] != null && !bindClass[0].equals(Void.class)) {
             bindClassName = bindClass[0].getName();
         }
         return bindClassName;
@@ -336,8 +335,6 @@ public class TabListItem<T extends Enum> extends UIItem<T> {
                     enumBuffer.append(clazz.getName() + ".class,");
                 }
             }
-//        } else if (this.getBindClassName() != null && !this.getBindClassName().equals("")&& !this.getBindClassName().equals(Void.class.getName()) && !getBindClassName().equals(Enum.class.getName())) {
-//            enumBuffer.append(this.getBindClassName() + ".class");
         } else {
             enumBuffer.append("null");
         }

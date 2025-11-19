@@ -308,7 +308,7 @@ public class TreeListItem<T extends TreeListItem> extends TabListItem implements
     public String toEnumsStr() {
         StringBuffer enumBuffer = new StringBuffer();
 
-        if (this.getBindClass() != null && this.getBindClass().length > 0) {
+        if (this.getBindClass() != null && this.getBindClass().length > 0 && this.getBindClass()[0] != null) {
             for (Class clazz : this.getBindClass()) {
                 if (clazz != null) {
                     enumBuffer.append(clazz.getName() + ".class,");
