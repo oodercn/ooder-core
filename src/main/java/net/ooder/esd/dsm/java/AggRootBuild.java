@@ -17,6 +17,7 @@ import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
+import net.ooder.esd.dsm.JavaRoot;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.AggregationManager;
 import net.ooder.esd.dsm.aggregation.DomainInst;
@@ -25,6 +26,7 @@ import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.gen.view.GenCustomViewJava;
 import net.ooder.esd.dsm.repository.RepositoryInst;
 import net.ooder.esd.dsm.repository.RepositoryManager;
+import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.ViewInst;
 import net.ooder.esd.dsm.view.ViewManager;
 import net.ooder.esd.engine.ESDFacrory;
@@ -38,6 +40,8 @@ public class AggRootBuild {
 
 
     GenCustomViewJava viewTask;
+
+    AggViewRoot viewRoot;
 
     List<JavaSrcBean> javaViewBeans;
 
@@ -215,10 +219,23 @@ public class AggRootBuild {
             }
 
         }
-        AggViewRoot viewRoot = new AggViewRoot(domainInst, euClassName, customModuleBean);
+        this.viewRoot = new AggViewRoot(domainInst, euClassName, customModuleBean);
         this.viewTask = viewManager.genCustomViewJava(viewRoot, customViewBean, euClassName, false, chrome);
         javaViewBeans = viewTask.getJavaSrcBeanList();
         return viewTask;
+    }
+
+    public JavaGenSource buildViewContext(JavaSrcBean javaSrcBean) throws JDSException {
+        JavaTemp javaTemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaSrcBean.getJavaTempId());
+        JavaRoot javaRoot = buildRootBySrc(javaSrcBean);
+        JavaGenSource javaGenSource = BuildFactory.getInstance().createSource(javaSrcBean.getClassName(), javaRoot, javaTemp, javaSrcBean);
+        return javaGenSource;
+
+    }
+
+    private JavaRoot buildRootBySrc(JavaSrcBean javaSrcBean) throws JDSException {
+        JavaRoot javaRoot = BuildFactory.getInstance().buildJavaRoot(viewRoot, this.customViewBean, javaSrcBean.getPackageName(), javaSrcBean.getClassName());
+        return javaRoot;
     }
 
     public List<JavaSrcBean> genRepositoryViewJava() throws JDSException {

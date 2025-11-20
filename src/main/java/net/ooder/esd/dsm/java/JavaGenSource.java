@@ -1,5 +1,7 @@
 package net.ooder.esd.dsm.java;
 
+import net.ooder.esd.bean.CustomViewBean;
+import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.JavaRoot;
 import net.ooder.esd.dsm.temp.JavaTemp;
 
@@ -9,12 +11,17 @@ public class JavaGenSource {
     JavaSrcBean srcBean;
     String className;
 
-    public JavaGenSource(){
+    public JavaGenSource() {
 
     }
 
-    public JavaGenSource( String className,JavaRoot javaRoot, JavaTemp javatemp, JavaSrcBean srcBean) {
-        this.className=className;
+    public JavaGenSource(CustomViewBean customViewBean,JavaSrcBean srcBean){
+
+
+    }
+
+    public JavaGenSource(String className, JavaRoot javaRoot, JavaTemp javatemp, JavaSrcBean srcBean) {
+        this.className = className;
         this.javaRoot = javaRoot;
         this.javatemp = javatemp;
         this.srcBean = srcBean;
