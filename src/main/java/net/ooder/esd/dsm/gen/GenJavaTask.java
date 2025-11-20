@@ -6,6 +6,7 @@ import net.ooder.common.logging.LogSetpLog;
 import net.ooder.context.JDSActionContext;
 import net.ooder.context.JDSContext;
 import net.ooder.esd.dsm.BuildFactory;
+import net.ooder.esd.dsm.JavaRoot;
 import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
@@ -66,6 +67,37 @@ public abstract class GenJavaTask implements Callable<List<JavaSrcBean>> {
         return javaSrcBeans;
     }
 
+    public List<JavaTemp> getJavaTemps() {
+        List<JavaTemp> javaTemps = new ArrayList<>();
+        List<JavaGenSource> sources = getSourceList();
+        for (String className : classList) {
+            try {
+                JavaGenSource javaGenSource = BuildFactory.getInstance().getJavaGenSource(className);
+                if (javaGenSource != null) {
+                    javaTemps.add(javaGenSource.getJavatemp());
+                }
+            } catch (JDSException e) {
+                e.printStackTrace();
+            }
+        }
+        return javaTemps;
+    }
+
+    public List<JavaRoot> getContextList() {
+        List<JavaRoot> javaRoots = new ArrayList<>();
+        List<JavaGenSource> sources = getSourceList();
+        for (String className : classList) {
+            try {
+                JavaGenSource javaGenSource = BuildFactory.getInstance().getJavaGenSource(className);
+                if (javaGenSource != null) {
+                    javaRoots.add(javaGenSource.getJavaRoot());
+                }
+            } catch (JDSException e) {
+                e.printStackTrace();
+            }
+        }
+        return javaRoots;
+    }
 
     public List<String> getSkipsTempIds() {
         return skipsTempIds;
