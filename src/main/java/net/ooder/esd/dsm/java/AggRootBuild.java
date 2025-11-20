@@ -22,6 +22,7 @@ import net.ooder.esd.dsm.aggregation.AggregationManager;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.gen.view.GenCustomViewJava;
 import net.ooder.esd.dsm.repository.RepositoryInst;
 import net.ooder.esd.dsm.repository.RepositoryManager;
 import net.ooder.esd.dsm.view.ViewInst;
@@ -34,6 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AggRootBuild {
+
+
+    GenCustomViewJava viewTask;
 
     List<JavaSrcBean> javaViewBeans;
 
@@ -127,7 +131,8 @@ public class AggRootBuild {
 
     public void reBuildModule() throws JDSException {
         //1.1创建视图层
-        this.javaViewBeans = genCustomViewJava();
+        viewTask = genCustomViewJava();
+        this.javaViewBeans = viewTask.getJavaSrcBeanList();
         //2.1创建资源层接口V
         this.repositoryBeans = genRepositoryViewJava();
         //3.1预编译一次
@@ -145,14 +150,17 @@ public class AggRootBuild {
 
     public void genBuildModule() throws JDSException {
         //1.1创建视图层
-        this.javaViewBeans = genCustomViewJava();
+
+        viewTask = genCustomViewJava();
+        this.javaViewBeans = viewTask.getJavaSrcBeanList();
         buildRepository();
     }
 
 
     public List<JavaSrcBean> build() throws JDSException {
         //1.1创建视图层
-        this.javaViewBeans = genCustomViewJava();
+        viewTask = genCustomViewJava();
+        this.javaViewBeans = viewTask.getJavaSrcBeanList();
 
         if (domainInst != null && domainInst.getUserSpace().equals(UserSpace.VIEW)) {
             //2.1创建资源层接口V
@@ -197,19 +205,20 @@ public class AggRootBuild {
      * @return
      * @throws JDSException
      */
-    public List<JavaSrcBean> genCustomViewJava() throws JDSException {
+    public GenCustomViewJava genCustomViewJava() throws JDSException {
         chrome.printLog("创建关联视图模型...", true);
         ViewManager viewManager = DSMFactory.getInstance().getViewManager();
         CustomModuleBean customModuleBean = customViewBean.getModuleBean();
-        if (customModuleBean == null){
+        if (customModuleBean == null) {
             if (customViewBean.getMethodConfig() != null) {
                 customModuleBean = customViewBean.getMethodConfig().getModuleBean();
             }
 
         }
         AggViewRoot viewRoot = new AggViewRoot(domainInst, euClassName, customModuleBean);
-        javaViewBeans = viewManager.genCustomViewJava(viewRoot, customViewBean, euClassName, false, chrome);
-        return javaViewBeans;
+        this.viewTask = viewManager.genCustomViewJava(viewRoot, customViewBean, euClassName, false, chrome);
+        javaViewBeans = viewTask.getJavaSrcBeanList();
+        return viewTask;
     }
 
     public List<JavaSrcBean> genRepositoryViewJava() throws JDSException {

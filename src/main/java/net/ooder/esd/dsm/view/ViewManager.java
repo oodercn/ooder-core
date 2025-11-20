@@ -722,10 +722,11 @@ public class ViewManager {
     }
 
 
-    public List<JavaSrcBean> genCustomViewJava(AggViewRoot viewRoot, CustomViewBean viewBean, String className, boolean autocommit, ChromeProxy chrome) throws JDSException {
+    public GenCustomViewJava genCustomViewJava(AggViewRoot viewRoot, CustomViewBean viewBean, String className, boolean autocommit, ChromeProxy chrome) throws JDSException {
         DomainInst domainInst = (DomainInst) viewRoot.getDsmBean();
         ViewInst viewInst = this.createDefaultView(domainInst);
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        GenCustomViewJava customViewJava=null;
         boolean canCreate = true;
         if (viewBean instanceof CustomBlockFormViewBean) {
             if (viewBean.getAllFields().size() == 1 && (viewBean.getAllFields().get(0) instanceof FieldFormConfig)) {
@@ -737,13 +738,13 @@ public class ViewManager {
             }
         }
         if (canCreate) {
-            GenCustomViewJava customViewJava = new GenCustomViewJava(viewRoot, viewBean, className, chrome);
+            customViewJava = new GenCustomViewJava(viewRoot, viewBean, className, chrome);
             List<JavaSrcBean> viewFileList = BuildFactory.getInstance().syncTasks(viewRoot.getDsmBean().getDsmId(), Arrays.asList(customViewJava));
             javaSrcBeans.addAll(viewFileList);
         }
 
         this.updateViewInst(viewInst, autocommit);
-        return javaSrcBeans;
+        return customViewJava;
     }
 
     public CustomViewBean getDefaultViewBean(ModuleComponent moduleComponent, String domainId) {
