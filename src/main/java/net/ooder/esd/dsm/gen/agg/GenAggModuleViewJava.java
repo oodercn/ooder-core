@@ -8,7 +8,7 @@ import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.aggregation.context.AggModuleViewRoot;
 import net.ooder.esd.dsm.enums.RangeType;
-import net.ooder.esd.dsm.gen.BaseAggCallabel;
+import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenAggModuleViewJava extends BaseAggCallabel {
+public class GenAggModuleViewJava extends GenJavaTask {
 
     DomainInst domainInst;
     String className;

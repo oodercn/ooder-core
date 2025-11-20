@@ -6,7 +6,7 @@ import net.ooder.common.util.StringUtility;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.enums.RangeType;
-import net.ooder.esd.dsm.gen.BaseAggCallabel;
+import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.repository.RepositoryInst;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-public class GenTableRootJava extends BaseAggCallabel {
+public class GenTableRootJava extends GenJavaTask {
 
     public RepositoryInst repositoryInst;
     public List<DSMTableProxy> tables;

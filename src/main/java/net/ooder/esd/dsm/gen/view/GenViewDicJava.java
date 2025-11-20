@@ -11,7 +11,7 @@ import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.enums.RangeType;
-import net.ooder.esd.dsm.gen.BaseAggCallabel;
+import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
@@ -25,7 +25,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenViewDicJava extends BaseAggCallabel {
+public class GenViewDicJava extends GenJavaTask {
 
     public ViewInst viewInst;
     public List<TabListItem> items;

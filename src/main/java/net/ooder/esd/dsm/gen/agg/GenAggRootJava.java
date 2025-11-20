@@ -11,7 +11,7 @@ import net.ooder.esd.dsm.aggregation.context.AggMenuRoot;
 import net.ooder.esd.dsm.aggregation.context.AggServiceRoot;
 import net.ooder.esd.dsm.aggregation.ref.AggEntityRef;
 import net.ooder.esd.dsm.enums.RangeType;
-import net.ooder.esd.dsm.gen.BaseAggCallabel;
+import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-public class GenAggRootJava extends BaseAggCallabel {
+public class GenAggRootJava extends GenJavaTask {
 
     DomainInst domainInst;
     AggEntityConfig esdClassConfig;

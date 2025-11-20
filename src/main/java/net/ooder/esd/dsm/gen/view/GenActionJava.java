@@ -11,7 +11,7 @@ import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.enums.RangeType;
-import net.ooder.esd.dsm.gen.BaseAggCallabel;
+import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenActionJava extends BaseAggCallabel {
+public class GenActionJava extends GenJavaTask {
 
     public ViewInst viewInst;
     public List<TreeListItem> items;

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public abstract class BaseAggCallabel implements Callable<List<JavaSrcBean>> {
+public abstract class GenJavaTask implements Callable<List<JavaSrcBean>> {
     protected MinServerActionContextImpl autoruncontext;
     public ChromeProxy chrome;
     public List<String> skipsTempIds = new ArrayList<>();
@@ -23,7 +23,7 @@ public abstract class BaseAggCallabel implements Callable<List<JavaSrcBean>> {
     public List<String> classList = new ArrayList<>();
 
 
-    public BaseAggCallabel() {
+    public GenJavaTask() {
         JDSContext context = JDSActionContext.getActionContext();
         this.autoruncontext = new MinServerActionContextImpl(context.getHttpRequest(), context.getOgnlContext());
         autoruncontext.setParamMap(context.getContext());

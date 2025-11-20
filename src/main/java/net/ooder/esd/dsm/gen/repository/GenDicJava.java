@@ -9,7 +9,7 @@ import net.ooder.esd.annotation.ViewType;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.enums.DSMType;
 import net.ooder.esd.dsm.enums.RangeType;
-import net.ooder.esd.dsm.gen.BaseAggCallabel;
+import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.repository.RepositoryInst;
@@ -23,7 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenDicJava<T extends TabListItem> extends BaseAggCallabel {
+public class GenDicJava<T extends TabListItem> extends GenJavaTask {
 
     RepositoryInst repositoryInst;
     List<T> subItems;
