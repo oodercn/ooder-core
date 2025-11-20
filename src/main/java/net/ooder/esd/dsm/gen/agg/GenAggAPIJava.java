@@ -54,14 +54,16 @@ public class GenAggAPIJava  extends BaseAggCallabel {
         for (String javaTempId : allTemps) {
             JavaTemp javatemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaTempId);
             if (javatemp != null && !javatemp.getRangeType().equals(RangeType.MODULEVIEW) && javatemp.getAggregationType().equals(AggregationType.ENTITY)) {
-                AggProxyRoot root = new AggProxyRoot(domainInst, esdClassConfig);
+                AggProxyRoot javaRoot = new AggProxyRoot(domainInst, esdClassConfig);
                 String packageName = className.substring(0, className.lastIndexOf("."));
-                root.setClassName(simClassName);
-                root.setPackageName(packageName);
-                File file = javaGen.createJava(javatemp, root, chrome);
+                javaRoot.setClassName(simClassName);
+                javaRoot.setPackageName(packageName);
+                File file = javaGen.createJava(javatemp, javaRoot, chrome);
                 JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, domainInst, javaTempId);
                 srcBean.setEntityClassName(esdClassConfig.getESDClass().getEntityClass().getClassName());
                 srcFiles.add(srcBean);
+                BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                classList.add(srcBean.getClassName());
             }
         }
         return srcFiles;

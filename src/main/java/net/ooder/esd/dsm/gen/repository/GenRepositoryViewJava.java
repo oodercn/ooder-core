@@ -123,18 +123,22 @@ public class GenRepositoryViewJava extends BaseAggCallabel {
                 } catch (ClassNotFoundException e) {
 
                 }
+                JavaSrcBean srcBean =null;
                 if (clazz == null || clear) {
                     File file = javaGen.createJava(javatemp, javaRoot, chrome);
-                    JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, dsmBean, javatemp.getJavaTempId());
+                     srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, dsmBean, javatemp.getJavaTempId());
                     srcFiles.add(srcBean);
                     dsmBean.addJavaBean(srcBean);
                 } else {
-                    JavaSrcBean srcBean = dsmBean.getJavaSrcByClassName(realClassName);
+                     srcBean = dsmBean.getJavaSrcByClassName(realClassName);
                     if (srcBean != null && srcBean.getJavaTempId() == null) {
                         srcBean.setJavaTempId(javatemp.getJavaTempId());
                     }
                     srcFiles.add(srcBean);
                 }
+
+                BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                classList.add(srcBean.getClassName());
             }
 
         }

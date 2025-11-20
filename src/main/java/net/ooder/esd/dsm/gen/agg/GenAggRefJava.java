@@ -59,20 +59,22 @@ public class GenAggRefJava extends BaseAggCallabel {
                     proxyList.add(proxy);
                 }
 
-                AggEntityRefRoot tempRoot = new AggEntityRefRoot(domainInst, esdClassConfig, proxyList, javatemp.getRefType());
+                AggEntityRefRoot javaRoot = new AggEntityRefRoot(domainInst, esdClassConfig, proxyList, javatemp.getRefType());
                 String basePath = domainInst.getPackageName();
-                tempRoot.setBasepath(basePath);
+                javaRoot.setBasepath(basePath);
                 String packageName = basePath + "." + esdClassConfig.getSourceClass().getName().toLowerCase();
                 if (javatemp.getPackagePostfix() != null && !javatemp.getPackagePostfix().equals("")) {
                     packageName = packageName + "." + javatemp.getPackagePostfix();
                 }
                 String className = StringUtility.replace(javatemp.getNamePostfix(), "**", esdClassConfig.getSourceClass().getName());
-                tempRoot.setClassName(className);
-                tempRoot.setPackageName(packageName);
-                File file = GenJava.getInstance(domainInst.getProjectVersionName()).createJava(javatemp, tempRoot, chrome);
+                javaRoot.setClassName(className);
+                javaRoot.setPackageName(packageName);
+                File file = GenJava.getInstance(domainInst.getProjectVersionName()).createJava(javatemp, javaRoot, chrome);
                 JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, domainInst, javaTempId);
                 srcBean.setEntityClassName(esdClassConfig.getESDClass().getClassName());
                 srcFiles.add(srcBean);
+                BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                classList.add(srcBean.getClassName());
             }
         }
 

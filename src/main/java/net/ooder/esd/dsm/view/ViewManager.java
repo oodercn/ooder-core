@@ -642,9 +642,7 @@ public class ViewManager {
         for (JavaSrcBean srcBean : viewBeans) {
             viewInst.updateView(srcBean);
         }
-
         this.updateViewInst(viewInst, true);
-
         return viewBeans;
 
     }

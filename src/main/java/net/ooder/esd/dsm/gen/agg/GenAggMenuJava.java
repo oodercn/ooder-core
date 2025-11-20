@@ -55,20 +55,22 @@ public class GenAggMenuJava extends BaseAggCallabel {
         for (String javaTempId : allTemps) {
             JavaTemp javatemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaTempId);
             if (javatemp != null && !javatemp.getRangeType().equals(RangeType.MODULEVIEW) && javatemp.getAggregationType().equals(AggregationType.MENU)) {
-                AggMenuRoot root = new AggMenuRoot(domainInst, esdClassConfig, dsmRefs);
+                AggMenuRoot javaRoot = new AggMenuRoot(domainInst, esdClassConfig, dsmRefs);
                 String basePath = domainInst.getPackageName() + "." + esdClassConfig.getESDClass().getEntityClass().getName().toLowerCase();
-                root.setBasepath(basePath);
+                javaRoot.setBasepath(basePath);
                 String packageName = basePath;
                 if (javatemp.getPackagePostfix() != null && !javatemp.getPackagePostfix().equals("")) {
                     packageName = packageName + "." + javatemp.getPackagePostfix();
                 }
                 String className = StringUtility.replace(javatemp.getNamePostfix(), "**", esdClassConfig.getESDClass().getEntityClass().getName());
-                root.setClassName(className);
-                root.setPackageName(packageName);
-                File file = javaGen.createJava(javatemp, root, chrome);
+                javaRoot.setClassName(className);
+                javaRoot.setPackageName(packageName);
+                File file = javaGen.createJava(javatemp, javaRoot, chrome);
                 JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, domainInst, javaTempId);
                 srcBean.setEntityClassName(esdClassConfig.getESDClass().getEntityClassName());
                 srcFiles.add(srcBean);
+                BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                classList.add(srcBean.getClassName());
             }
         }
         return srcFiles;

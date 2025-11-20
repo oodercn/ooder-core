@@ -39,7 +39,7 @@ public class GenAggModuleViewJava extends BaseAggCallabel {
         JDSActionContext.setContext(autoruncontext);
         String projectName = domainInst.getProjectVersionName();
         GenJava javaGen = GenJava.getInstance(projectName);
-        AggModuleViewRoot allRoot = new AggModuleViewRoot(domainInst, className, moduleBeans);
+        AggModuleViewRoot javaRoot = new AggModuleViewRoot(domainInst, className, moduleBeans);
         List<JavaSrcBean> srcFiles = new ArrayList<>();
         String simpleClassName = className.substring(className.lastIndexOf(".") + 1);
         String packageName = className.substring(0, className.lastIndexOf("."));
@@ -50,9 +50,9 @@ public class GenAggModuleViewJava extends BaseAggCallabel {
                     packageName = packageName + "." + javatemp.getPackagePostfix();
                 }
                 simpleClassName = StringUtility.replace(javatemp.getNamePostfix(), "**", simpleClassName);
-                allRoot.setPackageName(packageName);
-                allRoot.setClassName(simpleClassName);
-                File file = javaGen.createJava(javatemp, allRoot, chrome);
+                javaRoot.setPackageName(packageName);
+                javaRoot.setClassName(simpleClassName);
+                File file = javaGen.createJava(javatemp, javaRoot, chrome);
                 JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, domainInst, javatemp.getJavaTempId());
                 try {
                     javaGen.dynCompile(srcBean.getClassName(), srcBean.getContent());
@@ -60,6 +60,8 @@ public class GenAggModuleViewJava extends BaseAggCallabel {
                     e.printStackTrace();
                 }
                 srcFiles.add(srcBean);
+                BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                classList.add(srcBean.getClassName());
             }
         }
         return srcFiles;

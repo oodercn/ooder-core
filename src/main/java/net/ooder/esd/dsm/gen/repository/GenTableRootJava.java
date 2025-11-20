@@ -64,6 +64,8 @@ public class GenTableRootJava extends BaseAggCallabel {
                 File file = GenJava.getInstance(repositoryInst.getProjectVersionName()).createJava(javatemp, allRoot, chrome);
                 JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, repositoryInst, javaTempId);
                 srcFiles.add(srcBean);
+                BuildFactory.getInstance().createSource(srcBean.getClassName(), allRoot, javatemp, srcBean);
+                classList.add(srcBean.getClassName());
             }
 
 

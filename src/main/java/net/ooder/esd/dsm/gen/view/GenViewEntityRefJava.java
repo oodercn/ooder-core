@@ -78,6 +78,8 @@ public class GenViewEntityRefJava extends BaseAggCallabel {
                     srcBean.setSourceClassName(methodConfig.getSourceClassName());
                     srcBean.setMethodName(methodConfig.getMethodName());
                     srcFiles.add(srcBean);
+                    BuildFactory.getInstance().createSource(srcBean.getClassName(), tempRoot, javatemp, srcBean);
+                    classList.add(srcBean.getClassName());
                 }
             }
 

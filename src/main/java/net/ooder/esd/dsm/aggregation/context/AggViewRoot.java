@@ -1,11 +1,8 @@
 package net.ooder.esd.dsm.aggregation.context;
 
 import net.ooder.annotation.Aggregation;
-import net.ooder.annotation.AggregationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.annotation.MethodChinaName;
-import net.ooder.common.JDSException;
-import net.ooder.common.util.ClassUtility;
 import net.ooder.common.util.StringUtility;
 import net.ooder.config.ListResultModel;
 import net.ooder.config.ResultModel;
@@ -18,16 +15,13 @@ import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.UIType;
 import net.ooder.esd.annotation.view.*;
-import net.ooder.esd.bean.CustomView;
 import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.custom.ESDField;
-import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMInst;
 import net.ooder.esd.dsm.JavaRoot;
 import net.ooder.esd.dsm.java.JavaPackage;
-import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.esd.tool.properties.fchart.Categories;
@@ -39,7 +33,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 
 public class AggViewRoot implements JavaRoot {
@@ -87,7 +84,6 @@ public class AggViewRoot implements JavaRoot {
             Aggregation.class,
             LayoutViewAnnotation.class,
             ButtonViewsViewAnnotation.class,
-
             NavTreeViewAnnotation.class,
             APIEventAnnotation.class,
             FormAnnotation.class,
@@ -159,10 +155,10 @@ public class AggViewRoot implements JavaRoot {
             imports.add(clazz.getName());
         }
 
-        MethodConfig methodConfig=moduleBean.getMethodConfig();
-        if (methodConfig!=null){
-            CustomViewBean viewBean=methodConfig.getView();
-            if (viewBean!= null && viewBean.getViewClassName() != null) {
+        MethodConfig methodConfig = moduleBean.getMethodConfig();
+        if (methodConfig != null) {
+            CustomViewBean viewBean = methodConfig.getView();
+            if (viewBean != null && viewBean.getViewClassName() != null) {
                 Set<Class> otherClass = viewBean.getOtherClass();
                 if (otherClass != null) {
                     for (Class other : otherClass) {
@@ -174,17 +170,16 @@ public class AggViewRoot implements JavaRoot {
             }
         }
 
-        String basePackage =packageName.substring(0, className.lastIndexOf("."));
+        String basePackage = packageName.substring(0, className.lastIndexOf("."));
 
         List<JavaPackage> javaPackages = dsmBean.getRootPackage().listAllChildren();
         this.imports.add(basePackage + ".*");
         for (JavaPackage javaPackage : javaPackages) {
-            if (javaPackage.listFiles().size()>0 &&javaPackage.getPackageName().startsWith(basePackage)) {
+            if (javaPackage.listFiles().size() > 0 && javaPackage.getPackageName().startsWith(basePackage)) {
                 this.imports.add(javaPackage.getPackageName() + ".*");
             }
 
         }
-
 
 
 //        Set<String> basePackages1 = new HashSet();

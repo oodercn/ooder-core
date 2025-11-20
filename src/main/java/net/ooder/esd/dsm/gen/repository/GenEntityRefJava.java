@@ -69,6 +69,8 @@ public class GenEntityRefJava extends BaseAggCallabel {
                 File file = GenJava.getInstance(repositoryInst.getProjectVersionName()).createJava(javatemp, tempRoot, chrome);
                 JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, repositoryInst, javaTempId);
                 srcFiles.add(srcBean);
+                BuildFactory.getInstance().createSource(srcBean.getClassName(), tempRoot, javatemp, srcBean);
+                classList.add(srcBean.getClassName());
             }
         }
         return srcFiles;

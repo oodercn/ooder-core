@@ -53,9 +53,9 @@ public class GenAggEntityJava extends BaseAggCallabel {
         for (String javaTempId : allTemps) {
             JavaTemp javatemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaTempId);
             if (javatemp != null && javatemp.getAggregationType().equals(aggregationType)) {
-                AggEntityRoot root = new AggEntityRoot(domainInst, esdClassConfig, dsmRefs);
+                AggEntityRoot javaRoot = new AggEntityRoot(domainInst, esdClassConfig, dsmRefs);
                 String entityName = esdClassConfig.getESDClass().getEntityClass().getName().toLowerCase();
-                String moduleName = root.getModuleName();
+                String moduleName = javaRoot.getModuleName();
                 String spaceSpl =  domainInst.getEuPackage()+ ".";
                 if (moduleName.startsWith(spaceSpl)) {
                     moduleName = moduleName.substring(spaceSpl.length());
@@ -69,7 +69,7 @@ public class GenAggEntityJava extends BaseAggCallabel {
                     }
                 }
 
-                root.setBasepath(basePath.toLowerCase());
+                javaRoot.setBasepath(basePath.toLowerCase());
                 String packageName = basePath.toLowerCase();
                 if (javatemp.getPackagePostfix() != null && !javatemp.getPackagePostfix().equals("") && !packageName.endsWith("." + javatemp.getPackagePostfix())) {
                     packageName = packageName + "." + javatemp.getPackagePostfix();
@@ -80,12 +80,14 @@ public class GenAggEntityJava extends BaseAggCallabel {
                 }
 
                 className = StringUtility.replace(javatemp.getNamePostfix(), "**", className);
-                root.setClassName(className);
-                root.setPackageName(packageName);
-                File file = javaGen.createJava(javatemp, root, chrome);
+                javaRoot.setClassName(className);
+                javaRoot.setPackageName(packageName);
+                File file = javaGen.createJava(javatemp, javaRoot, chrome);
                 JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, domainInst, javaTempId);
                 srcBean.setEntityClassName(esdClassConfig.getESDClass().getEntityClass().getClassName());
                 srcFiles.add(srcBean);
+                BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                classList.add(srcBean.getClassName());
             }
         }
         return srcFiles;

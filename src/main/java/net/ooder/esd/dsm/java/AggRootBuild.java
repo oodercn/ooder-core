@@ -99,8 +99,8 @@ public class AggRootBuild {
                 this.domainInst = DSMFactory.getInstance().getDefaultDomain(projectName, userSpace);
                 domainId = domainInst.getDomainId();
             }
-
         }
+
         if (domainInst == null) {
             domainInst = DSMFactory.getInstance().getDefaultDomain(projectName, UserSpace.VIEW);
             domainId = domainInst.getDomainId();
@@ -153,6 +153,7 @@ public class AggRootBuild {
     public List<JavaSrcBean> build() throws JDSException {
         //1.1创建视图层
         this.javaViewBeans = genCustomViewJava();
+
         if (domainInst != null && domainInst.getUserSpace().equals(UserSpace.VIEW)) {
             //2.1创建资源层接口V
             this.repositoryBeans = genRepositoryViewJava();

@@ -87,23 +87,23 @@ public class JavaTempManager {
         try {
 
 
-                this.dbconfigFolder = space.getRootfolder().createChildFolder(dbconfigpath, JDSServer.getInstance().getAdminUser().getId());
-                this.dsmBeanFolder = space.getRootfolder().createChildFolder(dsmbeantemp, JDSServer.getInstance().getAdminUser().getId());
-                this.tempBeanFolder = space.getRootfolder().createChildFolder(javatemppath, JDSServer.getInstance().getAdminUser().getId());
-                this.thumbnailFolder = space.getRootfolder().createChildFolder(thumbnailpath, JDSServer.getInstance().getAdminUser().getId());
-                loadJavaTemps();
-                providerConfigs = loadDbConfig();
-                dsmBeans = loadDsmBeans();
+            this.dbconfigFolder = space.getRootfolder().createChildFolder(dbconfigpath, JDSServer.getInstance().getAdminUser().getId());
+            this.dsmBeanFolder = space.getRootfolder().createChildFolder(dsmbeantemp, JDSServer.getInstance().getAdminUser().getId());
+            this.tempBeanFolder = space.getRootfolder().createChildFolder(javatemppath, JDSServer.getInstance().getAdminUser().getId());
+            this.thumbnailFolder = space.getRootfolder().createChildFolder(thumbnailpath, JDSServer.getInstance().getAdminUser().getId());
+            loadJavaTemps();
+            providerConfigs = loadDbConfig();
+            dsmBeans = loadDsmBeans();
 
-                this.tempFolder = space.getRootfolder().createChildFolder(TempPath, JDSServer.getInstance().getAdminUser().getId());
-                tempFolder.getChildrenRecursivelyList();
-                //批量预读配置
-                Set<String> versions = new HashSet<>();
-                List<FileInfo> fileInfos = tempFolder.getFileListRecursively();
-                for (FileInfo fileInfo : fileInfos) {
-                    versions.add(fileInfo.getCurrentVersonId());
-                }
-                CtVfsFactory.getCtVfsService().loadVersionByIds(versions);
+            this.tempFolder = space.getRootfolder().createChildFolder(TempPath, JDSServer.getInstance().getAdminUser().getId());
+            tempFolder.getChildrenRecursivelyList();
+            //批量预读配置
+            Set<String> versions = new HashSet<>();
+            List<FileInfo> fileInfos = tempFolder.getFileListRecursively();
+            for (FileInfo fileInfo : fileInfos) {
+                versions.add(fileInfo.getCurrentVersonId());
+            }
+            CtVfsFactory.getCtVfsService().loadVersionByIds(versions);
 
         } catch (JDSException e) {
             e.printStackTrace();
@@ -228,13 +228,14 @@ public class JavaTempManager {
             if (javaTempId != null) {
                 srcBean.setJavaTempId(javaTempId);
             }
-
             dsmInst.getJavaSrcBeans().add(srcBean);
         } else {
             srcBean = new JavaSrcBean(file, dsmInst, javaTempId);
         }
         return srcBean;
     }
+
+
 
 
     public JavaTemp updateJavaTemp(JavaTemp javaTemp) throws JDSException {
@@ -613,6 +614,17 @@ public class JavaTempManager {
                 if (javatemp.getViewType() != null && javatemp.getViewType().equals(viewType)) {
                     javaTemps.add(javatemp);
                 }
+            }
+        }
+        return javaTemps;
+    }
+
+    public List<JavaTemp> getCustomModuleViewTemps(ViewType type) throws JDSException {
+        List<JavaTemp> javaTemps = new ArrayList<>();
+        List<JavaTemp> viewTemps = getCustomViewTemps(type);
+        for (JavaTemp javatemp : viewTemps) {
+            if (javatemp.getRangeType() != null && javatemp.getRangeType().equals(RangeType.MODULEVIEW)) {
+                javaTemps.add(javatemp);
             }
         }
         return javaTemps;

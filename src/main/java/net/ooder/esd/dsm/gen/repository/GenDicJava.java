@@ -87,21 +87,24 @@ public class GenDicJava<T extends TabListItem> extends BaseAggCallabel {
                     } catch (ClassNotFoundException e) {
 
                     }
+                    JavaSrcBean srcBean =null;
                     if (clazz == null || canReGen) {
                         File file = javaGen.createJava(javatemp, javaRoot, chrome);
-                        JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, repositoryInst, javatemp.getJavaTempId());
+                         srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, repositoryInst, javatemp.getJavaTempId());
                         srcFiles.add(srcBean);
                         if (treeItem != null) {
                             treeItem.setBindClass(new Class[]{srcBean.loadClass()});
                         }
                         repositoryInst.addJavaBean(srcBean);
                     } else {
-                        JavaSrcBean srcBean = repositoryInst.getJavaSrcByClassName(realClassName);
+                         srcBean = repositoryInst.getJavaSrcByClassName(realClassName);
                         if (srcBean != null && srcBean.getJavaTempId() == null) {
                             srcBean.setJavaTempId(javatemp.getJavaTempId());
                         }
                         srcFiles.add(srcBean);
                     }
+                    BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                    classList.add(srcBean.getClassName());
                 }
             }
         }

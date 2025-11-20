@@ -75,6 +75,8 @@ public class GenViewDicJava extends BaseAggCallabel {
                     File file = javaGen.createJava(javatemp, dicViewRoot, chrome);
                     JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, viewInst, javatemp.getJavaTempId());
                     javaSrcBeans.add(srcBean);
+                    BuildFactory.getInstance().createSource(srcBean.getClassName(), dicViewRoot, javatemp, srcBean);
+                    classList.add(srcBean.getClassName());
                 }
             }
             for (JavaSrcBean srcBean : javaSrcBeans) {

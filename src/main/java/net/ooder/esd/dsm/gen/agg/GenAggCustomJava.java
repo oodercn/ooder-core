@@ -87,6 +87,8 @@ public class GenAggCustomJava extends BaseAggCallabel {
                     JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, domainInst, javatemp.getJavaTempId());
                     srcFiles.add(srcBean);
                     domainInst.addJavaBean(srcBean);
+                    BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                    classList.add(srcBean.getClassName());
                 }
             }
         }

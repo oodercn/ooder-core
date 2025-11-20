@@ -16,7 +16,6 @@ import net.ooder.esd.dsm.repository.RepositoryInst;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.context.DicViewRoot;
 import net.ooder.esd.tool.properties.item.TabListItem;
-
 import net.ooder.jds.core.esb.EsbUtil;
 
 import java.io.File;
@@ -74,18 +73,21 @@ public class GenCustomDic extends BaseAggCallabel {
                     } catch (ClassNotFoundException e) {
 
                     }
+                    JavaSrcBean srcBean = null;
                     if (clazz == null) {
                         File file = javaGen.createJava(javatemp, javaRoot, chrome);
-                        JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, repositoryInst, javatemp.getJavaTempId());
+                        srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, repositoryInst, javatemp.getJavaTempId());
                         srcFiles.add(srcBean);
                         repositoryInst.addJavaBean(srcBean);
                     } else {
-                        JavaSrcBean srcBean = repositoryInst.getJavaSrcByClassName(realClassName);
+                        srcBean = repositoryInst.getJavaSrcByClassName(realClassName);
                         if (srcBean != null && srcBean.getJavaTempId() == null) {
                             srcBean.setJavaTempId(javatemp.getJavaTempId());
                         }
                         srcFiles.add(srcBean);
                     }
+                    BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                    classList.add(srcBean.getClassName());
                 }
             }
         }
@@ -95,8 +97,8 @@ public class GenCustomDic extends BaseAggCallabel {
 
     public ChromeProxy getCurrChromeDriver() {
         ChromeProxy chrome = JDSActionContext.getActionContext().Par("$currChromeDriver", ChromeProxy.class);
-        if (chrome==null){
-            chrome=new LogSetpLog();
+        if (chrome == null) {
+            chrome = new LogSetpLog();
         }
         return chrome;
     }

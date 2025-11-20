@@ -61,12 +61,12 @@ public class GenActionJava extends BaseAggCallabel {
             for (TreeListItem listItem : items) {
                 genChildAction(viewInst, listItem, menuBarBean, paramBeans, events, className);
             }
-            ActionViewRoot actionViewRoot = new ActionViewRoot(viewInst, items, menuBarBean, paramBeans, events, className);
+            ActionViewRoot javaRoot = new ActionViewRoot(viewInst, items, menuBarBean, paramBeans, events, className);
             GenJava javaGen = GenJava.getInstance(viewInst.getProjectVersionName());
             List<JavaTemp> viewTemps = BuildFactory.getInstance().getTempManager().getCustomViewTemps( ViewType.NAVMENUBAR);
             for (JavaTemp javatemp : viewTemps) {
                 if (javatemp.getRangeType() != null && javatemp.getRangeType().equals(RangeType.MODULEVIEW)) {
-                    File file = javaGen.createJava(javatemp, actionViewRoot, chrome);
+                    File file = javaGen.createJava(javatemp, javaRoot, chrome);
                     JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, viewInst, javatemp.getJavaTempId());
                     try {
                         clazz = javaGen.dynCompile(srcBean.getClassName(), srcBean.getContent());
@@ -74,6 +74,8 @@ public class GenActionJava extends BaseAggCallabel {
                         e.printStackTrace();
                     }
                     javaSrcBeans.add(srcBean);
+                    BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                    classList.add(srcBean.getClassName());
                 }
             }
 

@@ -22,6 +22,7 @@ import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
 import net.ooder.esd.dsm.enums.DSMType;
 import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.java.*;
+import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.temp.JavaTempManager;
 import net.ooder.esd.dsm.view.context.*;
 import net.ooder.esd.engine.ESDFacrory;
@@ -51,6 +52,8 @@ public class BuildFactory {
     private static Map<String, BuildFactory> managerMap = new HashMap<String, BuildFactory>();
 
     private Map<CustomViewBean, AggRootBuild> aggRootBuildMap = new HashMap<>();
+
+    private Map<String, JavaGenSource> javaGenSourceMap = new HashMap<>();
 
     private Map<String, AggRootBuild> classRootBuildMap = new HashMap<>();
 
@@ -96,8 +99,6 @@ public class BuildFactory {
         this.space = space;
         this.classManager = ESDClassManager.getInstance(space);
         this.tempManager = JavaTempManager.getInstance(space);
-
-
     }
 
 
@@ -265,7 +266,6 @@ public class BuildFactory {
     }
 
     public void registerClass(Class clazz) {
-
         if (clazz != null) {
             if (AnnotationUtil.getClassAnnotation(clazz, Aggregation.class) != null
                     || AnnotationUtil.getClassAnnotation(clazz, EsbBeanAnnotation.class) != null) {
@@ -283,6 +283,31 @@ public class BuildFactory {
         }
     }
 
+    public JavaGenSource createSource(String className, JavaRoot javaRoot, JavaTemp javatemp, JavaSrcBean srcBean) {
+        JavaGenSource source = new JavaGenSource(className, javaRoot, javatemp, srcBean);
+        javaGenSourceMap.put(className, source);
+        return source;
+    }
+
+    public JavaGenSource getJavaGenSource(String className) throws JDSException {
+        JavaGenSource source = javaGenSourceMap.get(className);
+        return source;
+    }
+
+
+    public JavaGenSource updateSource(JavaGenSource source) {
+        javaGenSourceMap.put(source.getClassName(), source);
+        return source;
+    }
+
+
+    public Map<String, JavaGenSource> getJavaGenSourceMap() {
+        return javaGenSourceMap;
+    }
+
+    public void setJavaGenSourceMap(Map<String, JavaGenSource> javaGenSourceMap) {
+        this.javaGenSourceMap = javaGenSourceMap;
+    }
 
     public JavaPackage findJavaPackage(String projectName, String packageName) {
         JavaPackage javaPackage = null;

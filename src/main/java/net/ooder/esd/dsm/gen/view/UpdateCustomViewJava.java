@@ -51,6 +51,8 @@ public class UpdateCustomViewJava extends BaseAggCallabel {
             File file = javaGen.createJava(javaTemp, javaRoot, chrome);
             JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, defaultView, javaTemp.getJavaTempId());
             javaSrcBeans.add(srcBean);
+            BuildFactory.getInstance().createSource(srcBean.getClassName(), viewRoot, javaTemp, srcBean);
+            classList.add(srcBean.getClassName());
         }
         return javaSrcBeans;
     }

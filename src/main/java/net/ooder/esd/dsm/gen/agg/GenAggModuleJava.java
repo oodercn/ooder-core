@@ -42,7 +42,7 @@ public class GenAggModuleJava extends BaseAggCallabel {
         JDSActionContext.setContext(autoruncontext);
         String projectName = domainInst.getProjectVersionName();
         GenJava javaGen = GenJava.getInstance(projectName);
-        AggRoot allRoot = new AggRoot(domainInst);
+        AggRoot javaRoot = new AggRoot(domainInst);
         List<JavaSrcBean> srcFiles = new ArrayList<>();
         if (allTemps == null) {
             allTemps = domainInst.getJavaTempIds();
@@ -55,11 +55,13 @@ public class GenAggModuleJava extends BaseAggCallabel {
                     packageName = packageName + "." + javatemp.getPackagePostfix();
                 }
                 String className = StringUtility.replace(javatemp.getNamePostfix(), "**", OODUtil.formatJavaName( domainInst.getEuPackage() , true));
-                allRoot.setPackageName(packageName);
-                allRoot.setClassName(className);
-                File file = javaGen.createJava(javatemp, allRoot, chrome);
+                javaRoot.setPackageName(packageName);
+                javaRoot.setClassName(className);
+                File file = javaGen.createJava(javatemp, javaRoot, chrome);
                 JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, domainInst, javaTempId);
                 srcFiles.add(srcBean);
+                BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                classList.add(srcBean.getClassName());
 
             }
         }
