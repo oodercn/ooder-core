@@ -25,7 +25,7 @@ public abstract class BaseAggCallabel implements Callable<List<JavaSrcBean>> {
 
     public BaseAggCallabel() {
         JDSContext context = JDSActionContext.getActionContext();
-        this.autoruncontext = new MinServerActionContextImpl(context.getHttpRequest(),context.getOgnlContext());
+        this.autoruncontext = new MinServerActionContextImpl(context.getHttpRequest(), context.getOgnlContext());
         autoruncontext.setParamMap(context.getContext());
         if (context.getSessionId() != null) {
             autoruncontext.setSessionId(context.getSessionId());
@@ -48,6 +48,22 @@ public abstract class BaseAggCallabel implements Callable<List<JavaSrcBean>> {
         }
 
         return sources;
+    }
+
+    public List<JavaSrcBean> getJavaSrcBeanList() {
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        List<JavaGenSource> sources = getSourceList();
+        for (String className : classList) {
+            try {
+                JavaGenSource javaGenSource = BuildFactory.getInstance().getJavaGenSource(className);
+                if (javaGenSource != null) {
+                    javaSrcBeans.add(javaGenSource.getSrcBean());
+                }
+            } catch (JDSException e) {
+                e.printStackTrace();
+            }
+        }
+        return javaSrcBeans;
     }
 
 
