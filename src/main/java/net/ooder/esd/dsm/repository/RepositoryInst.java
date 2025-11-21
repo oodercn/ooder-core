@@ -188,8 +188,10 @@ public class RepositoryInst extends DSMInst implements Comparable<RepositoryInst
     @JSONField(serialize = false)
     public List<ESDClass> getAggBeans(UserSpace userSpace, AggregationType aggregationType) {
         List<JavaSrcBean> repositoryList = this.getRepositoryInst().getJavaEntities();
+        List<JavaSrcBean> allEntityList = new ArrayList<>();
+        allEntityList.addAll(repositoryList);
         List<ESDClass> entityList = new ArrayList<>();
-        for (JavaSrcBean srcBean : repositoryList) {
+        for (JavaSrcBean srcBean : allEntityList) {
             String className = srcBean.getClassName();
             try {
                 Class clazz = ClassUtility.loadClass(className);
