@@ -116,7 +116,7 @@ public class ActionViewRoot implements JavaRoot {
         requestMapping = new RequestMappingBean(this.className.toLowerCase(), url);
         try {
             for (Class clazz : customClass) {
-                imports.add(clazz.getName());
+                imports.add(clazz.getPackage().getName() + ".*");
                 if (clazz.isAnnotation()) {
                     imports = MethodUtil.getAllImports(clazz, imports);
                 }
@@ -124,7 +124,7 @@ public class ActionViewRoot implements JavaRoot {
 
             for (TreeListItem listItem : treeListItems) {
                 for (Class clazz : listItem.getBindClass()) {
-                    imports.add(clazz.getName());
+                    imports.add(clazz.getPackage().getName() + ".*");
                 }
 
                 if (listItem.getEuClassName() != null) {

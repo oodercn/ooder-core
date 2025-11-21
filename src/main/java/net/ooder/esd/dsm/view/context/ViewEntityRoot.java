@@ -162,7 +162,7 @@ public class ViewEntityRoot<T extends CustomViewBean<ESDFieldConfig, UIItem, ? e
             apiClassConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(methodConfig.getViewClassName());
             sourceClass = methodConfig.getSourceClass();
             for (Class clazz : customClass) {
-                imports.add(clazz.getName());
+                imports.add(clazz.getPackage().getName() + ".*");
                 if (clazz.isAnnotation()) {
                     imports = MethodUtil.getAllImports(clazz, imports);
                 }

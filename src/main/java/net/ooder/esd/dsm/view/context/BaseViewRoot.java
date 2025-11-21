@@ -117,7 +117,7 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
         List<ESDClass> esdClasses = repositoryInst.getAggBeans(UserSpace.VIEW, AggregationType.ENTITY);
         for (ESDClass esdClass : esdClasses) {
             Class entityClass = esdClass.getAggregationBean().getEntityClass();
-            if (entityClass != null && entityClass.getSimpleName().equals(simClassName)) {
+            if (entityClass != null && entityClass.getPackage().getName().startsWith(repositoryInst.getPackageName() + "." + moduleName) && entityClass.getSimpleName().equals(simClassName)) {
                 serviceClass = esdClass.getCtClass();
                 imports.add(serviceClass.getPackage().getName() + ".*");
                 serviceClassName = serviceClass.getSimpleName();
@@ -136,13 +136,13 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
                     aggEntityConfig.setAggregationBean(aggregationBean);
                 } else {
                     if (aggregationBean.getRootClass() != null && !aggregationBean.getRootClass().equals(Void.class)) {
-                        imports.add(aggregationBean.getRootClass().getName());
+                        imports.add(aggregationBean.getRootClass().getPackage().getName() + ".*");
                     }
                     if (aggregationBean.getSourceClass() != null && !aggregationBean.getSourceClass().equals(Void.class)) {
-                        imports.add(aggregationBean.getSourceClass().getName());
+                        imports.add(aggregationBean.getSourceClass().getPackage().getName() + ".*");
                     }
                     if (aggregationBean.getEntityClass() != null && !aggregationBean.getEntityClass().equals(Void.class)) {
-                        imports.add(aggregationBean.getEntityClass().getName());
+                        imports.add(aggregationBean.getEntityClass().getPackage().getName() + ".*");
                     }
                 }
                 aggEntityConfig.getRequestMappingBean().reSetUrl(this.baseUrl);
@@ -234,7 +234,7 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
         }
 
         if (moduleName.equals("")) {
-            moduleName = simClassName.toLowerCase();
+            moduleName = this.packageName + "." + simClassName.toLowerCase();
         }
 
         if (!moduleName.equals(simClassName.toLowerCase()) && !moduleName.endsWith("." + simClassName.toLowerCase()) && !simClassName.toLowerCase().endsWith(moduleName.toLowerCase())) {

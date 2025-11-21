@@ -142,7 +142,7 @@ public class AggViewRoot implements JavaRoot {
 
         List<CustomBean> customBeans = methodRoot.getAnnotationBeans();
         for (CustomBean customBean : customBeans) {
-            imports.add(customBean.getClass().getName());
+            imports.add(customBean.getClass().getPackage().getName() + ".*");
             try {
                 imports = MethodUtil.getAllImports(customBean.getClass(), imports);
             } catch (ClassNotFoundException e) {
@@ -152,7 +152,7 @@ public class AggViewRoot implements JavaRoot {
 
 
         for (Class clazz : customClass) {
-            imports.add(clazz.getName());
+            imports.add(clazz.getPackage().getName() + ".*");
         }
 
         MethodConfig methodConfig = moduleBean.getMethodConfig();

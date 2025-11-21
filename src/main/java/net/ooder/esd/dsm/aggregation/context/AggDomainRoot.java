@@ -116,7 +116,7 @@ public class AggDomainRoot implements JavaRoot {
 
         try {
             for (Class clazz : customClass) {
-                imports.add(clazz.getName());
+                imports.add(clazz.getPackage().getName() + ".*");
             }
             imports = MethodUtil.getAllImports(sourceClass.getCtClass(), imports);
             imports = MethodUtil.getAllImports(config.getESDClass().getCtClass(), imports);

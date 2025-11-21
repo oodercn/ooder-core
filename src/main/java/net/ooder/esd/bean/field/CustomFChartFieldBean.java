@@ -205,9 +205,6 @@ public class CustomFChartFieldBean extends BaseWidgetBean<CustomFChartViewBean, 
             //e.printStackTrace();
         }
 
-        if (bindService != null && !bindService.equals(Void.class)) {
-            classSet.add(bindService);
-        }
         if (viewBean != null) {
             classSet.addAll(viewBean.getOtherClass());
         }

@@ -1,23 +1,23 @@
 package net.ooder.esd.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.CustomBean;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.ClassUtility;
-import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.ui.AppendType;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaSrcBean;
-import net.ooder.esd.util.json.ComponentDeserializer;
-import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.DSMProperties;
+import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
+import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.esd.tool.properties.Properties;
 import net.ooder.esd.util.OODUtil;
+import net.ooder.esd.util.json.ComponentDeserializer;
 import net.ooder.web.util.AnnotationUtil;
 import ognl.Ognl;
 import ognl.OgnlException;
@@ -35,7 +35,7 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
 
     @JSONField(serialize = false)
     public T viewBean;
-    public Class bindService;
+    public Class bindService1;
     public String euClassName;
     public String xpath;
     public List<JavaSrcBean> javaSrcBeans;
@@ -101,7 +101,7 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
             } catch (ClassNotFoundException ee) {
             }
             try {
-                if (euClass == null || bindService == null) {
+                if (euClass == null || viewBean.getBindService() == null || viewBean.getBindService().equals(Void.class)) {
                     CustomModuleBean customModuleBean = new CustomModuleBean(currModuleComponent);
                     AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(viewBean, euClassName, projectName);
                     List<JavaSrcBean> serviceList = aggRootBuild.build();
@@ -109,7 +109,6 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
                     if (serviceList.size() > 0) {
                         viewBean = (T) aggRootBuild.getCustomViewBean();
                         customModuleBean.reBindMethod(viewBean.getMethodConfig());
-                        this.setBindService(viewBean.getBindService());
                     }
                 }
                 this.javaSrcBeans = allSrc;
@@ -205,13 +204,6 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
         this.viewBean = viewBean;
     }
 
-    public Class getBindService() {
-        return bindService;
-    }
-
-    public void setBindService(Class bindService) {
-        this.bindService = bindService;
-    }
 
     public String getEuClassName() {
         return euClassName;

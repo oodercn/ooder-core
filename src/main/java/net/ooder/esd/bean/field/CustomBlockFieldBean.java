@@ -95,9 +95,7 @@ public class CustomBlockFieldBean extends BaseWidgetBean<CustomBlockFormViewBean
     @JSONField(serialize = false)
     public Set<Class> getOtherClass() {
         Set<Class> otherClass = new HashSet<>();
-        if (bindService != null) {
-            otherClass.add(bindService);
-        }
+
         if (viewBean != null) {
             otherClass.addAll(viewBean.getOtherClass());
         }
@@ -151,13 +149,6 @@ public class CustomBlockFieldBean extends BaseWidgetBean<CustomBlockFormViewBean
 
     }
 
-    public Class getBindService() {
-        return bindService;
-    }
-
-    public void setBindService(Class bindService) {
-        this.bindService = bindService;
-    }
 
     public String getEuClassName() {
         return euClassName;

@@ -185,19 +185,19 @@ public class AggProxyRoot<K extends CustomData> implements JavaRoot {
             AggregationBean aggregationBean = esdClass.getAggregationBean();
             if (aggregationBean != null) {
                 if (aggregationBean.getRootClass() != null) {
-                    imports.add(aggregationBean.getRootClass().getName());
+                    imports.add(aggregationBean.getRootClass().getPackage().getName() + ".*");
                 }
                 if (aggregationBean.getSourceClass() != null) {
-                    imports.add(aggregationBean.getSourceClass().getName());
+                    imports.add(aggregationBean.getSourceClass().getPackage().getName() + ".*");
                 }
                 if (aggregationBean.getEntityClass() != null) {
-                    imports.add(aggregationBean.getEntityClass().getName());
+                    imports.add(aggregationBean.getEntityClass().getPackage().getName() + ".*");
                 }
             }
 
             imports = MethodUtil.getAllImports(esdClass.getCtClass(), imports);
             for (Class clazz : customClass) {
-                imports.add(clazz.getName());
+                imports.add(clazz.getPackage().getName() + ".*");
                 if (clazz.isAnnotation()) {
                     imports = MethodUtil.getAllImports(clazz, imports);
                 }

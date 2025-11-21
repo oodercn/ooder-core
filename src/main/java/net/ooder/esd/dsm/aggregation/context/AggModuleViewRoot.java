@@ -115,7 +115,7 @@ public class AggModuleViewRoot implements JavaRoot {
         }
 
         for (Class clazz : customClass) {
-            imports.add(clazz.getName());
+            imports.add(clazz.getPackage().getName() + ".*");
         }
 
 

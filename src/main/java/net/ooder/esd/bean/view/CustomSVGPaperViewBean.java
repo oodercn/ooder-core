@@ -1,10 +1,11 @@
 package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.JSON;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.common.JDSException;
-import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.SVGPaperFormAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.ContainerBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomSVGPaperFieldBean;
@@ -12,12 +13,11 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.tool.component.Component;
-import net.ooder.esd.tool.component.SVGPaperComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.SVGPaperComponent;
 import net.ooder.esd.tool.properties.svg.SVGPaperProperties;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
@@ -50,7 +50,13 @@ public class CustomSVGPaperViewBean extends BaseFormViewBean {
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         updateBaseModule(moduleComponent);
         initMenuBar();
-        SVGPaperComponent currComponent = (SVGPaperComponent) moduleComponent.getCurrComponent();
+        SVGPaperComponent currComponent = null;
+        if (component != null && component instanceof SVGPaperComponent) {
+            currComponent = (SVGPaperComponent) this.component;
+        } else if (moduleComponent.getCurrComponent() != null && moduleComponent.getCurrComponent() instanceof SVGPaperComponent) {
+            currComponent = (SVGPaperComponent) moduleComponent.getCurrComponent();
+        }
+
         this.name = OODUtil.formatJavaName(currComponent.getAlias(), false);
         if (containerBean == null) {
             containerBean = new ContainerBean(currComponent);
@@ -82,7 +88,7 @@ public class CustomSVGPaperViewBean extends BaseFormViewBean {
             AnnotationUtil.fillBean(paperAnnotation, this);
         }
         this.methodName = methodAPIBean.getMethodName();
-        Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(methodAPIBean.getMethod(),true);
+        Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(methodAPIBean.getMethod(), true);
         svgPaperFieldBean = new CustomSVGPaperFieldBean(annotations);
 
         try {

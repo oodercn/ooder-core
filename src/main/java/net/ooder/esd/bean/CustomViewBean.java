@@ -190,7 +190,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         }
     }
 
-        protected void updateBaseModule(ModuleComponent moduleComponent) {
+    protected void updateBaseModule(ModuleComponent moduleComponent) {
         customComponentBeans = moduleComponent.findComponents(ComponentType.getCustomAPIComponents());
         if (moduleComponent.getCurrComponent() != null) {
             this.initRealPath(moduleComponent, moduleComponent.getCurrComponent());

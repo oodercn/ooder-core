@@ -52,7 +52,7 @@ public class DicViewRoot<T extends TabListItem> implements JavaRoot {
         this.items = treeListItems;
         try {
             for (Class clazz : customClass) {
-                imports.add(clazz.getName());
+                imports.add(clazz.getPackage().getName() + ".*");
                 if (clazz.isAnnotation()) {
                     imports = MethodUtil.getAllImports(clazz, imports);
                 }

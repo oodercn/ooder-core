@@ -33,6 +33,7 @@ import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.web.AggregationBean;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,9 @@ public class AggRootBuild {
 
     AggViewRoot viewRoot;
 
-    List<JavaSrcBean> javaViewBeans;
+    //List<JavaSrcBean> javaViewBeans;
+
+    List<JavaGenSource> javaViewSource = new ArrayList<>();
 
     List<JavaSrcBean> childBeans;
 
@@ -97,8 +100,6 @@ public class AggRootBuild {
         this.moduleName = packageName;
         this.customViewBean = customViewBean;
         this.domainId = customViewBean.getDomainId();
-
-
         MethodConfig methodConfig = customViewBean.getMethodConfig();
         if (methodConfig != null && methodConfig.getSourceClass() != null) {
             AggregationBean aggregationBean = customViewBean.getMethodConfig().getSourceClass().getAggregationBean();
@@ -127,16 +128,15 @@ public class AggRootBuild {
         this.repositoryInst = domainInst.getRepositoryInst();
         this.javaGen = GenJava.getInstance(domainInst.getProjectVersionName());
         this.serviceBeans = new ArrayList<>();
-        this.customViewBean = customViewBean;
-        this.customViewBean.setDomainId(domainId);
-        this.init(customViewBean.getViewJavaSrcBean());
+
+        this.reSetViewBean(customViewBean);
     }
 
 
     public void reBuildModule() throws JDSException {
         //1.1创建视图层
         viewTask = genCustomViewJava();
-        this.javaViewBeans = viewTask.getJavaSrcBeanList();
+        this.javaViewSource = viewTask.getSourceList();
         //2.1创建资源层接口V
         this.repositoryBeans = genRepositoryViewJava();
         //3.1预编译一次
@@ -156,7 +156,7 @@ public class AggRootBuild {
         //1.1创建视图层
 
         viewTask = genCustomViewJava();
-        this.javaViewBeans = viewTask.getJavaSrcBeanList();
+        this.javaViewSource = viewTask.getSourceList();
         buildRepository();
     }
 
@@ -164,7 +164,7 @@ public class AggRootBuild {
     public List<JavaSrcBean> build() throws JDSException {
         //1.1创建视图层
         viewTask = genCustomViewJava();
-        this.javaViewBeans = viewTask.getJavaSrcBeanList();
+        this.javaViewSource = viewTask.getSourceList();
 
         if (domainInst != null && domainInst.getUserSpace().equals(UserSpace.VIEW)) {
             //2.1创建资源层接口V
@@ -212,16 +212,8 @@ public class AggRootBuild {
     public GenCustomViewJava genCustomViewJava() throws JDSException {
         chrome.printLog("创建关联视图模型...", true);
         ViewManager viewManager = DSMFactory.getInstance().getViewManager();
-        CustomModuleBean customModuleBean = customViewBean.getModuleBean();
-        if (customModuleBean == null) {
-            if (customViewBean.getMethodConfig() != null) {
-                customModuleBean = customViewBean.getMethodConfig().getModuleBean();
-            }
-
-        }
-        this.viewRoot = new AggViewRoot(domainInst, euClassName, customModuleBean);
         this.viewTask = viewManager.genCustomViewJava(viewRoot, customViewBean, euClassName, false, chrome);
-        javaViewBeans = viewTask.getJavaSrcBeanList();
+        this.javaViewSource = viewTask.getSourceList();
         return viewTask;
     }
 
@@ -268,13 +260,29 @@ public class AggRootBuild {
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
+
                 //3.4重新绑定 重做生成
-                for (JavaSrcBean javaViewBean : javaViewBeans) {
+                for (JavaGenSource javaGenSource : javaViewSource) {
                     chrome.printLog("重新绑定视图关系：" + serviceBean.getClassName(), true);
-                    if (javaViewBean != null) {
-                        viewManager.reBuildJavaSrcBean(customViewBean, javaViewBean, moduleName, chrome);
-                    }
+                    GenJava javaGen = GenJava.getInstance(domainInst.getProjectVersionName());
+                    JavaTemp javaTemp = javaGenSource.getJavatemp();
+                    JavaRoot javaRoot = BuildFactory.getInstance().buildJavaRoot(viewRoot, customViewBean, moduleName, javaGenSource.getClassName());
+                    File file = javaGen.createJava(javaTemp, javaRoot, chrome);
+                    ViewInst defaultView = domainInst.getViewInst();
+                    BuildFactory.getInstance().getTempManager().genJavaSrc(file, defaultView, javaTemp.getJavaTempId());
+                    BuildFactory.getInstance().createSource(javaGenSource.getClassName(), viewRoot, javaTemp, javaGenSource.getSrcBean());
+
                 }
+
+//
+//                //3.4重新绑定 重做生成
+//                for (JavaSrcBean javaViewBean : javaViewBeans) {
+//                    chrome.printLog("重新绑定视图关系：" + serviceBean.getClassName(), true);
+//                    if (javaViewBean != null) {
+//                        viewManager.reBuildJavaSrcBean(customViewBean, javaViewBean, moduleName, chrome);
+//                    }
+//                }
+
             }
         }
     }
@@ -348,7 +356,20 @@ public class AggRootBuild {
         return reBindBean;
     }
 
-    void init(ViewJavaSrcBean viewJavaSrcBean) {
+    public void reSetViewBean(CustomViewBean customViewBean) {
+
+        this.customViewBean = customViewBean;
+        this.customViewBean.setDomainId(domainId);
+        CustomModuleBean customModuleBean = customViewBean.getModuleBean();
+        if (customModuleBean == null) {
+            if (customViewBean.getMethodConfig() != null) {
+                customModuleBean = customViewBean.getMethodConfig().getModuleBean();
+            }
+
+        }
+        this.viewRoot = new AggViewRoot(domainInst, euClassName, customModuleBean);
+
+        ViewJavaSrcBean viewJavaSrcBean = customViewBean.getViewJavaSrcBean();
         if (viewJavaSrcBean == null) {
             viewJavaSrcBean = new ViewJavaSrcBean(packageName, euClassName);
         } else {
@@ -357,9 +378,17 @@ public class AggRootBuild {
         }
 
         if (viewJavaSrcBean.getViewClassList() != null) {
-            javaViewBeans = viewInst.loadJavaSrc(viewJavaSrcBean.getViewClassList());
+            List<JavaSrcBean> srcBeans = viewInst.loadJavaSrc(viewJavaSrcBean.getViewClassList());
+
+            for (JavaSrcBean srcBean : srcBeans) {
+                try {
+                    javaViewSource.add(this.buildViewContext(srcBean));
+                } catch (JDSException e) {
+                    e.printStackTrace();
+                }
+            }
         } else {
-            javaViewBeans = new ArrayList<>();
+            javaViewSource = new ArrayList<>();
         }
 
         if (viewJavaSrcBean.getAggClassList() != null) {
@@ -398,11 +427,13 @@ public class AggRootBuild {
 
     public List<JavaSrcBean> getModuleBeans() {
         List<JavaSrcBean> allSrcBean = new ArrayList<>();
-        for (JavaSrcBean viewBean : javaViewBeans) {
-            if (!allSrcBean.contains(viewBean)) {
-                allSrcBean.add(viewBean);
+        for (JavaGenSource genSource : javaViewSource) {
+            if (!allSrcBean.contains(genSource.getSrcBean())) {
+                allSrcBean.add(genSource.getSrcBean());
             }
         }
+
+
         for (JavaSrcBean viewBean : repositoryBeans) {
             if (!allSrcBean.contains(viewBean)) {
                 allSrcBean.add(viewBean);
@@ -424,18 +455,13 @@ public class AggRootBuild {
             }
         }
 
-        for (JavaSrcBean viewBean : javaViewBeans) {
-            if (!allSrcBean.contains(viewBean)) {
-                allSrcBean.add(viewBean);
+
+        for (JavaGenSource genSource : javaViewSource) {
+            if (!allSrcBean.contains(genSource.getSrcBean())) {
+                allSrcBean.add(genSource.getSrcBean());
             }
         }
 
-
-        for (JavaSrcBean viewBean : javaViewBeans) {
-            if (!allSrcBean.contains(viewBean)) {
-                allSrcBean.add(viewBean);
-            }
-        }
 
         for (JavaSrcBean viewBean : childBeans) {
             if (!allSrcBean.contains(viewBean)) {
@@ -456,23 +482,23 @@ public class AggRootBuild {
 
         }
 
-
         return allSrcBean;
     }
 
 
-    void reSetViewBean(CustomViewBean customViewBean) {
+    void updateViewBean(CustomViewBean customViewBean) {
+
         ViewJavaSrcBean viewJavaSrcBean = customViewBean.getViewJavaSrcBean();
         if (viewJavaSrcBean == null) {
             viewJavaSrcBean = new ViewJavaSrcBean(packageName, euClassName);
         }
 
         List<String> viewClassList = new ArrayList<>();
-        for (JavaSrcBean javaSrcBean : javaViewBeans) {
-            viewClassList.add(javaSrcBean.getClassName());
+        for (JavaGenSource source : javaViewSource) {
+            viewClassList.add(source.getClassName());
         }
-        viewJavaSrcBean.setViewClassList(viewClassList);
 
+        viewJavaSrcBean.setViewClassList(viewClassList);
         List<String> aggClassList = new ArrayList<>();
         for (JavaSrcBean javaSrcBean : aggBeans) {
             aggClassList.add(javaSrcBean.getClassName());
@@ -503,7 +529,6 @@ public class AggRootBuild {
                 viewJavaSrcBean.getRootServicesClassName().add(javaSrcBean.getClassName());
             }
         }
-
         customViewBean.setViewJavaSrcBean(viewJavaSrcBean);
     }
 
@@ -553,14 +578,6 @@ public class AggRootBuild {
 
     public void setModuleName(String moduleName) {
         this.moduleName = moduleName;
-    }
-
-    public List<JavaSrcBean> getJavaViewBeans() {
-        return javaViewBeans;
-    }
-
-    public void setJavaViewBeans(List<JavaSrcBean> javaViewBeans) {
-        this.javaViewBeans = javaViewBeans;
     }
 
 

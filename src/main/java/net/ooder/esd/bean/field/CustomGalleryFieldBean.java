@@ -173,14 +173,6 @@ public class CustomGalleryFieldBean extends BaseWidgetBean<CustomGalleryViewBean
         return AnnotationUtil.fillBean(annotation, this);
     }
 
-    public Class getBindService() {
-        return bindService;
-    }
-
-    public void setBindService(Class bindService) {
-        this.bindService = bindService;
-    }
-
     public String getEuClassName() {
         return euClassName;
     }

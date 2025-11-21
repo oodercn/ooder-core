@@ -45,18 +45,19 @@ public class CustomTreeFieldBean extends BaseWidgetBean<CustomTreeViewBean, Tree
     }
 
 
-    public CustomTreeFieldBean fillData(FormFieldAnnotation annotation) {
+    public CustomTreeFieldBean fillData(TreeFieldAnnotation annotation) {
         return AnnotationUtil.fillBean(annotation, this);
     }
 
 
     public CustomTreeFieldBean(Set<Annotation> annotations) {
-        AnnotationUtil.fillDefaultValue(FormFieldAnnotation.class, this);
+        AnnotationUtil.fillDefaultValue(TreeFieldAnnotation.class, this);
         init(annotations);
     }
 
     public CustomTreeFieldBean(MethodConfig methodAPIBean) {
         this.viewBean = (CustomTreeViewBean) methodAPIBean.getView();
+        init(AnnotationUtil.getAllAnnotations(methodAPIBean.getMethod(),true));
     }
 
 
@@ -75,8 +76,8 @@ public class CustomTreeFieldBean extends BaseWidgetBean<CustomTreeViewBean, Tree
 
     void init(Set<Annotation> annotations) {
         for (Annotation annotation : annotations) {
-            if (annotation instanceof FormFieldAnnotation) {
-                fillData((FormFieldAnnotation) annotation);
+            if (annotation instanceof TreeFieldAnnotation) {
+                fillData((TreeFieldAnnotation) annotation);
             }
             if (annotation instanceof Widget) {
                 widgetBean = new CustomWidgetBean((Widget) annotation);

@@ -336,11 +336,11 @@ public class BuildFactory {
                 aggRootBuild = new AggRootBuild(customViewBean, className, projectName);
                 aggRootBuildMap.put(customViewBean, aggRootBuild);
             } else {
-                aggRootBuild.setCustomViewBean(customViewBean);
+                aggRootBuild.reSetViewBean(customViewBean);
             }
             classRootBuildMap.put(className, aggRootBuild);
         } else {
-            aggRootBuild.setCustomViewBean(customViewBean);
+            aggRootBuild.reSetViewBean(customViewBean);
         }
         return aggRootBuild;
     }

@@ -101,7 +101,7 @@ public class EntityRoot implements JavaRoot {
 
         try {
             for (Class clazz : customClass) {
-                imports.add(clazz.getName());
+                imports.add(clazz.getPackage().getName() + ".*");
                 if (clazz.isAnnotation()) {
                     imports = MethodUtil.getAllImports(clazz, imports);
                 }

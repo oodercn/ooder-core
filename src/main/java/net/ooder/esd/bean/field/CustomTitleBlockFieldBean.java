@@ -91,7 +91,7 @@ public class CustomTitleBlockFieldBean extends BaseWidgetBean<CustomTitleBlockVi
         List<JavaSrcBean> javaSrcBeans = super.update(parentModuleComponent, component);
         if (customListBean == null) {
             customListBean = new CustomListBean();
-            customListBean.setBindClass(bindService);
+            customListBean.setBindClass(viewBean.getBindService());
         } else {
             List<JavaSrcBean> srcBeanList = customListBean.update(parentModuleComponent, component);
             javaSrcBeans.addAll(srcBeanList);

@@ -9,6 +9,7 @@ import net.ooder.config.ErrorListResultModel;
 import net.ooder.config.ListResultModel;
 import net.ooder.config.TreeListResultModel;
 import net.ooder.context.JDSActionContext;
+import net.ooder.esd.annotation.TreeItem;
 import net.ooder.esd.annotation.ui.SelModeType;
 import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
@@ -24,7 +25,6 @@ import net.ooder.web.RemoteConnectionManager;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -181,23 +181,37 @@ public class TreePageUtil {
         }
 
         Set<String> classSet = new HashSet<>();
+        Map<Class, ChildTreeViewBean> classBeanMap = new HashMap<>();
 
         for (Object obj : objs)
             if (obj != null) {
                 if (clazz == null || clazz.isAssignableFrom(obj.getClass())) {
                     pageResult.add((T) obj);
                 } else {
-                    childTreeViewBean = viewBean.getChildTreeBean(obj);
-                    if (childTreeViewBean == null) {
-                        childTreeViewBean = viewBean.getLikeChildTreeBean(obj);
-                    }
-                    if (childTreeViewBean == null) {
-                        CustomTreeViewBean otherViewBean = new CustomTreeViewBean(clazz, viewBean);
-                        childTreeViewBean = otherViewBean.getChildTreeBean(obj);
+                    if (obj instanceof TreeItem) {
+                        childTreeViewBean = viewBean.getChildTreeBean((TreeItem) obj);
+                    } else {
+                        Class treeClass = obj.getClass();
+                        childTreeViewBean = classBeanMap.get(treeClass);
                         if (childTreeViewBean == null) {
-                            childTreeViewBean = otherViewBean.getLikeChildTreeBean(obj);
+                            childTreeViewBean = viewBean.getChildTreeBean(obj);
+                            if (childTreeViewBean == null) {
+                                childTreeViewBean = viewBean.getLikeChildTreeBean(obj);
+                            }
+                            if (childTreeViewBean == null) {
+                                CustomTreeViewBean otherViewBean = new CustomTreeViewBean(clazz, viewBean);
+                                childTreeViewBean = otherViewBean.getChildTreeBean(obj);
+                                if (childTreeViewBean == null) {
+                                    childTreeViewBean = otherViewBean.getLikeChildTreeBean(obj);
+                                }
+                            }
+                            if (childTreeViewBean != null) {
+                                classBeanMap.put(treeClass, childTreeViewBean);
+                            }
+
                         }
                     }
+
                     TreeItemTask<T> task = new TreeItemTask(obj, clazz, viewBean, childTreeViewBean, ids);
                     classSet.add(obj.getClass().getSimpleName());
                     tasks.add(task);
@@ -207,10 +221,10 @@ public class TreePageUtil {
         try {
             RemoteConnectionManager.initConnection(taskId, tasks.size());
             ExecutorService executorService = RemoteConnectionManager.createConntctionService(taskId);
-            List<Future<T>> futures =executorService.invokeAll(tasks);
+            List<Future<T>> futures = executorService.invokeAll(tasks);
             for (Future<T> resultFuture : futures) {
                 try {
-                    T item = resultFuture.get(200, TimeUnit.MILLISECONDS);
+                    T item = resultFuture.get();
                     if (item != null) {
                         if (item.getPattern() != null && !item.getPattern().equals("")
                                 // && (childTreeViewBean == null || (childTreeViewBean != null && (childTreeViewBean.getDeepSearch() != null && childTreeViewBean.getDeepSearch())))) {

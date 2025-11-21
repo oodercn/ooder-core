@@ -655,9 +655,9 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
         if (obj instanceof TreeItem) {
             return getChildTreeBean((TreeItem) obj);
         }
-
-        List<ChildTreeViewBean> allChildBean = this.getChildTreeBeans();
-        for (ChildTreeViewBean child : allChildBean) {
+        List<ChildTreeViewBean> cloneChildTreeBeans = new ArrayList<>();
+        cloneChildTreeBeans.addAll(this.getChildTreeBeans());
+        for (ChildTreeViewBean child : cloneChildTreeBeans) {
             try {
                 if (child != null) {
                     ConstructorBean constructorBean = child.getConstructorBean();
@@ -678,9 +678,9 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
             }
         }
 
-
-        List<CustomTreeViewBean> childs = this.getChildBeans();
-        for (CustomTreeViewBean treeViewBean : childs) {
+        List<CustomTreeViewBean> cloneTreeBeans = new ArrayList<>();
+        cloneTreeBeans.addAll(this.getChildBeans());
+        for (CustomTreeViewBean treeViewBean : cloneTreeBeans) {
             ChildTreeViewBean childTreeViewBean = treeViewBean.getLikeChildTreeBean(obj);
             if (childTreeViewBean != null) {
                 return childTreeViewBean;
@@ -690,15 +690,16 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
 
     }
 
+
     public ChildTreeViewBean getChildTreeBean(Object obj) {
         Class treeClass = obj.getClass();
-
         if (obj instanceof TreeItem) {
             return getChildTreeBean((TreeItem) obj);
         }
 
-        List<ChildTreeViewBean> childTreeViewBeans = this.getChildTreeBeans();
-        for (ChildTreeViewBean child : childTreeViewBeans) {
+        List<ChildTreeViewBean> cloneChildTreeBeans = new ArrayList<>();
+        cloneChildTreeBeans.addAll(this.getChildTreeBeans());
+        for (ChildTreeViewBean child : cloneChildTreeBeans) {
             try {
                 if (child != null) {
                     ConstructorBean constructorBean = child.getConstructorBean();
@@ -721,7 +722,10 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
         }
 
         List<CustomTreeViewBean> childs = this.getChildBeans();
-        for (CustomTreeViewBean treeViewBean : childs) {
+        List<CustomTreeViewBean> cloneChildBeans = new ArrayList<>();
+        cloneChildBeans.addAll(childs);
+
+        for (CustomTreeViewBean treeViewBean : cloneChildBeans) {
             ChildTreeViewBean childTreeViewBean = treeViewBean.getChildTreeBean(obj);
             if (childTreeViewBean != null) {
                 return childTreeViewBean;

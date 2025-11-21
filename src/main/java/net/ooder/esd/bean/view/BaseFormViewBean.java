@@ -431,6 +431,9 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
     @JSONField(serialize = false)
     public Set<Class> getOtherClass() {
         Set<Class> classSet = super.getOtherClass();
+        if (bindService != null) {
+            classSet.add(bindService);
+        }
         for (FieldFormConfig fieldFormConfig : this.getAllFields()) {
             classSet.addAll(fieldFormConfig.getOtherClass());
         }
