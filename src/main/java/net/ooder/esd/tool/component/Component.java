@@ -269,7 +269,7 @@ public class Component<T extends Properties, K extends EventKey> {
         for (Component component : components) {
             ComponentType type = ComponentType.fromType(component.getKey());
             if (customViewTypes.contains(type)) {
-                if (Arrays.asList(skipComponents).contains(type) && component.getChildren() != null && component.getChildren().size()>0) {
+                if (Arrays.asList(skipComponents).contains(type) && component.getChildren() != null && component.getChildren().size() > 0) {
                     List<Component> childComponent = component.getListGroupChild(component.getChildren(), groupTypes);
                     if (childComponent.size() > 0 || (component.getChildren() != null && component.getChildren().size() > 1)) {
                         viewComponents.add(component);
@@ -433,7 +433,10 @@ public class Component<T extends Properties, K extends EventKey> {
     }
 
     private Component getComponentByAlias(String alias) {
-        for (Component sub : children) {
+        List<Component> components = new ArrayList<>();
+        components.addAll(children);
+
+        for (Component sub : components) {
             if (sub.getAlias() != null && sub.getAlias().equals(alias)) {
                 return sub;
             }

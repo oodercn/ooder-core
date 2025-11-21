@@ -101,7 +101,7 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
         this.viewBean = viewBean;
         this.dsmBean = viewRoot.getDsmBean();
         this.repositoryInst = viewRoot.getDsmBean().getRepositoryInst();
-        this.moduleName = moduleName;
+
         this.cnName = dsmBean.getDesc();
         this.space = dsmBean.getSpace();
         if (viewBean.getUidField() != null) {
@@ -112,12 +112,19 @@ public abstract class BaseViewRoot<T extends CustomViewBean> implements JavaRoot
             fullClassName = dsmBean.getRootPackage().getPackageName() + "." + fullClassName;
         }
         this.packageName = fullClassName.substring(0, fullClassName.lastIndexOf("."));
+        this.moduleName = moduleName;
+
+        String fullPackage = packageName;
+        if (!fullPackage.startsWith(repositoryInst.getPackageName())) {
+            fullPackage = repositoryInst.getPackageName() + "." + fullPackage;
+        }
+
         this.simClassName = OODUtil.formatJavaName(fullClassName.substring(fullClassName.lastIndexOf(".") + 1), true);
         this.className = simClassName;
         List<ESDClass> esdClasses = repositoryInst.getAggBeans(UserSpace.VIEW, AggregationType.ENTITY);
         for (ESDClass esdClass : esdClasses) {
             Class entityClass = esdClass.getAggregationBean().getEntityClass();
-            if (entityClass != null && entityClass.getPackage().getName().startsWith(repositoryInst.getPackageName() + "." + moduleName) && entityClass.getSimpleName().equals(simClassName)) {
+            if (entityClass != null && entityClass.getPackage().getName().startsWith(fullPackage) && entityClass.getSimpleName().equals(simClassName)) {
                 serviceClass = esdClass.getCtClass();
                 imports.add(serviceClass.getPackage().getName() + ".*");
                 serviceClassName = serviceClass.getSimpleName();

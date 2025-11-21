@@ -13,7 +13,6 @@ public abstract class BaseGalleryRoot<T extends BaseGalleryViewBean> extends Bas
 
     private static Class[] galleryClass = new Class[]{
             OpinionItem.class,
-
             GridAnnotation.class
 
     };
