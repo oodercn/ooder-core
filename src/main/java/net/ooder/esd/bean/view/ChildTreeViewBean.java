@@ -1111,7 +1111,7 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
         if (getBindClass() != null && getBindClass().length > 0) {
             bindClassList.addAll(Arrays.asList(getBindClass()));
         }
-        if (getTreeItem() != null && getTreeItem().getBindClass().length > 0) {
+        if (getTreeItem() != null && getTreeItem().getBindClass() != null && getTreeItem().getBindClass().length > 0) {
             bindClassList.addAll(Arrays.asList(getTreeItem().getBindClass()));
         }
         for (Class bindClass : bindClassList) {

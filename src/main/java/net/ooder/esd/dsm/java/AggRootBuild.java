@@ -44,8 +44,6 @@ public class AggRootBuild {
 
     AggViewRoot viewRoot;
 
-    //List<JavaSrcBean> javaViewBeans;
-
     List<JavaGenSource> javaViewSource = new ArrayList<>();
 
     List<JavaSrcBean> childBeans;
