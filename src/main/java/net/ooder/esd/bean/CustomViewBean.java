@@ -267,7 +267,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         return annotationBeans;
     }
 
-    public void getAllJavaSrc() {
+    public List<JavaSrcBean> getAllJavaSrc() {
         List<JavaSrcBean> allJavaSrc = new ArrayList<>();
         allJavaSrc.addAll(this.getJavaSrcBeans());
         List<T> esdfields = this.getAllFields();
@@ -284,6 +284,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
                 }
             }
         }
+        return allJavaSrc;
     }
 
     public ComponentBean findComByAlias(String alias) {
