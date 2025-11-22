@@ -212,8 +212,20 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
     public abstract List<JavaSrcBean> updateModule(ModuleComponent moduleComponent);
 
     @Override
+    @JSONField(serialize = false)
     public List<JavaSrcBean> getJavaSrcBeans() {
-        return new ArrayList<>();
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        ViewJavaSrcBean viewJavaSrcBean = this.getViewJavaSrcBean();
+        if (viewJavaSrcBean != null) {
+            try {
+                DomainInst domainInst = DSMFactory.getInstance().getDomainInstById(this.getDomainId());
+                domainInst.loadJavaSrc(viewJavaSrcBean.getServiceClassList());
+                javaSrcBeans = domainInst.loadJavaSrc(viewJavaSrcBean.getAllClassNames());
+            } catch (JDSException e) {
+                e.printStackTrace();
+            }
+        }
+        return javaSrcBeans;
     }
 
     @Override

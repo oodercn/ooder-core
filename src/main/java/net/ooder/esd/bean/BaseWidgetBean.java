@@ -35,10 +35,9 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
 
     @JSONField(serialize = false)
     public T viewBean;
-    public Class bindService1;
+    // public Class bindService;
     public String euClassName;
     public String xpath;
-    public List<JavaSrcBean> javaSrcBeans;
 
 
     public abstract T createViewBean(ModuleComponent currModuleComponent, M component);
@@ -104,14 +103,14 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
                 if (euClass == null || viewBean.getBindService() == null || viewBean.getBindService().equals(Void.class)) {
                     CustomModuleBean customModuleBean = new CustomModuleBean(currModuleComponent);
                     AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(viewBean, euClassName, projectName);
-                    List<JavaSrcBean> serviceList = aggRootBuild.build();
-                    allSrc = aggRootBuild.getAllSrcBean();
-                    if (serviceList.size() > 0) {
-                        viewBean = (T) aggRootBuild.getCustomViewBean();
-                        customModuleBean.reBindMethod(viewBean.getMethodConfig());
+                    if (aggRootBuild.getAggServiceRootBean().isEmpty()) {
+                        List<JavaSrcBean> serviceList = aggRootBuild.build();
+                        if (serviceList.size() > 0) {
+                            viewBean = (T) aggRootBuild.getCustomViewBean();
+                            customModuleBean.reBindMethod(viewBean.getMethodConfig());
+                        }
                     }
                 }
-                this.javaSrcBeans = allSrc;
                 DSMFactory.getInstance().saveCustomViewBean(viewBean);
             } catch (JDSException e) {
                 e.printStackTrace();
@@ -121,16 +120,13 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
         return allSrc;
     }
 
+    @JSONField(serialize = false)
     public List<JavaSrcBean> getJavaSrcBeans() {
-        if (javaSrcBeans == null) {
-            javaSrcBeans = new ArrayList<>();
-        }
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        javaSrcBeans.addAll(viewBean.getAllJavaSrc());
         return javaSrcBeans;
     }
 
-    public void setJavaSrcBeans(List<JavaSrcBean> javaSrcBeans) {
-        this.javaSrcBeans = javaSrcBeans;
-    }
 
     @Override
     @JSONField(serialize = false)

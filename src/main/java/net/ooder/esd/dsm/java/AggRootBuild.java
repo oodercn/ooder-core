@@ -202,6 +202,28 @@ public class AggRootBuild {
         DSMFactory.getInstance().saveCustomViewBean(customViewBean);
     }
 
+    public List<JavaSrcBean> getViewSrcList() {
+        List<JavaSrcBean> viewClassList = new ArrayList<>();
+        for (JavaGenSource source : javaViewSource) {
+            viewClassList.add(source.getSrcBean());
+        }
+        viewClassList.addAll(aggBeans);
+        return viewClassList;
+    }
+
+    public List<JavaSrcBean> getRepositorySrcList() {
+        List<JavaSrcBean> classList = new ArrayList<>();
+        classList.addAll(repositoryBeans);
+
+        return classList;
+    }
+
+    public List<JavaSrcBean> getAggSrcList() {
+        List<JavaSrcBean> classList = new ArrayList<>();
+        classList.addAll(serviceBeans);
+        classList.addAll(aggServiceRootBean);
+        return classList;
+    }
 
     /**
      * 根据视图创建单一视图
@@ -365,7 +387,6 @@ public class AggRootBuild {
             if (customViewBean.getMethodConfig() != null) {
                 customModuleBean = customViewBean.getMethodConfig().getModuleBean();
             }
-
         }
         this.viewRoot = new AggViewRoot(domainInst, euClassName, customModuleBean);
 
@@ -379,7 +400,6 @@ public class AggRootBuild {
 
         if (viewJavaSrcBean.getViewClassList() != null) {
             List<JavaSrcBean> srcBeans = viewInst.loadJavaSrc(viewJavaSrcBean.getViewClassList());
-
             for (JavaSrcBean srcBean : srcBeans) {
                 try {
                     javaViewSource.add(this.buildViewContext(srcBean));
@@ -442,8 +462,8 @@ public class AggRootBuild {
         return allSrcBean;
     }
 
-    public List<JavaSrcBean> getAllSrcBean() {
-        List<JavaSrcBean> allSrcBean = getModuleBeans();
+    public List<JavaSrcBean> getSrcBeanList() {
+        List<JavaSrcBean> allSrcBean = new ArrayList<>();
         for (JavaSrcBean viewBean : aggBeans) {
             if (!allSrcBean.contains(viewBean)) {
                 allSrcBean.add(viewBean);
@@ -481,7 +501,12 @@ public class AggRootBuild {
             }
 
         }
+        return allSrcBean;
+    }
 
+    public List<JavaSrcBean> getAllSrcBean() {
+        List<JavaSrcBean> allSrcBean = getModuleBeans();
+        allSrcBean.addAll(this.getSrcBeanList());
         return allSrcBean;
     }
 

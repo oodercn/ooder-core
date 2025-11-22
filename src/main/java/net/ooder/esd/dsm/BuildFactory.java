@@ -329,6 +329,9 @@ public class BuildFactory {
     }
 
     public AggRootBuild getAggRootBuild(CustomViewBean customViewBean, String className, String projectName) throws JDSException {
+        if (projectName == null) {
+            projectName = DSMFactory.getInstance().getDefaultProjectName();
+        }
         AggRootBuild aggRootBuild = classRootBuildMap.get(className);
         if (aggRootBuild == null) {
             aggRootBuild = aggRootBuildMap.get(customViewBean);

@@ -25,6 +25,27 @@ public class ViewJavaSrcBean {
 
     }
 
+    public List<String> getAllClassNames() {
+        List<String> allClassNames = new ArrayList<>();
+        if (viewClassList != null) {
+            allClassNames.addAll(viewClassList);
+        }
+        if (repositoryClassList != null) {
+            allClassNames.addAll(repositoryClassList);
+        }
+        if (aggClassList != null) {
+            allClassNames.addAll(aggClassList);
+        }
+        if (serviceClassList != null) {
+            allClassNames.addAll(serviceClassList);
+        }
+        if (serviceClassList != null) {
+            allClassNames.addAll(rootServicesClassName);
+        }
+        return allClassNames;
+    }
+
+
     public ViewJavaSrcBean(String parentModuleClassName, String className) {
         this.parentModuleClassName = parentModuleClassName;
         this.className = className;
@@ -42,7 +63,6 @@ public class ViewJavaSrcBean {
     }
 
     public List<String> getViewClassList() {
-
         if (viewClassList == null) {
             viewClassList = new ArrayList<>();
         }
