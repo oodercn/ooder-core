@@ -210,11 +210,6 @@ public abstract class DSMInst {
             }
         }
 
-        if (javaSrcBean == null) {
-
-        }
-
-
         return javaSrcBean;
     }
 
