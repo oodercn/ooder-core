@@ -29,6 +29,7 @@ import ognl.OgnlException;
 
 import java.lang.reflect.Constructor;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class TabPageUtil {
 
@@ -317,7 +318,7 @@ public class TabPageUtil {
         TreeListResultModel<List<T>> userStatusInfo = new TreeListResultModel<List<T>>();
         try {
             List<T> pageResult = new ArrayList<T>();
-            List<K> list = objs.get();
+            List<K> list = objs.get(200,TimeUnit.MILLISECONDS);
             userStatusInfo.setData(fillObjs(list, clazz));
             userStatusInfo.setSize(objs.getSize());
             Object id = JDSActionContext.getActionContext().getParams("id");

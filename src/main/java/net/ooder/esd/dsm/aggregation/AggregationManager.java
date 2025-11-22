@@ -870,7 +870,7 @@ public class AggregationManager {
         List<String> srcBeans = new ArrayList<>();
         try {
 
-            ExecutorService executorService = RemoteConnectionManager.getConntctionService(taskId);
+            ExecutorService executorService = RemoteConnectionManager.createConntctionService(taskId);
             if (taskId == null) {
                 taskId = DSMFactory.DefaultDsmName;
             }
