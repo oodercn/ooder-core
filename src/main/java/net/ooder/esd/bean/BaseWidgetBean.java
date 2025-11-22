@@ -103,7 +103,8 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
                 if (euClass == null || viewBean.getBindService() == null || viewBean.getBindService().equals(Void.class)) {
                     CustomModuleBean customModuleBean = new CustomModuleBean(currModuleComponent);
                     AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(viewBean, euClassName, projectName);
-                    if (aggRootBuild.getAggServiceRootBean().isEmpty()) {
+
+                    if (aggRootBuild.getAggServiceRootBean().isEmpty() || aggRootBuild.getRepositorySrcList().isEmpty() || aggRootBuild.getViewSrcList().isEmpty()) {
                         List<JavaSrcBean> serviceList = aggRootBuild.build();
                         if (serviceList.size() > 0) {
                             viewBean = (T) aggRootBuild.getCustomViewBean();
@@ -114,12 +115,10 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
                         allSrc.addAll(aggRootBuild.getAllSrcBean());
                     }
                 }
-
             } catch (JDSException e) {
                 e.printStackTrace();
             }
         }
-
         return allSrc;
     }
 
