@@ -12,6 +12,7 @@ import net.ooder.common.util.java.DynamicClassLoader;
 import net.ooder.config.JDSConfig;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.bean.CustomViewBean;
+import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
@@ -659,30 +660,26 @@ public class DSMFactory {
     }
 
     public void saveCustomViewEntity(CustomViewBean viewBean) throws JDSException {
-        String sourceClassName = viewBean.getSourceClassName();
-        String domainId = viewBean.getDomainId();
-        if (sourceClassName != null && domainId != null) {
-            AggEntityConfig aggEntityConfig = getAggregationManager().getAggEntityConfig(viewBean.getViewClassName(), false);
+        MethodConfig methodConfig = viewBean.getMethodConfig();
+        if (methodConfig != null) {
+            AggEntityConfig aggEntityConfig = methodConfig.getAggEntityConfig();
             if (aggEntityConfig != null) {
                 getAggregationManager().updateAggEntityConfig(aggEntityConfig);
             }
-
         }
     }
 
     public void saveCustomViewBean(CustomViewBean viewBean) throws JDSException {
-        String sourceClassName = viewBean.getSourceClassName();
-        String domainId = viewBean.getDomainId();
-        if (sourceClassName != null && domainId != null) {
-            ApiClassConfig apiClassConfig = getAggregationManager().getApiClassConfig(sourceClassName);
+        MethodConfig methodConfig = viewBean.getMethodConfig();
+        if (methodConfig != null) {
+            ApiClassConfig apiClassConfig = methodConfig.getSourceClassConfig();
             if (apiClassConfig != null) {
                 getAggregationManager().updateApiClassConfig(apiClassConfig);
             }
-            AggEntityConfig aggEntityConfig = getAggregationManager().getAggEntityConfig(viewBean.getViewClassName(), false);
+            AggEntityConfig aggEntityConfig = methodConfig.getAggEntityConfig();
             if (aggEntityConfig != null) {
                 getAggregationManager().updateAggEntityConfig(aggEntityConfig);
             }
-
         }
     }
 

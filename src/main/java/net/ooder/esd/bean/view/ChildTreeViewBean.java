@@ -153,6 +153,7 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
 
 
     public ChildTreeViewBean(Constructor constructor, CustomTreeViewBean viewBean, TreeItem treeItem, Integer index) {
+        this.treeItem = treeItem;
         constructorBean = new ConstructorBean(constructor);
         this.domainId = viewBean.getDomainId();
         this.index = index;
@@ -166,6 +167,7 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
 
 
     public ChildTreeViewBean(MethodConfig methodConfig, CustomTreeViewBean viewBean, TreeItem treeItem, Integer index) {
+        this.treeItem = treeItem;
         this.methodConfig = methodConfig;
         this.initMethod(methodConfig);
         this.domainId = viewBean.getDomainId();
@@ -177,6 +179,7 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
     }
 
     void initTreeItem(TreeItem treeItem) {
+        this.treeItem = treeItem;
         if (treeItem != null) {
             this.enumName = treeItem.getType();
             if (enumName == null && treeItem.getClass().isEnum()) {
@@ -192,17 +195,18 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
             this.dynDestory = treeItem.isDynDestory();
             this.lazyLoad = treeItem.isLazyLoad();
             this.iniFold = treeItem.isIniFold();
-            this.treeItem = treeItem;
+
         }
 
     }
 
 
     public ChildTreeViewBean(ConstructorBean constructorBean, CustomTreeViewBean viewBean, TreeItem treeItem) {
+        this.treeItem = treeItem;
         this.constructorBean = constructorBean;
         this.domainId = viewBean.getDomainId();
         this.parentId = viewBean.getId();
-        this.treeItem = treeItem;
+
         caption = viewBean.getCaption() + "（" + constructorBean.getName() + ")";
         initTreeItem(treeItem);
 
@@ -419,10 +423,14 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
     public String getId() {
         if (id == null || id.equals("")) {
             TreeItem treeItem = this.getTreeItem();
-            if (treeItem != null && treeItem.getType() != null) {
-                id = treeItem.getType();
-                if (!(treeItem instanceof DefaultTreeItem)) {
-                    id = treeItem.getClass().getName() + "_" + id;
+            if (treeItem != null) {
+                if (treeItem.getClass().isEnum()) {
+                    id = ((Enum) treeItem).name();
+                } else if (treeItem.getType() != null) {
+                    id = treeItem.getType();
+                    if (!(treeItem instanceof DefaultTreeItem)) {
+                        id = treeItem.getClass().getName() + "_" + id;
+                    }
                 }
             } else {
                 id = this.getGroupName();

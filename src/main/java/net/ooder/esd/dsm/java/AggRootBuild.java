@@ -275,6 +275,7 @@ public class AggRootBuild {
                             } else {
                                 customViewBean.reBindService(ClassUtility.loadClass(serviceBean.getClassName()));
                             }
+                            methodConfig.setView(customViewBean);
                         } else {
                             customViewBean.getCustomServiceClass().add(serviceBean.getClassName());
                         }

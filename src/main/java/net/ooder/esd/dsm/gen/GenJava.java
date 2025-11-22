@@ -349,17 +349,19 @@ public class GenJava {
 
     private List<Class> dynCompile(List<JavaSrcBean> javaSrcBeans, boolean dynCompile) throws JDSException {
         List<Class> classes = new ArrayList<>();
+        List<JavaSrcBean> cloneList = new ArrayList<>();
+        cloneList.addAll(javaSrcBeans);
         List<JavaSrcBean> errorClass = new ArrayList<>();
 
         try {
             //尝试做一次全量预编译，但忽略错误
-            compileJavaSrc(javaSrcBeans, null);
+            compileJavaSrc(cloneList, null);
         } catch (JDSException ee) {
 
         }
         try {
 
-            for (JavaSrcBean javaSrcBean : javaSrcBeans) {
+            for (JavaSrcBean javaSrcBean : cloneList) {
                 try {
                     if (javaSrcBean.getContent() != null && javaSrcBean.getContent().length() > 0) {
                         Class clazz = CompileJava.dynCompile(javaSrcBean.getClassName(), javaSrcBean.getContent(), javaBuildPath);
