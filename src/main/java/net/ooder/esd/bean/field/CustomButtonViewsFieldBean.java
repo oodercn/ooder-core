@@ -35,7 +35,7 @@ public class CustomButtonViewsFieldBean extends BaseWidgetBean<CustomButtonViews
     }
 
     public CustomButtonViewsFieldBean(ModuleComponent parentModuleComponent, ButtonViewsComponent buttonViewsComponent) {
-        this.javaSrcBeans=update(parentModuleComponent, buttonViewsComponent);
+        update(parentModuleComponent, buttonViewsComponent);
     }
 
 

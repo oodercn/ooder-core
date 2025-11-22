@@ -69,7 +69,7 @@ public class CustomContentBlockFieldBean extends BaseWidgetBean<CustomContentBlo
 
 
     public CustomContentBlockFieldBean(ModuleComponent parentModuleComponent, ContentBlockComponent contentBlockComponent) {
-        this.javaSrcBeans = update(parentModuleComponent, contentBlockComponent);
+       update(parentModuleComponent, contentBlockComponent);
     }
 
 

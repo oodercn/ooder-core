@@ -46,7 +46,7 @@ public class CustomDivFieldBean extends BaseWidgetBean<CustomDivFormViewBean, Di
 
     public CustomDivFieldBean(ModuleComponent parentModuleComponent, DivComponent component) {
         AnnotationUtil.fillDefaultValue(DivFieldAnnotation.class, this);
-        this.javaSrcBeans=this.update(parentModuleComponent, component);
+       this.update(parentModuleComponent, component);
     }
 
     public CustomDivFieldBean(DivComponent component) {

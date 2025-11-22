@@ -59,7 +59,7 @@ public class CustomEChartFieldBean extends BaseWidgetBean<CustomEChartViewBean, 
 
     public CustomEChartFieldBean(ModuleComponent parentModuleComponent, EChartComponent chartComponent) {
         AnnotationUtil.fillDefaultValue(EChartFieldAnnotation.class, this);
-        this.javaSrcBeans = this.update(parentModuleComponent, chartComponent);
+      this.update(parentModuleComponent, chartComponent);
 
     }
 

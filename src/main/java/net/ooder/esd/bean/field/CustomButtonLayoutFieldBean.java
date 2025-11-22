@@ -38,7 +38,7 @@ public class CustomButtonLayoutFieldBean extends BaseWidgetBean<CustomButtonLayo
     }
 
     public CustomButtonLayoutFieldBean(ModuleComponent parentModuleComponent, ButtonLayoutComponent buttonLayoutComponent) {
-        this.javaSrcBeans = update(parentModuleComponent, buttonLayoutComponent);
+       update(parentModuleComponent, buttonLayoutComponent);
     }
 
 

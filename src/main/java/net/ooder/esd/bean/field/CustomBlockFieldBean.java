@@ -60,7 +60,7 @@ public class CustomBlockFieldBean extends BaseWidgetBean<CustomBlockFormViewBean
 
 
     public CustomBlockFieldBean(ModuleComponent parentModuleComponent, BlockComponent component) {
-        this.javaSrcBeans=this.update(parentModuleComponent, component);
+        this.update(parentModuleComponent, component);
     }
 
 

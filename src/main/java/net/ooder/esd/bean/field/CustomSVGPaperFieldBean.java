@@ -59,7 +59,7 @@ public class CustomSVGPaperFieldBean extends BaseWidgetBean<CustomSVGPaperViewBe
 
 
     public CustomSVGPaperFieldBean(ModuleComponent parentModuleComponent, SVGPaperComponent component) {
-        this.javaSrcBeans=update(parentModuleComponent, component);
+        update(parentModuleComponent, component);
     }
 
 

@@ -219,7 +219,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         if (viewJavaSrcBean != null) {
             try {
                 DomainInst domainInst = DSMFactory.getInstance().getDomainInstById(this.getDomainId());
-                domainInst.loadJavaSrc(viewJavaSrcBean.getServiceClassList());
                 javaSrcBeans = domainInst.loadJavaSrc(viewJavaSrcBean.getAllClassNames());
             } catch (JDSException e) {
                 e.printStackTrace();

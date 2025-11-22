@@ -108,10 +108,13 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
                         if (serviceList.size() > 0) {
                             viewBean = (T) aggRootBuild.getCustomViewBean();
                             customModuleBean.reBindMethod(viewBean.getMethodConfig());
+                            DSMFactory.getInstance().saveCustomViewBean(viewBean);
                         }
+                    } else {
+                        allSrc.addAll(aggRootBuild.getAllSrcBean());
                     }
                 }
-                DSMFactory.getInstance().saveCustomViewBean(viewBean);
+
             } catch (JDSException e) {
                 e.printStackTrace();
             }
@@ -123,7 +126,9 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
     @JSONField(serialize = false)
     public List<JavaSrcBean> getJavaSrcBeans() {
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
-        javaSrcBeans.addAll(viewBean.getAllJavaSrc());
+        if (viewBean != null) {
+            javaSrcBeans.addAll(viewBean.getAllJavaSrc());
+        }
         return javaSrcBeans;
     }
 
