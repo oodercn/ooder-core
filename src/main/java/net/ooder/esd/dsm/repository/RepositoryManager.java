@@ -867,6 +867,11 @@ public class RepositoryManager {
         List<Callable<List<JavaSrcBean>>> impltasks = genModuleViewJavaTask(repositoryInst, viewBean, moduleName, className, false, chrome, new RepositoryType[]{RepositoryType.DO, RepositoryType.VIEWSERVICE, RepositoryType.REPOSITORYIMPL});
         List<JavaSrcBean> implList = BuildFactory.getInstance().syncTasks(taskId, impltasks);
         javaSrcBeans.addAll(implList);
+        List<String> repositoryClassList = new ArrayList<>();
+        for (JavaSrcBean javaSrcBean : javaSrcBeans) {
+            repositoryClassList.add(javaSrcBean.getClassName());
+        }
+        viewBean.getViewJavaSrcBean().setRepositoryClassList(repositoryClassList);
         return javaSrcBeans;
     }
 

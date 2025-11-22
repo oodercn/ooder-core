@@ -176,7 +176,7 @@ public class AggRootBuild {
         }
         //3.5重新编译视图
         this.javaGen.dynCompile(getAllSrcBean());
-        reSetViewBean(customViewBean);
+        updateViewBean(customViewBean);
         if (childBeans == null || childBeans.isEmpty()) {
             this.genChildJava();
         }
@@ -198,7 +198,7 @@ public class AggRootBuild {
     }
 
     public void update() throws JDSException {
-        this.reSetViewBean(customViewBean);
+        this.updateViewBean(customViewBean);
         DSMFactory.getInstance().saveCustomViewBean(customViewBean);
     }
 

@@ -206,6 +206,7 @@ public class DomainInst extends DSMInst implements Comparable<DomainInst> {
         return javaSrcBean;
     }
 
+    @JSONField(serialize = false)
     public List<JavaSrcBean> getAllJavaSrcBeans() {
         List<JavaSrcBean> javaSrcBeans = getJavaSrcBeans();
         if (this.getViewInst() != null) {
@@ -217,7 +218,7 @@ public class DomainInst extends DSMInst implements Comparable<DomainInst> {
         return javaSrcBeans;
     }
 
-
+    @JSONField(serialize = false)
     public List<ESDClass> getEntityList(AggregationType aggregationType, boolean isProxy) {
         List<ESDClass> serviceBeans = new ArrayList<>();
         List<ESDClass> aggBeans = new ArrayList<>();

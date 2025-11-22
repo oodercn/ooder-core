@@ -92,8 +92,12 @@ public class GenJava {
 
 
     GenJava(String projectVersionName) {
+
         INProject dsmProject = null;
         try {
+            if (projectVersionName == null) {
+                projectVersionName = DSMFactory.getInstance().getDefaultProjectName();
+            }
             dsmProject = ESDFacrory.getDefalutProjectManager().getProjectByName(projectVersionName);
             if (CompileJava.isDebug()) {
                 this.javaBuildPath = CompileJava.getDebugClassPath();

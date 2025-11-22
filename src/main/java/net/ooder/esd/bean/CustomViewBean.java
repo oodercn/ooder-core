@@ -158,6 +158,48 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
 
     }
 
+    public CustomViewBean(MethodConfig methodAPIBean) {
+        this.methodConfig = methodAPIBean;
+        this.moduleBean = new CustomModuleBean(methodAPIBean.getCustomMethodInfo());
+        if (methodAPIBean.getViewClass() != null) {
+            this.viewClassName = methodAPIBean.getViewClass().getClassName();
+            Class clazz = methodAPIBean.getViewClass().getCtClass();
+            this.initViewClass(clazz);
+        }
+
+        if (methodAPIBean.getMethod() != null) {
+            if (containerBean == null) {
+                containerBean = new ContainerBean(AnnotationUtil.getAllAnnotations(methodAPIBean.getMethod(), true));
+            } else {
+                ContainerBean fieldContainerBean = new ContainerBean(AnnotationUtil.getAllAnnotations(methodAPIBean.getMethod(), true));
+                OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(fieldContainerBean), Map.class), containerBean, false, false);
+            }
+        }
+        this.id = methodAPIBean.getId();
+        this.caption = methodAPIBean.getCaption();
+        this.imageClass = methodAPIBean.getImageClass();
+        this.tagVar = methodAPIBean.getTagVar();
+        this.index = methodAPIBean.getIndex();
+        this.name = methodAPIBean.getName();
+        this.domainId = methodAPIBean.getDomainId();
+        this.methodName = methodAPIBean.getMethodName();
+        this.sourceMethodName = methodName;
+        this.sourceClassName = methodAPIBean.getSourceClassName();
+        if (menuBar != null && (menuBar.getId() == null || menuBar.getId().equals(""))) {
+            menuBar.setId(this.methodName + ComponentType.MENUBAR.getType());
+        }
+        String serviceClass = methodAPIBean.getMethod().getDeclaringClass().getName();
+        if (customServiceClass.isEmpty() || !customServiceClass.contains(serviceClass)) {
+            customServiceClass.add(serviceClass);
+        }
+
+        if (moduleBean != null && moduleBean.getName() != null && !moduleBean.getName().equals("")) {
+            name = moduleBean.getName();
+        }
+
+    }
+
+
     public void addChildJavaSrc(List<JavaSrcBean> javaSrcBeans) {
         List<String> childs = this.getViewJavaSrcBean().getChildClassList();
         for (JavaSrcBean javaSrcBean : javaSrcBeans) {
@@ -267,6 +309,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         return annotationBeans;
     }
 
+    @JSONField(serialize = false)
     public List<JavaSrcBean> getAllJavaSrc() {
         List<JavaSrcBean> allJavaSrc = new ArrayList<>();
         allJavaSrc.addAll(this.getJavaSrcBeans());
@@ -385,47 +428,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
             menuBar = new MenuBarBean(customMenuBar);
         } else {
             menuBar = AnnotationUtil.fillDefaultValue(MenuBarMenu.class, new MenuBarBean());
-        }
-
-    }
-
-    public CustomViewBean(MethodConfig methodAPIBean) {
-        this.methodConfig = methodAPIBean;
-        this.moduleBean = new CustomModuleBean(methodAPIBean.getCustomMethodInfo());
-        if (methodAPIBean.getViewClass() != null) {
-            this.viewClassName = methodAPIBean.getViewClass().getClassName();
-            Class clazz = methodAPIBean.getViewClass().getCtClass();
-            this.initViewClass(clazz);
-        }
-
-        if (methodAPIBean.getMethod() != null) {
-            if (containerBean == null) {
-                containerBean = new ContainerBean(AnnotationUtil.getAllAnnotations(methodAPIBean.getMethod(), true));
-            } else {
-                ContainerBean fieldContainerBean = new ContainerBean(AnnotationUtil.getAllAnnotations(methodAPIBean.getMethod(), true));
-                OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(fieldContainerBean), Map.class), containerBean, false, false);
-            }
-        }
-        this.id = methodAPIBean.getId();
-        this.caption = methodAPIBean.getCaption();
-        this.imageClass = methodAPIBean.getImageClass();
-        this.tagVar = methodAPIBean.getTagVar();
-        this.index = methodAPIBean.getIndex();
-        this.name = methodAPIBean.getName();
-        this.domainId = methodAPIBean.getDomainId();
-        this.methodName = methodAPIBean.getMethodName();
-        this.sourceMethodName = methodName;
-        this.sourceClassName = methodAPIBean.getSourceClassName();
-        if (menuBar != null && (menuBar.getId() == null || menuBar.getId().equals(""))) {
-            menuBar.setId(this.methodName + ComponentType.MENUBAR.getType());
-        }
-        String serviceClass = methodAPIBean.getMethod().getDeclaringClass().getName();
-        if (customServiceClass.isEmpty() || !customServiceClass.contains(serviceClass)) {
-            customServiceClass.add(serviceClass);
-        }
-
-        if (moduleBean != null && moduleBean.getName() != null && !moduleBean.getName().equals("")) {
-            name = moduleBean.getName();
         }
 
     }
