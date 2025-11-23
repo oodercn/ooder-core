@@ -5,7 +5,9 @@ import net.ooder.annotation.Aggregation;
 import net.ooder.annotation.AggregationType;
 import net.ooder.annotation.ESDEntity;
 import net.ooder.annotation.UserSpace;
-import net.ooder.common.JDSException;
+import net.ooder.common.JDSConstants;
+import net.ooder.common.logging.Log;
+import net.ooder.common.logging.LogFactory;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.dsm.BuildFactory;
@@ -20,6 +22,8 @@ import net.ooder.esd.util.json.CaseEnumsSerializer;
 import java.util.*;
 
 public class RepositoryInst extends DSMInst implements Comparable<RepositoryInst> {
+    private static final Log logger = LogFactory.getLog(JDSConstants.CONFIG_KEY, RepositoryInst.class);
+
     public String schema = "fdt";
     public String serverUrl = "http://api.radev.cn";
     @JSONField(deserializeUsing = CaseEnumsSerializer.class)
@@ -79,10 +83,8 @@ public class RepositoryInst extends DSMInst implements Comparable<RepositoryInst
                     }
 
                 }
-            } catch (ClassNotFoundException e) {
-
-            } catch (JDSException e) {
-                e.printStackTrace();
+            } catch (Throwable e) {
+                logger.warn(e.getMessage());
             }
         }
         return entityList;
@@ -207,10 +209,8 @@ public class RepositoryInst extends DSMInst implements Comparable<RepositoryInst
                     }
                 }
 
-            } catch (ClassNotFoundException e) {
-
-            } catch (JDSException e) {
-                e.printStackTrace();
+            } catch (Throwable e) {
+                logger.warn(e.getMessage());
             }
         }
         return entityList;
