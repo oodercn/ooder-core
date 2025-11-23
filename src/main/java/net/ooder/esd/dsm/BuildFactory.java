@@ -213,7 +213,7 @@ public class BuildFactory {
     }
 
 
-    public List<JavaSrcBean> syncTasks(String taskId, List<Callable<List<JavaSrcBean>>> buildTasks) {
+    public List<JavaSrcBean> syncTasks(String taskId, List<? extends Callable<List<JavaSrcBean>>> buildTasks) {
         List<JavaSrcBean> srcBeans = new ArrayList<>();
         try {
             if (taskId == null) {

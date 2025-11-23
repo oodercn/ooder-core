@@ -47,7 +47,6 @@ public abstract class GenJavaTask implements Callable<List<JavaSrcBean>> {
                 e.printStackTrace();
             }
         }
-
         return sources;
     }
 

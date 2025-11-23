@@ -22,10 +22,11 @@ import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.AggregationManager;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
+import net.ooder.esd.dsm.enums.RepositoryType;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.gen.repository.GenRepositoryViewJava;
 import net.ooder.esd.dsm.gen.view.GenCustomViewJava;
 import net.ooder.esd.dsm.repository.RepositoryInst;
-import net.ooder.esd.dsm.repository.RepositoryManager;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.ViewInst;
 import net.ooder.esd.dsm.view.ViewManager;
@@ -35,6 +36,7 @@ import net.ooder.web.AggregationBean;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AggRootBuild {
@@ -42,13 +44,17 @@ public class AggRootBuild {
 
     GenCustomViewJava viewTask;
 
+    GenRepositoryViewJava voRepositoryTask;
+
+    GenRepositoryViewJava serviceRepositoryTask;
+
     AggViewRoot viewRoot;
 
     List<JavaGenSource> javaViewSource = new ArrayList<>();
 
-    List<JavaSrcBean> childBeans;
+    List<JavaGenSource> repositorySource = new ArrayList<>();
 
-    List<JavaSrcBean> repositoryBeans;
+    List<JavaSrcBean> childBeans;
 
     List<JavaSrcBean> aggBeans;
 
@@ -136,7 +142,7 @@ public class AggRootBuild {
         viewTask = genCustomViewJava();
         this.javaViewSource = viewTask.getSourceList();
         //2.1创建资源层接口V
-        this.repositoryBeans = genRepositoryViewJava();
+        this.repositorySource = initRepositoryViewJava(true);
         //3.1预编译一次
         this.javaGen.dynCompile(getModuleBeans());
 
@@ -144,7 +150,7 @@ public class AggRootBuild {
 
     public void buildRepository() throws JDSException {
         //2.1创建资源层接口V
-        this.repositoryBeans = genRepositoryViewJava();
+        this.repositorySource = initRepositoryViewJava(true);
         //3.1预编译一次
         this.javaGen.dynCompile(getModuleBeans());
 
@@ -166,7 +172,7 @@ public class AggRootBuild {
 
         if (domainInst != null && domainInst.getUserSpace().equals(UserSpace.VIEW)) {
             //2.1创建资源层接口V
-            this.repositoryBeans = genRepositoryViewJava();
+            this.repositorySource = initRepositoryViewJava(false);
             //3.1预编译一次
             this.javaGen.dynCompile(getModuleBeans());
             this.aggServiceRootBean = genRootBean();
@@ -211,8 +217,9 @@ public class AggRootBuild {
 
     public List<JavaSrcBean> getRepositorySrcList() {
         List<JavaSrcBean> classList = new ArrayList<>();
-        classList.addAll(repositoryBeans);
-
+        for (JavaGenSource source : repositorySource) {
+            classList.add(source.getSrcBean());
+        }
         return classList;
     }
 
@@ -250,11 +257,33 @@ public class AggRootBuild {
         return javaRoot;
     }
 
-    public List<JavaSrcBean> genRepositoryViewJava() throws JDSException {
+    private List<JavaGenSource> reBuildRepositoryVO(boolean clear) throws JDSException {
+        if (voRepositoryTask == null || clear) {
+            String taskId = repositoryInst.getDsmId();
+            AggViewRoot aggViewRoot = new AggViewRoot(repositoryInst);
+            this.voRepositoryTask = new GenRepositoryViewJava(aggViewRoot, customViewBean, moduleName, euClassName, true, chrome, new RepositoryType[]{RepositoryType.VO, RepositoryType.VIEWBEAN, RepositoryType.REPOSITORY});
+            BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(voRepositoryTask));
+        }
+        return voRepositoryTask.getSourceList();
+    }
+
+    private List<JavaGenSource> reBuildRepositoryService(boolean clear) throws JDSException {
+        if (serviceRepositoryTask == null || clear) {
+            String taskId = repositoryInst.getDsmId();
+            AggViewRoot aggViewRoot = new AggViewRoot(repositoryInst);
+            serviceRepositoryTask = new GenRepositoryViewJava(aggViewRoot, customViewBean, moduleName, euClassName, true, chrome, new RepositoryType[]{RepositoryType.DO, RepositoryType.VIEWSERVICE, RepositoryType.REPOSITORYIMPL});
+            BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(serviceRepositoryTask));
+
+        }
+        return serviceRepositoryTask.getSourceList();
+    }
+
+    public List<JavaGenSource> initRepositoryViewJava(boolean clear) throws JDSException {
         chrome.printLog("创建创库模型模型...", true);
-        RepositoryManager repositoryManager = DSMFactory.getInstance().getRepositoryManager();
-        this.repositoryBeans = repositoryManager.genModuleViewJava(repositoryInst, customViewBean, moduleName, euClassName, chrome);
-        return repositoryBeans;
+        List repositorySource = new ArrayList<>();
+        repositorySource.addAll(reBuildRepositoryVO(clear));
+        repositorySource.addAll(reBuildRepositoryService(clear));
+        return repositorySource;
     }
 
     private void reBindService() throws JDSException {
@@ -324,7 +353,7 @@ public class AggRootBuild {
 
         //3.2创建资源层接口
         chrome.printLog("3.2创建资源层接口...", true);
-        List<JavaSrcBean> repositoryBeans = this.getRepositoryBeans();
+        List<JavaGenSource> repositoryBeans = this.getRepositorySource();
         if (repositoryBeans != null && !repositoryBeans.isEmpty()) {
             List<JavaSrcBean> aggServerBeans = rebuildAggServiceBean(repositoryBeans);
             aggServiceRoots.addAll(aggServerBeans);
@@ -341,16 +370,16 @@ public class AggRootBuild {
     /**
      * 根据仓储模型构建领域模型
      *
-     * @param repositoryBeans
+     * @param repositorySource
      * @return
      * @throws JDSException
      */
-    public List<JavaSrcBean> rebuildAggServiceBean(List<JavaSrcBean> repositoryBeans) throws JDSException {
+    public List<JavaSrcBean> rebuildAggServiceBean(List<JavaGenSource> repositorySource) throws JDSException {
 
         AggregationManager aggregationManager = DSMFactory.getInstance().getAggregationManager();
         List<String> serviceNames = new ArrayList<>();
         List<AggEntityConfig> aggEntityConfigs = new ArrayList<>();
-        for (JavaSrcBean srcBean : repositoryBeans) {
+        for (JavaGenSource srcBean : repositorySource) {
             ESDClass esdClass = BuildFactory.getInstance().getClassManager().getAggEntityByName(srcBean.getClassName(), true);
             if (esdClass != null && !esdClass.getCtClass().isInterface()) {
                 ExpressionTempBean expressionTempBean = EsbBeanFactory.getInstance().registerService(esdClass.getCtClass());
@@ -429,9 +458,16 @@ public class AggRootBuild {
         }
 
         if (viewJavaSrcBean.getRepositoryClassList() != null) {
-            repositoryBeans = repositoryInst.loadJavaSrc(viewJavaSrcBean.getRepositoryClassList());
+            List<JavaSrcBean> repositoryBeans = repositoryInst.loadJavaSrc(viewJavaSrcBean.getRepositoryClassList());
+            for (JavaSrcBean srcBean : repositoryBeans) {
+                try {
+                    repositorySource.add(this.buildViewContext(srcBean));
+                } catch (JDSException e) {
+                    e.printStackTrace();
+                }
+            }
         } else {
-            repositoryBeans = new ArrayList<>();
+            repositorySource = new ArrayList<>();
         }
 
         if (viewJavaSrcBean.getRootServicesClassName().size() > 0) {
@@ -453,9 +489,9 @@ public class AggRootBuild {
         }
 
 
-        for (JavaSrcBean viewBean : repositoryBeans) {
-            if (!allSrcBean.contains(viewBean)) {
-                allSrcBean.add(viewBean);
+        for (JavaGenSource genSource : repositorySource) {
+            if (!allSrcBean.contains(genSource.getSrcBean())) {
+                allSrcBean.add(genSource.getSrcBean());
             }
         }
         return allSrcBean;
@@ -488,12 +524,11 @@ public class AggRootBuild {
             }
         }
 
-        for (JavaSrcBean viewBean : repositoryBeans) {
-            if (!allSrcBean.contains(viewBean)) {
-                allSrcBean.add(viewBean);
+        for (JavaGenSource genSource : repositorySource) {
+            if (!allSrcBean.contains(genSource.getSrcBean())) {
+                allSrcBean.add(genSource.getSrcBean());
             }
         }
-
         for (JavaSrcBean javaSrcBean : aggServiceRootBean) {
             if (javaSrcBean != null && !allSrcBean.contains(javaSrcBean)) {
                 allSrcBean.add(javaSrcBean);
@@ -543,7 +578,7 @@ public class AggRootBuild {
         viewJavaSrcBean.setServiceClassList(serviceClassList);
 
         List<String> repositoryClassList = new ArrayList<>();
-        for (JavaSrcBean javaSrcBean : repositoryBeans) {
+        for (JavaGenSource javaSrcBean : repositorySource) {
             repositoryClassList.add(javaSrcBean.getClassName());
         }
         viewJavaSrcBean.setRepositoryClassList(repositoryClassList);
@@ -617,13 +652,44 @@ public class AggRootBuild {
         this.javaGen = javaGen;
     }
 
-
-    public List<JavaSrcBean> getRepositoryBeans() {
-        return repositoryBeans;
+    public GenCustomViewJava getViewTask() {
+        return viewTask;
     }
 
-    public void setRepositoryBeans(List<JavaSrcBean> repositoryBeans) {
-        this.repositoryBeans = repositoryBeans;
+    public void setViewTask(GenCustomViewJava viewTask) {
+        this.viewTask = viewTask;
+    }
+
+    public GenRepositoryViewJava getVoRepositoryTask() {
+        return voRepositoryTask;
+    }
+
+    public void setVoRepositoryTask(GenRepositoryViewJava voRepositoryTask) {
+        this.voRepositoryTask = voRepositoryTask;
+    }
+
+    public GenRepositoryViewJava getServiceRepositoryTask() {
+        return serviceRepositoryTask;
+    }
+
+    public void setServiceRepositoryTask(GenRepositoryViewJava serviceRepositoryTask) {
+        this.serviceRepositoryTask = serviceRepositoryTask;
+    }
+
+    public List<JavaGenSource> getJavaViewSource() {
+        return javaViewSource;
+    }
+
+    public void setJavaViewSource(List<JavaGenSource> javaViewSource) {
+        this.javaViewSource = javaViewSource;
+    }
+
+    public List<JavaGenSource> getRepositorySource() {
+        return repositorySource;
+    }
+
+    public void setRepositorySource(List<JavaGenSource> repositorySource) {
+        this.repositorySource = repositorySource;
     }
 
     public CustomViewBean getCustomViewBean() {

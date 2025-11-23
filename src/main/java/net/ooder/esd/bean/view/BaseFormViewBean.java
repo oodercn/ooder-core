@@ -140,7 +140,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                 ComponentType componentType = ComponentType.fromType(component.getKey());
                 if (componentType.isBar()) {
                     genBar(moduleComponent, component);
-                } else if (Arrays.asList(ComponentType.getCustomConnComponents()).contains(componentType)) {
+                } else if (Arrays.asList(ComponentType.getCustomAPIComponents()).contains(componentType)) {
                     genAPI(moduleComponent, component);
                 } else if (!skipType(component)) {
                     GenFormChildModule genChildModule = null;

@@ -856,32 +856,42 @@ public class RepositoryManager {
         BuildFactory.getInstance().compileJavaSrc(srcBeans, repositoryInst.getProjectVersionName(), chrome);
     }
 
+//
+//    public List<JavaSrcBean> genModuleViewJava(RepositoryInst repositoryInst, CustomViewBean viewBean, String moduleName, String className, ChromeProxy chrome) throws JDSException {
+//        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+//        List<GenRepositoryViewJava> votasks = genModuleViewJavaTask(repositoryInst, viewBean, moduleName, className, true, chrome, new RepositoryType[]{RepositoryType.VO, RepositoryType.VIEWBEAN, RepositoryType.REPOSITORY});
+//        String taskId = repositoryInst.getDsmId() + "[" + System.currentTimeMillis() + "]";
+//        List<JavaSrcBean> voList = BuildFactory.getInstance().syncTasks(taskId, votasks);
+//        javaSrcBeans.addAll(voList);
+//        taskId = repositoryInst.getDsmId() + "[" + System.currentTimeMillis() + "]";
+//        List<GenRepositoryViewJava> impltasks = genModuleViewJavaTask(repositoryInst, viewBean, moduleName, className, false, chrome, new RepositoryType[]{RepositoryType.DO, RepositoryType.VIEWSERVICE, RepositoryType.REPOSITORYIMPL});
+//        List<JavaSrcBean> implList = BuildFactory.getInstance().syncTasks(taskId, impltasks);
+//        javaSrcBeans.addAll(implList);
+//        List<String> repositoryClassList = new ArrayList<>();
+//        for (JavaSrcBean javaSrcBean : javaSrcBeans) {
+//            repositoryClassList.add(javaSrcBean.getClassName());
+//        }
+//        viewBean.getViewJavaSrcBean().setRepositoryClassList(repositoryClassList);
+//        return javaSrcBeans;
+//    }
 
-    public List<JavaSrcBean> genModuleViewJava(RepositoryInst repositoryInst, CustomViewBean viewBean, String moduleName, String className, ChromeProxy chrome) throws JDSException {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
-        List<Callable<List<JavaSrcBean>>> votasks = genModuleViewJavaTask(repositoryInst, viewBean, moduleName, className, true, chrome, new RepositoryType[]{RepositoryType.VO, RepositoryType.VIEWBEAN, RepositoryType.REPOSITORY});
-        String taskId = repositoryInst.getDsmId() + "[" + System.currentTimeMillis() + "]";
-        List<JavaSrcBean> voList = BuildFactory.getInstance().syncTasks(taskId, votasks);
-        javaSrcBeans.addAll(voList);
-        taskId = repositoryInst.getDsmId() + "[" + System.currentTimeMillis() + "]";
-        List<Callable<List<JavaSrcBean>>> impltasks = genModuleViewJavaTask(repositoryInst, viewBean, moduleName, className, false, chrome, new RepositoryType[]{RepositoryType.DO, RepositoryType.VIEWSERVICE, RepositoryType.REPOSITORYIMPL});
-        List<JavaSrcBean> implList = BuildFactory.getInstance().syncTasks(taskId, impltasks);
-        javaSrcBeans.addAll(implList);
-        List<String> repositoryClassList = new ArrayList<>();
-        for (JavaSrcBean javaSrcBean : javaSrcBeans) {
-            repositoryClassList.add(javaSrcBean.getClassName());
-        }
-        viewBean.getViewJavaSrcBean().setRepositoryClassList(repositoryClassList);
-        return javaSrcBeans;
-    }
-
-    public List<Callable<List<JavaSrcBean>>> genModuleViewJavaTask(RepositoryInst repositoryInst, CustomViewBean viewBean, String moduleName, String className, boolean clear, ChromeProxy chrome, RepositoryType... repositoryTypes) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> repositoryTasks = new ArrayList<>();
-        AggViewRoot aggViewRoot = new AggViewRoot(repositoryInst);
-        GenRepositoryViewJava genRepositoryViewJava = new GenRepositoryViewJava(aggViewRoot, viewBean, moduleName, className, clear, chrome, repositoryTypes);
-        repositoryTasks.add(genRepositoryViewJava);
-        return repositoryTasks;
-    }
+//    public List<JavaSrcBean> genModuleViewJava(RepositoryInst repositoryInst, CustomViewBean viewBean, String moduleName, String className, ChromeProxy chrome) throws JDSException {
+//        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+//        String taskId = repositoryInst.getDsmId();
+//        AggViewRoot aggViewRoot = new AggViewRoot(repositoryInst);
+//        GenRepositoryViewJava voTask = new GenRepositoryViewJava(aggViewRoot, viewBean, moduleName, className, true, chrome, new RepositoryType[]{RepositoryType.VO, RepositoryType.VIEWBEAN, RepositoryType.REPOSITORY});
+//        List<JavaSrcBean> voList = BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(voTask));
+//        javaSrcBeans.addAll(voList);
+//        GenRepositoryViewJava serviceTask = new GenRepositoryViewJava(aggViewRoot, viewBean, moduleName, className, true, chrome, new RepositoryType[]{RepositoryType.DO, RepositoryType.VIEWSERVICE, RepositoryType.REPOSITORYIMPL});
+//        List<JavaSrcBean> implList = BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(serviceTask));
+//        javaSrcBeans.addAll(implList);
+//        List<String> repositoryClassList = new ArrayList<>();
+//        for (JavaSrcBean javaSrcBean : javaSrcBeans) {
+//            repositoryClassList.add(javaSrcBean.getClassName());
+//        }
+//        viewBean.getViewJavaSrcBean().setRepositoryClassList(repositoryClassList);
+//        return javaSrcBeans;
+//    }
 
     public List<JavaSrcBean> genDicJava(RepositoryInst repositoryInst, List<? extends TabListItem> items, String moduleName, String className, ChromeProxy chrome) throws JDSException {
         List<Callable<List<JavaSrcBean>>> dicTasks = new ArrayList<>();
