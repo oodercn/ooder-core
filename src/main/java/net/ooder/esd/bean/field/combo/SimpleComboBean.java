@@ -28,6 +28,8 @@ public class SimpleComboBean implements ComboBoxBean<ComboInputComponent> {
 
     }
 
+
+
     public SimpleComboBean(ComboInputType inputType) {
 
         this.inputType = inputType;
@@ -73,10 +75,7 @@ public class SimpleComboBean implements ComboBoxBean<ComboInputComponent> {
         return new ArrayList<>();
     }
 
-    @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, ComboInputComponent component) {
-        return new ArrayList<>();
-    }
+
 
     @Override
     public ComboInputType[] getComboInputType() {

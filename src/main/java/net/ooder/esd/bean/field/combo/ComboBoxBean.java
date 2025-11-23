@@ -13,8 +13,6 @@ public interface ComboBoxBean<M extends Component> {
 
     List<JavaSrcBean> getJavaSrcBeans();
 
-    List<JavaSrcBean> update(ModuleComponent moduleComponent, M component);
-
     ComboInputType[] getComboInputType();
 
     ComboInputType getInputType();

@@ -40,6 +40,11 @@ public abstract class FieldBaseBean<M extends FieldComponent> implements FieldCo
     CustomWidgetBean widgetBean;
 
 
+
+    public FieldBaseBean() {
+
+    }
+
     public List<JavaSrcBean> javaSrcBeans;
 
 
@@ -89,9 +94,6 @@ public abstract class FieldBaseBean<M extends FieldComponent> implements FieldCo
         return annotationBeans;
     }
 
-    public FieldBaseBean() {
-
-    }
 
     public net.ooder.esd.tool.properties.CS getCS() {
         return CS;

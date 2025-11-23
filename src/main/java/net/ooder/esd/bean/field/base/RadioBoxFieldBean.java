@@ -1,6 +1,7 @@
 package net.ooder.esd.bean.field.base;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
@@ -15,10 +16,9 @@ import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.custom.component.form.field.CustomRadioBoxComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ListComponent;
-import net.ooder.esd.tool.component.RadioBoxComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.RadioBoxComponent;
 import net.ooder.esd.tool.properties.form.RadioBoxProperties;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 @CustomClass(clazz = CustomRadioBoxComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.RADIOBOX
@@ -56,27 +57,11 @@ public class RadioBoxFieldBean extends FieldBaseBean<RadioBoxComponent> {
             listFieldBean = new CustomListBean();
         }
         javaSrcBeans.addAll(listFieldBean.update(parentModuleComponent, component));
-
         listBean = new ListFieldBean(component.getProperties());
 
         return javaSrcBeans;
     }
 
-//    public RadioBoxFieldBean(RadioBoxComponent component) {
-//        super(component);
-//        if (listFieldBean == null) {
-//            listFieldBean = new CustomListBean(component.getProperties());
-//        } else {
-//            listFieldBean.update(component.getProperties());
-//        }
-//        if (listBean == null) {
-//            listBean = new ListFieldBean(component.getProperties());
-//        } else {
-//            listBean.update(component.getProperties());
-//        }
-//
-//    }
-//
 
     public RadioBoxFieldBean(ESDField esdField, Set<Annotation> annotations) {
         super(annotations);

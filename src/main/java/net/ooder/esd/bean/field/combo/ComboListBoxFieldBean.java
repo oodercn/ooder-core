@@ -42,6 +42,8 @@ public class ComboListBoxFieldBean<T extends ComboInputProperties> extends Combo
     }
 
 
+
+
     @Override
     public ComboInputType getInputType() {
         return ComboInputType.listbox;

@@ -11,12 +11,15 @@ import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.bean.field.base.ListFieldBean;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.custom.component.form.field.combo.CustomComboBoxComponent;
+import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ComboInputComponent;
+import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.form.ComboInputProperties;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,13 +51,21 @@ public class ComboxFieldBean<M extends ComboInputComponent> extends ComboInputFi
 
 
     protected void update(ComboInputProperties properties) {
-
         if (listBean == null) {
             this.listBean = new ListFieldBean(properties);
         } else {
             listBean.update(properties);
         }
     }
+
+
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent moduleComponent, M component) {
+        this.update(component.getProperties());
+        return  listBean.update(moduleComponent,component);
+    }
+
+
 
     public ComboxFieldBean() {
 

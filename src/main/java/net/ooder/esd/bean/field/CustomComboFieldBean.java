@@ -94,6 +94,7 @@ public class CustomComboFieldBean<M extends ComboInputComponent> implements Comb
         return new ArrayList<>();
     }
 
+
     @Override
     public List<JavaSrcBean> update(ModuleComponent moduleComponent, M component) {
         this.update(component.getProperties());

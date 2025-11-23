@@ -57,6 +57,7 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
 
     public CustomListBean() {
 
+
     }
 
 

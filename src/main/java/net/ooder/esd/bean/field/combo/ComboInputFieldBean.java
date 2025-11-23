@@ -2,10 +2,11 @@ package net.ooder.esd.bean.field.combo;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
-import net.ooder.esd.annotation.field.ComboInputAnnotation;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.Input;
+import net.ooder.esd.annotation.field.ComboInputAnnotation;
 import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
@@ -20,11 +21,11 @@ import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.esd.tool.properties.form.ComboInputProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+
 @CustomClass(clazz = CustomComboInputComponent.class,
         viewType = CustomViewType.COMBOBOX,
         inputType = {ComboInputType.input},
@@ -91,6 +92,7 @@ public class ComboInputFieldBean<M extends ComboInputComponent> implements Combo
     public List<JavaSrcBean> getJavaSrcBeans() {
         return new ArrayList<>();
     }
+
 
     @Override
     public List<JavaSrcBean> update(ModuleComponent moduleComponent, M component) {
