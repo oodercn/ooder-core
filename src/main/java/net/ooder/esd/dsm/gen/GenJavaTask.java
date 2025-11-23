@@ -13,7 +13,9 @@ import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.server.context.MinServerActionContextImpl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 public abstract class GenJavaTask implements Callable<List<JavaSrcBean>> {
@@ -21,7 +23,7 @@ public abstract class GenJavaTask implements Callable<List<JavaSrcBean>> {
     public ChromeProxy chrome;
     public List<String> skipsTempIds = new ArrayList<>();
     public List<JavaTemp> viewTemps = new ArrayList<>();
-    public List<String> classList = new ArrayList<>();
+    public Set<String> classList = new HashSet<>();
 
 
     public GenJavaTask() {
@@ -123,11 +125,11 @@ public abstract class GenJavaTask implements Callable<List<JavaSrcBean>> {
     }
 
 
-    public List<String> getClassList() {
+    public Set<String> getClassList() {
         return classList;
     }
 
-    public void setClassList(List<String> classList) {
+    public void setClassList(Set<String> classList) {
         this.classList = classList;
     }
 

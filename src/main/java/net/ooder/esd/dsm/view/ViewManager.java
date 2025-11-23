@@ -36,12 +36,12 @@ import net.ooder.esd.dsm.enums.DSMType;
 import net.ooder.esd.dsm.enums.RangeType;
 import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.gen.view.GenCustomViewJava;
+import net.ooder.esd.dsm.gen.view.GenViewDicJava;
 import net.ooder.esd.dsm.gen.view.GenViewEntityRefJava;
 import net.ooder.esd.dsm.gen.view.UpdateCustomViewJava;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.context.ActionViewRoot;
-import net.ooder.esd.dsm.view.context.DicViewRoot;
 import net.ooder.esd.dsm.view.context.ViewRoot;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.dsm.view.ref.ViewEntityRef;
@@ -726,7 +726,7 @@ public class ViewManager {
         DomainInst domainInst = (DomainInst) viewRoot.getDsmBean();
         ViewInst viewInst = this.createDefaultView(domainInst);
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
-        GenCustomViewJava customViewJava=null;
+        GenCustomViewJava customViewJava = null;
         boolean canCreate = true;
         if (viewBean instanceof CustomBlockFormViewBean) {
             if (viewBean.getAllFields().size() == 1 && (viewBean.getAllFields().get(0) instanceof FieldFormConfig)) {
@@ -935,83 +935,91 @@ public class ViewManager {
     }
 
 
-    public Class genDicJava(ViewInst viewInst, List<TabListItem> items, String moduleName, String className, ChromeProxy chrome) throws JDSException {
-
-        Class clazz = null;
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
-        for (TabListItem listItem : items) {
-            if (listItem instanceof TreeListItem) {
-                genChildTree(viewInst, moduleName, (TreeListItem) listItem, className);
-            }
-        }
-        DicViewRoot dicViewRoot = new DicViewRoot(viewInst, moduleName, items, className);
-        GenJava javaGen = GenJava.getInstance(viewInst.getProjectVersionName());
-        List<JavaTemp> viewTemps = BuildFactory.getInstance().getTempManager().getCustomViewTemps(ViewType.DIC);
-        for (JavaTemp javatemp : viewTemps) {
-            if (javatemp.getRangeType() != null && javatemp.getRangeType().equals(RangeType.MODULEVIEW)) {
-                String packageName = className.substring(0, className.lastIndexOf("."));
-                String simClass = className.substring(className.lastIndexOf(".") + 1);
-                if (javatemp.getPackagePostfix() != null && !javatemp.getPackagePostfix().equals("..") && !javatemp.getPackagePostfix().equals("")) {
-                    packageName = packageName + "." + javatemp.getPackagePostfix();
-                }
-                className = StringUtility.replace(javatemp.getNamePostfix(), "**", simClass);
-                dicViewRoot.setClassName(className);
-                dicViewRoot.setPackageName(packageName);
-                File file = javaGen.createJava(javatemp, dicViewRoot, chrome);
-                JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, viewInst, javatemp.getJavaTempId());
-                try {
-                    clazz = javaGen.dynCompile(srcBean.getClassName(), srcBean.getContent());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                javaSrcBeans.add(srcBean);
-            }
-        }
-        for (JavaSrcBean srcBean : javaSrcBeans) {
-            viewInst.updateView(srcBean);
-        }
-        this.updateViewInst(viewInst, true);
-
-        return clazz;
+    public GenViewDicJava genDicJava(ViewInst viewInst, List<TabListItem> items, String moduleName, String className, ChromeProxy chrome) throws JDSException {
+        GenViewDicJava genViewDicJava = new GenViewDicJava(viewInst, moduleName, items, className, chrome);
+        List<JavaSrcBean> srcBeans = BuildFactory.getInstance().syncTasks(className, Arrays.asList(genViewDicJava));
+        return genViewDicJava;
+//
+//        Class clazz = null;
+//        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+//        for (TabListItem listItem : items) {
+//            if (listItem instanceof TreeListItem) {
+//                List<JavaSrcBean> childJavaSrc = genChildTree(viewInst, moduleName, (TreeListItem) listItem, className);
+//                javaSrcBeans.addAll(childJavaSrc);
+//            }
+//        }
+//        DicViewRoot dicViewRoot = new DicViewRoot(viewInst, moduleName, items, className);
+//        GenJava javaGen = GenJava.getInstance(viewInst.getProjectVersionName());
+//        List<JavaTemp> viewTemps = BuildFactory.getInstance().getTempManager().getCustomViewTemps(ViewType.DIC);
+//        for (JavaTemp javatemp : viewTemps) {
+//            if (javatemp.getRangeType() != null && javatemp.getRangeType().equals(RangeType.MODULEVIEW)) {
+//                String packageName = className.substring(0, className.lastIndexOf("."));
+//                String simClass = className.substring(className.lastIndexOf(".") + 1);
+//                if (javatemp.getPackagePostfix() != null && !javatemp.getPackagePostfix().equals("..") && !javatemp.getPackagePostfix().equals("")) {
+//                    packageName = packageName + "." + javatemp.getPackagePostfix();
+//                }
+//                className = StringUtility.replace(javatemp.getNamePostfix(), "**", simClass);
+//                dicViewRoot.setClassName(className);
+//                dicViewRoot.setPackageName(packageName);
+//                File file = javaGen.createJava(javatemp, dicViewRoot, chrome);
+//                JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, viewInst, javatemp.getJavaTempId());
+//                try {
+//                    clazz = javaGen.dynCompile(srcBean.getClassName(), srcBean.getContent());
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                javaSrcBeans.add(srcBean);
+//            }
+//        }
+//        for (JavaSrcBean srcBean : javaSrcBeans) {
+//            viewInst.updateView(srcBean);
+//        }
+//        this.updateViewInst(viewInst, true);
+//
+//        return javaSrcBeans;
     }
-
-    private void genChildTree(ViewInst viewInst, String moduleName, TreeListItem item, String className) {
-        List<TabListItem> treeListItems = item.getSub();
-        if (treeListItems != null && treeListItems.size() > 0) {
-            String packageName = className.substring(0, className.lastIndexOf("."));
-            String name = className.substring(className.lastIndexOf(".") + 1);
-            List<Class> bindClass = new ArrayList<>();
-            Class clazz = null;
-            Class[] clazzList = item.getBindClass();
-            String bindClassName = null;
-            if (clazzList != null && clazzList.length > 0) {
-                bindClassName = clazzList[0].getName();
-            }
-            if (bindClassName == null) {
-                bindClassName = packageName + "." + OODUtil.formatJavaName(name + item.getId(), true);
-            }
-            try {
-                try {
-                    clazz = ClassUtility.loadClass(bindClassName);
-                } catch (ClassNotFoundException e) {
-                    DSMFactory.getInstance().getViewManager().genDicJava(viewInst, treeListItems, moduleName, bindClassName, null);
-                }
-                try {
-                    clazz = ClassUtility.loadClass(bindClassName);
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            } catch (JDSException e) {
-                e.printStackTrace();
-            }
-
-            if (clazz != null) {
-                bindClass.add(clazz);
-            }
-            item.setBindClass(bindClass.toArray(new Class[]{}));
-        }
-
-    }
+//
+//    private List<JavaSrcBean> genChildTree(ViewInst viewInst, String moduleName, TreeListItem item, String className) {
+//        List<TabListItem> treeListItems = item.getSub();
+//        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+//
+//        if (treeListItems != null && treeListItems.size() > 0) {
+//            String packageName = className.substring(0, className.lastIndexOf("."));
+//            String name = className.substring(className.lastIndexOf(".") + 1);
+//            List<Class> bindClass = new ArrayList<>();
+//            Class clazz = null;
+//            Class[] clazzList = item.getBindClass();
+//            String bindClassName = null;
+//            if (clazzList != null && clazzList.length > 0) {
+//                bindClassName = clazzList[0].getName();
+//            }
+//            if (bindClassName == null) {
+//                bindClassName = packageName + "." + OODUtil.formatJavaName(name + item.getId(), true);
+//            }
+//            try {
+//                try {
+//                    clazz = ClassUtility.loadClass(bindClassName);
+//                } catch (ClassNotFoundException e) {
+//                    javaSrcBeans = DSMFactory.getInstance().getViewManager().genDicJava(viewInst, treeListItems, moduleName, bindClassName, null).getJavaSrcBeanList();
+//                }
+//                try {
+//                    clazz = ClassUtility.loadClass(bindClassName);
+//                } catch (ClassNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            } catch (JDSException e) {
+//                e.printStackTrace();
+//            }
+//
+//            if (clazz != null) {
+//                bindClass.add(clazz);
+//            }
+//            item.setBindClass(bindClass.toArray(new Class[]{}));
+//        }
+//
+//        return javaSrcBeans;
+//
+//    }
 
 
     public List<JavaSrcBean> genViewsBySrc(DomainInst domainInst, List<JavaSrcBean> srcBeanList, ChromeProxy chrome) throws JDSException {

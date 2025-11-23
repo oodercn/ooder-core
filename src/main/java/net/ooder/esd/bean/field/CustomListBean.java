@@ -19,6 +19,7 @@ import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
+import net.ooder.esd.dsm.gen.view.GenViewDicJava;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
@@ -84,7 +85,9 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
                 }
                 String euClassName = packageName + "." + simClass;
                 if (enumClass == null && domainInst != null) {
-                    bindClass = DSMFactory.getInstance().getViewManager().genDicJava(domainInst.getViewInst(), listProperties.getItems(), module.toLowerCase(), euClassName, null);
+
+                    GenViewDicJava genViewDicJava = DSMFactory.getInstance().getViewManager().genDicJava(domainInst.getViewInst(), listProperties.getItems(), module.toLowerCase(), euClassName, null);
+                    bindClass = genViewDicJava.getDicClass();
                     if (bindClass.isEnum()) {
                         enumClass = bindClass;
                     }

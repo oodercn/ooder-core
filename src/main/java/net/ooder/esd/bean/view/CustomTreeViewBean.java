@@ -29,6 +29,7 @@ import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.DomainInst;
+import net.ooder.esd.dsm.gen.view.GenViewDicJava;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldTreeConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
@@ -375,8 +376,11 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                                 }
                             }
                             String euClassName = packageName + "." + simClass;
-                            Class dicClass = DSMFactory.getInstance().getViewManager().genDicJava(domainInst.getViewInst(), listItem.getSub(), module.toLowerCase(), euClassName, null);
+                            GenViewDicJava genViewDicJava = DSMFactory.getInstance().getViewManager().genDicJava(domainInst.getViewInst(), listItem.getSub(), module.toLowerCase(), euClassName, null);
+                            Class dicClass = genViewDicJava.getClass();
                             listItem.setEntityClass(dicClass);
+
+                            this.getViewJavaSrcBean().getViewClassList().addAll (genViewDicJava.getClassList());
                             this.getViewJavaSrcBean().getViewClassList().add(dicClass.getName());
                         }
 
@@ -398,29 +402,26 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                                     String packageName = moduleComponent.getClassName().toLowerCase();
                                     String module = packageName.substring(0, packageName.lastIndexOf("."));
                                     List<TabListItem> enumItems = ESDEnumsUtil.getEnumItems(serviceClass, TabListItem.class);
-
                                     List<TreeListItem> subList = listItem.getSub();
                                     if (subList != null && subList.size() > 0) {
                                         for (TabListItem tabListItem : enumItems) {
                                             tabListItem.setBindClass(subList.get(0).getBindClass());
                                         }
                                     }
-
                                     if (domainInst != null && domainInst.getEuPackage() != null) {
                                         if (packageName.startsWith(domainInst.getEuPackage())) {
                                             module = packageName.substring(domainInst.getEuPackage().length() + 1);
                                         }
                                     }
                                     String euClassName = packageName + "." + simClass;
-                                    Class dicClass = DSMFactory.getInstance().getViewManager().genDicJava(domainInst.getViewInst(), enumItems, module.toLowerCase(), euClassName, null);
+                                    GenViewDicJava genViewDicJava = DSMFactory.getInstance().getViewManager().genDicJava(domainInst.getViewInst(), enumItems, module.toLowerCase(), euClassName, null);
+                                    Class dicClass = genViewDicJava.getClass();
                                     listItem.setEntityClass(dicClass);
                                     this.getViewJavaSrcBean().getViewClassList().add(dicClass.getName());
                                     listItem.setBindClass(new Class[]{dicClass});
                                 }
 
                                 childTreeViewBean = createChildTreeViewBean(listItem, serviceClass, simClass);
-
-
                                 this.addChildTreeBean(childTreeViewBean);
                             } else {
                                 childTreeViewBean.update(listItem, simClass);

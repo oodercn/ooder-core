@@ -630,6 +630,8 @@ public class JavaTempManager {
         return javaTemps;
     }
 
+
+
     public List<JavaTemp> getCustomViewTemps(ViewType type) throws JDSException {
         List<JavaTemp> javaTemps = new ArrayList<>();
         List<JavaTemp> allJavaTemps = getDSMTypeTemps(DSMType.VIEW);
