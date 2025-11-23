@@ -1,22 +1,27 @@
 package net.ooder.esd.bean.field;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
+import net.ooder.annotation.NotNull;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.StatusButtonsAnnotation;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.custom.component.form.field.CustomStatusButtonsComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
-import net.ooder.esd.tool.component.StatusButtonsComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.annotation.AnnotationType;
-import net.ooder.annotation.NotNull;
+import net.ooder.esd.tool.component.StatusButtonsComponent;
+import net.ooder.esd.tool.properties.form.StatusButtonsProperties;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
 @CustomClass(clazz = CustomStatusButtonsComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.STATUSBUTTONS
@@ -66,14 +71,27 @@ public class StatusButtonsFieldBean extends FieldBaseBean<StatusButtonsComponent
     @NotNull
     BorderType borderType;
 
+    public StatusButtonsFieldBean() {
+
+    }
+
+    public StatusButtonsFieldBean(ModuleComponent moduleComponent, StatusButtonsComponent component) {
+        update(moduleComponent, component);
+    }
 
     @Override
     public List<JavaSrcBean> update(ModuleComponent moduleComponent, StatusButtonsComponent component) {
-        return null;
+        this.update(component.getProperties());
+        customListBean = new CustomListBean();
+        javaSrcBeans = customListBean.update(moduleComponent, component);
+        return javaSrcBeans;
+
     }
 
-    public StatusButtonsFieldBean() {
 
+    public void update(StatusButtonsProperties properties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
     }
 
 

@@ -97,6 +97,9 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
 
     }
 
+    public ToolBarMenuBean(ModuleComponent moduleComponent, ToolBarComponent component) {
+        this.update(moduleComponent,component);
+    }
 
     public void update(ToolBarComponent toolBarComponent) {
         AnnotationUtil.fillDefaultValue(ToolBarMenu.class, this);

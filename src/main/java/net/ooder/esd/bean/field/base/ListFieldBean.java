@@ -2,6 +2,7 @@ package net.ooder.esd.bean.field.base;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
@@ -14,17 +15,16 @@ import net.ooder.esd.bean.field.FieldBaseBean;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.custom.component.form.field.CustomListComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.FieldComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.esd.tool.component.Component;
-import net.ooder.esd.tool.component.ListComponent;
 import net.ooder.esd.tool.properties.list.ListFieldProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+
 @CustomClass(clazz = CustomListComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.LIST
@@ -68,6 +68,9 @@ public class ListFieldBean<T extends ListFieldProperties, M extends FieldCompone
 
     }
 
+    public ListFieldBean(ModuleComponent moduleComponent, M component) {
+        update(moduleComponent, component);
+    }
 
     @Override
     public List<JavaSrcBean> update(ModuleComponent moduleComponent, M component) {

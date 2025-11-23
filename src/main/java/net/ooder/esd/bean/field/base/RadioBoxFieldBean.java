@@ -49,6 +49,10 @@ public class RadioBoxFieldBean extends FieldBaseBean<RadioBoxComponent> {
 
     ListFieldBean<RadioBoxProperties, ListComponent> listBean;
 
+    public RadioBoxFieldBean(ModuleComponent moduleComponent, RadioBoxComponent component) {
+        update(moduleComponent, component);
+    }
+
 
     @Override
     public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, RadioBoxComponent component) {
