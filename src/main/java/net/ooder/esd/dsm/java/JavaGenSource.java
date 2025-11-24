@@ -1,13 +1,13 @@
 package net.ooder.esd.dsm.java;
 
-import net.ooder.esd.bean.CustomViewBean;
+import net.ooder.common.JDSException;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.JavaRoot;
 import net.ooder.esd.dsm.temp.JavaTemp;
 
 public class JavaGenSource {
-    JavaTemp javatemp;
-    JavaRoot javaRoot;
+
+    String javaTempId;
     JavaSrcBean srcBean;
     String className;
 
@@ -15,16 +15,10 @@ public class JavaGenSource {
 
     }
 
-    public JavaGenSource(CustomViewBean customViewBean,JavaSrcBean srcBean){
-
-
-    }
-
-    public JavaGenSource(String className, JavaRoot javaRoot, JavaTemp javatemp, JavaSrcBean srcBean) {
+    public JavaGenSource(String className, JavaSrcBean srcBean) {
         this.className = className;
-        this.javaRoot = javaRoot;
-        this.javatemp = javatemp;
         this.srcBean = srcBean;
+        this.javaTempId = srcBean.getJavaTempId();
     }
 
     public String getClassName() {
@@ -36,20 +30,37 @@ public class JavaGenSource {
     }
 
     public JavaTemp getJavatemp() {
-        return javatemp;
+        JavaTemp javaTemp = null;
+        try {
+            if (javaTempId != null) {
+                javaTemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaTempId);
+            }
+        } catch (JDSException e) {
+            e.printStackTrace();
+        }
+        return javaTemp;
     }
 
-    public void setJavatemp(JavaTemp javatemp) {
-        this.javatemp = javatemp;
+
+    public String getJavaTempId() {
+        return javaTempId;
+    }
+
+    public void setJavaTempId(String javaTempId) {
+        this.javaTempId = javaTempId;
     }
 
     public JavaRoot getJavaRoot() {
-        return javaRoot;
+        JavaRoot root = null;
+        try {
+            root = BuildFactory.getInstance().getJavaRootMap().get(className);
+        } catch (JDSException e) {
+            e.printStackTrace();
+        }
+
+        return root;
     }
 
-    public void setJavaRoot(JavaRoot javaRoot) {
-        this.javaRoot = javaRoot;
-    }
 
     public JavaSrcBean getSrcBean() {
         return srcBean;

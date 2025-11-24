@@ -13,7 +13,6 @@ import net.ooder.esd.dsm.JavaRoot;
 import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
-import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.server.context.MinServerActionContextImpl;
 
 import java.util.ArrayList;
@@ -29,7 +28,6 @@ public abstract class GenJavaTask implements Callable<List<JavaSrcBean>> {
     public List<String> skipsTempIds = new ArrayList<>();
     public List<JavaTemp> viewTemps = new ArrayList<>();
     public Set<String> classList = new HashSet<>();
-
 
     public GenJavaTask() {
         JDSContext context = JDSActionContext.getActionContext();
@@ -60,15 +58,8 @@ public abstract class GenJavaTask implements Callable<List<JavaSrcBean>> {
     public List<JavaSrcBean> getJavaSrcBeanList() {
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         List<JavaGenSource> sources = getSourceList();
-        for (String className : classList) {
-            try {
-                JavaGenSource javaGenSource = BuildFactory.getInstance().getJavaGenSource(className);
-                if (javaGenSource != null) {
-                    javaSrcBeans.add(javaGenSource.getSrcBean());
-                }
-            } catch (JDSException e) {
-                e.printStackTrace();
-            }
+        for (JavaGenSource javaGenSource : sources) {
+            javaSrcBeans.add(javaGenSource.getSrcBean());
         }
         return javaSrcBeans;
     }
@@ -76,15 +67,8 @@ public abstract class GenJavaTask implements Callable<List<JavaSrcBean>> {
     public List<JavaTemp> getJavaTemps() {
         List<JavaTemp> javaTemps = new ArrayList<>();
         List<JavaGenSource> sources = getSourceList();
-        for (String className : classList) {
-            try {
-                JavaGenSource javaGenSource = BuildFactory.getInstance().getJavaGenSource(className);
-                if (javaGenSource != null) {
-                    javaTemps.add(javaGenSource.getJavatemp());
-                }
-            } catch (JDSException e) {
-                e.printStackTrace();
-            }
+        for (JavaGenSource javaGenSource : sources) {
+            javaTemps.add(javaGenSource.getJavatemp());
         }
         return javaTemps;
     }
@@ -92,15 +76,8 @@ public abstract class GenJavaTask implements Callable<List<JavaSrcBean>> {
     public List<JavaRoot> getContextList() {
         List<JavaRoot> javaRoots = new ArrayList<>();
         List<JavaGenSource> sources = getSourceList();
-        for (String className : classList) {
-            try {
-                JavaGenSource javaGenSource = BuildFactory.getInstance().getJavaGenSource(className);
-                if (javaGenSource != null) {
-                    javaRoots.add(javaGenSource.getJavaRoot());
-                }
-            } catch (JDSException e) {
-                e.printStackTrace();
-            }
+        for (JavaGenSource javaGenSource : sources) {
+            javaRoots.add(javaGenSource.getJavaRoot());
         }
         return javaRoots;
     }

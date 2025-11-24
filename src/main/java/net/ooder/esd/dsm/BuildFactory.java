@@ -56,6 +56,8 @@ public class BuildFactory {
 
     private Map<String, JavaGenSource> javaGenSourceMap = new HashMap<>();
 
+    private Map<String, JavaRoot> javaRootMap = new HashMap<>();
+
     private Map<String, AggRootBuild> classRootBuildMap = new HashMap<>();
 
     private Map<String, GenJavaTask> buildTaskMap = new HashMap<>();
@@ -76,7 +78,6 @@ public class BuildFactory {
 
 
     public static BuildFactory getInstance(MySpace space) {
-
         String path = space.getPath();
         BuildFactory manager = managerMap.get(path);
         if (manager == null) {
@@ -152,7 +153,6 @@ public class BuildFactory {
                     start = end;
                 }
                 RemoteConnectionManager.initConnection(taskId, syncLoadClassTasks.size());
-
                 ExecutorService executorService = RemoteConnectionManager.createConntctionService(taskId);
                 List<Future<List<ESDClass>>> futures = executorService.invokeAll(syncLoadClassTasks);
                 for (Future<List<ESDClass>> resultFuture : futures) {
@@ -287,8 +287,16 @@ public class BuildFactory {
     }
 
     public JavaGenSource createSource(String className, JavaRoot javaRoot, JavaTemp javatemp, JavaSrcBean srcBean) {
-        JavaGenSource source = new JavaGenSource(className, javaRoot, javatemp, srcBean);
-        javaGenSourceMap.put(className, source);
+        javaRootMap.put(className, javaRoot);
+        if (javatemp!=null){
+            srcBean.setJavaTempId(javatemp.getJavaTempId());
+        }
+        JavaGenSource source = javaGenSourceMap.get(className);
+        if (source == null) {
+            source = new JavaGenSource(className, srcBean);
+            javaGenSourceMap.put(className, source);
+        }
+
         return source;
     }
 
@@ -373,7 +381,6 @@ public class BuildFactory {
         DSMInst dsmInst = DSMFactory.getInstance().getDSMInst(dsmId, dsmType);
         JavaPackage tPackage = dsmInst.getPackageByName(packageName);
         JavaSrcBean javaSrcBean = tPackage.update(className, content);
-
         return javaSrcBean;
     }
 
@@ -420,6 +427,14 @@ public class BuildFactory {
 
     }
 
+    public Map<String, JavaRoot> getJavaRootMap() {
+        return javaRootMap;
+    }
+
+    public void setJavaRootMap(Map<String, JavaRoot> javaRootMap) {
+        this.javaRootMap = javaRootMap;
+    }
+
     public static Map<String, BuildFactory> getManagerMap() {
         return managerMap;
     }
@@ -453,99 +468,102 @@ public class BuildFactory {
     }
 
     public JavaRoot buildJavaRoot(AggViewRoot viewRoot, CustomViewBean viewBean, String moduleName, String className) {
+
         ModuleViewType moduleViewType = viewBean.getModuleViewType();
-        JavaRoot javaRoot = null;
+        JavaRoot javaRoot = javaRootMap.get(className);
+        if (javaRoot == null) {
+            if (moduleName.equals(viewRoot.getDsmBean().getSpace())) {
+                moduleName = className.substring(className.lastIndexOf(".") + 1).toLowerCase();
+            } else if (moduleName.startsWith(viewRoot.getDsmBean().getSpace() + ".")) {
+                moduleName = moduleName.substring((viewRoot.getDsmBean().getSpace() + ".").length());
+            }
 
-        if (moduleName.equals(viewRoot.getDsmBean().getSpace())) {
-            moduleName = className.substring(className.lastIndexOf(".") + 1).toLowerCase();
-        } else if (moduleName.startsWith(viewRoot.getDsmBean().getSpace() + ".")) {
-            moduleName = moduleName.substring((viewRoot.getDsmBean().getSpace() + ".").length());
-        }
+            switch (moduleViewType) {
+                case GRIDCONFIG:
+                    javaRoot = new GridViewRoot(viewRoot, (CustomGridViewBean) viewBean, moduleName, className);
+                    break;
+                case NAVMENUBARCONFIG:
+                    javaRoot = new MenubarViewRoot(viewRoot, (NavMenuBarViewBean) viewBean, moduleName, className);
+                    break;
+                case DIVCONFIG:
+                    javaRoot = new DivViewRoot(viewRoot, (CustomDivFormViewBean) viewBean, moduleName, className);
+                    break;
+                case MGRIDCONFIG:
+                    javaRoot = new GridViewRoot(viewRoot, (CustomGridViewBean) viewBean, moduleName, className);
+                    break;
+                case BLOCKCONFIG:
+                    javaRoot = new BlockViewRoot(viewRoot, (CustomBlockFormViewBean) viewBean, moduleName, className);
+                    break;
+                case PANELCONFIG:
+                    javaRoot = new PanelViewRoot(viewRoot, (CustomPanelFormViewBean) viewBean, moduleName, className);
+                    break;
+                case FORMCONFIG:
+                    javaRoot = new FormViewRoot(viewRoot, (CustomFormViewBean) viewBean, null, moduleName, className);
+                    break;
+                case MFORMCONFIG:
+                    javaRoot = new FormViewRoot(viewRoot, (CustomFormViewBean) viewBean, null, moduleName, className);
+                    break;
+                case CONTENTBLOCKCONFIG:
+                    javaRoot = new ContentBlockViewRoot(viewRoot, (CustomContentBlockViewBean) viewBean, moduleName, className);
+                    break;
+                case TREECONFIG:
+                    javaRoot = new TreeViewRoot(viewRoot, (CustomTreeViewBean) viewBean, moduleName, className);
+                    break;
+                case POPTREECONFIG:
+                    javaRoot = new TreeViewRoot(viewRoot, (PopTreeViewBean) viewBean, moduleName, className);
+                    break;
+                case GALLERYCONFIG:
+                    javaRoot = new GalleryViewRoot(viewRoot, (CustomGalleryViewBean) viewBean, moduleName, className);
+                    break;
+                case SVGPAPERCONFIG:
+                    javaRoot = new SVGViewRoot(viewRoot, (CustomSVGPaperViewBean) viewBean, moduleName, className);
+                    break;
+                case TITLEBLOCKCONFIG:
+                    javaRoot = new TitleBlockViewRoot(viewRoot, (CustomTitleBlockViewBean) viewBean, moduleName, className);
+                    break;
+                case NAVBUTTONVIEWSCONFIG:
+                    javaRoot = new ButtonViewsViewRoot(viewRoot, (CustomButtonViewsViewBean) viewBean, moduleName, className);
+                    break;
+                case NAVSTACKSCONFIG:
+                    javaRoot = new StacksViewRoot(viewRoot, (StacksViewBean) viewBean, moduleName, className);
+                    break;
+                case NAVGALLERYCONFIG:
+                    javaRoot = new NavGalleryViewRoot(viewRoot, (NavGalleryComboViewBean) viewBean, moduleName, className);
+                    break;
+                case NAVGROUPCONFIG:
+                    javaRoot = new NavGroupViewRoot(viewRoot, (NavGroupViewBean) viewBean, moduleName, className);
+                    break;
+                case NAVTABSCONFIG:
+                    javaRoot = new TabsViewRoot(viewRoot, (TabsViewBean) viewBean, moduleName, className);
+                    break;
+                case BUTTONLAYOUTCONFIG:
+                    javaRoot = new ButtonLayoutViewRoot(viewRoot, (CustomButtonLayoutViewBean) viewBean, moduleName, className);
+                    break;
+                case NAVBUTTONLAYOUTCONFIG:
+                    javaRoot = new ButtonLayoutViewRoot(viewRoot, (CustomButtonLayoutViewBean) viewBean, moduleName, className);
+                    break;
+                case NAVFOLDINGTABSCONFIG:
+                    javaRoot = new FoldingTabsViewRoot(viewRoot, (NavFoldingTabsViewBean) viewBean, moduleName, className);
+                    break;
 
-        switch (moduleViewType) {
-            case GRIDCONFIG:
-                javaRoot = new GridViewRoot(viewRoot, (CustomGridViewBean) viewBean, moduleName, className);
-                break;
-            case NAVMENUBARCONFIG:
-                javaRoot = new MenubarViewRoot(viewRoot, (NavMenuBarViewBean) viewBean, moduleName, className);
-                break;
-            case DIVCONFIG:
-                javaRoot = new DivViewRoot(viewRoot, (CustomDivFormViewBean) viewBean, moduleName, className);
-                break;
-            case MGRIDCONFIG:
-                javaRoot = new GridViewRoot(viewRoot, (CustomGridViewBean) viewBean, moduleName, className);
-                break;
-            case BLOCKCONFIG:
-                javaRoot = new BlockViewRoot(viewRoot, (CustomBlockFormViewBean) viewBean, moduleName, className);
-                break;
-            case PANELCONFIG:
-                javaRoot = new PanelViewRoot(viewRoot, (CustomPanelFormViewBean) viewBean, moduleName, className);
-                break;
-            case FORMCONFIG:
-                javaRoot = new FormViewRoot(viewRoot, (CustomFormViewBean) viewBean, null, moduleName, className);
-                break;
-            case MFORMCONFIG:
-                javaRoot = new FormViewRoot(viewRoot, (CustomFormViewBean) viewBean, null, moduleName, className);
-                break;
-            case CONTENTBLOCKCONFIG:
-                javaRoot = new ContentBlockViewRoot(viewRoot, (CustomContentBlockViewBean) viewBean, moduleName, className);
-                break;
-            case TREECONFIG:
-                javaRoot = new TreeViewRoot(viewRoot, (CustomTreeViewBean) viewBean, moduleName, className);
-                break;
-            case POPTREECONFIG:
-                javaRoot = new TreeViewRoot(viewRoot, (PopTreeViewBean) viewBean, moduleName, className);
-                break;
-            case GALLERYCONFIG:
-                javaRoot = new GalleryViewRoot(viewRoot, (CustomGalleryViewBean) viewBean, moduleName, className);
-                break;
-            case SVGPAPERCONFIG:
-                javaRoot = new SVGViewRoot(viewRoot, (CustomSVGPaperViewBean) viewBean, moduleName, className);
-                break;
-            case TITLEBLOCKCONFIG:
-                javaRoot = new TitleBlockViewRoot(viewRoot, (CustomTitleBlockViewBean) viewBean, moduleName, className);
-                break;
-            case NAVBUTTONVIEWSCONFIG:
-                javaRoot = new ButtonViewsViewRoot(viewRoot, (CustomButtonViewsViewBean) viewBean, moduleName, className);
-                break;
-            case NAVSTACKSCONFIG:
-                javaRoot = new StacksViewRoot(viewRoot, (StacksViewBean) viewBean, moduleName, className);
-                break;
-            case NAVGALLERYCONFIG:
-                javaRoot = new NavGalleryViewRoot(viewRoot, (NavGalleryComboViewBean) viewBean, moduleName, className);
-                break;
-            case NAVGROUPCONFIG:
-                javaRoot = new NavGroupViewRoot(viewRoot, (NavGroupViewBean) viewBean, moduleName, className);
-                break;
-            case NAVTABSCONFIG:
-                javaRoot = new TabsViewRoot(viewRoot, (TabsViewBean) viewBean, moduleName, className);
-                break;
-            case BUTTONLAYOUTCONFIG:
-                javaRoot = new ButtonLayoutViewRoot(viewRoot, (CustomButtonLayoutViewBean) viewBean, moduleName, className);
-                break;
-            case NAVBUTTONLAYOUTCONFIG:
-                javaRoot = new ButtonLayoutViewRoot(viewRoot, (CustomButtonLayoutViewBean) viewBean, moduleName, className);
-                break;
-            case NAVFOLDINGTABSCONFIG:
-                javaRoot = new FoldingTabsViewRoot(viewRoot, (NavFoldingTabsViewBean) viewBean, moduleName, className);
-                break;
+                case LAYOUTCONFIG:
+                    javaRoot = new LayoutViewRoot(viewRoot, (CustomLayoutViewBean) viewBean, moduleName, className);
+                    break;
+                case NAVTREECONFIG:
+                    javaRoot = new NavTreeViewRoot(viewRoot, (NavTreeComboViewBean) viewBean, moduleName, className);
+                    break;
+                case CHARTCONFIG:
+                    javaRoot = new FChartRoot(viewRoot, (CustomFChartViewBean) viewBean, moduleName, className);
+                    break;
+                case OPINIONCONFIG:
+                    javaRoot = new OpinionViewRoot(viewRoot, (CustomOpinionViewBean) viewBean, moduleName, className);
+                    break;
+                case ECHARTCONFIG:
+                    javaRoot = new EChartRoot(viewRoot, (CustomEChartViewBean) viewBean, moduleName, className);
+                    break;
 
-            case LAYOUTCONFIG:
-                javaRoot = new LayoutViewRoot(viewRoot, (CustomLayoutViewBean) viewBean, moduleName, className);
-                break;
-            case NAVTREECONFIG:
-                javaRoot = new NavTreeViewRoot(viewRoot, (NavTreeComboViewBean) viewBean, moduleName, className);
-                break;
-            case CHARTCONFIG:
-                javaRoot = new FChartRoot(viewRoot, (CustomFChartViewBean) viewBean, moduleName, className);
-                break;
-            case OPINIONCONFIG:
-                javaRoot = new OpinionViewRoot(viewRoot, (CustomOpinionViewBean) viewBean, moduleName, className);
-                break;
-            case ECHARTCONFIG:
-                javaRoot = new EChartRoot(viewRoot, (CustomEChartViewBean) viewBean, moduleName, className);
-                break;
-
+            }
+            javaRootMap.put(className, javaRoot);
         }
 
         return javaRoot;

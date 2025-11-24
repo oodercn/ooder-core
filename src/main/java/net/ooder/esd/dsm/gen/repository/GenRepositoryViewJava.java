@@ -126,7 +126,7 @@ public class GenRepositoryViewJava extends GenJavaTask {
                 JavaSrcBean srcBean =null;
                 if (clazz == null || clear) {
                     File file = javaGen.createJava(javatemp, javaRoot, chrome);
-                     srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, dsmBean, javatemp.getJavaTempId());
+                    srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, dsmBean, javatemp.getJavaTempId());
                     srcFiles.add(srcBean);
                     dsmBean.addJavaBean(srcBean);
                 } else {
@@ -136,7 +136,6 @@ public class GenRepositoryViewJava extends GenJavaTask {
                     }
                     srcFiles.add(srcBean);
                 }
-
                 BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
                 classList.add(srcBean.getClassName());
             }

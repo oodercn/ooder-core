@@ -178,7 +178,7 @@ public class AggRootBuild {
 
         if (domainInst != null && domainInst.getUserSpace().equals(UserSpace.VIEW)) {
             //2.1创建资源层接口V
-            this.repositorySource = initRepositoryViewJava(false);
+            this.repositorySource = initRepositoryViewJava(true);
             //3.1预编译一次
             this.javaGen.dynCompile(getModuleJavaSrc());
             this.aggServiceRootBean = genRootBean();
@@ -292,6 +292,7 @@ public class AggRootBuild {
             String taskId = "voRepositoryTask[" + this.getEuClassName() + "]";
             this.voRepositoryTask = new GenRepositoryViewJava(repositoryInst.getViewRoot(), customViewBean, moduleName, euClassName, true, chrome, new RepositoryType[]{RepositoryType.VO, RepositoryType.VIEWBEAN, RepositoryType.REPOSITORY});
             BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(voRepositoryTask));
+            BuildFactory.getInstance().compileJavaSrc(voRepositoryTask.getJavaSrcBeanList(), packageName, this.getChrome());
         }
         return voRepositoryTask.getSourceList();
     }
@@ -301,6 +302,7 @@ public class AggRootBuild {
             String taskId = "serviceRepositoryTask[" + this.getEuClassName() + "]";
             serviceRepositoryTask = new GenRepositoryViewJava(repositoryInst.getViewRoot(), customViewBean, moduleName, euClassName, true, chrome, new RepositoryType[]{RepositoryType.DO, RepositoryType.VIEWSERVICE, RepositoryType.REPOSITORYIMPL});
             BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(serviceRepositoryTask));
+            BuildFactory.getInstance().compileJavaSrc(voRepositoryTask.getJavaSrcBeanList(), packageName, this.getChrome());
         }
         return serviceRepositoryTask.getSourceList();
     }
@@ -314,7 +316,6 @@ public class AggRootBuild {
     }
 
     private void reBindService() throws JDSException {
-        ViewManager viewManager = DSMFactory.getInstance().getViewManager();
         customViewBean.setViewClassName(euClassName);
         for (JavaGenSource genSource : aggServiceRootBean) {
             JavaSrcBean serviceBean = genSource.getSrcBean();
