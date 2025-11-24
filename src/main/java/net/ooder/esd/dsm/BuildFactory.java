@@ -285,13 +285,13 @@ public class BuildFactory {
         }
     }
 
-    public JavaGenSource createSource(String className, JavaTemp javatemp, JavaSrcBean srcBean) {
+    public JavaGenSource createSource(String className, JavaRoot javaRoot, JavaTemp javatemp, JavaSrcBean srcBean) {
         if (javatemp != null) {
             srcBean.setJavaTempId(javatemp.getJavaTempId());
         }
         JavaGenSource source = javaGenSourceMap.get(className);
         if (source == null) {
-            source = new JavaGenSource(className, srcBean);
+            source = new JavaGenSource(className, javaRoot, srcBean);
             javaGenSourceMap.put(className, source);
         }
 

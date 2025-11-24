@@ -10,15 +10,17 @@ public class JavaGenSource {
     String javaTempId;
     JavaSrcBean srcBean;
     String className;
+    JavaRoot javaRoot;
 
     public JavaGenSource() {
 
     }
 
-    public JavaGenSource(String className, JavaSrcBean srcBean) {
+    public JavaGenSource(String className, JavaRoot javaRoot, JavaSrcBean srcBean) {
         this.className = className;
         this.srcBean = srcBean;
         this.javaTempId = srcBean.getJavaTempId();
+        this.javaRoot = javaRoot;
     }
 
     public String getClassName() {
@@ -35,6 +37,7 @@ public class JavaGenSource {
             if (javaTempId != null) {
                 javaTemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaTempId);
             }
+
         } catch (JDSException e) {
             e.printStackTrace();
         }
@@ -51,14 +54,7 @@ public class JavaGenSource {
     }
 
     public JavaRoot getJavaRoot() {
-        JavaRoot root = null;
-        try {
-            root = BuildFactory.getInstance().getJavaRootMap().get(className);
-        } catch (JDSException e) {
-            e.printStackTrace();
-        }
-
-        return root;
+        return javaRoot;
     }
 
 
