@@ -381,7 +381,6 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     @JSONField(serialize = false)
     public Action findActionById(String actionId) {
         List<Action> actions = findAction(null);
-
         for (Action action : actions) {
             if (action.getId().equals(actionId)) {
                 return action;
@@ -2008,8 +2007,10 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                     mainBlock = new BlockComponent(Dock.fill, this.getEuModule().getName() + DefaultTopBoxfix);
                     this.addChildren(mainBlock);
                 } else {
+                    mainBlock = topComponent;
                     String alias = topComponent.getAlias();
                     topComponent.setAlias(mainAlias);
+                    topComponent.getProperties().setName(alias);
                     components.put(mainAlias, mainBlock);
                     components.remove(alias);
                 }

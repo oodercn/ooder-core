@@ -38,7 +38,7 @@ public abstract class BaseFormViewRoot<T extends BaseFormViewBean> extends BaseV
         this.allFields = viewBean.getAllFields();
         Set<Class> classes = new HashSet<>();
         classes.addAll(Arrays.asList(formClass));
-        this.imports.addAll(getCustomClassImpls(classes));
+        imports.addAll(getCustomClassImpls(classes));
         imports.addAll(viewRoot.getImports());
         imports.addAll(getFieldImpls(allFields));
 
