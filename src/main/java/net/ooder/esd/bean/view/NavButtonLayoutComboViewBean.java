@@ -14,6 +14,7 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.java.AggRootBuild;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.engine.ESDFacrory;
@@ -83,11 +84,12 @@ public class NavButtonLayoutComboViewBean extends NavComboBaseViewBean<ButtonLay
                     } catch (ClassNotFoundException e) {
                         customModuleBean = new CustomModuleBean(euModule.getComponent());
                         AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, euClassName, projectName);
-                        List<JavaSrcBean> serviceList = aggRootBuild.getAggServiceRootBean();
+                        List<JavaGenSource> serviceList = aggRootBuild.getAggServiceRootBean();
                         if (serviceList == null || serviceList.isEmpty()) {
                             serviceList = aggRootBuild.build();
                         }
-                        for (JavaSrcBean javaSrcBean : serviceList) {
+                        for (JavaGenSource genSource : serviceList) {
+                            JavaSrcBean javaSrcBean = genSource.getSrcBean();
                             if (javaSrcBean.getTarget() != null && javaSrcBean.getTarget().equals(layoutItem.getId())) {
                                 try {
                                     bindService = ClassUtility.loadClass(javaSrcBean.getClassName());

@@ -15,6 +15,7 @@ import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.custom.properties.ButtonViewsListItem;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
+import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.ButtonViewsComponent;
@@ -87,20 +88,16 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
             }
             try {
                 ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
-                List<Future<CustomModuleBean>> futures = service.invokeAll(tasks);
-                for (Future<CustomModuleBean> resultFuture : futures) {
+                List<Future<AggRootBuild>> futures = service.invokeAll(tasks);
+                for (Future<AggRootBuild> resultFuture : futures) {
                     try {
-                        CustomModuleBean cModuleBean = resultFuture.get();
+                        AggRootBuild aggRootBuild = resultFuture.get();
+                        childClassNameSet.add(aggRootBuild.getEuClassName());
+                        CustomModuleBean cModuleBean=aggRootBuild.getCustomModuleBean();
+
                         if (navModuleBeans != null && cModuleBean != null && !navModuleBeans.contains(cModuleBean)) {
                             navModuleBeans.add(cModuleBean);
                             javaSrcBeans.addAll(cModuleBean.getJavaSrcBeans());
-//                            MethodConfig methodConfig = cModuleBean.getMethodConfig();
-//                            if (methodConfig != null) {
-//                                AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(methodConfig.getView(), methodConfig.getEUClassName(), moduleComponent.getProjectName());
-//                                if (aggRootBuild != null) {
-//                                    javaSrcBeans.addAll(aggRootBuild.getAllSrcBean());
-//                                }
-//                            }
                         }
                     } catch (ExecutionException e) {
                         e.printStackTrace();

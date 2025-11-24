@@ -48,7 +48,6 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
 
     public List<TabItemBean> itemBeans = new ArrayList<>();
 
-
     EnumsClassBean enumsClassBean;
     Boolean closeBtn;
     Boolean popBtn;
@@ -921,12 +920,14 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
         this.group = group;
     }
 
+
     public Boolean getAutoSave() {
         if (autoSave == null) {
             autoSave = false;
         }
         return autoSave;
     }
+
 
     public void setAutoSave(Boolean autoSave) {
         this.autoSave = autoSave;

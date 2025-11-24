@@ -24,6 +24,7 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
 import net.ooder.esd.dsm.gen.view.GenFormChildModule;
+import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.OODTypeMapping;
@@ -173,18 +174,25 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                 ExecutorService service = RemoteConnectionManager.createConntctionService(taskIds);
                 List<Future<FieldFormConfig>> futures = service.invokeAll(tasks);
                 for (Future<FieldFormConfig> resultFuture : futures) {
-                    FieldFormConfig config = null;
+                    FieldFormConfig fieldFormConfig = null;
                     try {
-                        config = resultFuture.get();
+                        fieldFormConfig = resultFuture.get();
                     } catch (Throwable e) {
                         e.printStackTrace();
                     }
-                    if (config != null) {
-                        fieldFormConfigs.add(config);
+                    if (fieldFormConfig != null) {
+                        fieldFormConfigs.add(fieldFormConfig);
                     }
+                    if (fieldFormConfig.getWidgetConfig() != null && fieldFormConfig.getWidgetConfig() instanceof WidgetBean) {
+                        AggRootBuild build = ((WidgetBean) fieldFormConfig.getWidgetConfig()).getFieldRootBuild();
+                        if (build != null) {
+                            this.childClassNameSet.add(build.getEuClassName());
+                        }
+                    }
+
                 }
                 service.shutdownNow();
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

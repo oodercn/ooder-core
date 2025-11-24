@@ -9,6 +9,7 @@ import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.java.AggRootBuild;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.Component;
@@ -28,6 +29,7 @@ import java.util.List;
 public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Component> implements WidgetBean<T, M> {
 
     public CustomWidgetBean widgetBean;
+
     public ContainerBean containerBean;
 
     @JSONField(deserializeUsing = ComponentDeserializer.class)
@@ -108,7 +110,7 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
                     CustomModuleBean customModuleBean = new CustomModuleBean(currModuleComponent);
                     fieldRootBuild = this.getFieldRootBuild();
                     if (fieldRootBuild.getAggServiceRootBean().isEmpty() || fieldRootBuild.getRepositorySrcList().isEmpty() || fieldRootBuild.getViewSrcList().isEmpty()) {
-                        List<JavaSrcBean> serviceList = fieldRootBuild.build();
+                        List<JavaGenSource> serviceList = fieldRootBuild.build();
                         if (serviceList.size() > 0) {
                             viewBean = (T) fieldRootBuild.getCustomViewBean();
                             customModuleBean.reBindMethod(viewBean.getMethodConfig());
@@ -135,7 +137,7 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
     }
 
 
-    public AggRootBuild getFieldRootBuild() throws JDSException {
+    public AggRootBuild getFieldRootBuild()  throws JDSException{
         if (fieldRootBuild == null) {
             fieldRootBuild = BuildFactory.getInstance().getAggRootBuild(viewBean, euClassName, null);
         }

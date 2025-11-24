@@ -1250,17 +1250,19 @@ public class AggregationManager {
         return genAggViewJava(aggViewRoot, viewBean, moduleName, className, chrome);
     }
 
-    public List<JavaSrcBean> genAggMapJava(AggViewRoot aggViewRoot, CustomViewBean viewBean, ChromeProxy chrome) throws JDSException {
+    public GenAggCustomJava genAggMapJava(AggViewRoot aggViewRoot, CustomViewBean viewBean, ChromeProxy chrome) throws JDSException {
         DomainInst domainInst = (DomainInst) aggViewRoot.getDsmBean();
         String className = aggViewRoot.getClassName();
         String moduleName = aggViewRoot.getPackageName();
-        List<Callable<List<JavaSrcBean>>> aggViewJavaTask = genAggMapJavaTask(aggViewRoot, viewBean, moduleName, className, chrome);
-        List<JavaSrcBean> srcFiles = BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), aggViewJavaTask);
-        for (JavaSrcBean srcBean : srcFiles) {
-            domainInst.addJavaBean(srcBean);
-        }
-        this.updateDomainInst(domainInst, true);
-        return srcFiles;
+
+        GenAggCustomJava aggViewJavaTask = genAggMapJavaTask(aggViewRoot, viewBean, moduleName, className, chrome);
+
+//        List<JavaSrcBean> srcFiles = BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), aggViewJavaTask);
+//        for (JavaSrcBean srcBean : srcFiles) {
+//            domainInst.addJavaBean(srcBean);
+//        }
+//        this.updateDomainInst(domainInst, true);
+        return aggViewJavaTask;
     }
 
 
@@ -1270,20 +1272,17 @@ public class AggregationManager {
     }
 
 
-    private List<Callable<List<JavaSrcBean>>> genAggViewJavaTask(AggViewRoot aggViewRoot, CustomViewBean viewBean, String moduleName, String className, ChromeProxy chrome) {
-        List<Callable<List<JavaSrcBean>>> buildTasks = new ArrayList<>();
+    private List<GenAggCustomViewJava> genAggViewJavaTask(AggViewRoot aggViewRoot, CustomViewBean viewBean, String moduleName, String className, ChromeProxy chrome) {
+        List<GenAggCustomViewJava> buildTasks = new ArrayList<>();
         GenAggCustomViewJava genAggViewJava = new GenAggCustomViewJava(aggViewRoot, viewBean, moduleName, className, chrome);
         buildTasks.add(genAggViewJava);
         return buildTasks;
     }
 
-    private List<Callable<List<JavaSrcBean>>> genAggMapJavaTask(AggViewRoot aggViewRoot, CustomViewBean viewBean, String moduleName, String className, ChromeProxy chrome) {
-        List<Callable<List<JavaSrcBean>>> buildTasks = new ArrayList<>();
+    private GenAggCustomJava genAggMapJavaTask(AggViewRoot aggViewRoot, CustomViewBean viewBean, String moduleName, String className, ChromeProxy chrome) {
         DomainInst domainInst = (DomainInst) aggViewRoot.getDsmBean();
-
         GenAggCustomJava genAggViewJava = new GenAggCustomJava(aggViewRoot, viewBean, domainInst.getJavaTempIds(), AggregationType.NAVIGATION, moduleName, className, chrome);
-        buildTasks.add(genAggViewJava);
-        return buildTasks;
+        return genAggViewJava;
     }
 
     /**
@@ -1294,7 +1293,7 @@ public class AggregationManager {
     public JavaSrcBean genAggViewJava(AggViewRoot aggViewRoot, CustomViewBean viewBean, String moduleName, String className, ChromeProxy chrome) throws JDSException {
         JavaSrcBean javaSrcBean = null;
         DomainInst domainInst = (DomainInst) aggViewRoot.getDsmBean();
-        List<Callable<List<JavaSrcBean>>> aggViewJavaTask = genAggViewJavaTask(aggViewRoot, viewBean, moduleName, className, chrome);
+        List<GenAggCustomViewJava> aggViewJavaTask = genAggViewJavaTask(aggViewRoot, viewBean, moduleName, className, chrome);
         List<JavaSrcBean> srcFiles = BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), aggViewJavaTask);
         for (JavaSrcBean srcBean : srcFiles) {
             domainInst.addJavaBean(srcBean);

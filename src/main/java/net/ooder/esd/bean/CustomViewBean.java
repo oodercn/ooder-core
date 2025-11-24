@@ -127,6 +127,8 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
 
     public List<U> tabItems = new ArrayList<>();
 
+    public Set<String> childClassNameSet = new HashSet<>();
+
     @JSONField(deserializeUsing = EsdFieldMapDeserializer.class)
     public CaselessStringKeyHashMap<String, T> fieldConfigMap = new CaselessStringKeyHashMap<>();
 
@@ -1691,6 +1693,14 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
             viewJavaSrcBean = new ViewJavaSrcBean();
         }
         return viewJavaSrcBean;
+    }
+
+    public Set<String> getChildClassNameSet() {
+        return childClassNameSet;
+    }
+
+    public void setChildClassNameSet(Set<String> childClassNameSet) {
+        this.childClassNameSet = childClassNameSet;
     }
 
     public void setViewJavaSrcBean(ViewJavaSrcBean viewJavaSrcBean) {

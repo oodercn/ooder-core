@@ -19,6 +19,7 @@ import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.java.AggRootBuild;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
@@ -129,12 +130,13 @@ public class NavMenuBarViewBean extends NavComboBaseViewBean<TreeListItem> {
                             Class clazz = ClassUtility.loadClass(euClassName);
                         } catch (ClassNotFoundException e) {
                             AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, euClassName, projectName);
-                            List<JavaSrcBean> serviceList = aggRootBuild.getAggServiceRootBean();
+                            List<JavaGenSource> serviceList = aggRootBuild.getAggServiceRootBean();
                             if (serviceList == null || serviceList.isEmpty()) {
                                 serviceList = aggRootBuild.build();
                             }
 
-                            for (JavaSrcBean javaSrcBean : serviceList) {
+                            for (JavaGenSource genSource : serviceList) {
+                                JavaSrcBean javaSrcBean = genSource.getSrcBean();
                                 if (javaSrcBean != null && javaSrcBean.getTarget().equals(layoutItem.getId())) {
                                     customModuleBean = new CustomModuleBean(euModule.getComponent());
                                     try {

@@ -14,6 +14,7 @@ import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.java.AggRootBuild;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.Component;
@@ -31,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-public class GenTabsChildModule implements Callable<CustomModuleBean> {
+public class GenTabsChildModule implements Callable<AggRootBuild> {
     private MinServerActionContextImpl autoruncontext;
     private OgnlContext onglContext;
     Component childComponent;
@@ -70,7 +71,8 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
     }
 
     @Override
-    public CustomModuleBean call() throws Exception {
+    public AggRootBuild call() throws Exception {
+        AggRootBuild aggRootBuild=null;
         JDSActionContext.setContext(autoruncontext);
         String projectName = moduleComponent.getProjectName();
         CustomModuleBean cModuleBean = null;
@@ -139,31 +141,30 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
         }
 
         if (customViewBean != null) {
-            AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, cEuClassName, projectName);
-            List<JavaSrcBean> serviceList = aggRootBuild.getAggServiceRootBean();
+             aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, cEuClassName, projectName);
+            List<JavaGenSource> serviceList = aggRootBuild.getAggServiceRootBean();
             if (serviceList == null || serviceList.isEmpty()) {
                 serviceList = aggRootBuild.build();
             }
             bindItem(serviceList, currListItem);
-            for (JavaSrcBean javaSrcBean : serviceList) {
+            for (JavaGenSource genSource : serviceList) {
+                JavaSrcBean javaSrcBean = genSource.getSrcBean();
                 if (javaSrcBean.getTarget() == null || javaSrcBean.getTarget().equals(target)) {
                     Class bindService = ClassUtility.loadClass(javaSrcBean.getClassName());
                     customViewBean.reBindService(bindService);
                 }
             }
-
-
             cModuleBean.setJavaSrcBeans(aggRootBuild.getAllSrcBean());
             cModuleBean.reBindMethod(customViewBean.getMethodConfig());
             DSMFactory.getInstance().saveCustomViewBean(customViewBean);
         }
 
 
-        return cModuleBean;
+        return aggRootBuild;
     }
 
 
-    protected Set<MethodConfig> bindItem(List<JavaSrcBean> javaSrcBeanList, TabListItem currListItem) {
+    protected Set<MethodConfig> bindItem(List<JavaGenSource> javaSrcBeanList, TabListItem currListItem) {
         List<Class> classList = new ArrayList<>();
         if (currListItem.getBindClass() != null && currListItem.getBindClass().length > 0) {
             for (Class clazz : currListItem.getBindClass()) {
@@ -177,7 +178,7 @@ public class GenTabsChildModule implements Callable<CustomModuleBean> {
             }
         }
         Set<MethodConfig> methodConfigs = new HashSet<>();
-        for (JavaSrcBean srcBean : javaSrcBeanList) {
+        for (JavaGenSource srcBean : javaSrcBeanList) {
             try {
                 MethodConfig editorMethod = this.tabsViewBean.findEditorMethod(srcBean.getClassName());
                 if (editorMethod != null) {

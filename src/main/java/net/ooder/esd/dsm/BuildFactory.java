@@ -21,6 +21,7 @@ import net.ooder.esd.custom.ESDClassManager;
 import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
 import net.ooder.esd.dsm.enums.DSMType;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.java.*;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.temp.JavaTempManager;
@@ -56,6 +57,8 @@ public class BuildFactory {
     private Map<String, JavaGenSource> javaGenSourceMap = new HashMap<>();
 
     private Map<String, AggRootBuild> classRootBuildMap = new HashMap<>();
+
+    private Map<String, GenJavaTask> buildTaskMap = new HashMap<>();
 
     private final ESDClassManager classManager;
 
@@ -417,6 +420,37 @@ public class BuildFactory {
 
     }
 
+    public static Map<String, BuildFactory> getManagerMap() {
+        return managerMap;
+    }
+
+    public static void setManagerMap(Map<String, BuildFactory> managerMap) {
+        BuildFactory.managerMap = managerMap;
+    }
+
+    public Map<CustomViewBean, AggRootBuild> getAggRootBuildMap() {
+        return aggRootBuildMap;
+    }
+
+    public void setAggRootBuildMap(Map<CustomViewBean, AggRootBuild> aggRootBuildMap) {
+        this.aggRootBuildMap = aggRootBuildMap;
+    }
+
+    public Map<String, AggRootBuild> getClassRootBuildMap() {
+        return classRootBuildMap;
+    }
+
+    public void setClassRootBuildMap(Map<String, AggRootBuild> classRootBuildMap) {
+        this.classRootBuildMap = classRootBuildMap;
+    }
+
+    public Map<String, GenJavaTask> getBuildTaskMap() {
+        return buildTaskMap;
+    }
+
+    public void setBuildTaskMap(Map<String, GenJavaTask> buildTaskMap) {
+        this.buildTaskMap = buildTaskMap;
+    }
 
     public JavaRoot buildJavaRoot(AggViewRoot viewRoot, CustomViewBean viewBean, String moduleName, String className) {
         ModuleViewType moduleViewType = viewBean.getModuleViewType();

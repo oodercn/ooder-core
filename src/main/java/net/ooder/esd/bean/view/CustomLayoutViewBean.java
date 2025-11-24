@@ -19,6 +19,7 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.gen.view.GenLayoutChildModule;
 import net.ooder.esd.dsm.java.AggRootBuild;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.engine.ESDFacrory;
@@ -97,13 +98,15 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
                     tasks.add(genChildModule);
                 }
             }
-            List<Future<CustomModuleBean>> futures = null;
+            List<Future<AggRootBuild>> futures = null;
             try {
                 ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
                 futures = service.invokeAll(tasks);
-                for (Future<CustomModuleBean> resultFuture : futures) {
+                for (Future<AggRootBuild> resultFuture : futures) {
                     try {
-                        CustomModuleBean cModuleBean = resultFuture.get();
+                        AggRootBuild aggRootBuild = resultFuture.get();
+                        childClassNameSet.add(aggRootBuild.getEuClassName());
+                        CustomModuleBean cModuleBean = aggRootBuild.getCustomModuleBean();
                         if (navModuleBeans != null && !navModuleBeans.contains(cModuleBean)) {
                             navModuleBeans.add(cModuleBean);
                             if (cModuleBean.getJavaSrcBeans() != null) {
@@ -267,12 +270,13 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
                         CustomViewBean customViewBean = DSMFactory.getInstance().getViewManager().getDefaultViewBean(euModule.getComponent(), domainId);
                         customViewBean.setDomainId(methodConfig.getDomainId());
                         AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, euClassName, projectName);
-                        List<JavaSrcBean> serviceList = aggRootBuild.getAggServiceRootBean();
+                        List<JavaGenSource> serviceList = aggRootBuild.getAggServiceRootBean();
                         if (serviceList == null || serviceList.isEmpty()) {
                             serviceList = aggRootBuild.build();
                         }
-                        for (JavaSrcBean javaSrcBean : serviceList) {
-                            if (javaSrcBean.getTarget() != null && javaSrcBean.getTarget().equals(layoutItem.getId())) {
+                        for (JavaGenSource genSource : serviceList) {
+                            JavaSrcBean javaSrcBean = genSource.getSrcBean();
+                            if (javaSrcBean != null && javaSrcBean.getTarget() != null && javaSrcBean.getTarget().equals(layoutItem.getId())) {
                                 try {
                                     Class bindService = ClassUtility.loadClass(javaSrcBean.getClassName());
                                     customViewBean.reBindService(bindService);
@@ -346,7 +350,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         return null;
     }
 
-    public Set<MethodConfig> bindItem(List<JavaSrcBean> javaSrcBeanList, TabListItem currListItem) {
+    public Set<MethodConfig> bindItem(List<JavaGenSource> javaSrcBeanList, TabListItem currListItem) {
         List<Class> classList = new ArrayList<>();
         if (currListItem.getBindClass() != null && currListItem.getBindClass().length > 0) {
             for (Class clazz : currListItem.getBindClass()) {
@@ -360,7 +364,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
             }
         }
         Set<MethodConfig> methodConfigs = new HashSet<>();
-        for (JavaSrcBean srcBean : javaSrcBeanList) {
+        for (JavaGenSource srcBean : javaSrcBeanList) {
             try {
                 if (srcBean != null) {
                     MethodConfig editorMethod = findEditorMethod(srcBean.getClassName());

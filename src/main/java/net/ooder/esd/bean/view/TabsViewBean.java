@@ -16,6 +16,7 @@ import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.custom.properties.NavTabsProperties;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
+import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.item.TabListItem;
@@ -35,6 +36,8 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
     ModuleViewType moduleViewType = ModuleViewType.NAVTABSCONFIG;
 
     Set<CustomTabsEvent> event = new HashSet<>();
+
+
 
     public TabsViewBean() {
         super();
@@ -135,11 +138,12 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
             }
             try {
                 ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
-                List<Future<CustomModuleBean>> futures = service.invokeAll(tasks);
-                for (Future<CustomModuleBean> resultFuture : futures) {
+                List<Future<AggRootBuild>> futures = service.invokeAll(tasks);
+                for (Future<AggRootBuild> resultFuture : futures) {
                     try {
-                        CustomModuleBean cModuleBean = resultFuture.get();
-
+                        AggRootBuild aggRootBuild = resultFuture.get();
+                        childClassNameSet.add(aggRootBuild.getEuClassName());
+                        CustomModuleBean cModuleBean = aggRootBuild.getCustomModuleBean();
                         if (navModuleBeans != null && !navModuleBeans.contains(cModuleBean)) {
                             navModuleBeans.add(cModuleBean);
                             if (cModuleBean.getJavaSrcBeans() != null) {
