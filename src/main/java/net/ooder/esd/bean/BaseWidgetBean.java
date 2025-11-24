@@ -37,6 +37,10 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
     public T viewBean;
     // public Class bindService;
     public String euClassName;
+
+    @JSONField(serialize = false)
+    AggRootBuild fieldRootBuild;
+
     public String xpath;
 
 
@@ -53,7 +57,6 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
         String realPath = this.getFieldRealPath(parentModuleComponent, component);
         this.setXpath(realPath);
         String parentModuleClassName = parentModuleComponent.getClassName();
-        String projectName = parentModuleComponent.getProjectName();
         String packageName = parentModuleClassName.substring(0, parentModuleClassName.lastIndexOf(".")).toLowerCase();
         String moduleName = parentModuleClassName.substring(parentModuleClassName.lastIndexOf(".") + 1).toLowerCase();
         String simClass = OODUtil.formatJavaName(component.getAlias(), true);
@@ -98,20 +101,21 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
             try {
                 euClass = ClassUtility.loadClass(euClassName);
             } catch (ClassNotFoundException ee) {
+
             }
             try {
                 if (euClass == null || viewBean.getBindService() == null || viewBean.getBindService().equals(Void.class)) {
                     CustomModuleBean customModuleBean = new CustomModuleBean(currModuleComponent);
-                    AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(viewBean, euClassName, projectName);
-                    if (aggRootBuild.getAggServiceRootBean().isEmpty() || aggRootBuild.getRepositorySrcList().isEmpty() || aggRootBuild.getViewSrcList().isEmpty()) {
-                        List<JavaSrcBean> serviceList = aggRootBuild.build();
+                    fieldRootBuild = this.getFieldRootBuild();
+                    if (fieldRootBuild.getAggServiceRootBean().isEmpty() || fieldRootBuild.getRepositorySrcList().isEmpty() || fieldRootBuild.getViewSrcList().isEmpty()) {
+                        List<JavaSrcBean> serviceList = fieldRootBuild.build();
                         if (serviceList.size() > 0) {
-                            viewBean = (T) aggRootBuild.getCustomViewBean();
+                            viewBean = (T) fieldRootBuild.getCustomViewBean();
                             customModuleBean.reBindMethod(viewBean.getMethodConfig());
                             DSMFactory.getInstance().saveCustomViewBean(viewBean);
                         }
                     } else {
-                        allSrc.addAll(aggRootBuild.getAllSrcBean());
+                        allSrc.addAll(fieldRootBuild.getAllSrcBean());
                     }
                 }
             } catch (JDSException e) {
@@ -130,6 +134,17 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
         return javaSrcBeans;
     }
 
+
+    public AggRootBuild getFieldRootBuild() throws JDSException {
+        if (fieldRootBuild == null) {
+            fieldRootBuild = BuildFactory.getInstance().getAggRootBuild(viewBean, euClassName, null);
+        }
+        return fieldRootBuild;
+    }
+
+    public void setFieldRootBuild(AggRootBuild fieldRootBuild) {
+        this.fieldRootBuild = fieldRootBuild;
+    }
 
     @Override
     @JSONField(serialize = false)

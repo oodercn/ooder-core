@@ -56,7 +56,8 @@ public class GenViewDicJava extends GenJavaTask {
         Class clazz = null;
         try {
             clazz = ClassUtility.loadClass(className);
-        } catch (ClassNotFoundException e) {
+        } catch (Throwable e) {
+            log.warn(e.getMessage());
         }
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         if (clazz == null) {

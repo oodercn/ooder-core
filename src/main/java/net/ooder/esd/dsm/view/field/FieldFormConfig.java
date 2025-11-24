@@ -109,7 +109,6 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
     @JSONField(serialize = false)
     List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
 
-
     @JSONField(serialize = false)
     ESDField esdField;
 

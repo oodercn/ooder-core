@@ -53,11 +53,9 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
 
     CS cs;
 
-
     Class<? extends Enum> enumClass;
 
     public CustomListBean() {
-
 
     }
 
@@ -181,11 +179,6 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
     }
 
 
-    public CS getCs() {
-        return cs;
-    }
-
-
     @JSONField(serialize = false)
     public Set<Class> getOtherClass() {
         Set<Class> classes = new HashSet<>();
@@ -205,6 +198,17 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
             annotationBeans.add(this);
         }
         return annotationBeans;
+    }
+
+    public List<TreeListItem> getItems() {
+        if (items == null) {
+            items = new ArrayList<>();
+        }
+        return items;
+    }
+
+    public CS getCs() {
+        return cs;
     }
 
     public Set<String> getEnums() {
@@ -256,12 +260,6 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
         this.dynLoad = dynLoad;
     }
 
-    public List<TreeListItem> getItems() {
-        if (items == null) {
-            items = new ArrayList<>();
-        }
-        return items;
-    }
 
     public Class<? extends Enum> getEnumClass() {
         return enumClass;

@@ -1,7 +1,10 @@
 package net.ooder.esd.dsm.gen;
 
+import net.ooder.common.JDSConstants;
 import net.ooder.common.JDSException;
 import net.ooder.common.logging.ChromeProxy;
+import net.ooder.common.logging.Log;
+import net.ooder.common.logging.LogFactory;
 import net.ooder.common.logging.LogSetpLog;
 import net.ooder.context.JDSActionContext;
 import net.ooder.context.JDSContext;
@@ -10,6 +13,7 @@ import net.ooder.esd.dsm.JavaRoot;
 import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
+import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.server.context.MinServerActionContextImpl;
 
 import java.util.ArrayList;
@@ -19,6 +23,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 
 public abstract class GenJavaTask implements Callable<List<JavaSrcBean>> {
+    protected Log log = LogFactory.getLog(JDSConstants.CONFIG_KEY, GenJavaTask.class);
     protected MinServerActionContextImpl autoruncontext;
     public ChromeProxy chrome;
     public List<String> skipsTempIds = new ArrayList<>();
