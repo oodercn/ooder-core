@@ -206,7 +206,6 @@ public class ChildTreeViewBean<T extends FieldTreeConfig> implements ContextMenu
         this.constructorBean = constructorBean;
         this.domainId = viewBean.getDomainId();
         this.parentId = viewBean.getId();
-
         caption = viewBean.getCaption() + "（" + constructorBean.getName() + ")";
         initTreeItem(treeItem);
 

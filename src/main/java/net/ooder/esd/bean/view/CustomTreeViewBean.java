@@ -148,6 +148,10 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
 
     EnumsClassBean enumsClassBean;
 
+    @JSONField(serialize = false)
+    Map<String, GenViewDicJava> dicTaskMap = new HashMap();
+
+
     public List<TreeListItem> items = new ArrayList<>();
 
     public CustomTreeViewBean() {
@@ -376,15 +380,20 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                                 }
                             }
                             String euClassName = packageName + "." + simClass;
-                            GenViewDicJava genViewDicJava = DSMFactory.getInstance().getViewManager().genDicJava(domainInst.getViewInst(), listItem.getSub(), module.toLowerCase(), euClassName, null);
+
+                            GenViewDicJava genViewDicJava = dicTaskMap.get(euClassName);
+                            if (genViewDicJava == null) {
+                                genViewDicJava = new GenViewDicJava(domainInst.getViewInst(), module.toLowerCase(), listItem.getSub(), euClassName, null);
+                                BuildFactory.getInstance().syncTasks(euClassName, Arrays.asList(genViewDicJava));
+                                dicTaskMap.put(euClassName, genViewDicJava);
+                            }
                             Class dicClass = genViewDicJava.getClass();
                             listItem.setEntityClass(dicClass);
-
-                            this.getViewJavaSrcBean().getViewClassList().addAll (genViewDicJava.getClassList());
+                            this.getViewJavaSrcBean().getViewClassList().addAll(genViewDicJava.getClassList());
                             this.getViewJavaSrcBean().getViewClassList().add(dicClass.getName());
                         }
 
-                        if ((listItem.getBindClass().length > 0 && listItem.getBindClass()[0] != null && listItem.getBindClass()[0].equals(Void.class)) || listItem.getEntityClass() != null) {
+                        if ((listItem.getBindClass().length > 0 && listItem.getBindClass()[0] != null && !listItem.getBindClass()[0].equals(Void.class)) || listItem.getEntityClass() != null) {
                             ChildTreeViewBean childTreeViewBean = null;
                             if (listItem.getGroupName() != null && !listItem.getGroupName().equals("")) {
                                 childTreeViewBean = this.getChildTreeByGroup(listItem.getGroupName());
@@ -414,13 +423,17 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                                         }
                                     }
                                     String euClassName = packageName + "." + simClass;
-                                    GenViewDicJava genViewDicJava = DSMFactory.getInstance().getViewManager().genDicJava(domainInst.getViewInst(), enumItems, module.toLowerCase(), euClassName, null);
+                                    GenViewDicJava genViewDicJava = dicTaskMap.get(euClassName);
+                                    if (genViewDicJava == null) {
+                                        genViewDicJava = new GenViewDicJava(domainInst.getViewInst(), module.toLowerCase(), listItem.getSub(), euClassName, null);
+                                        BuildFactory.getInstance().syncTasks(euClassName, Arrays.asList(genViewDicJava));
+                                        dicTaskMap.put(euClassName, genViewDicJava);
+                                    }
                                     Class dicClass = genViewDicJava.getClass();
                                     listItem.setEntityClass(dicClass);
                                     this.getViewJavaSrcBean().getViewClassList().add(dicClass.getName());
                                     listItem.setBindClass(new Class[]{dicClass});
                                 }
-
                                 childTreeViewBean = createChildTreeViewBean(listItem, serviceClass, simClass);
                                 this.addChildTreeBean(childTreeViewBean);
                             } else {
@@ -1192,6 +1205,14 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
             }
         }
         return paramList;
+    }
+
+    public Map<String, GenViewDicJava> getDicTaskMap() {
+        return dicTaskMap;
+    }
+
+    public void setDicTaskMap(Map<String, GenViewDicJava> dicTaskMap) {
+        this.dicTaskMap = dicTaskMap;
     }
 
     public LinkedHashSet<TreeEventBean> getExtAPIEvent() {

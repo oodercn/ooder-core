@@ -17,6 +17,7 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.ESDField;
+import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.gen.view.GenViewDicJava;
@@ -55,6 +56,9 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
 
     Class<? extends Enum> enumClass;
 
+    @JSONField(serialize = false)
+    GenViewDicJava genViewDicJava;
+
     public CustomListBean() {
 
     }
@@ -83,7 +87,10 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
                 }
                 String euClassName = packageName + "." + simClass;
                 if (enumClass == null && domainInst != null) {
-                    GenViewDicJava genViewDicJava = DSMFactory.getInstance().getViewManager().genDicJava(domainInst.getViewInst(), listProperties.getItems(), module.toLowerCase(), euClassName, null);
+                    if (genViewDicJava == null) {
+                        genViewDicJava = new GenViewDicJava(domainInst.getViewInst(), module.toLowerCase(), listProperties.getItems(), euClassName, null);
+                        BuildFactory.getInstance().syncTasks(euClassName, Arrays.asList(genViewDicJava));
+                    }
                     bindClass = genViewDicJava.getDicClass();
                     if (genViewDicJava.getJavaSrcBeanList() != null) {
                         javaSrcBeans.addAll(genViewDicJava.getJavaSrcBeanList());
@@ -108,6 +115,13 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
         }
     }
 
+    public GenViewDicJava getGenViewDicJava() {
+        return genViewDicJava;
+    }
+
+    public void setGenViewDicJava(GenViewDicJava genViewDicJava) {
+        this.genViewDicJava = genViewDicJava;
+    }
 
     public CustomListBean(ESDField esdField) {
         this.init(esdField);
