@@ -91,6 +91,7 @@ public class CustomComboFieldBean<M extends ComboInputComponent> implements Comb
 
     @Override
     public List<JavaSrcBean> getJavaSrcBeans() {
+
         return new ArrayList<>();
     }
 

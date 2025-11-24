@@ -62,6 +62,8 @@ public class ComboInputFieldBean<M extends ComboInputComponent> implements Combo
 
     InputBean<ComboInputProperties> inputBean;
 
+    List<JavaSrcBean> javaSrcBeans;
+
 
     public ComboInputFieldBean() {
 
@@ -89,8 +91,13 @@ public class ComboInputFieldBean<M extends ComboInputComponent> implements Combo
 
 
     @Override
+    @JSONField(serialize = false)
     public List<JavaSrcBean> getJavaSrcBeans() {
-        return new ArrayList<>();
+        if (javaSrcBeans == null) {
+            javaSrcBeans = new ArrayList<>();
+        }
+
+        return javaSrcBeans;
     }
 
 

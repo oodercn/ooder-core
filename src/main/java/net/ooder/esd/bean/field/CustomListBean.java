@@ -85,9 +85,11 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
                 }
                 String euClassName = packageName + "." + simClass;
                 if (enumClass == null && domainInst != null) {
-
                     GenViewDicJava genViewDicJava = DSMFactory.getInstance().getViewManager().genDicJava(domainInst.getViewInst(), listProperties.getItems(), module.toLowerCase(), euClassName, null);
                     bindClass = genViewDicJava.getDicClass();
+                    if (genViewDicJava.getJavaSrcBeanList() != null) {
+                        javaSrcBeans.addAll(genViewDicJava.getJavaSrcBeanList());
+                    }
                     if (bindClass.isEnum()) {
                         enumClass = bindClass;
                     }

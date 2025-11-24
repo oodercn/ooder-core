@@ -1,6 +1,7 @@
 package net.ooder.esd.bean.field.combo;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
@@ -15,7 +16,6 @@ import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ComboInputComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.form.ComboInputProperties;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -62,9 +62,9 @@ public class ComboxFieldBean<M extends ComboInputComponent> extends ComboInputFi
     @Override
     public List<JavaSrcBean> update(ModuleComponent moduleComponent, M component) {
         this.update(component.getProperties());
-        return  listBean.update(moduleComponent,component);
-    }
 
+        return listBean.update(moduleComponent, component);
+    }
 
 
     public ComboxFieldBean() {
@@ -93,6 +93,15 @@ public class ComboxFieldBean<M extends ComboInputComponent> extends ComboInputFi
 
     }
 
+
+    @JSONField(serialize = false)
+    public List<JavaSrcBean> getJavaSrcBeans() {
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        if (listBean != null) {
+            javaSrcBeans.addAll(listBean.getJavaSrcBeans());
+        }
+        return javaSrcBeans;
+    }
 
     @JSONField(serialize = false)
     public List<CustomBean> getAnnotationBeans() {
