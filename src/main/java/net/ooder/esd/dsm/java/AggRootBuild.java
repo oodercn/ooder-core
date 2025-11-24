@@ -292,7 +292,7 @@ public class AggRootBuild {
             String taskId = "voRepositoryTask[" + this.getEuClassName() + "]";
             this.voRepositoryTask = new GenRepositoryViewJava(repositoryInst.getViewRoot(), customViewBean, moduleName, euClassName, true, chrome, new RepositoryType[]{RepositoryType.VO, RepositoryType.VIEWBEAN, RepositoryType.REPOSITORY});
             BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(voRepositoryTask));
-            BuildFactory.getInstance().compileJavaSrc(voRepositoryTask.getJavaSrcBeanList(), packageName, this.getChrome());
+
         }
         return voRepositoryTask.getSourceList();
     }
@@ -302,16 +302,22 @@ public class AggRootBuild {
             String taskId = "serviceRepositoryTask[" + this.getEuClassName() + "]";
             serviceRepositoryTask = new GenRepositoryViewJava(repositoryInst.getViewRoot(), customViewBean, moduleName, euClassName, true, chrome, new RepositoryType[]{RepositoryType.DO, RepositoryType.VIEWSERVICE, RepositoryType.REPOSITORYIMPL});
             BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(serviceRepositoryTask));
-            BuildFactory.getInstance().compileJavaSrc(voRepositoryTask.getJavaSrcBeanList(), packageName, this.getChrome());
         }
         return serviceRepositoryTask.getSourceList();
     }
 
     public List<JavaGenSource> initRepositoryViewJava(boolean clear) throws JDSException {
         chrome.printLog("创建创库模型模型...", true);
-        List repositorySource = new ArrayList<>();
+        List<JavaGenSource> repositorySource = new ArrayList<>();
         repositorySource.addAll(reBuildRepositoryVO(clear));
         repositorySource.addAll(reBuildRepositoryService(clear));
+        List<String> repositoryClassList = new ArrayList<>();
+        for (JavaGenSource javaSrcBean : repositorySource) {
+            repositoryClassList.add(javaSrcBean.getClassName());
+            repositoryInst.addJavaBean(javaSrcBean.getSrcBean());
+        }
+
+        customViewBean.getViewJavaSrcBean().setRepositoryClassList(repositoryClassList);
         return repositorySource;
     }
 

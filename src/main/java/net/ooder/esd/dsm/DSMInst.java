@@ -32,6 +32,10 @@ public abstract class DSMInst {
     public String className;
     public String euPackage;
 
+
+    @JSONField(serialize = false)
+    public Map<File, JavaPackage> packageFilePackageMap = new HashMap<>();
+
     public Set<String> javaTempIds = new LinkedHashSet<>();
 
     public Set<String> openClassNames = new LinkedHashSet<>();
@@ -70,18 +74,27 @@ public abstract class DSMInst {
         return javaPackage;
     }
 
+
+    public JavaPackage createChildPackage(File file) {
+        JavaPackage childPackage = packageFilePackageMap.get(file);
+        if (childPackage == null) {
+            childPackage = new JavaPackage(this, file);
+            packageFilePackageMap.put(file, childPackage);
+        }
+        return childPackage;
+    }
+
+
     public JavaPackage createChildPackage(String packageName) {
         JavaPackage projectRoot = this.getProjectRoot();
         if (packageName.indexOf(".") > -1) {
             packageName = packageName.replace(".", "/");
         }
-
         File packageFile = new File(projectRoot.getPackageFile(), packageName);
-
         if (!packageFile.exists()) {
             packageFile.mkdirs();
         }
-        JavaPackage childPackage = projectRoot.createChildPackage(packageFile);
+        JavaPackage childPackage = createChildPackage(packageFile);
 
         return childPackage;
     }
@@ -103,7 +116,6 @@ public abstract class DSMInst {
         if (!javaSrcBeans.contains(srcBean)) {
             javaSrcBeans.add(srcBean);
         }
-
     }
 
 

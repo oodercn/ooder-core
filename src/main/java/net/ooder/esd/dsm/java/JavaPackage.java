@@ -34,10 +34,8 @@ public class JavaPackage {
     String imageClass =  "ri-folder-open-line";
     String projectVersionName;
 
-    @JSONField(serialize = false)
-    public Map<File, JavaPackage> packageFilePackageMap = new HashMap<>();
 
-    JavaPackage(DSMInst dsmInst, File packageFile) {
+   public JavaPackage(DSMInst dsmInst, File packageFile) {
 
         this.dsmInst = dsmInst;
         this.dsmType = dsmInst.getDsmType();
@@ -97,15 +95,6 @@ public class JavaPackage {
         return packageFile;
     }
 
-    public JavaPackage createChildPackage(File file) {
-        JavaPackage childPackage = packageFilePackageMap.get(file);
-        if (childPackage == null) {
-            childPackage = new JavaPackage(dsmInst, file);
-            packageFilePackageMap.put(file, childPackage);
-        }
-        return childPackage;
-    }
-
     public JavaPackage createChildPackage(String packageName) {
         File file = getPackageFile();
         if (packageName.indexOf(".") > -1) {
@@ -117,7 +106,7 @@ public class JavaPackage {
         if (!rootPackFile.exists()) {
             rootPackFile.mkdirs();
         }
-        JavaPackage childPackage = createChildPackage(rootPackFile);
+        JavaPackage childPackage = this.getDsmInst().createChildPackage(rootPackFile);
 
         return childPackage;
     }
@@ -125,7 +114,7 @@ public class JavaPackage {
     @JSONField(serialize = false)
     public JavaPackage getParent() {
         File parentFile = this.getPackageFile().getParentFile();
-        JavaPackage parentPackage = createChildPackage(parentFile);
+        JavaPackage parentPackage = this.getDsmInst().createChildPackage(parentFile);
         return parentPackage;
     }
 
@@ -199,7 +188,7 @@ public class JavaPackage {
         if (files != null) {
             for (File childFile : files) {
                 if (childFile.isDirectory()) {
-                    JavaPackage childPackage = createChildPackage(childFile);
+                    JavaPackage childPackage = this.getDsmInst().createChildPackage(childFile);
                     javaPackage.add(childPackage);
                 }
             }

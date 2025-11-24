@@ -125,7 +125,8 @@ public class JavaSrcBean {
             if (dsmInst == null) {
                 dsmInst = DSMFactory.getInstance().getDSMInst(dsmId, dsmType);
             }
-            javaPackage = new JavaPackage(dsmInst, this.getFile().getParentFile());
+          //  javaPackage = new JavaPackage(dsmInst, this.getFile().getParentFile());
+            javaPackage =   dsmInst.createChildPackage( this.getFile().getParentFile());
 
         } catch (JDSException e) {
             e.printStackTrace();

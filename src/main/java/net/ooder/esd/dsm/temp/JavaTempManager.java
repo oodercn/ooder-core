@@ -224,6 +224,7 @@ public class JavaTempManager {
             srcBean = dsmInst.getJavaSrcByPath(filePath);
             if (srcBean == null) {
                 srcBean = new JavaSrcBean(file, dsmInst, javaTempId);
+
             }
             if (javaTempId != null) {
                 srcBean.setJavaTempId(javaTempId);

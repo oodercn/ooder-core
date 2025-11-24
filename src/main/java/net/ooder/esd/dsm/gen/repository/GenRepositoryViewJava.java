@@ -88,18 +88,20 @@ public class GenRepositoryViewJava extends GenJavaTask {
         DSMInst dsmBean = viewRoot.getDsmBean();
         GenJava javaGen = GenJava.getInstance(dsmBean.getProjectVersionName());
         ModuleViewType moduleViewType = viewBean.getModuleViewType();
-        JavaRoot javaRoot = BuildFactory.getInstance().buildJavaRoot(viewRoot, viewBean, moduleName, fullClassName);
+
         List<JavaSrcBean> srcFiles = new ArrayList<>();
         List<JavaTemp> viewTemps = BuildFactory.getInstance().getTempManager().getRepositoryCatTemps(moduleViewType.getDefaultView(), RangeType.MODULEVIEW, repositoryTypes);
         chrome.printLog("开始创建模型视图：" + fullClassName, true);
         for (JavaTemp javatemp : viewTemps) {
             boolean canGen = true;
             String expression = javatemp.getExpression();
+            String genClassName = StringUtility.replace(javatemp.getNamePostfix(), "**", simClassName);
+            JavaRoot javaRoot = BuildFactory.getInstance().buildJavaRoot(viewRoot, viewBean, moduleName, genClassName);
             if (expression != null && !expression.equals("")) {
                 canGen = EsbUtil.parExpression(javatemp.getExpression(), JDSActionContext.getActionContext().getContext(), javaRoot, Boolean.class);
             }
             if (canGen) {
-                String genClassName = StringUtility.replace(javatemp.getNamePostfix(), "**", simClassName);
+
                 javaRoot.setClassName(genClassName);
                 String packageName = dsmBean.getPackageName();
 
