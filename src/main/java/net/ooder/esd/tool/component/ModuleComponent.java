@@ -1998,31 +1998,44 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     @JSONField(serialize = false)
     public Component getMainBoxComponent() {
         Component mainBlock = null;
-        String mainComAlias=this.getEuModule().getName() + DefaultTopBoxfix;
+        String mainAlias = null;
         if (this.getEuModule() != null) {
-            mainBlock = this.components.get(mainComAlias);
-        } else if (this.getChildren() != null) {
-            for (Component topComponent : this.getChildren()) {
-                String alias=topComponent.getAlias();
-                if (alias.endsWith(DefaultTopBoxfix) && topComponent instanceof BlockComponent) {
-                    mainBlock = topComponent;
-                    components.remove(mainBlock);
-                    mainBlock.setAlias(mainComAlias);
-                    components.put(mainComAlias,mainBlock);
-
+            mainAlias = this.getEuModule().getName() + DefaultTopBoxfix;
+            mainBlock = this.components.get(this.getEuModule().getName() + DefaultTopBoxfix);
+            if (mainBlock == null) {
+                BlockComponent topComponent = getDefaultTopComponent();
+                if (topComponent == null) {
+                    mainBlock = new BlockComponent(Dock.fill, this.getEuModule().getName() + DefaultTopBoxfix);
+                    this.addChildren(mainBlock);
+                } else {
+                    String alias = topComponent.getAlias();
+                    topComponent.setAlias(mainAlias);
+                    components.put(mainAlias, mainBlock);
+                    components.remove(alias);
                 }
+            }
+        } else {
+            mainBlock = getDefaultTopComponent();
+            if (mainBlock == null) {
+                mainBlock = new BlockComponent(Dock.fill, this.alias + DefaultTopBoxfix);
+                this.addChildren(mainBlock);
             }
         }
 
-        if (mainBlock == null) {
-            mainBlock = new BlockComponent(Dock.fill, mainComAlias);
-            this.addChildren(mainBlock);
-        }
+        ((BlockComponent) mainBlock).getProperties().setBorderType(BorderType.none);
 
-        if (mainBlock instanceof BlockComponent) {
-            ((BlockComponent) mainBlock).getProperties().setBorderType(BorderType.none);
-        }
+        return mainBlock;
+    }
 
+    private BlockComponent getDefaultTopComponent() {
+        BlockComponent mainBlock = null;
+        if (this.getChildren() != null) {
+            for (Component topComponent : this.getChildren()) {
+                if (topComponent.getAlias().endsWith(DefaultTopBoxfix) && topComponent instanceof BlockComponent) {
+                    mainBlock = (BlockComponent) topComponent;
+                }
+            }
+        }
         return mainBlock;
     }
 
