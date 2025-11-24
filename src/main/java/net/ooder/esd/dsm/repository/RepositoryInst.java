@@ -12,6 +12,7 @@ import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMInst;
+import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
 import net.ooder.esd.dsm.enums.DSMType;
 import net.ooder.esd.dsm.java.JavaPackage;
 import net.ooder.esd.dsm.java.JavaSrcBean;
@@ -41,7 +42,8 @@ public class RepositoryInst extends DSMInst implements Comparable<RepositoryInst
     public Set<String> viewTables = new LinkedHashSet<>();
     public Set<String> urlNames = new LinkedHashSet<>();
     public Set<String> refIds = new LinkedHashSet<>();
-
+    @JSONField(serialize = false)
+    public AggViewRoot viewRoot;
 
     public RepositoryInst() {
 
@@ -64,6 +66,17 @@ public class RepositoryInst extends DSMInst implements Comparable<RepositoryInst
         return rootPackage;
     }
 
+
+    public AggViewRoot getViewRoot() {
+        if (viewRoot == null) {
+            viewRoot = new AggViewRoot(this);
+        }
+        return viewRoot;
+    }
+
+    public void setViewRoot(AggViewRoot viewRoot) {
+        this.viewRoot = viewRoot;
+    }
 
     @JSONField(serialize = false)
     public List<ESDClass> getEntityList() {

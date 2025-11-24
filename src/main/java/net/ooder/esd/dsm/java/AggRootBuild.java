@@ -289,9 +289,8 @@ public class AggRootBuild {
 
     private List<JavaGenSource> reBuildRepositoryVO(boolean clear) throws JDSException {
         if (voRepositoryTask == null || clear) {
-            String taskId = repositoryInst.getDsmId();
-            AggViewRoot aggViewRoot = new AggViewRoot(repositoryInst);
-            this.voRepositoryTask = new GenRepositoryViewJava(aggViewRoot, customViewBean, moduleName, euClassName, true, chrome, new RepositoryType[]{RepositoryType.VO, RepositoryType.VIEWBEAN, RepositoryType.REPOSITORY});
+            String taskId = "voRepositoryTask[" + this.getEuClassName() + "]";
+            this.voRepositoryTask = new GenRepositoryViewJava(repositoryInst.getViewRoot(), customViewBean, moduleName, euClassName, true, chrome, new RepositoryType[]{RepositoryType.VO, RepositoryType.VIEWBEAN, RepositoryType.REPOSITORY});
             BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(voRepositoryTask));
         }
         return voRepositoryTask.getSourceList();
@@ -299,11 +298,9 @@ public class AggRootBuild {
 
     private List<JavaGenSource> reBuildRepositoryService(boolean clear) throws JDSException {
         if (serviceRepositoryTask == null || clear) {
-            String taskId = repositoryInst.getDsmId();
-            AggViewRoot aggViewRoot = new AggViewRoot(repositoryInst);
-            serviceRepositoryTask = new GenRepositoryViewJava(aggViewRoot, customViewBean, moduleName, euClassName, true, chrome, new RepositoryType[]{RepositoryType.DO, RepositoryType.VIEWSERVICE, RepositoryType.REPOSITORYIMPL});
+            String taskId = "serviceRepositoryTask[" + this.getEuClassName() + "]";
+            serviceRepositoryTask = new GenRepositoryViewJava(repositoryInst.getViewRoot(), customViewBean, moduleName, euClassName, true, chrome, new RepositoryType[]{RepositoryType.DO, RepositoryType.VIEWSERVICE, RepositoryType.REPOSITORYIMPL});
             BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(serviceRepositoryTask));
-
         }
         return serviceRepositoryTask.getSourceList();
     }
@@ -376,9 +373,8 @@ public class AggRootBuild {
         if (rootTask == null) {
             String taskId = className;
             rootTask = new GenAggCustomViewJava(viewRoot, customViewBean, moduleName, className, chrome);
-            BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(voRepositoryTask));
+            BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(rootTask));
             aggServiceRoots = rootTask.getSourceList();
-
             GenAggCustomJava genAggCustomJava = aggregationManager.genAggMapJava(viewRoot, customViewBean, getCurrChromeDriver());
             aggBeans.addAll(genAggCustomJava.getSourceList());
         }

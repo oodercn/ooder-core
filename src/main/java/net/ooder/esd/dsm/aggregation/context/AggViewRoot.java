@@ -106,7 +106,6 @@ public class AggViewRoot implements JavaRoot {
 
     public AggViewRoot(DSMInst dsmBean) {
         this.dsmBean = dsmBean;
-
     }
 
 

@@ -82,6 +82,8 @@ public class RepositoryManager {
     private Folder entityConfigFolder;
 
 
+
+
     public static RepositoryManager getInstance(MySpace space) {
         String path = space.getPath();
         RepositoryManager manager = managerMap.get(path);
@@ -106,8 +108,6 @@ public class RepositoryManager {
         } catch (JDSException e) {
             e.printStackTrace();
         }
-
-
     }
 
 
@@ -130,6 +130,7 @@ public class RepositoryManager {
             }
         }
     }
+
 
 
     public void updateEntityConfig(EntityConfig entityConfig) throws JDSException {
