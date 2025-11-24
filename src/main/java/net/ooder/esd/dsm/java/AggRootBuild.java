@@ -275,7 +275,7 @@ public class AggRootBuild {
                 e.printStackTrace();
             }
             if (genSource != null && !javaGenSources.contains(genSource)) {
-                javaSrcList.add(javaSrcBean);
+                javaGenSources.add(genSource);
             }
         }
         return javaGenSources;

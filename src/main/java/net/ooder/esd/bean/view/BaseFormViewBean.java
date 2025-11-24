@@ -182,13 +182,14 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                     }
                     if (fieldFormConfig != null) {
                         fieldFormConfigs.add(fieldFormConfig);
-                    }
-                    if (fieldFormConfig.getWidgetConfig() != null && fieldFormConfig.getWidgetConfig() instanceof WidgetBean) {
-                        AggRootBuild build = ((WidgetBean) fieldFormConfig.getWidgetConfig()).getFieldRootBuild();
-                        if (build != null) {
-                            this.childClassNameSet.add(build.getEuClassName());
+                        if (fieldFormConfig.getWidgetConfig() != null && fieldFormConfig.getWidgetConfig() instanceof WidgetBean) {
+                            AggRootBuild build = ((WidgetBean) fieldFormConfig.getWidgetConfig()).getFieldRootBuild();
+                            if (build != null) {
+                                this.childClassNameSet.add(build.getEuClassName());
+                            }
                         }
                     }
+
 
                 }
                 service.shutdownNow();

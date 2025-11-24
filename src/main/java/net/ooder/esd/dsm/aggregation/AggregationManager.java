@@ -1022,8 +1022,9 @@ public class AggregationManager {
                     domainId = domainInst.getDomainId();
                 }
                 domainIdMap.put(className, domainId);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            } catch (Throwable e) {
+                log.warn(e.getMessage());
+                //  e.printStackTrace();
             }
         }
 
@@ -1517,11 +1518,9 @@ public class AggregationManager {
                 domainInst = this.getDomainInstByCat(projectName, UserSpace.VIEW);
             }
 
-
             if (domainInst != null) {
                 return domainInst;
             }
-
 
         } catch (JDSException e) {
             //e.printStackTrace();

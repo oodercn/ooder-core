@@ -37,7 +37,9 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
 
     @JSONField(serialize = false)
     public T viewBean;
-    // public Class bindService;
+
+    public Class bindService;
+
     public String euClassName;
 
     @JSONField(serialize = false)
@@ -177,6 +179,13 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
         return viewBean;
     }
 
+    public Class getBindService() {
+        return bindService;
+    }
+
+    public void setBindService(Class bindService) {
+        this.bindService = bindService;
+    }
 
     protected String getFieldRealPath(ModuleComponent moduleComponent, Component component) {
         String realPath = component.getPath();
