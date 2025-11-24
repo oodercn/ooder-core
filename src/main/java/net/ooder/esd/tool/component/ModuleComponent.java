@@ -1998,18 +1998,24 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     @JSONField(serialize = false)
     public Component getMainBoxComponent() {
         Component mainBlock = null;
+        String mainComAlias=this.getEuModule().getName() + DefaultTopBoxfix;
         if (this.getEuModule() != null) {
-            mainBlock = this.components.get(this.getEuModule().getName() + DefaultTopBoxfix);
+            mainBlock = this.components.get(mainComAlias);
         } else if (this.getChildren() != null) {
             for (Component topComponent : this.getChildren()) {
-                if (topComponent.getAlias().endsWith(DefaultTopBoxfix) && topComponent instanceof BlockComponent) {
+                String alias=topComponent.getAlias();
+                if (alias.endsWith(DefaultTopBoxfix) && topComponent instanceof BlockComponent) {
                     mainBlock = topComponent;
+                    components.remove(mainBlock);
+                    mainBlock.setAlias(mainComAlias);
+                    components.put(mainComAlias,mainBlock);
+
                 }
             }
         }
 
         if (mainBlock == null) {
-            mainBlock = new BlockComponent(Dock.fill, this.getEuModule().getName() + DefaultTopBoxfix);
+            mainBlock = new BlockComponent(Dock.fill, mainComAlias);
             this.addChildren(mainBlock);
         }
 
