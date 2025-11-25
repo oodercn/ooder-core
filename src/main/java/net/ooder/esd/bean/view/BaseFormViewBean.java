@@ -128,9 +128,9 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
     }
 
 
-    protected List<FieldFormConfig> genChildComponent(ModuleComponent moduleComponent, List<Component> components) {
+    public List<GenFormChildModule> createTasks(ModuleComponent moduleComponent, List<Component> components) {
         List<GenFormChildModule> tasks = new ArrayList<GenFormChildModule>();
-        List<FieldFormConfig> fieldFormConfigs = new ArrayList<>();
+
         int index = 0;
         if (components != null) {
             for (Component component : components) {
@@ -159,48 +159,44 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                     if (genChildModule == null) {
                         genChildModule = new GenFormChildModule(moduleComponent, component, config);
                     }
-
                     if (genChildModule != null) {
                         tasks.add(genChildModule);
-                    } else {
-                        config.update(moduleComponent, component);
-                        fieldFormConfigs.add(config);
                     }
                 }
             }
+        }
+        return tasks;
+    }
 
-            try {
-                String taskIds = this.getXpath() + "[" + System.currentTimeMillis() + "]";
-                ExecutorService service = RemoteConnectionManager.createConntctionService(taskIds);
-                List<Future<FieldFormConfig>> futures = service.invokeAll(tasks);
-                for (Future<FieldFormConfig> resultFuture : futures) {
-                    FieldFormConfig fieldFormConfig = null;
-                    try {
-                        fieldFormConfig = resultFuture.get();
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                    }
-                    if (fieldFormConfig != null) {
-                        fieldFormConfigs.add(fieldFormConfig);
-                        if (fieldFormConfig.getWidgetConfig() != null && fieldFormConfig.getWidgetConfig() instanceof WidgetBean) {
-                            AggRootBuild build = ((WidgetBean) fieldFormConfig.getWidgetConfig()).getFieldRootBuild();
-                            if (build != null) {
-                                this.childClassNameSet.add(build.getEuClassName());
-                            }
+
+    protected List<FieldFormConfig> genChildComponent(ModuleComponent moduleComponent, List<Component> components) {
+        List<GenFormChildModule> tasks = this.createTasks(moduleComponent, components);
+        List<FieldFormConfig> fieldFormConfigs = new ArrayList<>();
+        try {
+            String taskIds = this.getXpath() + "[" + System.currentTimeMillis() + "]";
+            ExecutorService service = RemoteConnectionManager.createConntctionService(taskIds);
+            List<Future<FieldFormConfig>> futures = service.invokeAll(tasks);
+            for (Future<FieldFormConfig> resultFuture : futures) {
+                FieldFormConfig fieldFormConfig = null;
+                try {
+                    fieldFormConfig = resultFuture.get();
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+                if (fieldFormConfig != null) {
+                    fieldFormConfigs.add(fieldFormConfig);
+                    if (fieldFormConfig.getWidgetConfig() != null && fieldFormConfig.getWidgetConfig() instanceof WidgetBean) {
+                        AggRootBuild build = ((WidgetBean) fieldFormConfig.getWidgetConfig()).getFieldRootBuild();
+                        if (build != null) {
+                            this.childClassNameSet.add(build.getEuClassName());
                         }
                     }
                 }
-                service.shutdownNow();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+            service.shutdownNow();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-//        try {
-//            DSMFactory.getInstance().saveCustomViewBean(this,false);
-//        } catch (JDSException e) {
-//            e.printStackTrace();
-//        }
         return fieldFormConfigs;
     }
 

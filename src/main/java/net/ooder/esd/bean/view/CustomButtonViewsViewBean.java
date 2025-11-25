@@ -113,11 +113,7 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
         }
         this.setModuleBeans(navModuleBeans);
         addChildJavaSrc(javaSrcBeans);
-//        try {
-//            DSMFactory.getInstance().saveCustomViewBean(this);
-//        } catch (JDSException e) {
-//            e.printStackTrace();
-//        }
+
         return javaSrcBeans;
     }
 
