@@ -10,7 +10,6 @@ import net.ooder.common.util.StringUtility;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.dsm.enums.DSMType;
 import net.ooder.esd.dsm.gen.GenJava;
-import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaPackage;
 import net.ooder.esd.dsm.java.JavaPackageManager;
 import net.ooder.esd.dsm.java.JavaSrcBean;
@@ -31,7 +30,8 @@ public abstract class DSMInst {
     public String desc;
     public String className;
     public String euPackage;
-
+    @JSONField(serialize = false)
+    public Set<String> badClassNames = new LinkedHashSet<>();
 
     @JSONField(serialize = false)
     public Map<File, JavaPackage> packageFilePackageMap = new HashMap<>();
@@ -114,6 +114,7 @@ public abstract class DSMInst {
     public void addJavaBean(JavaSrcBean srcBean) {
         List<JavaSrcBean> javaSrcBeans = this.getJavaEntities();
         if (!javaSrcBeans.contains(srcBean)) {
+            this.badClassNames.remove(srcBean.getClassName());
             javaSrcBeans.add(srcBean);
         }
     }
@@ -234,6 +235,7 @@ public abstract class DSMInst {
             List<JavaSrcBean> javaSrcBeans = javaPackage.listFiles();
             for (JavaSrcBean srcBean : javaSrcBeans) {
                 if (srcBean.getClassName() != null && srcBean.getClassName().equals(className)) {
+                    this.badClassNames.remove(srcBean.getClassName());
                     return srcBean;
                 }
             }
@@ -369,8 +371,6 @@ public abstract class DSMInst {
     public void removeJavaSrc(JavaSrcBean javaSrcBean) {
         Set<JavaSrcBean> javaSrcBeans = new HashSet<>();
         this.getJavaEntities().remove(javaSrcBean);
-
-
     }
 
     public void updateBeans(Set<JavaSrcBean> beans) {
@@ -384,6 +384,7 @@ public abstract class DSMInst {
         for (JavaSrcBean bean : beans) {
             if (javaSrcBean.equals(bean)) {
                 isUpdate = true;
+                this.badClassNames.remove(bean.getClassName());
                 bean.setJavaTempId(javaSrcBean.getJavaTempId());
                 bean.setDate(System.currentTimeMillis());
                 bean.setClassName(javaSrcBean.getClassName());

@@ -206,10 +206,10 @@ public class AggRootBuild {
         return childBeans;
     }
 
-//    public void update() throws JDSException {
-//        this.updateViewBean(customViewBean);
-//        DSMFactory.getInstance().saveCustomViewBean(customViewBean);
-//    }
+    public void update() throws JDSException {
+        this.updateViewBean(customViewBean);
+        DSMFactory.getInstance().saveCustomViewBean(customViewBean);
+    }
 
     public List<JavaGenSource> getViewSrcList() {
         List<JavaGenSource> viewClassList = new ArrayList<>();

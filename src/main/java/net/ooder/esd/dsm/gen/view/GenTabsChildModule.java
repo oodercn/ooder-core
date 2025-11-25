@@ -143,7 +143,7 @@ public class GenTabsChildModule implements Callable<AggRootBuild> {
         if (customViewBean != null) {
             aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, cEuClassName, projectName);
             List<JavaGenSource> serviceList = aggRootBuild.getAggServiceRootBean();
-            if (serviceList == null || serviceList.isEmpty()) {
+            if (aggRootBuild.getAggServiceRootBean().isEmpty() || aggRootBuild.getRepositorySrcList().isEmpty() || aggRootBuild.getViewSrcList().isEmpty()) {
                 serviceList = aggRootBuild.build();
             }
             bindItem(serviceList, currListItem);
@@ -156,7 +156,7 @@ public class GenTabsChildModule implements Callable<AggRootBuild> {
             }
             cModuleBean.setJavaSrcBeans(aggRootBuild.getAllSrcBean());
             cModuleBean.reBindMethod(customViewBean.getMethodConfig());
-            // DSMFactory.getInstance().saveCustomViewBean(customViewBean);
+            aggRootBuild.update();
         }
 
 

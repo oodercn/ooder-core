@@ -2009,8 +2009,8 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                 } else {
                     mainBlock = topComponent;
                     String alias = topComponent.getAlias();
-                    topComponent.setAlias(mainAlias);
-                    topComponent.getProperties().setName(alias);
+                    mainBlock.setAlias(mainAlias);
+                    mainBlock.getProperties().setName(mainAlias);
                     components.put(mainAlias, mainBlock);
                     components.remove(alias);
                 }

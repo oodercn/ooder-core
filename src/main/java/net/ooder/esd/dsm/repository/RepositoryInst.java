@@ -32,6 +32,7 @@ public class RepositoryInst extends DSMInst implements Comparable<RepositoryInst
     public Map<String, TableRef> tableRefMap = new HashMap<>();
     public Map<String, EntityRef> entityRefMap = new HashMap<>();
     public Set<String> entityNames = new LinkedHashSet<>();
+
     public Set<String> bpmEntityNames = new LinkedHashSet<>();
     public Set<String> userEntityNames = new LinkedHashSet<>();
     public Set<String> viewEntityNames = new LinkedHashSet<>();
@@ -78,36 +79,10 @@ public class RepositoryInst extends DSMInst implements Comparable<RepositoryInst
         this.viewRoot = viewRoot;
     }
 
-    @JSONField(serialize = false)
-    public List<ESDClass> getEntityList() {
-        List<JavaSrcBean> repositoryList = this.getRepositoryInst().getJavaEntities();
-        List<JavaSrcBean> allEntityList = new ArrayList<>();
-        allEntityList.addAll(repositoryList);
-        List<ESDClass> entityList = new ArrayList<>();
-        for (JavaSrcBean srcBean : allEntityList) {
-            String className = srcBean.getClassName();
-            try {
-                Class clazz = ClassUtility.loadClass(className);
-                ESDEntity entity = (ESDEntity) clazz.getAnnotation(ESDEntity.class);
-                if (entity != null) {
-                    ESDClass esdClass = BuildFactory.getInstance().getClassManager().getRepositoryClass(className, true);
-                    if (!entityList.contains(esdClass)) {
-                        entityList.add(esdClass);
-                    }
-
-                }
-            } catch (Throwable e) {
-                logger.warn(e.getMessage());
-            }
-        }
-        return entityList;
-
-    }
 
     @JSONField(serialize = false)
     public List<JavaSrcBean> getJavaSrcListByMethod(String sourceClassName, String methodName) {
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
-
         for (JavaSrcBean srcBean : this.getJavaSrcBeans()) {
             if (srcBean.getSourceClassName() != null && srcBean.getSourceClassName().equals(sourceClassName) && srcBean.getMethodName() != null && srcBean.getMethodName().equals(methodName)) {
                 javaSrcBeans.add(srcBean);
@@ -201,6 +176,35 @@ public class RepositoryInst extends DSMInst implements Comparable<RepositoryInst
 
 
     @JSONField(serialize = false)
+    public List<ESDClass> getEntityList() {
+        List<JavaSrcBean> repositoryList = getJavaEntities();
+        List<JavaSrcBean> allEntityList = new ArrayList<>();
+        allEntityList.addAll(repositoryList);
+        List<ESDClass> entityList = new ArrayList<>();
+        for (JavaSrcBean srcBean : allEntityList) {
+            String className = srcBean.getClassName();
+            try {
+                if (!badClassNames.contains(className)) {
+                    Class clazz = ClassUtility.loadClass(className);
+                    ESDEntity entity = (ESDEntity) clazz.getAnnotation(ESDEntity.class);
+                    if (entity != null) {
+                        ESDClass esdClass = BuildFactory.getInstance().getClassManager().getRepositoryClass(className, true);
+                        if (!entityList.contains(esdClass)) {
+                            entityList.add(esdClass);
+                        }
+
+                    }
+                }
+            } catch (Throwable e) {
+                badClassNames.add(className);
+                logger.warn(e.getMessage());
+            }
+        }
+        return entityList;
+    }
+
+
+    @JSONField(serialize = false)
     public List<ESDClass> getAggBeans(UserSpace userSpace, AggregationType aggregationType) {
         List<JavaSrcBean> repositoryList = this.getRepositoryInst().getJavaEntities();
         List<JavaSrcBean> allEntityList = new ArrayList<>();
@@ -208,26 +212,37 @@ public class RepositoryInst extends DSMInst implements Comparable<RepositoryInst
         List<ESDClass> entityList = new ArrayList<>();
         for (JavaSrcBean srcBean : allEntityList) {
             String className = srcBean.getClassName();
-            try {
-                Class clazz = ClassUtility.loadClass(className);
-                if (clazz != null) {
-                    Aggregation aggregation = (Aggregation) clazz.getAnnotation(Aggregation.class);
-                    if (aggregation != null && aggregation.rootClass() != null && (aggregationType == null || aggregation.type().equals(aggregationType))) {
-                        if (aggregation.userSpace().length == 0 || userSpace == null || Arrays.asList(aggregation.userSpace()).contains(userSpace)) {
-                            ESDClass esdClass = BuildFactory.getInstance().getClassManager().getRepositoryClass(className, true);
-                            if (!entityList.contains(esdClass)) {
-                                entityList.add(esdClass);
+            if (!badClassNames.contains(className)) {
+                try {
+                    Class clazz = ClassUtility.loadClass(className);
+                    if (clazz != null) {
+                        Aggregation aggregation = (Aggregation) clazz.getAnnotation(Aggregation.class);
+                        if (aggregation != null && aggregation.rootClass() != null && (aggregationType == null || aggregation.type().equals(aggregationType))) {
+                            if (aggregation.userSpace().length == 0 || userSpace == null || Arrays.asList(aggregation.userSpace()).contains(userSpace)) {
+                                ESDClass esdClass = BuildFactory.getInstance().getClassManager().getRepositoryClass(className, true);
+                                if (!entityList.contains(esdClass)) {
+                                    entityList.add(esdClass);
+                                }
                             }
                         }
                     }
-                }
 
-            } catch (Throwable e) {
-                logger.warn(e.getMessage());
+                } catch (Throwable e) {
+                    badClassNames.add(className);
+                    logger.warn(e.getMessage());
+                }
             }
         }
         return entityList;
 
+    }
+
+    public Set<String> getBadClassNames() {
+        return badClassNames;
+    }
+
+    public void setBadClassNames(Set<String> badClassNames) {
+        this.badClassNames = badClassNames;
     }
 
     public String getSchema() {

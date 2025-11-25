@@ -229,18 +229,22 @@ public class DomainInst extends DSMInst implements Comparable<DomainInst> {
         for (JavaSrcBean srcBean : domainBeanList) {
             Class clazz = null;
             String className = srcBean.getClassName();
-            try {
-                clazz = ClassUtility.loadClass(className);
-                if (clazz != null) {
-                    Aggregation aggregation = (Aggregation) clazz.getAnnotation(Aggregation.class);
-                    if (aggregation != null && aggregation.rootClass() != null && aggregation.type().equals(aggregationType)) {
-                        ESDClass serviceClass = BuildFactory.getInstance().getClassManager().getAggEntityByName(className, true);
-                        aggBeans.add(serviceClass);
+            if (!badClassNames.contains(className)) {
+                try {
+                    clazz = ClassUtility.loadClass(className);
+                    if (clazz != null) {
+                        Aggregation aggregation = (Aggregation) clazz.getAnnotation(Aggregation.class);
+                        if (aggregation != null && aggregation.rootClass() != null && aggregation.type().equals(aggregationType)) {
+                            ESDClass serviceClass = BuildFactory.getInstance().getClassManager().getAggEntityByName(className, true);
+                            aggBeans.add(serviceClass);
+                        }
                     }
+                } catch (Throwable e) {
+                    this.badClassNames.add(className);
+                    log.warn(e);
                 }
-            } catch (Throwable e) {
-                log.warn(e);
             }
+
         }
 
         for (ESDClass esdClass : aggBeans) {
