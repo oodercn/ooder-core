@@ -136,10 +136,6 @@ public class CustomEChartFieldBean extends BaseWidgetBean<CustomEChartViewBean, 
         return AnnotationUtil.toAnnotationStr(this);
     }
 
-    @Override
-    public CustomEChartViewBean getViewBean() {
-        return viewBean;
-    }
 
 
     @Override

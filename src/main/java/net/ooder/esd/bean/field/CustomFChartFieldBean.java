@@ -177,14 +177,6 @@ public class CustomFChartFieldBean extends BaseWidgetBean<CustomFChartViewBean, 
         return AnnotationUtil.toAnnotationStr(this);
     }
 
-    @Override
-    public CustomFChartViewBean getViewBean() {
-        return viewBean;
-    }
-
-    public void setViewBean(CustomFChartViewBean viewBean) {
-        this.viewBean = viewBean;
-    }
 
     @Override
     public ComponentType getComponentType() {

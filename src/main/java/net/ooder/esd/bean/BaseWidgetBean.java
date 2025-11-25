@@ -3,7 +3,6 @@ package net.ooder.esd.bean;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
 import net.ooder.common.JDSException;
-import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.ui.AppendType;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.dsm.BuildFactory;
@@ -42,28 +41,66 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
 
     public String euClassName;
 
+    ModuleProperties moduleProperties;
+
     @JSONField(serialize = false)
     AggRootBuild fieldRootBuild;
 
     public String xpath;
 
-
     public abstract T createViewBean(ModuleComponent currModuleComponent, M component);
 
 
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, M component) {
+    public List<JavaSrcBean> build() throws JDSException {
         List<JavaSrcBean> allSrc = new ArrayList<>();
+        AggRootBuild fieldRootBuild = getFieldRootBuild();
+        if (fieldRootBuild.getAggServiceRootBean().isEmpty() || fieldRootBuild.getRepositorySrcList().isEmpty() || fieldRootBuild.getViewSrcList().isEmpty()) {
+            List<JavaGenSource> serviceList = fieldRootBuild.build();
+            if (serviceList.size() > 0) {
+                viewBean = (T) fieldRootBuild.getCustomViewBean();
+                viewBean.getModuleBean().reBindMethod(viewBean.getMethodConfig());
+                DSMFactory.getInstance().saveCustomViewBean(viewBean);
+            }
+        } else {
+            allSrc.addAll(fieldRootBuild.getAllSrcBean());
+        }
+        return allSrc;
+    }
+
+    public AggRootBuild getFieldRootBuild() throws JDSException {
+        if (fieldRootBuild == null) {
+            if (viewBean==null){
+                viewBean = genViewBean();
+            }
+            fieldRootBuild = BuildFactory.getInstance().getAggRootBuild(viewBean, euClassName, null);
+        }
+        return fieldRootBuild;
+    }
+
+
+    public AggRootBuild initAggRootBuild(ModuleComponent parentModuleComponent, M component) throws JDSException {
         this.initProperties(component);
         if (parentModuleComponent == null) {
             parentModuleComponent = component.getModuleComponent();
         }
-        this.component = component;
+        this.component = (M) component.clone();
         String realPath = this.getFieldRealPath(parentModuleComponent, component);
         this.setXpath(realPath);
         String parentModuleClassName = parentModuleComponent.getClassName();
         String packageName = parentModuleClassName.substring(0, parentModuleClassName.lastIndexOf(".")).toLowerCase();
         String moduleName = parentModuleClassName.substring(parentModuleClassName.lastIndexOf(".") + 1).toLowerCase();
         String simClass = OODUtil.formatJavaName(component.getAlias(), true);
+        ModuleProperties parentModuleProperties = parentModuleComponent.getProperties();
+        DSMProperties dsmProperties = new DSMProperties();
+        dsmProperties.setSourceClassName(parentModuleComponent.getClassName());
+        DSMProperties parentDsmProperties = parentModuleProperties.getDsmProperties();
+        if (parentDsmProperties != null) {
+            dsmProperties.setDomainId(parentDsmProperties.getDomainId());
+        }
+        dsmProperties.setRealPath(this.getXpath());
+        this.moduleProperties = new ModuleProperties();
+        moduleProperties.setMethodName(OODUtil.getGetMethodName(component.getAlias()));
+        moduleProperties.setDsmProperties(dsmProperties);
         Properties properties = component.getProperties();
         if (euClassName == null) {
             try {
@@ -75,7 +112,6 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
                 //   e.printStackTrace();
             }
         }
-
         if (euClassName == null) {
             String simPack = packageName;
             if (!moduleName.toLowerCase().equals(simClass.toLowerCase())) {
@@ -84,47 +120,24 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
             euClassName = simPack.toLowerCase() + "." + simClass;
         }
 
-        if (!euClassName.equals(parentModuleComponent.getClassName())) {
-            ModuleProperties parentModuleProperties = parentModuleComponent.getProperties();
-            DSMProperties dsmProperties = new DSMProperties();
-            dsmProperties.setSourceClassName(parentModuleComponent.getClassName());
-            ModuleProperties moduleProperties = new ModuleProperties();
-            moduleProperties.setMethodName(OODUtil.getGetMethodName(component.getAlias()));
-            moduleProperties.setDsmProperties(dsmProperties);
-            DSMProperties parentDsmProperties = parentModuleProperties.getDsmProperties();
-            if (parentDsmProperties != null) {
-                dsmProperties.setDomainId(parentDsmProperties.getDomainId());
-            }
-            dsmProperties.setRealPath(realPath);
-            ModuleComponent currModuleComponent = new ModuleComponent(component);
-            currModuleComponent.setProperties(moduleProperties);
-            currModuleComponent.setClassName(euClassName);
-            viewBean = this.createViewBean(currModuleComponent, component);
-            viewBean.setComponent(component);
-            Class euClass = null;
-            try {
-                euClass = ClassUtility.loadClass(euClassName);
-            } catch (ClassNotFoundException ee) {
+        if (viewBean==null){
+            viewBean=  genViewBean();
+        }
+        fieldRootBuild = BuildFactory.getInstance().getAggRootBuild(viewBean, euClassName, null);
 
+        return fieldRootBuild;
+    }
+
+
+    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, M component) {
+        List<JavaSrcBean> allSrc = new ArrayList<>();
+        try {
+            initAggRootBuild(parentModuleComponent, component);
+            if (!euClassName.equals(parentModuleComponent.getClassName())) {
+                allSrc.addAll(build());
             }
-            try {
-                if (euClass == null || viewBean.getBindService() == null || viewBean.getBindService().equals(Void.class)) {
-                    CustomModuleBean customModuleBean = new CustomModuleBean(currModuleComponent);
-                    fieldRootBuild = this.getFieldRootBuild();
-                    if (fieldRootBuild.getAggServiceRootBean().isEmpty() || fieldRootBuild.getRepositorySrcList().isEmpty() || fieldRootBuild.getViewSrcList().isEmpty()) {
-                        List<JavaGenSource> serviceList = fieldRootBuild.build();
-                        if (serviceList.size() > 0) {
-                            viewBean = (T) fieldRootBuild.getCustomViewBean();
-                            customModuleBean.reBindMethod(viewBean.getMethodConfig());
-                            DSMFactory.getInstance().saveCustomViewBean(viewBean);
-                        }
-                    } else {
-                        allSrc.addAll(fieldRootBuild.getAllSrcBean());
-                    }
-                }
-            } catch (JDSException e) {
-                e.printStackTrace();
-            }
+        } catch (JDSException e) {
+            e.printStackTrace();
         }
         return allSrc;
     }
@@ -132,23 +145,15 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
     @JSONField(serialize = false)
     public List<JavaSrcBean> getJavaSrcBeans() {
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
-        if (viewBean != null) {
+        if (viewBean==null){
+            viewBean=  genViewBean();
+        }
+        if (viewBean!= null) {
             javaSrcBeans.addAll(viewBean.getAllJavaSrc());
         }
         return javaSrcBeans;
     }
 
-
-    public AggRootBuild getFieldRootBuild()  throws JDSException{
-        if (fieldRootBuild == null) {
-            fieldRootBuild = BuildFactory.getInstance().getAggRootBuild(viewBean, euClassName, null);
-        }
-        return fieldRootBuild;
-    }
-
-    public void setFieldRootBuild(AggRootBuild fieldRootBuild) {
-        this.fieldRootBuild = fieldRootBuild;
-    }
 
     @Override
     @JSONField(serialize = false)
@@ -174,7 +179,19 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
     }
 
 
-    @Override
+    public T genViewBean() {
+        if (viewBean == null && component != null) {
+            ModuleComponent currModuleComponent = new ModuleComponent(component);
+            CustomModuleBean customModuleBean = new CustomModuleBean(currModuleComponent);
+            currModuleComponent.setProperties(moduleProperties);
+            currModuleComponent.setClassName(euClassName);
+            viewBean = this.createViewBean(currModuleComponent, component);
+            viewBean.setModuleBean(customModuleBean);
+            viewBean.setComponent(component);
+        }
+        return viewBean;
+    }
+
     public T getViewBean() {
         return viewBean;
     }
@@ -185,6 +202,18 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
 
     public void setBindService(Class bindService) {
         this.bindService = bindService;
+    }
+
+    public ModuleProperties getModuleProperties() {
+        return moduleProperties;
+    }
+
+    public void setModuleProperties(ModuleProperties moduleProperties) {
+        this.moduleProperties = moduleProperties;
+    }
+
+    public void setFieldRootBuild(AggRootBuild fieldRootBuild) {
+        this.fieldRootBuild = fieldRootBuild;
     }
 
     protected String getFieldRealPath(ModuleComponent moduleComponent, Component component) {
@@ -210,7 +239,10 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
     @JSONField(serialize = false)
     public List<CustomBean> getFieldAnnotationBeans() {
         List<CustomBean> annotationBeans = new ArrayList<>();
-        if (this.getViewBean() != null && this.getViewBean().getModuleViewType().getAppendType().equals(AppendType.append)) {
+        if (viewBean==null){
+            viewBean=genViewBean();
+        }
+        if (viewBean != null && viewBean.getModuleViewType().getAppendType().equals(AppendType.append)) {
             annotationBeans.add(this);
         }
         return annotationBeans;

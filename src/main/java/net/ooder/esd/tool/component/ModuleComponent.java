@@ -158,10 +158,22 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
     }
 
+    public ModuleComponent(M currComponent, ModuleProperties properties) {
+        super(ComponentType.MODULE);
+        this.properties = properties;
+        init(currComponent);
+    }
 
     public ModuleComponent(M currComponent) {
         super(ComponentType.MODULE);
         this.properties = new ModuleProperties();
+        init(currComponent);
+
+    }
+
+    void init(M currComponent) {
+
+
         if (components == null) {
             components = new HashMap<String, Component>();
         }
@@ -171,7 +183,6 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         blockComponent.addChildren(currComponent);
         this.addChildren(blockComponent);
         this.setCurrComponent(currComponent);
-
     }
 
 

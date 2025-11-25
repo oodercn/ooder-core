@@ -275,11 +275,6 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
             if (viewConfig != null) {
                 this.setServiceClassName(viewConfig.getSourceClassName());
                 this.setMethodName(viewConfig.getSourceMethodName());
-//                try {
-//                    DSMFactory.getInstance().saveCustomViewBean(viewConfig);
-//                } catch (JDSException e) {
-//                    e.printStackTrace();
-//                }
             }
         }
 
@@ -1051,7 +1046,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
         return methodRoot;
     }
 
-
+    @JSONField(serialize = false)
     public List<JavaSrcBean> getAllJavaSrcBeans() {
         List<JavaSrcBean> allJavaSrc = new ArrayList<>();
         allJavaSrc.addAll(javaSrcBeans);
@@ -1074,6 +1069,30 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
             }
         }
         return allJavaSrc;
+    }
+
+    public Component getComponent() {
+        return component;
+    }
+
+    public void setComponent(Component component) {
+        this.component = component;
+    }
+
+    public List<JavaSrcBean> getJavaSrcBeans() {
+        return javaSrcBeans;
+    }
+
+    public void setEsdField(ESDField esdField) {
+        this.esdField = esdField;
+    }
+
+    public DBFieldBean getDbFieldBean() {
+        return dbFieldBean;
+    }
+
+    public void setDbFieldBean(DBFieldBean dbFieldBean) {
+        this.dbFieldBean = dbFieldBean;
     }
 
     public void setJavaSrcBeans(List<JavaSrcBean> javaSrcBeans) {

@@ -203,7 +203,6 @@ public class GenTabsChildModule implements Callable<AggRootBuild> {
 
     protected CustomModuleBean createModuleBean(ModuleComponent cmoduleComponent) {
         CustomModuleBean cModuleBean = new CustomModuleBean(cmoduleComponent);
-
         cModuleBean.reBindMethod(cmoduleComponent.getMethodAPIBean());
         cmoduleComponent.setModuleBean(cModuleBean);
         Component childComponent = cmoduleComponent.getCurrComponent();

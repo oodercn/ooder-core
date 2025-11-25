@@ -1228,6 +1228,10 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         this.moduleBean = moduleBean;
     }
 
+    public void updateModule(CustomModuleBean moduleBean) {
+        this.moduleBean = moduleBean;
+    }
+
     public void setImageClass(String imageClass) {
         this.imageClass = imageClass;
     }

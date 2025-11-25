@@ -125,9 +125,6 @@ public class CustomGridFieldBean extends BaseWidgetBean<CustomGridViewBean, Tree
         return AnnotationUtil.fillBean(annotation, this);
     }
 
-    @Override
-    public CustomGridViewBean getViewBean() {
-        return viewBean;
-    }
+
 
 }
