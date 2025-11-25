@@ -127,50 +127,17 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         }
     }
 
-
-    public List<GenFormChildModule> createTasks(ModuleComponent moduleComponent, List<Component> components) {
-        List<GenFormChildModule> tasks = new ArrayList<GenFormChildModule>();
-
-        int index = 0;
-        if (components != null) {
-            for (Component component : components) {
-                FieldFormConfig config = findFieldByCom(component);
-                CustomFieldBean customFieldBean = config.createCustomBean();
-                customFieldBean.setIndex(index);
-                index++;
-                ComponentType componentType = ComponentType.fromType(component.getKey());
-                if (componentType.isBar()) {
-                    genBar(moduleComponent, component);
-                } else if (Arrays.asList(ComponentType.getCustomAPIComponents()).contains(componentType)) {
-                    genAPI(moduleComponent, component);
-                } else if (!skipType(component)) {
-                    GenFormChildModule genChildModule = null;
-                    if (component.getChildren() != null && component.getChildren().size() == 1 && componentType.equals(ComponentType.BLOCK)) {
-                        component = component.getChildren().get(0);
-                        if (component instanceof ModuleComponent) {
-                            if (((ModuleComponent) component).getCurrComponent() != null) {
-                                component = ((ModuleComponent) component).getCurrComponent().clone();
-                                genChildModule = new GenFormChildModule(moduleComponent, component, config);
-                            }
-                        } else {
-                            genChildModule = new GenFormChildModule(moduleComponent, component, config);
-                        }
-                    }
-                    if (genChildModule == null) {
-                        genChildModule = new GenFormChildModule(moduleComponent, component, config);
-                    }
-                    if (genChildModule != null) {
-                        tasks.add(genChildModule);
-                    }
-                }
-            }
+    public FieldFormConfig buildField(ModuleComponent moduleComponent, Component component) {
+        FieldFormConfig fieldFormConfig = null;
+        List<GenFormChildModule> tasks = createTasks(moduleComponent, Arrays.asList(component));
+        List<FieldFormConfig> fieldFormConfigs = buildField(tasks);
+        if (fieldFormConfigs.size() > 0) {
+            fieldFormConfig = fieldFormConfigs.get(0);
         }
-        return tasks;
+        return fieldFormConfig;
     }
 
-
-    protected List<FieldFormConfig> genChildComponent(ModuleComponent moduleComponent, List<Component> components) {
-        List<GenFormChildModule> tasks = this.createTasks(moduleComponent, components);
+    public List<FieldFormConfig> buildField(List<GenFormChildModule> tasks) {
         List<FieldFormConfig> fieldFormConfigs = new ArrayList<>();
         try {
             String taskIds = this.getXpath() + "[" + System.currentTimeMillis() + "]";
@@ -200,14 +167,54 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         return fieldFormConfigs;
     }
 
-    private void genAPI(ModuleComponent moduleComponent, Component component) {
-
-        //todo
+    public GenFormChildModule createTask(ModuleComponent moduleComponent, Component component) {
+        FieldFormConfig config = findFieldByCom(component);
+        GenFormChildModule genChildModule = null;
+        ComponentType componentType = ComponentType.fromType(component.getKey());
+        if (componentType.isBar()) {
+            genChildModule = genBar(moduleComponent, component);
+        } else if (Arrays.asList(ComponentType.getCustomAPIComponents()).contains(componentType)) {
+            genChildModule = genAPI(moduleComponent, component);
+        } else if (!skipType(component)) {
+            if (component.getChildren() != null && component.getChildren().size() == 1 && componentType.equals(ComponentType.BLOCK)) {
+                component = component.getChildren().get(0);
+                if (component instanceof ModuleComponent) {
+                    if (((ModuleComponent) component).getCurrComponent() != null) {
+                        component = ((ModuleComponent) component).getCurrComponent().clone();
+                        genChildModule = new GenFormChildModule(moduleComponent, component, config);
+                    }
+                } else {
+                    genChildModule = new GenFormChildModule(moduleComponent, component, config);
+                }
+            }
+            if (genChildModule == null) {
+                genChildModule = new GenFormChildModule(moduleComponent, component, config);
+            }
+        }
+        return genChildModule;
     }
 
-    private void genBar(ModuleComponent moduleComponent, Component component) {
-        //todo
+    public List<GenFormChildModule> createTasks(ModuleComponent moduleComponent, List<Component> components) {
+        List<GenFormChildModule> tasks = new ArrayList<GenFormChildModule>();
+        if (components != null) {
+            for (Component component : components) {
+                GenFormChildModule genChildModule = createTask(moduleComponent, component);
+                if (genChildModule != null) {
+                    tasks.add(genChildModule);
+                }
+            }
+        }
+        return tasks;
     }
+
+
+    protected List<FieldFormConfig> genChildComponent(ModuleComponent moduleComponent, List<Component> components) {
+        List<FieldFormConfig> fieldFormConfigs = new ArrayList<>();
+        List<GenFormChildModule> tasks = this.createTasks(moduleComponent, components);
+        fieldFormConfigs.addAll(this.buildField(tasks));
+        return fieldFormConfigs;
+    }
+
 
     private boolean skipType(Component child) {
         String alias = child.getAlias();
@@ -443,6 +450,17 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         return classSet;
     }
 
+
+    private GenFormChildModule genAPI(ModuleComponent moduleComponent, Component component) {
+
+        //todo
+        return null;
+    }
+
+    private GenFormChildModule genBar(ModuleComponent moduleComponent, Component component) {
+        //todo
+        return null;
+    }
 
     @Override
     public abstract ComponentType getComponentType();
