@@ -275,11 +275,11 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
             if (viewConfig != null) {
                 this.setServiceClassName(viewConfig.getSourceClassName());
                 this.setMethodName(viewConfig.getSourceMethodName());
-                try {
-                    DSMFactory.getInstance().saveCustomViewBean(viewConfig);
-                } catch (JDSException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    DSMFactory.getInstance().saveCustomViewBean(viewConfig);
+//                } catch (JDSException e) {
+//                    e.printStackTrace();
+//                }
             }
         }
 

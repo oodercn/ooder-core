@@ -651,13 +651,13 @@ public class DSMFactory {
 
     }
 
-    public void saveCustomViewAPI(CustomViewBean viewBean) throws JDSException {
-        String entityClassName = viewBean.getEntityClassName();
-        ApiClassConfig apiClassConfig = getAggregationManager().getApiClassConfig(entityClassName);
-        if (apiClassConfig != null) {
-            getAggregationManager().updateApiClassConfig(apiClassConfig);
-        }
-    }
+//    public void saveCustomViewAPI(CustomViewBean viewBean) throws JDSException {
+//        String entityClassName = viewBean.getEntityClassName();
+//        ApiClassConfig apiClassConfig = getAggregationManager().getApiClassConfig(entityClassName);
+//        if (apiClassConfig != null) {
+//            getAggregationManager().updateApiClassConfig(apiClassConfig);
+//        }
+//    }
 
     public void saveCustomViewEntity(CustomViewBean viewBean) throws JDSException {
         MethodConfig methodConfig = viewBean.getMethodConfig();

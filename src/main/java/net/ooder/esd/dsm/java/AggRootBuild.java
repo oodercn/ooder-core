@@ -123,7 +123,7 @@ public class AggRootBuild {
         if (domainInst == null) {
             domainInst = DSMFactory.getInstance().getDefaultDomain(projectName, UserSpace.VIEW);
             domainId = domainInst.getDomainId();
-        }
+    }
 
         if (domainInst != null) {
             String basePackage = domainInst.getEuPackage();
@@ -206,10 +206,10 @@ public class AggRootBuild {
         return childBeans;
     }
 
-    public void update() throws JDSException {
-        this.updateViewBean(customViewBean);
-        DSMFactory.getInstance().saveCustomViewBean(customViewBean);
-    }
+//    public void update() throws JDSException {
+//        this.updateViewBean(customViewBean);
+//        DSMFactory.getInstance().saveCustomViewBean(customViewBean);
+//    }
 
     public List<JavaGenSource> getViewSrcList() {
         List<JavaGenSource> viewClassList = new ArrayList<>();
@@ -292,7 +292,6 @@ public class AggRootBuild {
             String taskId = "voRepositoryTask[" + this.getEuClassName() + "]";
             this.voRepositoryTask = new GenRepositoryViewJava(repositoryInst.getViewRoot(), customViewBean, moduleName, euClassName, true, chrome, new RepositoryType[]{RepositoryType.VO, RepositoryType.VIEWBEAN, RepositoryType.REPOSITORY});
             BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(voRepositoryTask));
-
         }
         return voRepositoryTask.getSourceList();
     }
@@ -381,10 +380,10 @@ public class AggRootBuild {
             String taskId = className;
             rootTask = new GenAggCustomViewJava(viewRoot, customViewBean, moduleName, className, chrome);
             BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(rootTask));
-            aggServiceRoots = rootTask.getSourceList();
             GenAggCustomJava genAggCustomJava = aggregationManager.genAggMapJava(viewRoot, customViewBean, getCurrChromeDriver());
             aggBeans.addAll(genAggCustomJava.getSourceList());
         }
+        aggServiceRoots = rootTask.getSourceList();
 
 //
 //        JavaSrcBean aggRootBean = DSMFactory.getInstance().getAggregationManager().genAggViewJava(defaultViewRoot, customViewBean, getCurrChromeDriver());

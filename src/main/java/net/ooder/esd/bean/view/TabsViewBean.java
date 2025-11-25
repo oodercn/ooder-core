@@ -166,11 +166,11 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
         this.setTabItems(tabItems);
         tabsProperties.setItems(tabItems);
         this.initProperties(tabsProperties);
-        try {
-            DSMFactory.getInstance().saveCustomViewBean(this);
-        } catch (JDSException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            DSMFactory.getInstance().saveCustomViewBean(this);
+//        } catch (JDSException e) {
+//            e.printStackTrace();
+//        }
         return javaSrcBeans;
     }
 

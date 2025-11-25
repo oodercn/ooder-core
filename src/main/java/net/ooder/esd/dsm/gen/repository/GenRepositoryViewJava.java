@@ -16,13 +16,12 @@ import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
 import net.ooder.esd.dsm.enums.RangeType;
 import net.ooder.esd.dsm.enums.RepositoryType;
-import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.EsbUtil;
-
 
 import java.io.File;
 import java.util.ArrayList;
@@ -88,7 +87,7 @@ public class GenRepositoryViewJava extends GenJavaTask {
         DSMInst dsmBean = viewRoot.getDsmBean();
         GenJava javaGen = GenJava.getInstance(dsmBean.getProjectVersionName());
         ModuleViewType moduleViewType = viewBean.getModuleViewType();
-
+        JavaRoot javaRoot = BuildFactory.getInstance().buildJavaRoot(viewRoot, viewBean, moduleName, fullClassName);
         List<JavaSrcBean> srcFiles = new ArrayList<>();
         List<JavaTemp> viewTemps = BuildFactory.getInstance().getTempManager().getRepositoryCatTemps(moduleViewType.getDefaultView(), RangeType.MODULEVIEW, repositoryTypes);
         chrome.printLog("开始创建模型视图：" + fullClassName, true);
@@ -96,15 +95,12 @@ public class GenRepositoryViewJava extends GenJavaTask {
             boolean canGen = true;
             String expression = javatemp.getExpression();
             String genClassName = StringUtility.replace(javatemp.getNamePostfix(), "**", simClassName);
-            JavaRoot javaRoot = BuildFactory.getInstance().buildJavaRoot(viewRoot, viewBean, moduleName, genClassName);
             if (expression != null && !expression.equals("")) {
                 canGen = EsbUtil.parExpression(javatemp.getExpression(), JDSActionContext.getActionContext().getContext(), javaRoot, Boolean.class);
             }
             if (canGen) {
-
                 javaRoot.setClassName(genClassName);
                 String packageName = dsmBean.getPackageName();
-
                 if (!moduleName.equals("")) {
                     packageName = packageName + "." + moduleName.toLowerCase();
                 }
@@ -125,14 +121,14 @@ public class GenRepositoryViewJava extends GenJavaTask {
                 } catch (ClassNotFoundException e) {
 
                 }
-                JavaSrcBean srcBean =null;
+                JavaSrcBean srcBean = null;
                 if (clazz == null || clear) {
                     File file = javaGen.createJava(javatemp, javaRoot, chrome);
                     srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, dsmBean, javatemp.getJavaTempId());
                     srcFiles.add(srcBean);
                     dsmBean.addJavaBean(srcBean);
                 } else {
-                     srcBean = dsmBean.getJavaSrcByClassName(realClassName);
+                    srcBean = dsmBean.getJavaSrcByClassName(realClassName);
                     if (srcBean != null && srcBean.getJavaTempId() == null) {
                         srcBean.setJavaTempId(javatemp.getJavaTempId());
                     }

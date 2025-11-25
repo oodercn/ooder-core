@@ -138,7 +138,7 @@ public class GenLayoutChildModule implements Callable<AggRootBuild> {
             }
 
             cModuleBean.reBindMethod(customViewBean.getMethodConfig());
-            DSMFactory.getInstance().saveCustomViewBean(customViewBean);
+            // DSMFactory.getInstance().saveCustomViewBean(customViewBean);
         }
         return aggRootBuild;
     }

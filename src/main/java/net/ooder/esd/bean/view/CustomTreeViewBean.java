@@ -387,7 +387,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                                 BuildFactory.getInstance().syncTasks(euClassName, Arrays.asList(genViewDicJava));
                                 dicTaskMap.put(euClassName, genViewDicJava);
                             }
-                            Class dicClass = genViewDicJava.getClass();
+                            Class dicClass = genViewDicJava.getDicClass();
                             listItem.setEntityClass(dicClass);
                             this.getViewJavaSrcBean().getViewClassList().addAll(genViewDicJava.getClassList());
                             this.getViewJavaSrcBean().getViewClassList().add(dicClass.getName());
@@ -425,11 +425,11 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                                     String euClassName = packageName + "." + simClass;
                                     GenViewDicJava genViewDicJava = dicTaskMap.get(euClassName);
                                     if (genViewDicJava == null) {
-                                        genViewDicJava = new GenViewDicJava(domainInst.getViewInst(), module.toLowerCase(), listItem.getSub(), euClassName, null);
+                                        genViewDicJava = new GenViewDicJava(domainInst.getViewInst(), module.toLowerCase(), enumItems, euClassName, null);
                                         BuildFactory.getInstance().syncTasks(euClassName, Arrays.asList(genViewDicJava));
                                         dicTaskMap.put(euClassName, genViewDicJava);
                                     }
-                                    Class dicClass = genViewDicJava.getClass();
+                                    Class dicClass = genViewDicJava.getDicClass();
                                     listItem.setEntityClass(dicClass);
                                     this.getViewJavaSrcBean().getViewClassList().add(dicClass.getName());
                                     listItem.setBindClass(new Class[]{dicClass});

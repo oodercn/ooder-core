@@ -521,7 +521,8 @@ public class AggregationManager {
                 domainId = getRealDomainId(className, true);
             }
             String uKey = className + "[" + domainId + "]";
-            if (!context.containsKey(uKey) && domainId != null) {
+            ApiClassConfig oapiClassConfig = (ApiClassConfig) context.get(uKey);
+            if ((oapiClassConfig == null || !oapiClassConfig.equals(apiClassConfig)) && domainId != null) {
                 String content = JSON.toJSONString(apiClassConfig);
                 apiConfigMap.put(uKey, apiClassConfig);
                 apiConfigCache.put(uKey, content);

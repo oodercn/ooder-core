@@ -189,8 +189,6 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                             }
                         }
                     }
-
-
                 }
                 service.shutdownNow();
             } catch (Exception e) {
@@ -198,11 +196,11 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
             }
         }
 
-        try {
-            DSMFactory.getInstance().saveCustomViewBean(this);
-        } catch (JDSException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            DSMFactory.getInstance().saveCustomViewBean(this,false);
+//        } catch (JDSException e) {
+//            e.printStackTrace();
+//        }
         return fieldFormConfigs;
     }
 

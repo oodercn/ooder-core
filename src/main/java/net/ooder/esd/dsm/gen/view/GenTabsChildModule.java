@@ -72,7 +72,7 @@ public class GenTabsChildModule implements Callable<AggRootBuild> {
 
     @Override
     public AggRootBuild call() throws Exception {
-        AggRootBuild aggRootBuild=null;
+        AggRootBuild aggRootBuild = null;
         JDSActionContext.setContext(autoruncontext);
         String projectName = moduleComponent.getProjectName();
         CustomModuleBean cModuleBean = null;
@@ -141,7 +141,7 @@ public class GenTabsChildModule implements Callable<AggRootBuild> {
         }
 
         if (customViewBean != null) {
-             aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, cEuClassName, projectName);
+            aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, cEuClassName, projectName);
             List<JavaGenSource> serviceList = aggRootBuild.getAggServiceRootBean();
             if (serviceList == null || serviceList.isEmpty()) {
                 serviceList = aggRootBuild.build();
@@ -156,7 +156,7 @@ public class GenTabsChildModule implements Callable<AggRootBuild> {
             }
             cModuleBean.setJavaSrcBeans(aggRootBuild.getAllSrcBean());
             cModuleBean.reBindMethod(customViewBean.getMethodConfig());
-            DSMFactory.getInstance().saveCustomViewBean(customViewBean);
+            // DSMFactory.getInstance().saveCustomViewBean(customViewBean);
         }
 
 
