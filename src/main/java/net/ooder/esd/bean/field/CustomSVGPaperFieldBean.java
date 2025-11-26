@@ -2,29 +2,30 @@ package net.ooder.esd.bean.field;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.esd.annotation.CustomClass;
-import net.ooder.esd.annotation.field.SVGPaperFieldAnnotation;
 import net.ooder.esd.annotation.Widget;
+import net.ooder.esd.annotation.field.SVGPaperFieldAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.OverflowType;
 import net.ooder.esd.bean.BaseWidgetBean;
-import net.ooder.esd.bean.view.CustomSVGPaperViewBean;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.view.CustomSVGPaperViewBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldSVGPaperComponent;
-import net.ooder.esd.tool.component.SVGPaperComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.SVGPaperComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.svg.SVGPaperProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 @CustomClass(clazz = CustomFieldSVGPaperComponent.class,
         viewType = CustomViewType.COMPONENT,
         moduleType = ModuleViewType.SVGPAPERCONFIG,
@@ -52,14 +53,19 @@ public class CustomSVGPaperFieldBean extends BaseWidgetBean<CustomSVGPaperViewBe
     Boolean scaleChildren;
 
 
-
     public CustomSVGPaperFieldBean(SVGPaperComponent component) {
         update(null, component);
     }
 
 
     public CustomSVGPaperFieldBean(ModuleComponent parentModuleComponent, SVGPaperComponent component) {
-        update(parentModuleComponent, component);
+        if (component != null) {
+            this.updateFieldBean(component);
+        }
+        if (component.getChildren().size() > 0) {
+            update(parentModuleComponent, component);
+        }
+
     }
 
 
@@ -89,7 +95,13 @@ public class CustomSVGPaperFieldBean extends BaseWidgetBean<CustomSVGPaperViewBe
 
     public CustomSVGPaperFieldBean(MethodConfig methodConfig) {
         viewBean = (CustomSVGPaperViewBean) methodConfig.getView();
-        init(AnnotationUtil.getAllAnnotations(methodConfig.getMethod(),true));
+        init(AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true));
+    }
+
+    private void updateFieldBean(SVGPaperComponent component) {
+        if (component != null) {
+            this.initProperties(component.getProperties());
+        }
     }
 
     void init(Set<Annotation> annotations) {

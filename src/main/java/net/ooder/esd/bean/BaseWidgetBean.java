@@ -69,7 +69,7 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
 
     public AggRootBuild getFieldRootBuild() throws JDSException {
         if (fieldRootBuild == null) {
-            if (viewBean==null){
+            if (viewBean == null) {
                 viewBean = genViewBean();
             }
             fieldRootBuild = BuildFactory.getInstance().getAggRootBuild(viewBean, euClassName, null);
@@ -83,7 +83,7 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
         if (parentModuleComponent == null) {
             parentModuleComponent = component.getModuleComponent();
         }
-        this.component = (M) component.clone();
+        this.component = component;
         String realPath = this.getFieldRealPath(parentModuleComponent, component);
         this.setXpath(realPath);
         String parentModuleClassName = parentModuleComponent.getClassName();
@@ -120,8 +120,8 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
             euClassName = simPack.toLowerCase() + "." + simClass;
         }
 
-        if (viewBean==null){
-            viewBean=  genViewBean();
+        if (viewBean == null) {
+            viewBean = genViewBean();
         }
         fieldRootBuild = BuildFactory.getInstance().getAggRootBuild(viewBean, euClassName, null);
 
@@ -132,6 +132,7 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
     public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, M component) {
         List<JavaSrcBean> allSrc = new ArrayList<>();
         try {
+
             initAggRootBuild(parentModuleComponent, component);
             if (!euClassName.equals(parentModuleComponent.getClassName())) {
                 allSrc.addAll(build());
@@ -145,10 +146,10 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
     @JSONField(serialize = false)
     public List<JavaSrcBean> getJavaSrcBeans() {
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
-        if (viewBean==null){
-            viewBean=  genViewBean();
+        if (viewBean == null) {
+            viewBean = genViewBean();
         }
-        if (viewBean!= null) {
+        if (viewBean != null) {
             javaSrcBeans.addAll(viewBean.getAllJavaSrc());
         }
         return javaSrcBeans;
@@ -239,8 +240,8 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
     @JSONField(serialize = false)
     public List<CustomBean> getFieldAnnotationBeans() {
         List<CustomBean> annotationBeans = new ArrayList<>();
-        if (viewBean==null){
-            viewBean=genViewBean();
+        if (viewBean == null) {
+            viewBean = genViewBean();
         }
         if (viewBean != null && viewBean.getModuleViewType().getAppendType().equals(AppendType.append)) {
             annotationBeans.add(this);

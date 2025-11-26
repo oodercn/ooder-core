@@ -2,26 +2,27 @@ package net.ooder.esd.bean.field;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.esd.annotation.CustomClass;
-import net.ooder.esd.annotation.field.PanelFieldAnnotation;
 import net.ooder.esd.annotation.Widget;
+import net.ooder.esd.annotation.field.PanelFieldAnnotation;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.BaseWidgetBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomPanelFormViewBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldPanelComponent;
-import net.ooder.esd.tool.component.PanelComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.PanelComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.PanelProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 @CustomClass(clazz = CustomFieldPanelComponent.class,
         viewType = CustomViewType.COMPONENT,
         moduleType = ModuleViewType.PANELCONFIG,
@@ -30,15 +31,32 @@ import java.util.Set;
 @AnnotationType(clazz = PanelFieldAnnotation.class)
 public class CustomPanelFieldBean extends BaseWidgetBean<CustomPanelFormViewBean, PanelComponent<PanelProperties>> {
 
-    BorderType borderType;
-    Boolean resizer;
-    Map<String, Object> resizerProp;
-    String sideBarCaption;
-    String sideBarType;
-    SideBarStatusType sideBarStatus;
-    String sideBarSize;
-    String background;
+
     Dock dock;
+
+    String caption;
+
+    String html;
+
+    String image;
+
+    ImagePos imagePos;
+
+    String imageBgSiz;
+
+    String imageClass;
+
+    String iconFontCode;
+
+    BorderType borderType;
+
+    boolean noFrame;
+
+    HAlignType hAlign;
+
+    ToggleIconType toggleIcon;
+
+    boolean toggle;
 
     public CustomPanelFieldBean() {
 
@@ -50,12 +68,15 @@ public class CustomPanelFieldBean extends BaseWidgetBean<CustomPanelFormViewBean
 
     public CustomPanelFieldBean(MethodConfig methodConfig) {
         viewBean = (CustomPanelFormViewBean) methodConfig.getView();
-        init(AnnotationUtil.getAllAnnotations(methodConfig.getMethod(),true));
+        init(AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true));
     }
 
 
     public CustomPanelFieldBean(ModuleComponent parentModuleComponent, PanelComponent component) {
-        this.update(parentModuleComponent, component);
+        updateFieldBean(component);
+        if (component.getChildren().size() > 0) {
+            this.update(parentModuleComponent, component);
+        }
     }
 
     public CustomPanelFieldBean(PanelComponent component) {
@@ -76,6 +97,28 @@ public class CustomPanelFieldBean extends BaseWidgetBean<CustomPanelFormViewBean
                 widgetBean = new CustomWidgetBean((Widget) annotation);
             }
         }
+
+    }
+
+
+    private void updateFieldBean(PanelComponent<PanelProperties> panelComponent) {
+        if (panelComponent != null) {
+            PanelProperties panelProperties = panelComponent.getProperties();
+            this.dock = panelProperties.getDock();
+            this.caption = panelProperties.getCaption();
+            this.html = panelProperties.getHtml();
+            this.image = panelProperties.getImage();
+            this.imagePos = panelProperties.getImagePos();
+            this.imageBgSiz = panelProperties.getImageBgSize();
+            this.iconFontCode = panelProperties.getIconFontCode();
+            this.borderType = panelProperties.getBorderType();
+            this.noFrame = panelProperties.getNoFrame();
+            this.hAlign = panelProperties.gethAlign();
+            this.toggleIcon = panelProperties.getToggleIcon();
+            this.toggle = panelProperties.getToggle();
+
+        }
+
 
     }
 
@@ -111,17 +154,103 @@ public class CustomPanelFieldBean extends BaseWidgetBean<CustomPanelFormViewBean
 
     }
 
+    public String getCaption() {
+        return caption;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    public String getHtml() {
+        return html;
+    }
+
+    public void setHtml(String html) {
+        this.html = html;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public ImagePos getImagePos() {
+        return imagePos;
+    }
+
+    public void setImagePos(ImagePos imagePos) {
+        this.imagePos = imagePos;
+    }
+
+    public String getImageBgSiz() {
+        return imageBgSiz;
+    }
+
+    public void setImageBgSiz(String imageBgSiz) {
+        this.imageBgSiz = imageBgSiz;
+    }
+
+    public String getImageClass() {
+        return imageClass;
+    }
+
+    public void setImageClass(String imageClass) {
+        this.imageClass = imageClass;
+    }
+
+    public String getIconFontCode() {
+        return iconFontCode;
+    }
+
+    public void setIconFontCode(String iconFontCode) {
+        this.iconFontCode = iconFontCode;
+    }
+
+    public boolean isNoFrame() {
+        return noFrame;
+    }
+
+    public void setNoFrame(boolean noFrame) {
+        this.noFrame = noFrame;
+    }
+
+    public HAlignType gethAlign() {
+        return hAlign;
+    }
+
+    public void sethAlign(HAlignType hAlign) {
+        this.hAlign = hAlign;
+    }
+
+    public ToggleIconType getToggleIcon() {
+        return toggleIcon;
+    }
+
+    public void setToggleIcon(ToggleIconType toggleIcon) {
+        this.toggleIcon = toggleIcon;
+    }
+
+    public boolean isToggle() {
+        return toggle;
+    }
+
+    public void setToggle(boolean toggle) {
+        this.toggle = toggle;
+    }
+
     @Override
     public ComponentType getComponentType() {
         return ComponentType.PANEL;
     }
 
 
-
     public CustomPanelFormViewBean getViewBean() {
         return viewBean;
     }
-
 
 
     public BorderType getBorderType() {
@@ -130,62 +259,6 @@ public class CustomPanelFieldBean extends BaseWidgetBean<CustomPanelFormViewBean
 
     public void setBorderType(BorderType borderType) {
         this.borderType = borderType;
-    }
-
-    public Boolean getResizer() {
-        return resizer;
-    }
-
-    public void setResizer(Boolean resizer) {
-        this.resizer = resizer;
-    }
-
-    public Map<String, Object> getResizerProp() {
-        return resizerProp;
-    }
-
-    public void setResizerProp(Map<String, Object> resizerProp) {
-        this.resizerProp = resizerProp;
-    }
-
-    public String getSideBarCaption() {
-        return sideBarCaption;
-    }
-
-    public void setSideBarCaption(String sideBarCaption) {
-        this.sideBarCaption = sideBarCaption;
-    }
-
-    public String getSideBarType() {
-        return sideBarType;
-    }
-
-    public void setSideBarType(String sideBarType) {
-        this.sideBarType = sideBarType;
-    }
-
-    public SideBarStatusType getSideBarStatus() {
-        return sideBarStatus;
-    }
-
-    public void setSideBarStatus(SideBarStatusType sideBarStatus) {
-        this.sideBarStatus = sideBarStatus;
-    }
-
-    public String getSideBarSize() {
-        return sideBarSize;
-    }
-
-    public void setSideBarSize(String sideBarSize) {
-        this.sideBarSize = sideBarSize;
-    }
-
-    public String getBackground() {
-        return background;
-    }
-
-    public void setBackground(String background) {
-        this.background = background;
     }
 
     public Dock getDock() {

@@ -2,27 +2,28 @@ package net.ooder.esd.bean.field;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
+import net.ooder.esd.annotation.Widget;
 import net.ooder.esd.annotation.field.BlockFieldAnnotation;
 import net.ooder.esd.annotation.ui.*;
-import net.ooder.esd.annotation.Widget;
 import net.ooder.esd.bean.BaseWidgetBean;
-import net.ooder.esd.bean.view.CustomBlockFormViewBean;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.view.CustomBlockFormViewBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldBlockComponent;
 import net.ooder.esd.tool.component.BlockComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.BlockProperties;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 @CustomClass(clazz = CustomFieldBlockComponent.class,
         viewType = CustomViewType.COMPONENT,
         moduleType = ModuleViewType.BLOCKCONFIG,
@@ -55,12 +56,16 @@ public class CustomBlockFieldBean extends BaseWidgetBean<CustomBlockFormViewBean
 
     public CustomBlockFieldBean(MethodConfig methodConfig) {
         viewBean = (CustomBlockFormViewBean) methodConfig.getView();
-        init(AnnotationUtil.getAllAnnotations(methodConfig.getMethod(),true));
+        init(AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true));
     }
 
 
     public CustomBlockFieldBean(ModuleComponent parentModuleComponent, BlockComponent component) {
-        this.update(parentModuleComponent, component);
+        updateFieldBean(component);
+        if (component.getChildren().size() > 0) {
+            this.update(parentModuleComponent, component);
+        }
+
     }
 
 
@@ -129,7 +134,6 @@ public class CustomBlockFieldBean extends BaseWidgetBean<CustomBlockFormViewBean
         updateFieldBean(component);
         return viewBean;
     }
-
 
 
     private void updateFieldBean(BlockComponent blockComponent) {

@@ -2,29 +2,30 @@ package net.ooder.esd.bean.field;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.esd.annotation.CustomClass;
-import net.ooder.esd.annotation.field.DivFieldAnnotation;
 import net.ooder.esd.annotation.Widget;
+import net.ooder.esd.annotation.field.DivFieldAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.OverflowType;
 import net.ooder.esd.bean.BaseWidgetBean;
-import net.ooder.esd.bean.view.CustomDivFormViewBean;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.view.CustomDivFormViewBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldDivComponent;
 import net.ooder.esd.tool.component.DivComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.DivProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 @CustomClass(clazz = CustomFieldDivComponent.class,
         viewType = CustomViewType.COMPONENT,
         moduleType = ModuleViewType.DIVCONFIG,
@@ -46,7 +47,11 @@ public class CustomDivFieldBean extends BaseWidgetBean<CustomDivFormViewBean, Di
 
     public CustomDivFieldBean(ModuleComponent parentModuleComponent, DivComponent component) {
         AnnotationUtil.fillDefaultValue(DivFieldAnnotation.class, this);
-       this.update(parentModuleComponent, component);
+        updateFieldBean(component);
+        if (component.getChildren().size() > 0) {
+            this.update(parentModuleComponent, component);
+        }
+
     }
 
     public CustomDivFieldBean(DivComponent component) {
@@ -57,7 +62,7 @@ public class CustomDivFieldBean extends BaseWidgetBean<CustomDivFormViewBean, Di
 
     public CustomDivFieldBean(MethodConfig methodConfig) {
         viewBean = (CustomDivFormViewBean) methodConfig.getView();
-        initAnnotations(AnnotationUtil.getAllAnnotations(methodConfig.getMethod(),true).toArray(new Annotation[]{}));
+        initAnnotations(AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true).toArray(new Annotation[]{}));
     }
 
 

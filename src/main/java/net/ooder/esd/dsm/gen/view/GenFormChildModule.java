@@ -7,7 +7,6 @@ import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.server.context.MinServerActionContextImpl;
-import net.ooder.server.httpproxy.core.HttpRequest;
 import ognl.OgnlContext;
 
 import java.util.List;
@@ -26,7 +25,7 @@ public class GenFormChildModule implements Callable<FieldFormConfig> {
         this.component = component;
         this.fieldFormConfig = fieldFormConfig;
         JDSContext context = JDSActionContext.getActionContext();
-        autoruncontext = new MinServerActionContextImpl(context.getHttpRequest(),context.getOgnlContext());
+        autoruncontext = new MinServerActionContextImpl(context.getHttpRequest(), context.getOgnlContext());
         autoruncontext.getParamMap().putAll(context.getPagectx());
         autoruncontext.getParamMap().putAll(context.getContext());
         if (context.getSessionId() != null) {
@@ -41,7 +40,7 @@ public class GenFormChildModule implements Callable<FieldFormConfig> {
     @Override
     public FieldFormConfig call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
-        javaSrcBeans= fieldFormConfig.update(moduleComponent, component);
+        javaSrcBeans = fieldFormConfig.update(moduleComponent, component);
         return fieldFormConfig;
     }
 
