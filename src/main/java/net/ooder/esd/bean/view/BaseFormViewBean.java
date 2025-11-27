@@ -184,7 +184,6 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                 if (widgetConfig == null) {
                     widgetConfig = fieldFormConfig.createDefaultWidget(componentType, moduleComponent, component);
                 }
-
                 if (widgetConfig != null && widgetConfig instanceof WidgetBean) {
                     if (component.getChildren() != null && component.getChildren().size() == 1 && componentType.equals(ComponentType.BLOCK)) {
                         component = component.getChildren().get(0);
@@ -210,16 +209,19 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
             }
         }
 
-        fieldFormConfigs.addAll(this.buildField(tasks));
+        if (tasks.size()>0){
+            fieldFormConfigs.addAll(this.buildField(tasks));
+        }
+
         return fieldFormConfigs;
     }
 
 
-    private boolean skipType(Component child) {
-        String alias = child.getAlias();
-        ComponentType componentType = ComponentType.fromType(child.getKey());
+    private boolean skipType(Component childComponent) {
+        String alias = childComponent.getAlias();
+        ComponentType componentType = ComponentType.fromType(childComponent.getKey());
         if (componentType.equals(ComponentType.BLOCK)) {
-            BlockComponent component = (BlockComponent) child;
+            BlockComponent component = (BlockComponent) childComponent;
             if (alias.indexOf(CustomBlockFieldBean.skipStr) > -1) {
                 return true;
             } else if (alias.endsWith(ModuleComponent.DefaultTopBoxfix)) {
@@ -233,7 +235,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
             return true;
         } else if (alias.equals(ModuleComponent.PAGECTXNAME)) {
             return true;
-        } else if (component.getProperties() instanceof AbsListProperties) {
+        } else if (childComponent.getProperties() instanceof AbsListProperties) {
             AbsListProperties listProperties = (AbsListProperties) component.getProperties();
             if (listProperties.getItems().isEmpty()) {
                 return true;
