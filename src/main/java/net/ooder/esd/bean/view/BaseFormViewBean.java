@@ -33,6 +33,7 @@ import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.item.UIItem;
+import net.ooder.esd.tool.properties.list.AbsListProperties;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.web.RemoteConnectionManager;
 import net.ooder.web.util.AnnotationUtil;
@@ -225,13 +226,18 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                 return true;
             } else if (component.getProperties().getComboType() != null) {
                 return true;
-            } else if (component.getChildren().isEmpty() && componentType.equals(ComponentType.BLOCK)) {
+            } else if (component.getChildren().isEmpty() && Arrays.asList(ComponentType.getContainerComponents()).contains(ComponentType.BLOCK)) {
                 return true;
             }
         } else if (alias.indexOf("StatusBottom") > -1) {
             return true;
         } else if (alias.equals(ModuleComponent.PAGECTXNAME)) {
             return true;
+        } else if (component.getProperties() instanceof AbsListProperties) {
+            AbsListProperties listProperties = (AbsListProperties) component.getProperties();
+            if (listProperties.getItems().isEmpty()) {
+                return true;
+            }
         }
         return false;
     }
