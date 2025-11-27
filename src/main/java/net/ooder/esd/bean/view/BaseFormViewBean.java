@@ -179,7 +179,6 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
             } else if (Arrays.asList(ComponentType.getCustomAPIComponents()).contains(componentType)) {
                 genChildModule = genAPI(moduleComponent, component);
             } else if (!skipType(component)) {
-
                 FieldComponentBean widgetConfig = fieldFormConfig.getWidgetConfig();
                 if (widgetConfig == null) {
                     widgetConfig = fieldFormConfig.createDefaultWidget(componentType, moduleComponent, component);
@@ -225,6 +224,8 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
             } else if (alias.endsWith(ModuleComponent.DefaultTopBoxfix)) {
                 return true;
             } else if (component.getProperties().getComboType() != null) {
+                return true;
+            } else if (component.getChildren().isEmpty() && componentType.equals(ComponentType.BLOCK)) {
                 return true;
             }
         } else if (alias.indexOf("StatusBottom") > -1) {

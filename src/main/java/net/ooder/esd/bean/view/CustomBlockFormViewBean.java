@@ -66,6 +66,7 @@ public class CustomBlockFormViewBean extends BaseFormViewBean {
             currComponent = (BlockComponent) moduleComponent.getMainBoxComponent();
         }
 
+
         super.updateBaseModule(moduleComponent);
         initMenuBar();
 
@@ -80,6 +81,7 @@ public class CustomBlockFormViewBean extends BaseFormViewBean {
         }
 
         List<Component> components = currComponent.getChildren();//this.cloneComponentList(currComponent.getChildren());
+
         List<FieldFormConfig> fieldFormConfigs = genChildComponent(moduleComponent, components);
         for (FieldFormConfig fieldFormConfig : fieldFormConfigs) {
             this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
