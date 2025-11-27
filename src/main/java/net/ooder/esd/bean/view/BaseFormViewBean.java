@@ -139,31 +139,34 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
 
     public List<FieldFormConfig> buildField(List<GenFormChildModule> tasks) {
         List<FieldFormConfig> fieldFormConfigs = new ArrayList<>();
-        try {
-            String taskIds = this.getXpath() + "[" + System.currentTimeMillis() + "]";
-            ExecutorService service = RemoteConnectionManager.createConntctionService(taskIds);
-            List<Future<FieldFormConfig>> futures = service.invokeAll(tasks);
-            for (Future<FieldFormConfig> resultFuture : futures) {
-                FieldFormConfig fieldFormConfig = null;
-                try {
-                    fieldFormConfig = resultFuture.get();
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                }
-                if (fieldFormConfig != null) {
-                    fieldFormConfigs.add(fieldFormConfig);
-                    if (fieldFormConfig.getWidgetConfig() != null && fieldFormConfig.getWidgetConfig() instanceof WidgetBean) {
-                        AggRootBuild build = ((WidgetBean) fieldFormConfig.getWidgetConfig()).getFieldRootBuild();
-                        if (build != null) {
-                            this.childClassNameSet.add(build.getEuClassName());
+        if (tasks.size() > 0) {
+            try {
+                String taskIds = this.getXpath() + "[" + System.currentTimeMillis() + "]";
+                ExecutorService service = RemoteConnectionManager.createConntctionService(taskIds);
+                List<Future<FieldFormConfig>> futures = service.invokeAll(tasks);
+                for (Future<FieldFormConfig> resultFuture : futures) {
+                    FieldFormConfig fieldFormConfig = null;
+                    try {
+                        fieldFormConfig = resultFuture.get();
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                    }
+                    if (fieldFormConfig != null) {
+                        fieldFormConfigs.add(fieldFormConfig);
+                        if (fieldFormConfig.getWidgetConfig() != null && fieldFormConfig.getWidgetConfig() instanceof WidgetBean) {
+                            AggRootBuild build = ((WidgetBean) fieldFormConfig.getWidgetConfig()).getFieldRootBuild();
+                            if (build != null) {
+                                this.childClassNameSet.add(build.getEuClassName());
+                            }
                         }
                     }
                 }
+                service.shutdownNow();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            service.shutdownNow();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
         return fieldFormConfigs;
     }
 
@@ -209,7 +212,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
             }
         }
 
-        if (tasks.size()>0){
+        if (tasks.size() > 0) {
             fieldFormConfigs.addAll(this.buildField(tasks));
         }
 
@@ -236,7 +239,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         } else if (alias.equals(ModuleComponent.PAGECTXNAME)) {
             return true;
         } else if (childComponent.getProperties() instanceof AbsListProperties) {
-            AbsListProperties listProperties = (AbsListProperties) component.getProperties();
+            AbsListProperties listProperties = (AbsListProperties) childComponent.getProperties();
             if (listProperties.getItems().isEmpty()) {
                 return true;
             }
