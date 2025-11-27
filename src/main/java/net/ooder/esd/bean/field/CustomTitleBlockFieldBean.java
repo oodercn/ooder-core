@@ -2,12 +2,13 @@ package net.ooder.esd.bean.field;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.ListMenu;
-import net.ooder.esd.annotation.field.TitleBlockFieldAnnotation;
 import net.ooder.esd.annotation.Widget;
+import net.ooder.esd.annotation.field.TitleBlockFieldAnnotation;
 import net.ooder.esd.annotation.ui.BorderType;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
@@ -20,20 +21,17 @@ import net.ooder.esd.bean.view.CustomTitleBlockViewBean;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.custom.component.form.field.CustomFieldTitleBlockComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
-import net.ooder.esd.tool.component.TitleBlockComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.TitleBlockComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.TitleBlockProperties;
 import net.ooder.esd.tool.properties.item.TitleBlockItem;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
 @CustomClass(clazz = CustomFieldTitleBlockComponent.class,
         moduleType = ModuleViewType.TITLEBLOCKCONFIG,
         viewType = CustomViewType.COMPONENT,
@@ -64,7 +62,7 @@ public class CustomTitleBlockFieldBean extends BaseWidgetBean<CustomTitleBlockVi
 
     public CustomTitleBlockFieldBean(MethodConfig methodConfig) {
         viewBean = (CustomTitleBlockViewBean) methodConfig.getView();
-        init(methodConfig.getCustomMethodInfo(), AnnotationUtil.getAllAnnotations(methodConfig.getMethod(),true));
+        init(methodConfig.getCustomMethodInfo(), AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true));
         if (this.customListBean.getBindClass() != null) {
             viewBean.setBindService(this.customListBean.getBindClass());
         }
@@ -77,37 +75,54 @@ public class CustomTitleBlockFieldBean extends BaseWidgetBean<CustomTitleBlockVi
 
     @Override
     public CustomTitleBlockViewBean createViewBean(ModuleComponent currModuleComponent, TitleBlockComponent component) {
+        TitleBlockProperties contentBlockProperties = component.getProperties();
+        this.initProperties(contentBlockProperties);
+
         if (viewBean == null) {
             viewBean = new CustomTitleBlockViewBean(currModuleComponent);
         } else {
             viewBean.updateModule(currModuleComponent);
         }
-        viewBean.updateContainerBean(component);
-        return viewBean;
-    }
 
-    @Override
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, TitleBlockComponent component) {
-        List<JavaSrcBean> javaSrcBeans = super.update(parentModuleComponent, component);
         if (customListBean == null) {
             customListBean = new CustomListBean();
             customListBean.setBindClass(viewBean.getBindService());
-        } else {
-            List<JavaSrcBean> srcBeanList = customListBean.update(parentModuleComponent, component);
-            javaSrcBeans.addAll(srcBeanList);
         }
-        TitleBlockProperties titleBlockProperties = component.getProperties();
-        Class<? extends Enum> enumClass = titleBlockProperties.getEnumClass();
+
+        Class<? extends Enum> enumClass = contentBlockProperties.getEnumClass();
         if (enumClass == null) {
-            this.blockItems = titleBlockProperties.getItems();
+            this.blockItems = contentBlockProperties.getItems();
         }
-        this.initProperties(component.getProperties());
+
         if (containerBean == null) {
             containerBean = new ContainerBean(component);
         } else {
             containerBean.update(component);
         }
+        viewBean.updateContainerBean(component);
+        return viewBean;
+
+    }
+
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, TitleBlockComponent component) {
+        this.component = component;
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        TitleBlockProperties listProperties = component.getProperties();
+        if (component.getChildren() != null && component.getChildren().size() > 0) {
+            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+        } else if (listProperties.getItems().size() > 0) {
+            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+            this.viewBean = genViewBean();
+        }
+        if (customListBean != null) {
+            List<JavaSrcBean> srcBeanList = customListBean.update(parentModuleComponent, component);
+            javaSrcBeans.addAll(srcBeanList);
+        }
+
         return javaSrcBeans;
+
+
     }
 
     void init(ESDField esdField, Set<Annotation> annotations) {

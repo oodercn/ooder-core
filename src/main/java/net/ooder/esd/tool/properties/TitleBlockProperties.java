@@ -7,6 +7,7 @@ import net.ooder.esd.bean.field.CustomGalleryFieldBean;
 import net.ooder.esd.bean.view.CustomTitleBlockViewBean;
 import net.ooder.esd.tool.properties.item.TitleBlockItem;
 import net.ooder.esd.tool.properties.list.AbsListProperties;
+import net.ooder.esd.tool.properties.list.AbsUIListProperties;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;

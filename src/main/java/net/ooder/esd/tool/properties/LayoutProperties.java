@@ -10,12 +10,13 @@ import net.ooder.esd.annotation.ui.NavComboType;
 import net.ooder.esd.bean.CustomLayoutItemBean;
 import net.ooder.esd.bean.view.CustomLayoutViewBean;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
+import net.ooder.esd.tool.properties.list.AbsListProperties;
 import net.ooder.esd.tool.properties.list.AbsUIListProperties;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class LayoutProperties extends AbsUIListProperties<LayoutListItem> {
+public class LayoutProperties extends AbsListProperties<LayoutListItem> {
 
 
     public LayoutType type;

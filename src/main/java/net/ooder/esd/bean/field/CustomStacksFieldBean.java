@@ -14,9 +14,13 @@ import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.StacksComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.tool.component.TabsComponent;
+import net.ooder.esd.tool.properties.list.AbsListProperties;
+import net.ooder.esd.tool.properties.list.AbsUIListProperties;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,9 +44,19 @@ public class CustomStacksFieldBean extends BaseWidgetBean<StacksViewBean, Stacks
         update(parentModuleComponent, component);
     }
 
+
+    @Override
     public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, StacksComponent component) {
+        this.initWidget(parentModuleComponent,component);
         this.initProperties(component);
-        return super.update(parentModuleComponent, component);
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        AbsListProperties listProperties= component.getProperties();
+        if (component.getChildren() != null && component.getChildren().size() > 0) {
+            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+        } else if (listProperties.getItems().size()>0){
+            this.viewBean=genViewBean();
+        }
+        return javaSrcBeans;
 
     }
 

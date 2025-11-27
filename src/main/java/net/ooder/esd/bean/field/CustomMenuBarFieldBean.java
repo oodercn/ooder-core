@@ -14,6 +14,7 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.NavMenuBarViewBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldMenubarComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.EChartComponent;
 import net.ooder.esd.tool.component.FormLayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
@@ -22,6 +23,7 @@ import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,6 +49,7 @@ public class CustomMenuBarFieldBean extends BaseWidgetBean<NavMenuBarViewBean, F
         this.update(parentModuleComponent, component);
 
     }
+
 
 
     public CustomMenuBarFieldBean(MethodConfig methodConfig, FormLayoutComponent component) {
@@ -85,7 +88,11 @@ public class CustomMenuBarFieldBean extends BaseWidgetBean<NavMenuBarViewBean, F
     }
 
     public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, FormLayoutComponent component) {
-        List<JavaSrcBean> javaSrcBeans = super.update(parentModuleComponent, component);
+        this.initWidget(parentModuleComponent,component);
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        if (component.getChildren() != null && component.getChildren().size() > 0) {
+            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+        }
         if (containerBean == null) {
             containerBean = new ContainerBean(component);
         } else {

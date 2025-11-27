@@ -11,6 +11,8 @@ import net.ooder.esd.bean.BaseWidgetBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomPanelFormViewBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldPanelComponent;
+import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.BlockComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.PanelComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
@@ -19,9 +21,7 @@ import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @CustomClass(clazz = CustomFieldPanelComponent.class,
         viewType = CustomViewType.COMPONENT,
@@ -74,9 +74,7 @@ public class CustomPanelFieldBean extends BaseWidgetBean<CustomPanelFormViewBean
 
     public CustomPanelFieldBean(ModuleComponent parentModuleComponent, PanelComponent component) {
         updateFieldBean(component);
-        if (component.getChildren().size() > 0) {
-            this.update(parentModuleComponent, component);
-        }
+       this.update(parentModuleComponent,component);
     }
 
     public CustomPanelFieldBean(PanelComponent component) {
@@ -136,6 +134,19 @@ public class CustomPanelFieldBean extends BaseWidgetBean<CustomPanelFormViewBean
     public CustomPanelFieldBean(Set<Annotation> annotations) {
         AnnotationUtil.fillDefaultValue(PanelFieldAnnotation.class, this);
         init(annotations);
+
+    }
+
+
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, PanelComponent component) {
+        this.initWidget(parentModuleComponent,component);
+        updateFieldBean(component);
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        if (component.getChildren() != null && component.getChildren().size() > 0) {
+            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+        }
+        return javaSrcBeans;
 
     }
 

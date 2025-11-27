@@ -7,13 +7,18 @@ import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.BaseWidgetBean;
+import net.ooder.esd.bean.ContainerBean;
 import net.ooder.esd.bean.view.CustomButtonViewsViewBean;
 import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldButtonViewsComponent;
 import net.ooder.esd.custom.properties.ButtonViewsListItem;
+import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.ButtonLayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.ButtonViewsComponent;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.tool.properties.ContentBlockProperties;
+import net.ooder.esd.tool.properties.list.AbsUIListProperties;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -35,6 +40,7 @@ public class CustomButtonViewsFieldBean extends BaseWidgetBean<CustomButtonViews
     }
 
     public CustomButtonViewsFieldBean(ModuleComponent parentModuleComponent, ButtonViewsComponent buttonViewsComponent) {
+
         update(parentModuleComponent, buttonViewsComponent);
     }
 
@@ -58,6 +64,19 @@ public class CustomButtonViewsFieldBean extends BaseWidgetBean<CustomButtonViews
         }
         viewBean.updateContainerBean(buttonViewsComponent);
         return viewBean;
+
+    }
+
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, ButtonViewsComponent component) {
+        this.initWidget(parentModuleComponent,component);
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        if (component.getChildren() != null && component.getChildren().size() > 0) {
+            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+        }else if (component.getProperties().getItems().size()>0){
+            this.viewBean=genViewBean();
+        }
+        return javaSrcBeans;
 
     }
 

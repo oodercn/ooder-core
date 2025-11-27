@@ -10,10 +10,8 @@ import net.ooder.esd.annotation.ui.PosType;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.view.*;
 import net.ooder.esd.custom.component.form.field.CustomFieldLayoutComponent;
-import net.ooder.esd.tool.component.Component;
-import net.ooder.esd.tool.component.ComponentList;
-import net.ooder.esd.tool.component.LayoutComponent;
-import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
@@ -41,6 +39,19 @@ public class CustomLayoutFieldBean extends BaseWidgetBean<CustomViewBean, Layout
         update(parentModuleComponent, component);
     }
 
+
+
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, LayoutComponent component) {
+        this.initWidget(parentModuleComponent,component);
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        if (component.getChildren() != null && component.getChildren().size() > 0) {
+            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+        }
+        return javaSrcBeans;
+
+    }
+
     @Override
     public CustomViewBean createViewBean(ModuleComponent currModuleComponent, LayoutComponent component) {
         List<LayoutListItem> layoutItemBeans = component.getProperties().getItems();
@@ -53,30 +64,33 @@ public class CustomLayoutFieldBean extends BaseWidgetBean<CustomViewBean, Layout
 
         if (viewBean == null) {
             ComponentList components = component.getChildren();
-            for (Component childComponent : components) {
-                if (childComponent.getTarget() != null && childComponent.getTarget().endsWith(PosType.before.name())) {
-                    ComponentType navType = ComponentType.fromType(childComponent.getKey());
-                    switch (navType) {
-                        case TREEVIEW:
-                            viewBean = new NavTreeComboViewBean(currModuleComponent);
-                            break;
-                        case MENUBAR:
-                            viewBean = new NavMenuBarViewBean(currModuleComponent);
-                            break;
-                        case GALLERY:
-                            viewBean = new NavGalleryComboViewBean(currModuleComponent);
-                            break;
-                        case BUTTONLAYOUT:
-                            viewBean = new NavButtonLayoutComboViewBean(currModuleComponent);
-                            break;
-                        case FOLDINGTABS:
-                            viewBean = new NavFoldingTabsViewBean(currModuleComponent);
-                            break;
-                        default:
-                            viewBean = new CustomLayoutViewBean(currModuleComponent);
+            if (components!=null){
+                for (Component childComponent : components) {
+                    if (childComponent.getTarget() != null && childComponent.getTarget().endsWith(PosType.before.name())) {
+                        ComponentType navType = ComponentType.fromType(childComponent.getKey());
+                        switch (navType) {
+                            case TREEVIEW:
+                                viewBean = new NavTreeComboViewBean(currModuleComponent);
+                                break;
+                            case MENUBAR:
+                                viewBean = new NavMenuBarViewBean(currModuleComponent);
+                                break;
+                            case GALLERY:
+                                viewBean = new NavGalleryComboViewBean(currModuleComponent);
+                                break;
+                            case BUTTONLAYOUT:
+                                viewBean = new NavButtonLayoutComboViewBean(currModuleComponent);
+                                break;
+                            case FOLDINGTABS:
+                                viewBean = new NavFoldingTabsViewBean(currModuleComponent);
+                                break;
+                            default:
+                                viewBean = new CustomLayoutViewBean(currModuleComponent);
+                        }
                     }
                 }
             }
+
             if (viewBean == null) {
                 viewBean = new CustomLayoutViewBean(currModuleComponent);
             }

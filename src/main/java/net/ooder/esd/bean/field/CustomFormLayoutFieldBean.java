@@ -1,30 +1,31 @@
 package net.ooder.esd.bean.field;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.esd.annotation.CustomClass;
-import net.ooder.esd.annotation.field.FormFieldAnnotation;
 import net.ooder.esd.annotation.Widget;
+import net.ooder.esd.annotation.field.FormFieldAnnotation;
 import net.ooder.esd.annotation.ui.BorderType;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.BaseWidgetBean;
 import net.ooder.esd.bean.ContainerBean;
-import net.ooder.esd.bean.view.CustomFormViewBean;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.view.CustomFormViewBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldFormComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.FormLayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.form.FormLayoutProperties;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 @CustomClass(clazz = CustomFieldFormComponent.class,
         viewType = CustomViewType.COMPONENT,
         moduleType = ModuleViewType.FORMCONFIG,
@@ -43,8 +44,9 @@ public class CustomFormLayoutFieldBean extends BaseWidgetBean<CustomFormViewBean
     }
 
     public CustomFormLayoutFieldBean(ModuleComponent parentModuleComponent, FormLayoutComponent component) {
-        this.update(parentModuleComponent, component);
-
+        if (component.getChildren()!=null && component.getChildren().size() > 0) {
+            this.update(parentModuleComponent, component);
+        }
     }
 
 
@@ -58,7 +60,7 @@ public class CustomFormLayoutFieldBean extends BaseWidgetBean<CustomFormViewBean
 
     public CustomFormLayoutFieldBean(MethodConfig methodConfig) {
         viewBean = (CustomFormViewBean) methodConfig.getView();
-        init(AnnotationUtil.getAllAnnotations(methodConfig.getMethod(),true));
+        init(AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true));
     }
 
     public CustomFormLayoutFieldBean(Set<Annotation> annotations) {
@@ -84,6 +86,7 @@ public class CustomFormLayoutFieldBean extends BaseWidgetBean<CustomFormViewBean
     }
 
     public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, FormLayoutComponent component) {
+        this.initWidget(parentModuleComponent,component);
         List<JavaSrcBean> javaSrcBeans = super.update(parentModuleComponent, component);
         if (containerBean == null) {
             containerBean = new ContainerBean(component);

@@ -260,6 +260,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
     }
 
     public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, Component component) {
+
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         this.component = component;
         this.init(component);
@@ -710,7 +711,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
     }
 
     public M createDefaultWidget(ComponentType componentType, ModuleComponent moduleComponent, Component component) {
-        M widgetBean = null;
+        // M widgetBean = null;
 
         Class clazz = CustomViewConfigFactory.getInstance().getDefaultWidgetClass(componentType);
         MethodConfig methodConfig = this.getMethodConfig();
@@ -723,30 +724,30 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
                     ConstructorBean constructorBean = getComponentConstructor(clazz, ModuleComponent.class, Component.class);
                     ConstructorBean simBean = getComponentConstructor(clazz, Component.class);
                     if (constructorBean != null) {
-                        widgetBean = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{moduleComponent, component});
+                        widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{moduleComponent, component});
                     } else if (componentConstructor != null) {
-                        widgetBean = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{methodConfig, component});
+                        widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{methodConfig, component});
                     } else if (methodConfig != null && methodBean != null) {
-                        widgetBean = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{methodConfig});
+                        widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{methodConfig});
                     } else if (simBean != null) {
-                        widgetBean = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{component});
+                        widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{component});
                     } else {
                         Properties properties = component.getProperties();
-                        widgetBean = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{properties});
+                        widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{properties});
                     }
                 } else {
-                    widgetBean = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{});
+                    widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{});
                     Class<Annotation> annotationClass = CustomViewConfigFactory.getInstance().getWidgetAnnMap().get(componentType);
                     if (annotationClass != null) {
-                        AnnotationUtil.fillDefaultValue(annotationClass, widgetBean);
+                        AnnotationUtil.fillDefaultValue(annotationClass, widgetConfig);
                     }
                 }
             } else {
-                widgetBean = (M) new HiddenInputFieldBean();
+                widgetConfig = (M) new HiddenInputFieldBean();
             }
 
-            if (widgetBean instanceof WidgetBean) {
-                WidgetBean widgetViewBean = (WidgetBean) widgetBean;
+            if (widgetConfig instanceof WidgetBean) {
+                WidgetBean widgetViewBean = (WidgetBean) widgetConfig;
                 CustomViewBean viewConfig = widgetViewBean.getViewBean();
                 if (viewConfig != null) {
                     CustomModuleBean moduleBean = viewConfig.getModuleBean();
@@ -770,7 +771,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
         } catch (OgnlException e) {
             e.printStackTrace();
         }
-        return widgetBean;
+        return widgetConfig;
     }
 
     public N createDefaultCombo(ComboInputType inputType, Component component) {

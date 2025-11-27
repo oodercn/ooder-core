@@ -382,7 +382,6 @@ public class GenJava {
 
             if (dynCompile) {
                 for (Class clazz : classes) {
-
                     APIConfigFactory.getInstance().reload(clazz.getName());
                     ESDClassManager.getInstance().clear(clazz.getName());
                 }

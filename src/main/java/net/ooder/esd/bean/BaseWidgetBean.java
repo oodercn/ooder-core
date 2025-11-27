@@ -77,13 +77,12 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
         return fieldRootBuild;
     }
 
-
-    public AggRootBuild initAggRootBuild(ModuleComponent parentModuleComponent, M component) throws JDSException {
+    public void initWidget(ModuleComponent parentModuleComponent, M component) {
+        this.component = component;
         this.initProperties(component);
         if (parentModuleComponent == null) {
             parentModuleComponent = component.getModuleComponent();
         }
-        this.component = component;
         String realPath = this.getFieldRealPath(parentModuleComponent, component);
         this.setXpath(realPath);
         String parentModuleClassName = parentModuleComponent.getClassName();
@@ -98,7 +97,9 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
             dsmProperties.setDomainId(parentDsmProperties.getDomainId());
         }
         dsmProperties.setRealPath(this.getXpath());
-        this.moduleProperties = new ModuleProperties();
+        if (moduleProperties == null) {
+            moduleProperties = new ModuleProperties();
+        }
         moduleProperties.setMethodName(OODUtil.getGetMethodName(component.getAlias()));
         moduleProperties.setDsmProperties(dsmProperties);
         Properties properties = component.getProperties();
@@ -120,6 +121,11 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
             euClassName = simPack.toLowerCase() + "." + simClass;
         }
 
+    }
+
+
+    public AggRootBuild initAggRootBuild(ModuleComponent parentModuleComponent, M component) throws JDSException {
+
         if (viewBean == null) {
             viewBean = genViewBean();
         }
@@ -130,9 +136,11 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
 
 
     public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, M component) {
+        if (moduleProperties == null) {
+            initWidget(parentModuleComponent, component);
+        }
         List<JavaSrcBean> allSrc = new ArrayList<>();
         try {
-
             initAggRootBuild(parentModuleComponent, component);
             if (!euClassName.equals(parentModuleComponent.getClassName())) {
                 allSrc.addAll(build());
@@ -206,6 +214,7 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
     }
 
     public ModuleProperties getModuleProperties() {
+
         return moduleProperties;
     }
 

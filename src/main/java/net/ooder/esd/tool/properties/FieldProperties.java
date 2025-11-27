@@ -35,7 +35,6 @@ public class FieldProperties extends ContainerProperties implements FormField {
 
     public FieldProperties(Enum enumType) {
         this.setId(enumType.name());
-
         if (enumType instanceof IconEnumstype) {
             this.id = ((IconEnumstype) enumType).getType();
             this.caption = ((IconEnumstype) enumType).getName();

@@ -6,11 +6,12 @@ import net.ooder.esd.annotation.ui.BorderType;
 import net.ooder.esd.annotation.ui.SideBarStatusType;
 import net.ooder.esd.annotation.ui.TagCmdsAlign;
 import net.ooder.esd.tool.properties.item.TabListItem;
+import net.ooder.esd.tool.properties.list.AbsListProperties;
 import net.ooder.esd.tool.properties.list.AbsUIListProperties;
 
 import java.util.List;
 
-public class TabsProperties<T extends TabListItem> extends AbsUIListProperties<T> {
+public class TabsProperties<T extends TabListItem> extends AbsListProperties<T> {
 
     public Boolean lazyAppend;
     public String message;

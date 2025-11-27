@@ -2,17 +2,21 @@ package net.ooder.esd.bean.field;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.ListMenu;
-import net.ooder.esd.annotation.field.ContentBlockFieldAnnotation;
 import net.ooder.esd.annotation.Widget;
+import net.ooder.esd.annotation.field.ContentBlockFieldAnnotation;
 import net.ooder.esd.annotation.ui.BorderType;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
-import net.ooder.esd.bean.*;
+import net.ooder.esd.bean.BaseWidgetBean;
+import net.ooder.esd.bean.ContainerBean;
+import net.ooder.esd.bean.ListMenuBean;
+import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomContentBlockViewBean;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.custom.component.form.field.CustomFieldContentBlockComponent;
@@ -22,15 +26,14 @@ import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ContentBlockProperties;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.item.ContentBlockItem;
+import net.ooder.esd.tool.properties.list.AbsListProperties;
+import net.ooder.esd.tool.properties.list.AbsUIListProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
 @CustomClass(clazz = CustomFieldContentBlockComponent.class,
         moduleType = ModuleViewType.CONTENTBLOCKCONFIG,
         viewType = CustomViewType.COMPONENT,
@@ -56,7 +59,7 @@ public class CustomContentBlockFieldBean extends BaseWidgetBean<CustomContentBlo
 
     public CustomContentBlockFieldBean(MethodConfig methodConfig) {
         viewBean = (CustomContentBlockViewBean) methodConfig.getView();
-        init(methodConfig.getCustomMethodInfo(), AnnotationUtil.getAllAnnotations(methodConfig.getMethod(),true));
+        init(methodConfig.getCustomMethodInfo(), AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true));
         if (this.customListBean.getBindClass() != null) {
             viewBean.setBindService(this.customListBean.getBindClass());
         }
@@ -69,7 +72,29 @@ public class CustomContentBlockFieldBean extends BaseWidgetBean<CustomContentBlo
 
 
     public CustomContentBlockFieldBean(ModuleComponent parentModuleComponent, ContentBlockComponent contentBlockComponent) {
-       update(parentModuleComponent, contentBlockComponent);
+        update(parentModuleComponent, contentBlockComponent);
+    }
+
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, ContentBlockComponent component) {
+        this.initWidget(parentModuleComponent,component);
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+
+        AbsListProperties listProperties = component.getProperties();
+
+        if (component.getChildren() != null && component.getChildren().size() > 0) {
+            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+        } else if (listProperties.getItems().size() > 0) {
+            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+            this.viewBean = genViewBean();
+        }
+        if (customListBean != null) {
+            List<JavaSrcBean> srcBeanList = customListBean.update(parentModuleComponent, component);
+            javaSrcBeans.addAll(srcBeanList);
+        }
+
+        return javaSrcBeans;
+
     }
 
 
@@ -80,22 +105,10 @@ public class CustomContentBlockFieldBean extends BaseWidgetBean<CustomContentBlo
         } else {
             viewBean.updateModule(currModuleComponent);
         }
-        viewBean.updateContainerBean(component);
-        return viewBean;
-    }
-
-    @Override
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, ContentBlockComponent component) {
-        List<JavaSrcBean> javaSrcBeans = super.update(parentModuleComponent, component);
         if (customListBean == null) {
             customListBean = new CustomListBean();
             customListBean.setBindClass(viewBean.getBindService());
-        } else {
-            List<JavaSrcBean> srcBeanList = customListBean.update(parentModuleComponent, component);
-            javaSrcBeans.addAll(srcBeanList);
         }
-
-
         ContentBlockProperties contentBlockProperties = component.getProperties();
         Class<? extends Enum> enumClass = contentBlockProperties.getEnumClass();
         if (enumClass == null) {
@@ -107,9 +120,8 @@ public class CustomContentBlockFieldBean extends BaseWidgetBean<CustomContentBlo
         } else {
             containerBean.update(component);
         }
-
-        return javaSrcBeans;
-
+        viewBean.updateContainerBean(component);
+        return viewBean;
     }
 
     void init(ESDField esdField, Set<Annotation> annotations) {

@@ -3,6 +3,7 @@ package net.ooder.esd.tool.component;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.util.TypeUtils;
+import net.ooder.annotation.UserSpace;
 import net.ooder.common.JDSConstants;
 import net.ooder.common.JDSException;
 import net.ooder.common.logging.Log;
@@ -29,6 +30,7 @@ import net.ooder.esd.custom.component.CustomDynLoadView;
 import net.ooder.esd.custom.component.CustomModuleComponent;
 import net.ooder.esd.custom.properties.BarProperties;
 import net.ooder.esd.dsm.DSMFactory;
+import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.manager.editor.PluginsFactory;
@@ -113,6 +115,10 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
     @JSONField(serialize = false)
     MethodConfig methodAPIBean;
+
+
+    @JSONField(serialize = false)
+    DomainInst domainInst;
 
     //@JSONField(serialize = false)
     ModuleProperties properties = new ModuleProperties();
@@ -281,6 +287,25 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         return null;
     }
 
+    @JSONField(serialize = false)
+    public DomainInst getDomainInst() throws JDSException {
+        if (domainInst == null) {
+            if (getProperties().getDsmProperties() != null && getProperties().getDsmProperties().getDomainId() != null) {
+                domainInst = DSMFactory.getInstance().getDomainInstById(getProperties().getDsmProperties().getDomainId());
+            }
+            if (domainInst == null) {
+                if (projectName == null) {
+                    projectName = DSMFactory.getInstance().getDefaultProjectName();
+                }
+                domainInst = DSMFactory.getInstance().getDefaultDomain(projectName, UserSpace.VIEW);
+            }
+        }
+        return domainInst;
+    }
+
+    public void setDomainInst(DomainInst domainInst) {
+        this.domainInst = domainInst;
+    }
 
     @JSONField(serialize = false)
     public List<Action> getComponentAction(String alias) {

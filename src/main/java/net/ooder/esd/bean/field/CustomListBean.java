@@ -56,8 +56,6 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
 
     Class<? extends Enum> enumClass;
 
-    @JSONField(serialize = false)
-    GenViewDicJava genViewDicJava;
 
     public CustomListBean() {
 
@@ -73,10 +71,7 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
                 if (moduleComponent == null) {
                     moduleComponent = component.getModuleComponent();
                 }
-                DomainInst domainInst = null;
-                if (moduleComponent.getProperties().getDsmProperties() != null && moduleComponent.getProperties().getDsmProperties().getDomainId() != null) {
-                    domainInst = DSMFactory.getInstance().getDomainInstById(moduleComponent.getProperties().getDsmProperties().getDomainId());
-                }
+                DomainInst domainInst = moduleComponent.getDomainInst();
                 String simClass = OODUtil.formatJavaName(component.getAlias(), true);
                 String packageName = moduleComponent.getClassName().toLowerCase();
                 String module = packageName.substring(0, packageName.lastIndexOf("."));
@@ -86,20 +81,17 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
                     }
                 }
                 String euClassName = packageName + "." + simClass;
-                if (enumClass == null && domainInst != null) {
-                    if (genViewDicJava == null) {
-                        genViewDicJava = new GenViewDicJava(domainInst.getViewInst(), module.toLowerCase(), listProperties.getItems(), euClassName, null);
-                        BuildFactory.getInstance().syncTasks(euClassName, Arrays.asList(genViewDicJava));
-                    }
-                    bindClass = genViewDicJava.getDicClass();
-                    if (genViewDicJava.getJavaSrcBeanList() != null) {
-                        javaSrcBeans.addAll(genViewDicJava.getJavaSrcBeanList());
-                    }
-                    if (bindClass.isEnum()) {
-                        enumClass = bindClass;
+                if (bindClass == null || bindClass.equals(Void.class)) {
+                    if (enumClass == null || enumClass.equals(Enum.class)) {
+                        GenViewDicJava genViewDicJava = new GenViewDicJava(domainInst.getViewInst(), module.toLowerCase(), listProperties.getItems(), euClassName, null);
+                        javaSrcBeans.addAll(BuildFactory.getInstance().syncTasks(euClassName, Arrays.asList(genViewDicJava)));
+                        bindClass = genViewDicJava.getDicClass();
+                        if (bindClass != null && bindClass.isEnum()) {
+                            enumClass = bindClass;
+                        }
+
                     }
                 }
-
             }
         } catch (JDSException e) {
             e.printStackTrace();
@@ -113,14 +105,6 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
         if (valueMap.get("items") != null) {
             items = JSONArray.parseArray(JSON.toJSONString(valueMap.get("items")), TreeListItem.class);
         }
-    }
-
-    public GenViewDicJava getGenViewDicJava() {
-        return genViewDicJava;
-    }
-
-    public void setGenViewDicJava(GenViewDicJava genViewDicJava) {
-        this.genViewDicJava = genViewDicJava;
     }
 
     public CustomListBean(ESDField esdField) {

@@ -20,6 +20,8 @@ public class DicViewRoot<T extends TabListItem> implements JavaRoot {
 
     public String className;
 
+    public String fullClassName;
+
     public String cnName;
 
     public DSMInst dsmBean;
@@ -42,6 +44,7 @@ public class DicViewRoot<T extends TabListItem> implements JavaRoot {
 
         this.dsmBean = dsmBean;
         this.moduleName = moduleName;
+        this.fullClassName=fullClassName;
         if (fullClassName.indexOf(".") == -1) {
             fullClassName = dsmBean.getRootPackage().getPackageName() + "." + moduleName + "." + fullClassName;
         }
@@ -81,6 +84,14 @@ public class DicViewRoot<T extends TabListItem> implements JavaRoot {
                 }
             }
         }
+    }
+
+    public String getFullClassName() {
+        return fullClassName;
+    }
+
+    public void setFullClassName(String fullClassName) {
+        this.fullClassName = fullClassName;
     }
 
     @Override

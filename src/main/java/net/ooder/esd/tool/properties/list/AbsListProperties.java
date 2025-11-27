@@ -8,6 +8,7 @@ import net.ooder.esd.tool.properties.AbsUIProperties;
 import net.ooder.esd.tool.properties.FieldProperties;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AbsListProperties<T extends AbsUIProperties> extends FieldProperties {
@@ -24,24 +25,31 @@ public class AbsListProperties<T extends AbsUIProperties> extends FieldPropertie
     public Boolean activeLast;
 
 
+
+
     public AbsListProperties() {
 
     }
-
 
     public List<T> addItem(T item) {
         if (items == null) {
             items = new ArrayList<T>();
         }
+        T ooitem = null;
         for (T oitem : items) {
             if (item.getId().equals(oitem.getId())) {
-                return items;
+                ooitem = oitem;
             }
         }
-        items.add(item);
+        if (ooitem != null) {
+            int k = items.indexOf(ooitem);
+            items.remove(ooitem);
+            items.add(k, item);
+        } else {
+            items.add(item);
+        }
         return items;
     }
-
 
     public Class<? extends Enum> getEnumClass() {
         return enumClass;
@@ -65,7 +73,14 @@ public class AbsListProperties<T extends AbsUIProperties> extends FieldPropertie
     }
 
 
+
     public List<T> getItems() {
+
+        if (items != null) {
+            Arrays.sort(items.toArray());
+        } else {
+            items = new ArrayList<>();
+        }
         return items;
     }
 

@@ -14,6 +14,8 @@ import net.ooder.esd.bean.BaseWidgetBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomSVGPaperViewBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldSVGPaperComponent;
+import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.DivComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.SVGPaperComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
@@ -22,9 +24,7 @@ import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @CustomClass(clazz = CustomFieldSVGPaperComponent.class,
         viewType = CustomViewType.COMPONENT,
@@ -62,13 +62,24 @@ public class CustomSVGPaperFieldBean extends BaseWidgetBean<CustomSVGPaperViewBe
         if (component != null) {
             this.updateFieldBean(component);
         }
-        if (component.getChildren().size() > 0) {
-            update(parentModuleComponent, component);
-        }
+
+            this.update(parentModuleComponent, component);
 
     }
 
 
+
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, SVGPaperComponent component) {
+        this.initWidget(parentModuleComponent,component);
+        updateFieldBean(component);
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        if (component.getChildren() != null && component.getChildren().size() > 0) {
+            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+        }
+        return javaSrcBeans;
+
+    }
     @Override
     public CustomSVGPaperViewBean createViewBean(ModuleComponent currModuleComponent, SVGPaperComponent component) {
         if (viewBean == null) {

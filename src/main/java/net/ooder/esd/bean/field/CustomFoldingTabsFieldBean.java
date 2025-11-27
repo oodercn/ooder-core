@@ -11,6 +11,8 @@ import net.ooder.esd.bean.BaseWidgetBean;
 import net.ooder.esd.bean.ContainerBean;
 import net.ooder.esd.bean.view.NavFoldingTabsViewBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldFoldingTabsComponent;
+import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.ButtonViewsComponent;
 import net.ooder.esd.tool.component.FoldingTabsComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.TabsComponent;
@@ -18,7 +20,9 @@ import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @CustomClass(clazz = CustomFieldFoldingTabsComponent.class,
@@ -40,6 +44,19 @@ public class CustomFoldingTabsFieldBean extends BaseWidgetBean<NavFoldingTabsVie
 
     public CustomFoldingTabsFieldBean(ModuleComponent parentModuleComponent, FoldingTabsComponent tabsComponent) {
         update(parentModuleComponent, tabsComponent);
+    }
+
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, FoldingTabsComponent component) {
+        this.initWidget(parentModuleComponent,component);
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        if (component.getChildren() != null && component.getChildren().size() > 0) {
+            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+        }else if (component.getProperties().getItems().size()>0){
+            this.viewBean=genViewBean();
+        }
+        return javaSrcBeans;
+
     }
 
     @Override

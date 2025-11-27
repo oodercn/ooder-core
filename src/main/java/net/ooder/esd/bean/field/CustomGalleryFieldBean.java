@@ -2,12 +2,13 @@ package net.ooder.esd.bean.field;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.ListMenu;
-import net.ooder.esd.annotation.field.GalleryFieldAnnotation;
 import net.ooder.esd.annotation.Widget;
+import net.ooder.esd.annotation.field.GalleryFieldAnnotation;
 import net.ooder.esd.annotation.ui.BorderType;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
@@ -19,20 +20,18 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomGalleryViewBean;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.custom.component.form.field.CustomFieldGalleryComponent;
+import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.GalleryComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.GalleryProperties;
 import net.ooder.esd.tool.properties.item.GalleryItem;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
 @CustomClass(clazz = CustomFieldGalleryComponent.class,
         moduleType = ModuleViewType.GALLERYCONFIG,
         viewType = CustomViewType.COMPONENT,
@@ -64,10 +63,29 @@ public class CustomGalleryFieldBean extends BaseWidgetBean<CustomGalleryViewBean
         update(parentModuleComponent, galleryComponent);
     }
 
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, GalleryComponent component) {
+        this.initWidget(parentModuleComponent,component);
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        GalleryProperties contentBlockProperties = component.getProperties();
+        if (component.getChildren() != null && component.getChildren().size() > 0) {
+            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+        } else if (contentBlockProperties.getItems().size() > 0) {
+            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+            this.viewBean = genViewBean();
+        }
+        if (customListBean != null) {
+            List<JavaSrcBean> srcBeanList = customListBean.update(parentModuleComponent, component);
+            javaSrcBeans.addAll(srcBeanList);
+        }
+        return javaSrcBeans;
+
+    }
+
 
     public CustomGalleryFieldBean(MethodConfig methodConfig) {
         viewBean = (CustomGalleryViewBean) methodConfig.getView();
-        init(methodConfig.getCustomMethodInfo(), AnnotationUtil.getAllAnnotations(methodConfig.getMethod(),true));
+        init(methodConfig.getCustomMethodInfo(), AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true));
     }
 
     public CustomGalleryFieldBean(ESDField esdField, Set<Annotation> annotations) {
@@ -77,6 +95,7 @@ public class CustomGalleryFieldBean extends BaseWidgetBean<CustomGalleryViewBean
 
     @Override
     public CustomGalleryViewBean createViewBean(ModuleComponent currModuleComponent, GalleryComponent component) {
+        this.component = component;
         if (viewBean == null) {
             viewBean = new CustomGalleryViewBean(currModuleComponent);
         } else {
@@ -104,7 +123,6 @@ public class CustomGalleryFieldBean extends BaseWidgetBean<CustomGalleryViewBean
 
         return viewBean;
     }
-
 
 
     void init(ESDField esdField, Set<Annotation> annotations) {

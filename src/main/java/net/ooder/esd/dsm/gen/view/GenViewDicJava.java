@@ -19,7 +19,6 @@ import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.OODUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,8 +27,6 @@ import java.util.Set;
 public class GenViewDicJava extends GenJavaTask {
 
     public ViewInst viewInst;
-    public List<TabListItem> items;
-    public String className;
     public String moduleName;
     public Class dicClass;
     public ChromeProxy chrome;
@@ -39,8 +36,6 @@ public class GenViewDicJava extends GenJavaTask {
         super();
         this.moduleName = moduleName;
         this.viewInst = viewInst;
-        this.items = items;
-        this.className = className;
         this.chrome = chrome;
         dicViewRoot = new DicViewRoot(viewInst, moduleName, items, className);
         try {
@@ -48,17 +43,17 @@ public class GenViewDicJava extends GenJavaTask {
         } catch (JDSException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
     public List<JavaSrcBean> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
-        return genDic(items, className);
+        return genDic(dicViewRoot);
     }
 
-    List<JavaSrcBean> genDic(List<TabListItem> items, String className) {
-
+    List<JavaSrcBean> genDic(DicViewRoot dicViewRoot) {
+        List<TabListItem> items = dicViewRoot.getItems();
+        String className = dicViewRoot.getFullClassName();
         Class clazz = null;
         try {
             clazz = ClassUtility.loadClass(className);
@@ -77,7 +72,6 @@ public class GenViewDicJava extends GenJavaTask {
                                 classList.add(srcBean.getClassName());
                             }
                         }
-
                     }
                 }
             }
@@ -94,26 +88,30 @@ public class GenViewDicJava extends GenJavaTask {
                     dicViewRoot.setPackageName(packageName);
                     File file = javaGen.createJava(javatemp, dicViewRoot, chrome);
                     JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, viewInst, javatemp.getJavaTempId());
-                    try {
-                        dicClass = javaGen.dynCompile(srcBean.getClassName(), srcBean.getContent());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    dicClass = javaGen.dynCompile(srcBean.getClassName(), srcBean.getContent());
+
                     javaSrcBeans.add(srcBean);
                     BuildFactory.getInstance().createSource(srcBean.getClassName(), dicViewRoot, javatemp, srcBean);
                     classList.add(srcBean.getClassName());
                 } catch (Exception e) {
                     log.warn(e.getMessage());
                 }
-
             }
             for (JavaSrcBean srcBean : javaSrcBeans) {
                 viewInst.updateView(srcBean);
             }
         }
+
         return javaSrcBeans;
     }
 
+    public Class getDicClass() {
+        return dicClass;
+    }
+
+    public void setDicClass(Class dicClass) {
+        this.dicClass = dicClass;
+    }
 
     List<JavaSrcBean> genChildTree(TreeListItem item, String className) {
         List<JavaSrcBean> srcBeanList = new ArrayList<>();
@@ -131,7 +129,8 @@ public class GenViewDicJava extends GenJavaTask {
                 bindClassName = packageName + "." + OODUtil.formatJavaName(name + item.getId(), true);
             }
             try {
-                srcBeanList = genDic(treeListItems, bindClassName);
+                DicViewRoot childRoot = new DicViewRoot(viewInst, moduleName, treeListItems, bindClassName);
+                srcBeanList = genDic(childRoot);
                 for (JavaSrcBean srcBean : srcBeanList) {
                     Class clazz = srcBean.loadClass();
                     if (clazz != null) {
@@ -157,21 +156,6 @@ public class GenViewDicJava extends GenJavaTask {
         this.viewInst = viewInst;
     }
 
-    public List<TabListItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<TabListItem> items) {
-        this.items = items;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
 
     public String getModuleName() {
         return moduleName;
@@ -181,13 +165,6 @@ public class GenViewDicJava extends GenJavaTask {
         this.moduleName = moduleName;
     }
 
-    public Class getDicClass() {
-        return dicClass;
-    }
-
-    public void setDicClass(Class dicClass) {
-        this.dicClass = dicClass;
-    }
 
     @Override
     public ChromeProxy getChrome() {

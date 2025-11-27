@@ -13,7 +13,9 @@ import net.ooder.esd.bean.ContainerBean;
 import net.ooder.esd.bean.view.CustomEChartViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.custom.component.form.field.CustomFieldEChartComponent;
+import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.EChartComponent;
+import net.ooder.esd.tool.component.FoldingTabsComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.echarts.EChartProperties;
@@ -21,9 +23,7 @@ import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 @CustomClass(clazz = CustomFieldEChartComponent.class,
         viewType = CustomViewType.COMPONENT,

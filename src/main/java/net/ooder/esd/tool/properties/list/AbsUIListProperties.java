@@ -1,15 +1,20 @@
 package net.ooder.esd.tool.properties.list;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.Enumstype;
+import net.ooder.annotation.IconEnumstype;
 import net.ooder.esd.annotation.ui.BorderType;
 import net.ooder.esd.annotation.ui.SelModeType;
 import net.ooder.esd.tool.properties.AbsUIProperties;
-import net.ooder.esd.tool.properties.ContainerUIProperties;
+import net.ooder.esd.tool.properties.ContainerProperties;
+import net.ooder.esd.tool.properties.FieldProperties;
+import net.ooder.esd.util.json.EnumsClassDeserializer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AbsUIListProperties<T extends AbsUIProperties> extends ContainerUIProperties {
+public class AbsUIListProperties<T extends AbsUIProperties> extends FieldProperties {
 
     public List<T> items;
     public List<String> listKey;
@@ -18,10 +23,25 @@ public class AbsUIListProperties<T extends AbsUIProperties> extends ContainerUIP
     public SelModeType selMode;
     public BorderType borderType;
     public Boolean activeLast;
+    @JSONField(deserializeUsing = EnumsClassDeserializer.class)
+    public Class<? extends Enum> enumClass;
 
 
     public AbsUIListProperties() {
 
+    }
+
+
+    public AbsUIListProperties(Enum enumType) {
+        this.setId(enumType.name());
+        if (enumType instanceof IconEnumstype) {
+            this.id = ((IconEnumstype) enumType).getType();
+            this.caption = ((IconEnumstype) enumType).getName();
+            this.imageClass = ((IconEnumstype) enumType).getImageClass();
+        } else if (enumType instanceof Enumstype) {
+            this.id = ((Enumstype) enumType).getType();
+            this.caption = ((Enumstype) enumType).getName();
+        }
     }
 
 
@@ -42,14 +62,19 @@ public class AbsUIListProperties<T extends AbsUIProperties> extends ContainerUIP
         } else {
             items.add(item);
         }
-
-
         return items;
+    }
+
+    public Class<? extends Enum> getEnumClass() {
+        return enumClass;
+    }
+
+    public void setEnumClass(Class<? extends Enum> enumClass) {
+        this.enumClass = enumClass;
     }
 
 
     public void setActiveLast(Boolean activeLast) {
-
         this.activeLast = activeLast;
     }
 
@@ -74,6 +99,7 @@ public class AbsUIListProperties<T extends AbsUIProperties> extends ContainerUIP
     public void setItems(List<T> items) {
         this.items = items;
     }
+
 
     public Boolean getDragSortable() {
         return dragSortable;

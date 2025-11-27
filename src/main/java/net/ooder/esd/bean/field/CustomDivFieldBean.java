@@ -14,6 +14,7 @@ import net.ooder.esd.bean.BaseWidgetBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomDivFormViewBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldDivComponent;
+import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.DivComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
@@ -22,9 +23,7 @@ import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @CustomClass(clazz = CustomFieldDivComponent.class,
         viewType = CustomViewType.COMPONENT,
@@ -48,10 +47,7 @@ public class CustomDivFieldBean extends BaseWidgetBean<CustomDivFormViewBean, Di
     public CustomDivFieldBean(ModuleComponent parentModuleComponent, DivComponent component) {
         AnnotationUtil.fillDefaultValue(DivFieldAnnotation.class, this);
         updateFieldBean(component);
-        if (component.getChildren().size() > 0) {
-            this.update(parentModuleComponent, component);
-        }
-
+        this.update(parentModuleComponent, component);
     }
 
     public CustomDivFieldBean(DivComponent component) {
@@ -63,6 +59,19 @@ public class CustomDivFieldBean extends BaseWidgetBean<CustomDivFormViewBean, Di
     public CustomDivFieldBean(MethodConfig methodConfig) {
         viewBean = (CustomDivFormViewBean) methodConfig.getView();
         initAnnotations(AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true).toArray(new Annotation[]{}));
+    }
+
+
+    @Override
+    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, DivComponent component) {
+        this.initWidget(parentModuleComponent, component);
+        updateFieldBean(component);
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        if (component.getChildren() != null && component.getChildren().size() > 0) {
+            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+        }
+        return javaSrcBeans;
+
     }
 
 
