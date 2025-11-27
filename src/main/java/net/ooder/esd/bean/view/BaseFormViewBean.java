@@ -224,14 +224,14 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         String alias = childComponent.getAlias();
         ComponentType componentType = ComponentType.fromType(childComponent.getKey());
         if (componentType.equals(ComponentType.BLOCK)) {
-            BlockComponent component = (BlockComponent) childComponent;
+            BlockComponent blockComponent = (BlockComponent) childComponent;
             if (alias.indexOf(CustomBlockFieldBean.skipStr) > -1) {
                 return true;
             } else if (alias.endsWith(ModuleComponent.DefaultTopBoxfix)) {
                 return true;
-            } else if (component.getProperties().getComboType() != null) {
+            } else if (blockComponent.getProperties().getComboType() != null) {
                 return true;
-            } else if (component.getChildren().isEmpty() && Arrays.asList(ComponentType.getContainerComponents()).contains(ComponentType.BLOCK)) {
+            } else if ((blockComponent.getChildren() == null || blockComponent.getChildren().isEmpty()) && Arrays.asList(ComponentType.getContainerComponents()).contains(componentType)) {
                 return true;
             }
         } else if (alias.indexOf("StatusBottom") > -1) {
