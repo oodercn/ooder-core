@@ -1,6 +1,7 @@
 package net.ooder.esd.tool.properties;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.Enumstype;
 import net.ooder.annotation.IconEnumstype;
 import net.ooder.esd.bean.field.FieldBean;
@@ -64,6 +65,7 @@ public class FieldProperties extends ContainerProperties implements FormField {
         this.caption = caption;
         this.imageClass = imageClass;
     }
+
 
     public Boolean getDynCheck() {
         return dynCheck;

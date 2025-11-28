@@ -1,6 +1,7 @@
 package net.ooder.esd.tool.properties;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.ContainerBean;
@@ -65,6 +66,7 @@ public class ContainerProperties extends DataProperties {
     public String tips;
     public Integer rotate;
     public String activeAnim;
+
 
     public ContainerProperties() {
 

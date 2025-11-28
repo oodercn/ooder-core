@@ -30,6 +30,7 @@ public class Properties implements Comparable<Properties> {
     public String expression;
 
 
+
     public Map<?, Event> events;
 
 
@@ -94,6 +95,7 @@ public class Properties implements Comparable<Properties> {
         return name;
 
     }
+
 
     public void setName(String name) {
         this.name = name;

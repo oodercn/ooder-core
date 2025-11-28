@@ -51,6 +51,11 @@ public class Component<T extends Properties, K extends EventKey> {
     @JSONField(name = "CS")
     public net.ooder.esd.tool.properties.CS CS;
 
+
+    @JSONField(serialize = false)
+    public Boolean buildLock = false;
+
+
     public String target;
 
     public Component() {
@@ -504,4 +509,11 @@ public class Component<T extends Properties, K extends EventKey> {
         return getAlias() + desc;
     }
 
+    public Boolean getBuildLock() {
+        return buildLock;
+    }
+
+    public void setBuildLock(Boolean buildLock) {
+        this.buildLock = buildLock;
+    }
 }
