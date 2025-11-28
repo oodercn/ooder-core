@@ -86,7 +86,6 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
 
     LabelBean labelBean;
 
-
     ContainerBean containerBean;
 
     RightContextMenuBean contextMenuBean;

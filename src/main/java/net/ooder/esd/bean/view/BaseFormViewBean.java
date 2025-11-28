@@ -178,38 +178,42 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
             FieldFormConfig fieldFormConfig = findFieldByCom(component);
             ComponentType componentType = ComponentType.fromType(component.getKey());
             GenFormChildModule genChildModule = null;
-            if (componentType.isBar()) {
-                genChildModule = genBar(moduleComponent, component);
-            } else if (Arrays.asList(ComponentType.getCustomAPIComponents()).contains(componentType)) {
-                genChildModule = genAPI(moduleComponent, component);
-            } else if (!skipType(component)) {
-                FieldComponentBean widgetConfig = fieldFormConfig.getWidgetConfig();
-                if (widgetConfig == null) {
-                    widgetConfig = fieldFormConfig.createDefaultWidget(componentType, moduleComponent, component);
-                }
-                if (widgetConfig != null && widgetConfig instanceof WidgetBean) {
-                    if (component.getChildren() != null && component.getChildren().size() == 1 && componentType.equals(ComponentType.BLOCK)) {
-                        component = component.getChildren().get(0);
-                        if (component instanceof ModuleComponent) {
-                            if (((ModuleComponent) component).getCurrComponent() != null) {
-                                component = ((ModuleComponent) component).getCurrComponent().clone();
+            if (fieldFormConfig.getComponent() == null) {
+                fieldFormConfig.setComponent(component);
+                if (componentType.isBar()) {
+                    genChildModule = genBar(moduleComponent, component);
+                } else if (Arrays.asList(ComponentType.getCustomAPIComponents()).contains(componentType)) {
+                    genChildModule = genAPI(moduleComponent, component);
+                } else if (!skipType(component)) {
+                    FieldComponentBean widgetConfig = fieldFormConfig.getWidgetConfig();
+                    if (widgetConfig == null) {
+                        widgetConfig = fieldFormConfig.createDefaultWidget(componentType, moduleComponent, component);
+                    }
+                    if (widgetConfig != null && widgetConfig instanceof WidgetBean) {
+                        if (component.getChildren() != null && component.getChildren().size() == 1 && componentType.equals(ComponentType.BLOCK)) {
+                            component = component.getChildren().get(0);
+                            if (component instanceof ModuleComponent) {
+                                if (((ModuleComponent) component).getCurrComponent() != null) {
+                                    component = ((ModuleComponent) component).getCurrComponent().clone();
+                                    genChildModule = new GenFormChildModule(moduleComponent, component, fieldFormConfig);
+                                }
+                            } else {
                                 genChildModule = new GenFormChildModule(moduleComponent, component, fieldFormConfig);
                             }
                         } else {
                             genChildModule = new GenFormChildModule(moduleComponent, component, fieldFormConfig);
                         }
-                    } else {
+                    } else if (component.getChildren() != null && component.getChildren().size() > 0) {
                         genChildModule = new GenFormChildModule(moduleComponent, component, fieldFormConfig);
                     }
-                } else if (component.getChildren() != null && component.getChildren().size() > 0) {
-                    genChildModule = new GenFormChildModule(moduleComponent, component, fieldFormConfig);
+                }
+                if (genChildModule != null) {
+                    tasks.add(genChildModule);
+                } else {
+                    fieldFormConfigs.add(fieldFormConfig);
                 }
             }
-            if (genChildModule != null) {
-                tasks.add(genChildModule);
-            } else {
-                fieldFormConfigs.add(fieldFormConfig);
-            }
+
         }
 
         if (tasks.size() > 0) {
