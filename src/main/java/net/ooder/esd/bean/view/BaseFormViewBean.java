@@ -32,6 +32,7 @@ import net.ooder.esd.tool.component.BlockComponent;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
+import net.ooder.esd.tool.properties.WidgetProperties;
 import net.ooder.esd.tool.properties.item.UIItem;
 import net.ooder.esd.tool.properties.list.AbsListProperties;
 import net.ooder.esd.util.OODUtil;
@@ -178,7 +179,9 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
             FieldFormConfig fieldFormConfig = findFieldByCom(component);
             ComponentType componentType = ComponentType.fromType(component.getKey());
             GenFormChildModule genChildModule = null;
-            if (fieldFormConfig.getComponent() == null) {
+
+
+
                 fieldFormConfig.setComponent(component);
                 if (componentType.isBar()) {
                     genChildModule = genBar(moduleComponent, component);
@@ -186,6 +189,8 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                     genChildModule = genAPI(moduleComponent, component);
                 } else if (!skipType(component)) {
                     FieldComponentBean widgetConfig = fieldFormConfig.getWidgetConfig();
+
+
                     if (widgetConfig == null) {
                         widgetConfig = fieldFormConfig.createDefaultWidget(componentType, moduleComponent, component);
                     }
@@ -214,7 +219,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                 }
             }
 
-        }
+
 
         if (tasks.size() > 0) {
             fieldFormConfigs.addAll(this.buildField(tasks));

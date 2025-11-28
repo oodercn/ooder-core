@@ -6,6 +6,8 @@ import net.ooder.esd.annotation.ui.Dock;
 public class WidgetProperties extends ContainerUIProperties {
     Boolean shadow;
 
+    Boolean startBuild = false;
+
     public WidgetProperties() {
 
     }
@@ -26,6 +28,15 @@ public class WidgetProperties extends ContainerUIProperties {
             this.height = widgetBean.getHeight();
             this.shadow = widgetBean.getShadow();
         }
+    }
+
+
+    public Boolean getStartBuild() {
+        return startBuild;
+    }
+
+    public void setStartBuild(Boolean startBuild) {
+        this.startBuild = startBuild;
     }
 
     public Boolean getShadow() {

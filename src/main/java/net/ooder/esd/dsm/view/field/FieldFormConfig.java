@@ -38,6 +38,7 @@ import net.ooder.esd.tool.OODTypeMapping;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.Properties;
+import net.ooder.esd.tool.properties.WidgetProperties;
 import net.ooder.esd.tool.properties.form.ComboInputProperties;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.esd.util.json.FormFieldComboDeserializer;
@@ -706,66 +707,71 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
     }
 
     public M createDefaultWidget(ComponentType componentType, ModuleComponent moduleComponent, Component component) {
-        // M widgetBean = null;
 
-        Class clazz = CustomViewConfigFactory.getInstance().getDefaultWidgetClass(componentType);
-        MethodConfig methodConfig = this.getMethodConfig();
-        try {
-            OgnlContext ognlContext = JDSActionContext.getActionContext().getOgnlContext();
-            if (clazz != null && ognlContext != null) {
-                if (component != null) {
-                    ConstructorBean methodBean = getComponentConstructor(clazz, MethodConfig.class);
-                    ConstructorBean componentConstructor = getComponentConstructor(clazz, MethodConfig.class, Component.class);
-                    ConstructorBean constructorBean = getComponentConstructor(clazz, ModuleComponent.class, Component.class);
-                    ConstructorBean simBean = getComponentConstructor(clazz, Component.class);
-                    if (constructorBean != null) {
-                        widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{moduleComponent, component});
-                    } else if (componentConstructor != null) {
-                        widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{methodConfig, component});
-                    } else if (methodConfig != null && methodBean != null) {
-                        widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{methodConfig});
-                    } else if (simBean != null) {
-                        widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{component});
+        WidgetProperties widgetProperties = (WidgetProperties) component.getProperties();
+        if (widgetProperties.getStartBuild() == null || widgetProperties.getStartBuild()) {
+            widgetProperties.setStartBuild(true);
+            Class clazz = CustomViewConfigFactory.getInstance().getDefaultWidgetClass(componentType);
+            MethodConfig methodConfig = this.getMethodConfig();
+            try {
+                OgnlContext ognlContext = JDSActionContext.getActionContext().getOgnlContext();
+                if (clazz != null && ognlContext != null) {
+                    if (component != null) {
+                        ConstructorBean methodBean = getComponentConstructor(clazz, MethodConfig.class);
+                        ConstructorBean componentConstructor = getComponentConstructor(clazz, MethodConfig.class, Component.class);
+                        ConstructorBean constructorBean = getComponentConstructor(clazz, ModuleComponent.class, Component.class);
+                        ConstructorBean simBean = getComponentConstructor(clazz, Component.class);
+                        if (constructorBean != null) {
+                            widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{moduleComponent, component});
+                        } else if (componentConstructor != null) {
+                            widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{methodConfig, component});
+                        } else if (methodConfig != null && methodBean != null) {
+                            widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{methodConfig});
+                        } else if (simBean != null) {
+                            widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{component});
+                        } else {
+                            Properties properties = component.getProperties();
+                            widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{properties});
+                        }
                     } else {
-                        Properties properties = component.getProperties();
-                        widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{properties});
+                        widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{});
+                        Class<Annotation> annotationClass = CustomViewConfigFactory.getInstance().getWidgetAnnMap().get(componentType);
+                        if (annotationClass != null) {
+                            AnnotationUtil.fillDefaultValue(annotationClass, widgetConfig);
+                        }
                     }
                 } else {
-                    widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{});
-                    Class<Annotation> annotationClass = CustomViewConfigFactory.getInstance().getWidgetAnnMap().get(componentType);
-                    if (annotationClass != null) {
-                        AnnotationUtil.fillDefaultValue(annotationClass, widgetConfig);
-                    }
+                    widgetConfig = (M) new HiddenInputFieldBean();
                 }
-            } else {
-                widgetConfig = (M) new HiddenInputFieldBean();
-            }
 
-            if (widgetConfig instanceof WidgetBean) {
-                WidgetBean widgetViewBean = (WidgetBean) widgetConfig;
-                CustomViewBean viewConfig = widgetViewBean.getViewBean();
-                if (viewConfig != null) {
-                    CustomModuleBean moduleBean = viewConfig.getModuleBean();
-                    if (moduleBean == null) {
-                        moduleBean = new CustomModuleBean(component);
-                        moduleBean.reBindMethod(this.getMethodConfig());
-                    }
-                    if (viewConfig.getBindService() != null) {
-                        moduleBean.setBindService(viewConfig.getBindService());
-                    }
-                    MethodRoot methodRoot = this.getMethodRoot();
-                    if (methodRoot != null) {
-                        methodRoot.update(moduleBean, component);
-                    }
-                    this.setMethodName(viewConfig.getSourceMethodName());
-                    if (viewConfig.getBindService() != null) {
-                        this.setServiceClassName(viewConfig.getBindService().getName());
+                if (widgetConfig instanceof WidgetBean) {
+                    WidgetBean widgetViewBean = (WidgetBean) widgetConfig;
+                    CustomViewBean viewConfig = widgetViewBean.getViewBean();
+                    if (viewConfig != null) {
+                        CustomModuleBean moduleBean = viewConfig.getModuleBean();
+                        if (moduleBean == null) {
+                            moduleBean = new CustomModuleBean(component);
+                            moduleBean.reBindMethod(this.getMethodConfig());
+                        }
+                        if (viewConfig.getBindService() != null) {
+                            moduleBean.setBindService(viewConfig.getBindService());
+                        }
+                        MethodRoot methodRoot = this.getMethodRoot();
+                        if (methodRoot != null) {
+                            methodRoot.update(moduleBean, component);
+                        }
+                        this.setMethodName(viewConfig.getSourceMethodName());
+                        if (viewConfig.getBindService() != null) {
+                            this.setServiceClassName(viewConfig.getBindService().getName());
+                        }
                     }
                 }
+            } catch (OgnlException e) {
+                e.printStackTrace();
             }
-        } catch (OgnlException e) {
-            e.printStackTrace();
+            widgetProperties.setStartBuild(false);
         }
+
         return widgetConfig;
     }
 
