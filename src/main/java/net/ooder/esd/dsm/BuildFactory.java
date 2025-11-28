@@ -56,6 +56,7 @@ public class BuildFactory {
 
     private Map<String, JavaGenSource> javaGenSourceMap = new HashMap<>();
 
+    private Map<String, CustomViewBean> tempCustomViewBeanMap = new HashMap<>();
 
     private Map<String, AggRootBuild> classRootBuildMap = new HashMap<>();
 
@@ -214,6 +215,13 @@ public class BuildFactory {
 
     }
 
+    public Map<String, CustomViewBean> getTempCustomViewBeanMap() {
+        return tempCustomViewBeanMap;
+    }
+
+    public void setTempCustomViewBeanMap(Map<String, CustomViewBean> tempCustomViewBeanMap) {
+        this.tempCustomViewBeanMap = tempCustomViewBeanMap;
+    }
 
     public List<JavaSrcBean> syncTasks(String taskId, List<? extends Callable<List<JavaSrcBean>>> buildTasks) {
         List<JavaSrcBean> srcBeans = new ArrayList<>();

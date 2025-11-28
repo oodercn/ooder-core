@@ -248,10 +248,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
         if (this.id == null) {
             this.id = aggConfig.getId();
         }
-
-
         M widget = getWidgetConfig();
-
         if (widget != null && (widget instanceof ComboBoxBean)) {
             componentType = ComponentType.COMBOINPUT;
         } else if (aggConfig.getColHidden() != null && aggConfig.getColHidden()) {
@@ -260,7 +257,6 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
     }
 
     public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, Component component) {
-
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         this.component = component;
         this.init(component);

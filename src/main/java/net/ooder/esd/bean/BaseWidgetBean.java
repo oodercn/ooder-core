@@ -24,6 +24,7 @@ import ognl.OgnlException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Component> implements WidgetBean<T, M> {
 
@@ -189,14 +190,26 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
 
 
     public T genViewBean() {
+
         if (viewBean == null && component != null) {
-            ModuleComponent currModuleComponent = new ModuleComponent(component);
-            CustomModuleBean customModuleBean = new CustomModuleBean(currModuleComponent);
-            currModuleComponent.setProperties(moduleProperties);
-            currModuleComponent.setClassName(euClassName);
-            viewBean = this.createViewBean(currModuleComponent, component);
-            viewBean.setModuleBean(customModuleBean);
-            viewBean.setComponent(component);
+            if (component.getPath() != null) {
+                try {
+                    Map<String, CustomViewBean> viewBeanMap = BuildFactory.getInstance().getTempCustomViewBeanMap();
+                    ModuleComponent currModuleComponent = new ModuleComponent(component);
+                    CustomModuleBean customModuleBean = new CustomModuleBean(currModuleComponent);
+                    currModuleComponent.setProperties(moduleProperties);
+                    currModuleComponent.setClassName(euClassName);
+                    viewBean = (T) viewBeanMap.get(component.getPath());
+                    if (viewBean == null) {
+                        viewBean = this.createViewBean(currModuleComponent, component);
+                        viewBeanMap.put(component.getPath(), viewBean);
+                    }
+                    viewBean.setModuleBean(customModuleBean);
+                    viewBean.setComponent(component);
+                } catch (JDSException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return viewBean;
     }
