@@ -67,56 +67,58 @@ public class CustomFieldSVGPaperComponent extends SVGPaperComponent {
         }
 
         for (FieldFormConfig fieldInfo : fieldList) {
+            if (fieldInfo.getEsdField() != null) {
+                Class fieldClass = fieldInfo.getEsdField().getReturnType();
+                Component svgComponent = null;
+                Object value = null;
+                if (fieldInfo.getMethodConfig() != null
+                        && fieldInfo.getMethodConfig().getRequestMethodBean() != null
+                        && fieldInfo.getMethodConfig().getApi() == null) {
 
-            Class fieldClass = fieldInfo.getEsdField().getReturnType();
-            Component svgComponent = null;
-            Object value = null;
-            if (fieldInfo.getMethodConfig() != null
-                    && fieldInfo.getMethodConfig().getRequestMethodBean() != null
-                    && fieldInfo.getMethodConfig().getApi() == null) {
+                    if (fieldInfo.getMethodConfig() != null && fieldInfo.getMethodConfig().getRequestMethodBean() != null && fieldInfo.getMethodConfig().getApi() == null) {
+                        try {
+                            value = fieldInfo.getMethodConfig().getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (OgnlException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
 
-                if (fieldInfo.getMethodConfig() != null && fieldInfo.getMethodConfig().getRequestMethodBean() != null && fieldInfo.getMethodConfig().getApi() == null) {
-                    try {
-                        value = fieldInfo.getMethodConfig().getRequestMethodBean().invok(JDSActionContext.getActionContext().getOgnlContext(), JDSActionContext.getActionContext().getContext());
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (OgnlException e) {
-                        e.printStackTrace();
+                if (value != null && (value.getClass().isArray() || Collection.class.isAssignableFrom(value.getClass()))) {
+                    ArrayList<Object> objs = TypeUtils.castToJavaBean(value, ArrayList.class);
+                    for (Object obj : objs) {
+                        svgComponent = createComponent(fieldInfo, obj);
+                        PositionType positionType = fieldInfo.getFieldBean().getInnerPosition();
+                        if (positionType == null || positionType.equals(PositionType.inner)) {
+                            this.addChildren(svgComponent);
+                        } else {
+                            this.euModule.getComponent().getMainBoxComponent().addChildren(svgComponent);
+                        }
+                    }
+
+                } else {
+                    if (Component.class.isAssignableFrom(fieldClass)) {
+                        svgComponent = (Component) value;
+                    } else {
+                        svgComponent = createComponent(fieldInfo, value);
+                    }
+                    if (svgComponent.getKey().equals(ComponentType.MQTT.getClassName())) {
+                        this.euModule.getComponent().addChildren(svgComponent);
+                    } else if (svgComponent.getKey().equals(ComponentType.APICALLER.getClassName())) {
+                        this.euModule.getComponent().addChildren(svgComponent);
+                    } else {
+                        PositionType positionType = fieldInfo.getFieldBean().getInnerPosition();
+                        if (positionType == null || positionType.equals(PositionType.inner)) {
+                            this.addChildren(svgComponent);
+                        } else {
+                            this.euModule.getComponent().getMainBoxComponent().addChildren(svgComponent);
+                        }
                     }
                 }
             }
 
-            if (value != null && (value.getClass().isArray() || Collection.class.isAssignableFrom(value.getClass()))) {
-                ArrayList<Object> objs = TypeUtils.castToJavaBean(value, ArrayList.class);
-                for (Object obj : objs) {
-                    svgComponent = createComponent(fieldInfo, obj);
-                    PositionType positionType = fieldInfo.getFieldBean().getInnerPosition();
-                    if (positionType == null || positionType.equals(PositionType.inner)) {
-                        this.addChildren(svgComponent);
-                    } else {
-                        this.euModule.getComponent().getMainBoxComponent().addChildren(svgComponent);
-                    }
-                }
-
-            } else {
-                if (Component.class.isAssignableFrom(fieldClass)) {
-                    svgComponent = (Component) value;
-                } else {
-                    svgComponent = createComponent(fieldInfo, value);
-                }
-                if (svgComponent.getKey().equals(ComponentType.MQTT.getClassName())) {
-                    this.euModule.getComponent().addChildren(svgComponent);
-                } else if (svgComponent.getKey().equals(ComponentType.APICALLER.getClassName())) {
-                    this.euModule.getComponent().addChildren(svgComponent);
-                } else {
-                    PositionType positionType = fieldInfo.getFieldBean().getInnerPosition();
-                    if (positionType == null || positionType.equals(PositionType.inner)) {
-                        this.addChildren(svgComponent);
-                    } else {
-                        this.euModule.getComponent().getMainBoxComponent().addChildren(svgComponent);
-                    }
-                }
-            }
         }
     }
 

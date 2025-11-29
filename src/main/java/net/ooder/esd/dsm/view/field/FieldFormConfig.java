@@ -260,31 +260,35 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
         this.component = component;
         this.init(component);
         CustomViewBean viewConfig = null;
-        if (this.widgetConfig == null) {
+        if (this.widgetConfig == null || !widgetConfig.getComponentType().equals(componentType)) {
             this.widgetConfig = this.createDefaultWidget(componentType, parentModuleComponent, component);
         } else {
             widgetConfig.update(parentModuleComponent, component);
         }
-        if (widgetConfig instanceof WidgetBean) {
-            WidgetBean widgetBean = (WidgetBean) widgetConfig;
-            viewConfig = widgetBean.getViewBean();
-            if (viewConfig != null) {
-                this.setServiceClassName(viewConfig.getSourceClassName());
-                this.setMethodName(viewConfig.getSourceMethodName());
+        if (widgetConfig != null) {
+            if (widgetConfig instanceof WidgetBean) {
+                WidgetBean widgetBean = (WidgetBean) widgetConfig;
+                viewConfig = widgetBean.getViewBean();
+                if (viewConfig != null) {
+                    this.setServiceClassName(viewConfig.getSourceClassName());
+                    this.setMethodName(viewConfig.getSourceMethodName());
+                }
             }
+
+            if (widgetConfig.getJavaSrcBeans() != null) {
+                javaSrcBeans.addAll(widgetConfig.getJavaSrcBeans());
+            }
+
+            if (componentType.equals(ComponentType.COMBOINPUT)) {
+                ComboInputProperties comboInputProperties = (ComboInputProperties) component.getProperties();
+                if (comboConfig == null) {
+                    this.comboConfig = this.createDefaultCombo(comboInputProperties.getType(), component);
+                }
+            }
+            this.javaSrcBeans = javaSrcBeans;
         }
 
-        if (widgetConfig.getJavaSrcBeans() != null) {
-            javaSrcBeans.addAll(widgetConfig.getJavaSrcBeans());
-        }
 
-        if (componentType.equals(ComponentType.COMBOINPUT)) {
-            ComboInputProperties comboInputProperties = (ComboInputProperties) component.getProperties();
-            if (comboConfig == null) {
-                this.comboConfig = this.createDefaultCombo(comboInputProperties.getType(), component);
-            }
-        }
-        this.javaSrcBeans = javaSrcBeans;
         return javaSrcBeans;
 
     }

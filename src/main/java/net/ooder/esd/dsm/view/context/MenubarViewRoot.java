@@ -11,6 +11,7 @@ import net.ooder.esd.annotation.GridAnnotation;
 import net.ooder.esd.annotation.ModuleAnnotation;
 import net.ooder.esd.annotation.TabsAnnotation;
 import net.ooder.esd.annotation.field.ToolBarMenu;
+import net.ooder.esd.bean.nav.LayoutItem;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.bean.view.NavMenuBarViewBean;
 import net.ooder.esd.dsm.DSMInst;
@@ -66,6 +67,7 @@ public class MenubarViewRoot implements JavaRoot {
             GridAnnotation.class,
             MethodChinaName.class,
             Controller.class,
+            LayoutItem.class,
             ModuleAnnotation.class,
             ToolBarMenu.class,
             ResponseBody.class};

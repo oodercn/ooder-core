@@ -341,34 +341,6 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     }
 
 
-//    @JSONField(serialize = false)
-//    public ModuleComponent getRealModuleComponent() throws JDSException {
-//        ModuleComponent moduleComponent = this;
-//        String dynClass = this.getProperties().getViewClass();
-//        while (dynClass != null && dynClass.equals(CustomDynLoadView.class.getName())) {
-//            String className = this.getClassName();
-////
-////            if (!className.endsWith(CustomViewFactory.dynBuild)) {
-////                className = this.getClassName() + CustomViewFactory.dynBuild;
-////            }
-//
-//            if (className.endsWith(CustomViewFactory.dynBuild)) {
-//                className = moduleComponent.getEuModule().getRealClassName();
-//            }
-//
-//            EUModule module = ESDFacrory.getAdminESDClient().getModule(className, this.projectName);
-//            if (module == null) {
-//                module = CustomViewFactory.getInstance().getView(className, projectName);
-//            }
-//            if (module != null) {
-//                moduleComponent = module.getComponent();
-//                dynClass = moduleComponent.getProperties().getViewClass();
-//            }
-//        }
-//        return moduleComponent;
-//    }
-//
-
     @JSONField(serialize = false)
     public List<Action> getAllAction() {
         List<Action> actions = new ArrayList<>();
@@ -2160,9 +2132,9 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                             case GROUP:
                                 moduleViewType = ModuleViewType.GROUPCONFIG;
                                 break;
-                            case MENUBAR:
-                                moduleViewType = ModuleViewType.NAVMENUBARCONFIG;
-                                break;
+//                            case MENUBAR:
+//                                moduleViewType = ModuleViewType.NAVMENUBARCONFIG;
+//                                break;
                             case GALLERY:
                                 moduleViewType = ModuleViewType.NAVGALLERYCONFIG;
                                 break;
