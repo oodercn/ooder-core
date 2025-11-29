@@ -33,6 +33,8 @@ public class Text implements CustomBean {
     @JSONField(name = "strok-width")
     Integer strokeWidth;
 
+
+
     String stroke;
 
     String title;

@@ -18,8 +18,8 @@ import java.util.Set;
 
 @AnnotationType(clazz = SVGKeyAnnotation.class)
 public class Key implements CustomBean {
-    public Integer x;
-    public Integer y;
+    public String x;
+    public String y;
     public String id;
     public String text;
     public String fill;
@@ -59,6 +59,22 @@ public class Key implements CustomBean {
             }
         }
 
+    }
+
+    public String getX() {
+        return x;
+    }
+
+    public void setX(String x) {
+        this.x = x;
+    }
+
+    public String getY() {
+        return y;
+    }
+
+    public void setY(String y) {
+        this.y = y;
     }
 
     public String getId() {
@@ -101,21 +117,6 @@ public class Key implements CustomBean {
         this.stroke = stroke;
     }
 
-    public Integer getX() {
-        return x;
-    }
-
-    public void setX(Integer x) {
-        this.x = x;
-    }
-
-    public Integer getY() {
-        return y;
-    }
-
-    public void setY(Integer y) {
-        this.y = y;
-    }
 
     public Key clone() {
         Key svgBean = new Key();

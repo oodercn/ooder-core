@@ -20,8 +20,6 @@ import java.util.Set;
 @AnnotationType(clazz = SVGTextAnnotation.class)
 public class TextKey extends Key {
 
-    Integer width = 80;
-    Integer height = 40;
 
     @JSONField(name = "stroke-miterlimit")
     Integer strokeMiterlimit;
@@ -136,21 +134,6 @@ public class TextKey extends Key {
         this.transform = transform;
     }
 
-    public Integer getWidth() {
-        return width;
-    }
-
-    public void setWidth(Integer width) {
-        this.width = width;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
-
-    public void setHeight(Integer height) {
-        this.height = height;
-    }
 
     public TextKey clone() {
         TextKey text = new TextKey();

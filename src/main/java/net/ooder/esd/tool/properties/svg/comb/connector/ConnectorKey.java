@@ -2,6 +2,7 @@ package net.ooder.esd.tool.properties.svg.comb.connector;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.util.TypeUtils;
 import net.ooder.esd.annotation.svg.ConnectorKeyAnnotation;
 import net.ooder.esd.annotation.ui.CursorType;
 import net.ooder.esd.tool.properties.svg.SVGProperties;
@@ -10,6 +11,7 @@ import net.ooder.esd.tool.properties.svg.comb.circle.CircleKey;
 import net.ooder.esd.tool.properties.svg.comb.rect.RectKey;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.web.json.JSONUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -101,8 +103,8 @@ public class ConnectorKey extends Key {
                 ssy = circleKey.getCy();
             } else if (start instanceof RectKey) {
                 RectKey rectKey = (RectKey) start;
-                ssx = rectKey.getX();
-                ssy = rectKey.getY();
+                ssx = TypeUtils.castToInt(rectKey.getX());
+                ssy = TypeUtils.castToInt(rectKey.getY());
                 ssw = rectKey.getWidth();
                 ssh = rectKey.getHeight();
             }
@@ -113,10 +115,10 @@ public class ConnectorKey extends Key {
                 eey = circleKey.getCy();
             } else if (end instanceof RectKey) {
                 RectKey rectKey = (RectKey) end;
-                eex = rectKey.getX();
+                eex = TypeUtils.castToInt(rectKey.getX());
                 eew = rectKey.getWidth();
                 eeh = rectKey.getHeight();
-                eey = rectKey.getY();
+                eey = TypeUtils.castToInt(rectKey.getY());
             }
 
 
@@ -147,8 +149,8 @@ public class ConnectorKey extends Key {
                 RectKey rectKey = (RectKey) start;
                 Integer with = rectKey.getWidth();
                 Integer height = rectKey.getHeight();
-                sx = rectKey.getX();
-                sy = rectKey.getY();
+                sx = TypeUtils.castToInt(rectKey.getX());
+                sy = TypeUtils.castToInt( rectKey.getY());
                 if (sx < eex) {
                     if (sx <= (eex - with)) {
                         sx = sx + with + 5;
@@ -228,8 +230,8 @@ public class ConnectorKey extends Key {
                 RectKey rectKey = (RectKey) end;
                 int with = rectKey.getWidth();
                 int height = rectKey.getHeight();
-                ex = rectKey.getX();
-                ey = rectKey.getY();
+                ex =  TypeUtils.castToInt(rectKey.getX());
+                ey = TypeUtils.castToInt( rectKey.getY());
                 if (ex < ssx) {
                     if (ex <= (ssx - with)) {
                         ex = ex + with + 5;
