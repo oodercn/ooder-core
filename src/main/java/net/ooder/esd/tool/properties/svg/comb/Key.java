@@ -2,7 +2,9 @@ package net.ooder.esd.tool.properties.svg.comb;
 
 import com.alibaba.fastjson.JSON;
 import net.ooder.annotation.CustomBean;
+import net.ooder.annotation.NotNull;
 import net.ooder.esd.annotation.svg.SVGKeyAnnotation;
+import net.ooder.esd.annotation.ui.CursorType;
 import net.ooder.esd.bean.svg.SVGBean;
 import net.ooder.esd.tool.properties.svg.SVGAttr;
 import net.ooder.esd.tool.properties.svg.SVGProperties;
@@ -23,6 +25,9 @@ public class Key implements CustomBean {
     public String fill;
     public String stroke;
     public String title;
+
+
+
 
     public Key() {
 

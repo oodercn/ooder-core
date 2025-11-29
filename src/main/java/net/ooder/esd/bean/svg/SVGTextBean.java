@@ -13,6 +13,7 @@ import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.SVGTextComponent;
 import net.ooder.esd.tool.properties.svg.SVGProperties;
+import net.ooder.esd.tool.properties.svg.text.TextKey;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -28,6 +29,7 @@ import java.util.Set;
 @AnnotationType(clazz = SVGTextAnnotation.class)
 public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
 
+    TextKey KEY;
 
     SVGBean svgBean;
 
@@ -42,6 +44,14 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
     public SVGTextBean(SVGTextComponent svgTextComponent) {
         xpath = svgTextComponent.getPath();
         svgBean = new SVGBean(svgTextComponent.getProperties());
+    }
+
+    public TextKey getKEY() {
+        return KEY;
+    }
+
+    public void setKEY(TextKey KEY) {
+        this.KEY = KEY;
     }
 
     @Override
