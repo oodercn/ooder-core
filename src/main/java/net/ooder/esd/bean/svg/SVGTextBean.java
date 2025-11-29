@@ -1,15 +1,18 @@
 package net.ooder.esd.bean.svg;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
-import net.ooder.esd.annotation.svg.SVGText;
+import net.ooder.esd.annotation.CustomClass;
+import net.ooder.esd.annotation.svg.SVGTextAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.bean.field.FieldComponentBean;
+import net.ooder.esd.custom.component.form.field.svg.CustomSVGTextComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.SVGTextComponent;
 import net.ooder.esd.tool.properties.svg.SVGProperties;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -18,7 +21,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@AnnotationType(clazz = SVGText.class)
+@CustomClass(clazz = CustomSVGTextComponent.class,
+        viewType = CustomViewType.COMPONENT,
+        componentType = ComponentType.SVGTEXT)
+
+@AnnotationType(clazz = SVGTextAnnotation.class)
 public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
 
 
@@ -36,6 +43,7 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
         xpath = svgTextComponent.getPath();
         svgBean = new SVGBean(svgTextComponent.getProperties());
     }
+
     @Override
     public List<JavaSrcBean> getJavaSrcBeans() {
         return new ArrayList<>();
@@ -51,10 +59,10 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
     }
 
     public SVGTextBean(Set<Annotation> annotations) {
-        AnnotationUtil.fillDefaultValue(SVGText.class, this);
+        AnnotationUtil.fillDefaultValue(SVGTextAnnotation.class, this);
         for (Annotation annotation : annotations) {
-            if (annotation instanceof SVGText) {
-                fillData((SVGText) annotation);
+            if (annotation instanceof SVGTextAnnotation) {
+                fillData((SVGTextAnnotation) annotation);
             }
         }
         svgBean = new SVGBean(annotations);
@@ -79,11 +87,11 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
         return annotationBeans;
     }
 
-    public SVGTextBean(SVGText annotation) {
+    public SVGTextBean(SVGTextAnnotation annotation) {
         fillData(annotation);
     }
 
-    public SVGTextBean fillData(SVGText annotation) {
+    public SVGTextBean fillData(SVGTextAnnotation annotation) {
         return AnnotationUtil.fillBean(annotation, this);
     }
 

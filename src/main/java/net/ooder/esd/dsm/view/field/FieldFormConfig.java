@@ -38,7 +38,6 @@ import net.ooder.esd.tool.OODTypeMapping;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.Properties;
-import net.ooder.esd.tool.properties.WidgetProperties;
 import net.ooder.esd.tool.properties.form.ComboInputProperties;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.esd.util.json.FormFieldComboDeserializer;
@@ -707,10 +706,9 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
     }
 
     public M createDefaultWidget(ComponentType componentType, ModuleComponent moduleComponent, Component component) {
-
-        WidgetProperties widgetProperties = (WidgetProperties) component.getProperties();
-        if (widgetProperties.getStartBuild() == null || widgetProperties.getStartBuild()) {
-            widgetProperties.setStartBuild(true);
+        Properties properties = component.getProperties();
+        if (component.getBuildLock() == null || !component.getBuildLock()) {
+            component.setBuildLock(true);
             Class clazz = CustomViewConfigFactory.getInstance().getDefaultWidgetClass(componentType);
             MethodConfig methodConfig = this.getMethodConfig();
             try {
@@ -730,7 +728,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
                         } else if (simBean != null) {
                             widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{component});
                         } else {
-                            Properties properties = component.getProperties();
+                            properties = component.getProperties();
                             widgetConfig = (M) OgnlRuntime.callConstructor(ognlContext, clazz.getName(), new Object[]{properties});
                         }
                     } else {
@@ -769,7 +767,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
             } catch (OgnlException e) {
                 e.printStackTrace();
             }
-            widgetProperties.setStartBuild(false);
+            component.setBuildLock(false);
         }
 
         return widgetConfig;

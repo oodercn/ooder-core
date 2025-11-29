@@ -3,7 +3,7 @@ package net.ooder.esd.tool.properties.svg.comb;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
-import net.ooder.esd.annotation.svg.SVGText;
+import net.ooder.esd.annotation.svg.SVGTextAnnotation;
 import net.ooder.esd.annotation.ui.CursorType;
 import net.ooder.esd.tool.properties.svg.SVGProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -14,7 +14,7 @@ import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.Set;
 
-@AnnotationType(clazz = SVGText.class)
+@AnnotationType(clazz = SVGTextAnnotation.class)
 public class Text implements CustomBean {
     String text;
     @JSONField(name = "font-size")
@@ -52,20 +52,20 @@ public class Text implements CustomBean {
 
 
     public Text(Set<Annotation> annotations) {
-        AnnotationUtil.fillDefaultValue(SVGText.class, this);
+        AnnotationUtil.fillDefaultValue(SVGTextAnnotation.class, this);
         for (Annotation annotation : annotations) {
-            if (annotation instanceof SVGText) {
-                fillData((SVGText) annotation);
+            if (annotation instanceof SVGTextAnnotation) {
+                fillData((SVGTextAnnotation) annotation);
             }
         }
 
     }
 
-    public Text(SVGText annotation) {
+    public Text(SVGTextAnnotation annotation) {
         fillData(annotation);
     }
 
-    public Text fillData(SVGText annotation) {
+    public Text fillData(SVGTextAnnotation annotation) {
         return AnnotationUtil.fillBean(annotation, this);
     }
 
