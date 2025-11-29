@@ -6,6 +6,7 @@ import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.svg.SVGTextAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.ui.CursorType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.bean.field.FieldComponentBean;
 import net.ooder.esd.custom.component.form.field.svg.CustomSVGTextComponent;
@@ -36,6 +37,27 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
     String xpath;
 
     String path;
+
+    String text;
+
+    String fontSize;
+
+    String fill;
+
+    String fontWeight;
+
+    String fontFamily;
+
+    String fontStyle;
+
+    Integer strokeWidth;
+
+    String stroke;
+
+    String title;
+
+    CursorType cursor;
+
 
     public SVGTextBean() {
 
@@ -79,6 +101,85 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
 
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getFontSize() {
+        return fontSize;
+    }
+
+    public void setFontSize(String fontSize) {
+        this.fontSize = fontSize;
+    }
+
+    public String getFill() {
+        return fill;
+    }
+
+    public void setFill(String fill) {
+        this.fill = fill;
+    }
+
+    public String getFontWeight() {
+        return fontWeight;
+    }
+
+    public void setFontWeight(String fontWeight) {
+        this.fontWeight = fontWeight;
+    }
+
+    public String getFontFamily() {
+        return fontFamily;
+    }
+
+    public void setFontFamily(String fontFamily) {
+        this.fontFamily = fontFamily;
+    }
+
+    public String getFontStyle() {
+        return fontStyle;
+    }
+
+    public void setFontStyle(String fontStyle) {
+        this.fontStyle = fontStyle;
+    }
+
+    public Integer getStrokeWidth() {
+        return strokeWidth;
+    }
+
+    public void setStrokeWidth(Integer strokeWidth) {
+        this.strokeWidth = strokeWidth;
+    }
+
+    public String getStroke() {
+        return stroke;
+    }
+
+    public void setStroke(String stroke) {
+        this.stroke = stroke;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public CursorType getCursor() {
+        return cursor;
+    }
+
+    public void setCursor(CursorType cursor) {
+        this.cursor = cursor;
+    }
 
     @Override
     public ComponentType getComponentType() {
