@@ -1,10 +1,14 @@
 package net.ooder.esd.tool.properties.svg.text;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.esd.annotation.ui.CursorType;
-import net.ooder.esd.bean.svg.SVGTextBean;
+import net.ooder.esd.bean.svg.SVGAttrBean;
 import net.ooder.esd.tool.properties.svg.SVGAttr;
 import net.ooder.esd.tool.properties.svg.comb.Text;
+import net.ooder.jds.core.esb.util.OgnlUtil;
+
+import java.util.Map;
 
 
 public class TextAttr extends SVGAttr {
@@ -28,8 +32,6 @@ public class TextAttr extends SVGAttr {
     @JSONField(name = "strok-width")
     Integer strokeWidth;
 
-
-
     String stroke;
 
     String title;
@@ -37,9 +39,8 @@ public class TextAttr extends SVGAttr {
     CursorType cursor;
 
 
-
-    public TextAttr(SVGTextBean textBean) {
-        this.KEY = textBean.getKEY();
+    public TextAttr(SVGAttrBean attrBean) {
+        OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(attrBean), Map.class), this, false, false);
     }
 
     public TextAttr() {

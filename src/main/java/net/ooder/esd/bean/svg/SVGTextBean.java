@@ -15,7 +15,6 @@ import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.SVGTextComponent;
 import net.ooder.esd.tool.properties.svg.text.SVGTextProperties;
-import net.ooder.esd.tool.properties.svg.text.TextKey;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -29,7 +28,7 @@ import java.util.*;
 @AnnotationType(clazz = SVGTextAnnotation.class)
 public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
 
-    TextKey KEY;
+    SVGAttrBean attr;
 
     SVGBean svgBean;
 
@@ -66,15 +65,9 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
         xpath = svgTextComponent.getPath();
         svgBean = new SVGBean(svgTextComponent.getProperties());
         this.init(svgTextComponent.getProperties());
+
     }
 
-    public TextKey getKEY() {
-        return KEY;
-    }
-
-    public void setKEY(TextKey KEY) {
-        this.KEY = KEY;
-    }
 
     @Override
     public List<JavaSrcBean> getJavaSrcBeans() {
@@ -84,6 +77,7 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
     void init(SVGTextProperties properties) {
         Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
+
     }
 
     @Override
@@ -200,8 +194,8 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
         if (svgBean != null && !AnnotationUtil.getAnnotationMap(svgBean).isEmpty()) {
             annotationBeans.add(svgBean);
         }
-        if (KEY != null && !AnnotationUtil.getAnnotationMap(KEY).isEmpty()) {
-            annotationBeans.add(KEY);
+        if (attr != null && !AnnotationUtil.getAnnotationMap(attr).isEmpty()) {
+            annotationBeans.add(attr);
         }
         annotationBeans.add(this);
         return annotationBeans;
@@ -220,10 +214,18 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
         if (svgBean != null) {
             textBean.setSvgBean(svgBean.clone());
         }
-        if (KEY != null) {
-            textBean.setKEY(KEY.clone());
+        if (attr != null) {
+            textBean.setAttr(attr.clone());
         }
         return textBean;
+    }
+
+    public SVGAttrBean getAttr() {
+        return attr;
+    }
+
+    public void setAttr(SVGAttrBean attr) {
+        this.attr = attr;
     }
 
     @Override

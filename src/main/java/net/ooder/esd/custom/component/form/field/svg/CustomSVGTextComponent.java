@@ -10,7 +10,6 @@ import java.util.Map;
 
 public class CustomSVGTextComponent extends SVGTextComponent {
 
-
     public CustomSVGTextComponent(EUModule euModule, FieldFormConfig<SVGTextBean, ?> field, String target, Object value, Map valueMap) {
         super(field.getId());
         SVGTextBean svgPathBean = field.getWidgetConfig().clone();

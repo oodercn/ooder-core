@@ -17,10 +17,10 @@ public class SVGTextProperties<T extends TextAttr> extends SVGProperties {
 
     }
 
-    public SVGTextProperties(SVGTextBean rectBean) {
-        this.id = rectBean.getXpath();
-        OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(rectBean.getSvgBean()), Map.class), this, false, false);
-        attr = new TextAttr(rectBean);
+    public SVGTextProperties(SVGTextBean svgTextBean) {
+        this.id = svgTextBean.getXpath();
+        OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(svgTextBean.getSvgBean()), Map.class), this, false, false);
+        attr = new TextAttr(svgTextBean.getAttr());
 
     }
 

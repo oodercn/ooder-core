@@ -1,12 +1,13 @@
 package net.ooder.esd.tool.properties.svg;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.CustomBean;
 import net.ooder.esd.tool.properties.svg.comb.BGText;
 import net.ooder.esd.tool.properties.svg.comb.Text;
 
 import java.util.List;
 
-public class SVGAttr {
+public class SVGAttr  {
 
     Integer rx;
 
@@ -264,4 +265,5 @@ public class SVGAttr {
     public void setSrc(String src) {
         this.src = src;
     }
+
 }

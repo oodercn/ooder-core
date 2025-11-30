@@ -2,11 +2,12 @@ package net.ooder.esd.bean.svg;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.svg.SVGAttrAnnotation;
+import net.ooder.esd.tool.properties.svg.SVGAttr;
 import net.ooder.esd.tool.properties.svg.SVGProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -80,7 +81,7 @@ public class SVGAttrBean implements CustomBean {
 
     }
 
-    public SVGAttrBean(SVGProperties properties) {
+    public SVGAttrBean(SVGAttr properties) {
         Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
 
@@ -204,7 +205,7 @@ public class SVGAttrBean implements CustomBean {
         return transform;
     }
 
-    public void setTransform(    List<String> transform) {
+    public void setTransform(List<String> transform) {
         this.transform = transform;
     }
 

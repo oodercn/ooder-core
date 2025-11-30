@@ -7,6 +7,7 @@ import net.ooder.annotation.NotNull;
 import net.ooder.esd.annotation.svg.RectKeyAnnotation;
 import net.ooder.esd.annotation.svg.SVGTextAnnotation;
 import net.ooder.esd.annotation.ui.CursorType;
+import net.ooder.esd.tool.properties.svg.SVGProperties;
 import net.ooder.esd.tool.properties.svg.comb.Key;
 import net.ooder.esd.tool.properties.svg.ellipse.EllipseProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -46,7 +47,7 @@ public class TextKey extends Key {
 
     }
 
-    public TextKey(EllipseProperties properties) {
+    public TextKey(SVGProperties properties) {
         Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
     }
