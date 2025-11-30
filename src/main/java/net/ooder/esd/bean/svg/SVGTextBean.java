@@ -1,5 +1,6 @@
 package net.ooder.esd.bean.svg;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
@@ -13,15 +14,13 @@ import net.ooder.esd.custom.component.form.field.svg.CustomSVGTextComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.SVGTextComponent;
-import net.ooder.esd.tool.properties.svg.SVGProperties;
+import net.ooder.esd.tool.properties.svg.text.SVGTextProperties;
 import net.ooder.esd.tool.properties.svg.text.TextKey;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @CustomClass(clazz = CustomSVGTextComponent.class,
         viewType = CustomViewType.COMPONENT,
@@ -66,6 +65,7 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
     public SVGTextBean(SVGTextComponent svgTextComponent) {
         xpath = svgTextComponent.getPath();
         svgBean = new SVGBean(svgTextComponent.getProperties());
+        this.init(svgTextComponent.getProperties());
     }
 
     public TextKey getKEY() {
@@ -81,13 +81,20 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
         return new ArrayList<>();
     }
 
+    void init(SVGTextProperties properties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+    }
+
     @Override
     public List<JavaSrcBean> update(ModuleComponent moduleComponent, SVGTextComponent component) {
+        this.init(component.getProperties());
         return new ArrayList<>();
     }
 
-    public SVGTextBean(SVGProperties properties) {
+    public SVGTextBean(SVGTextProperties properties) {
         svgBean = new SVGBean(properties);
+        this.init(properties);
     }
 
     public SVGTextBean(Set<Annotation> annotations) {
@@ -193,7 +200,9 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
         if (svgBean != null && !AnnotationUtil.getAnnotationMap(svgBean).isEmpty()) {
             annotationBeans.add(svgBean);
         }
-
+        if (KEY != null && !AnnotationUtil.getAnnotationMap(KEY).isEmpty()) {
+            annotationBeans.add(KEY);
+        }
         annotationBeans.add(this);
         return annotationBeans;
     }
@@ -207,11 +216,14 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
     }
 
     public SVGTextBean clone() {
-        SVGTextBean circleBean = new SVGTextBean();
+        SVGTextBean textBean = new SVGTextBean();
         if (svgBean != null) {
-            circleBean.setSvgBean(svgBean.clone());
+            textBean.setSvgBean(svgBean.clone());
         }
-        return circleBean;
+        if (KEY != null) {
+            textBean.setKEY(KEY.clone());
+        }
+        return textBean;
     }
 
     @Override
@@ -246,7 +258,9 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
     }
 
     @Override
+    @JSONField(serialize = false)
     public String toAnnotationStr() {
+
         return AnnotationUtil.toAnnotationStr(this);
     }
 }

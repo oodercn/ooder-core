@@ -54,10 +54,10 @@ public abstract class SVGFieldBaseBean<T extends Key,M extends SVGBaseComponent>
     public List<JavaSrcBean> update(ModuleComponent moduleComponent, M component) {
         return new ArrayList<>();
     }
+
     @JSONField(serialize = false)
     public List<CustomBean> getAnnotationBeans() {
-        List<CustomBean> annotationBeans = new ArrayList<>();
-        annotationBeans = new ArrayList<>();
+        List<CustomBean> annotationBeans  = new ArrayList<>();
         if (svgBean != null && !AnnotationUtil.getAnnotationMap(svgBean).isEmpty()) {
             annotationBeans.add(svgBean);
         }

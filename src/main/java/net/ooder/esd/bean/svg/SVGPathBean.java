@@ -1,6 +1,7 @@
 package net.ooder.esd.bean.svg;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.svg.SVGPathAnnotation;
@@ -9,11 +10,10 @@ import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.bean.field.FieldComponentBean;
 import net.ooder.esd.custom.component.form.field.svg.CustomSVGPathComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
-import net.ooder.esd.tool.component.SVGPathComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.component.SVGPathComponent;
 import net.ooder.esd.tool.properties.svg.comb.path.PathKey;
 import net.ooder.esd.tool.properties.svg.comb.path.PathProperties;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -41,12 +41,10 @@ public class SVGPathBean implements FieldComponentBean<SVGPathComponent> {
     }
 
     public SVGPathBean(PathProperties properties) {
-        svgTag = properties.getSvgTag();
-        path = properties.getAttr().getPath();
-        svgBean = new SVGBean(properties);
-        svgKey = new PathKey(properties);
+        init(properties);
 
     }
+
     @Override
     public List<JavaSrcBean> getJavaSrcBeans() {
         return new ArrayList<>();
@@ -54,8 +52,17 @@ public class SVGPathBean implements FieldComponentBean<SVGPathComponent> {
 
     @Override
     public List<JavaSrcBean> update(ModuleComponent moduleComponent, SVGPathComponent component) {
+        init(component.getProperties());
         return new ArrayList<>();
     }
+
+    void init(PathProperties properties) {
+        svgTag = properties.getSvgTag();
+        path = properties.getAttr().getPath();
+        svgBean = new SVGBean(properties);
+        svgKey = new PathKey(properties);
+    }
+
     public SVGPathBean(Set<Annotation> annotations) {
 
         AnnotationUtil.fillDefaultValue(SVGPathAnnotation.class, this);
