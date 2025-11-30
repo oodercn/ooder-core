@@ -28,7 +28,7 @@ public class EMSerializer implements ObjectSerializer {
                 str = str.substring(0, str.length() - 2);
                 result = formatNum(str);
                 result = result + "px";
-            } else {
+            } else if(!str.endsWith("%")){
                 result = formatNum(str);
             }
         }
