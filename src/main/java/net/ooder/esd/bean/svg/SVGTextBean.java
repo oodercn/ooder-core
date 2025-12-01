@@ -112,7 +112,7 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
                 fillData((SVGTextAnnotation) annotation);
             }
             if (annotation instanceof SVGAttrAnnotation) {
-                 AnnotationUtil.fillBean(annotation, this);
+                AnnotationUtil.fillBean(annotation, this);
             }
         }
         attr = new SVGAttrBean(annotations);
@@ -293,7 +293,6 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
     @Override
     @JSONField(serialize = false)
     public String toAnnotationStr() {
-
         return AnnotationUtil.toAnnotationStr(this);
     }
 }
