@@ -447,7 +447,11 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         List<FieldFormConfig> fieldFormConfigList = new ArrayList<>();
         List<FieldFormConfig> fieldFormConfigs = super.getAllFields();
         for (FieldFormConfig fieldFormConfig : fieldFormConfigs) {
-            if (!fieldFormConfig.getComponentType().equals(ComponentType.APICALLER)) {
+            fieldFormConfig.setSourceClassName(this.getSourceClassName());
+            fieldFormConfig.setViewClassName(this.getViewClassName());
+            fieldFormConfig.setSourceMethodName(this.getSourceMethodName());
+            ComponentType componentType = fieldFormConfig.getComponentType();
+            if (!Arrays.asList(ComponentType.getCustomAPIComponents()).contains(componentType)) {
                 fieldFormConfigList.add(fieldFormConfig);
             }
         }

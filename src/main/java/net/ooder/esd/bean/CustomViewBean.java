@@ -760,6 +760,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
             T fieldFormConfig = this.getFieldConfigMap().get(fieldName);
             if (fieldFormConfig != null) {
                 fieldFormConfig.setDomainId(domainId);
+
                 fieldFormConfig.setFieldname(fieldName);
                 CustomFieldBean customFieldBean = fieldFormConfig.getCustomBean();
                 if (customFieldBean == null) {
