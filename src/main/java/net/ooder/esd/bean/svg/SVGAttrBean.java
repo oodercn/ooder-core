@@ -276,6 +276,8 @@ public class SVGAttrBean implements CustomBean {
         this.title = title;
     }
 
+
+
     public SVGAttrBean clone() {
         SVGAttrBean svgBean = new SVGAttrBean();
         OgnlUtil.copy(this, svgBean, null);

@@ -37,6 +37,7 @@ public class SVGProperties extends ContainerProperties {
 
 
     public SVGProperties(SVGBean svgBean) {
+
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(svgBean), Map.class), this, false, false);
     }
 

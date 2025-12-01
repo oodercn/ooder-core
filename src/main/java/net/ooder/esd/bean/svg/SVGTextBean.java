@@ -90,7 +90,6 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
 
         }
         Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
-
         OgnlUtil.setProperties(valueMap, this, false, false);
     }
 

@@ -1,13 +1,16 @@
 package net.ooder.esd.tool.properties.svg;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
-import net.ooder.annotation.CustomBean;
+import net.ooder.esd.bean.svg.SVGAttrBean;
 import net.ooder.esd.tool.properties.svg.comb.BGText;
 import net.ooder.esd.tool.properties.svg.comb.Text;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 
 import java.util.List;
+import java.util.Map;
 
-public class SVGAttr  {
+public class SVGAttr {
 
     String rx;
 
@@ -71,6 +74,15 @@ public class SVGAttr  {
 
     }
 
+    public SVGAttr(SVGAttrBean attrBean) {
+        fill(attrBean);
+
+    }
+
+   protected void fill(SVGAttrBean attrBean) {
+        OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(attrBean), Map.class), this, false, false);
+    }
+
 
     public String getText() {
         return text;
@@ -79,7 +91,6 @@ public class SVGAttr  {
     public void setText(String text) {
         this.text = text;
     }
-
 
 
     public Long getStrokeopacity() {
