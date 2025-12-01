@@ -19,7 +19,9 @@ public class SVGProperties extends ContainerProperties {
 
     // Map<String, Object> attr;
     Boolean shadow;
+
     String animDraw;
+
     String offsetFlow;
 
 
