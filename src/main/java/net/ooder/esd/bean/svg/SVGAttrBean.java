@@ -6,7 +6,6 @@ import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.svg.SVGAttrAnnotation;
 import net.ooder.esd.tool.properties.svg.SVGAttr;
-import net.ooder.esd.tool.properties.svg.SVGProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -17,19 +16,19 @@ import java.util.Set;
 
 @AnnotationType(clazz = SVGAttrAnnotation.class)
 public class SVGAttrBean implements CustomBean {
-    Integer rx;
+    String rx;
 
-    Integer ry;
+    String ry;
 
-    Integer x;
+    String x;
 
-    Integer y;
+    String y;
 
-    Integer r;
+    String r;
 
-    Integer cx;
+    String cx;
 
-    Integer cy;
+    String cy;
 
     String stroke;
 
@@ -37,12 +36,9 @@ public class SVGAttrBean implements CustomBean {
 
     String path;
 
-
     String text;
 
-
     String src;
-
 
     List<String> transform;
 
@@ -105,59 +101,59 @@ public class SVGAttrBean implements CustomBean {
         return AnnotationUtil.fillBean(annotation, this);
     }
 
-    public Integer getRx() {
-        return rx;
-    }
-
-    public void setRx(Integer rx) {
-        this.rx = rx;
-    }
-
-    public Integer getRy() {
-        return ry;
-    }
-
-    public void setRy(Integer ry) {
-        this.ry = ry;
-    }
-
-    public Integer getX() {
+    public String getX() {
         return x;
     }
 
-    public void setX(Integer x) {
+    public void setX(String x) {
         this.x = x;
     }
 
-    public Integer getY() {
+    public String getY() {
         return y;
     }
 
-    public void setY(Integer y) {
+    public void setY(String y) {
         this.y = y;
     }
 
-    public Integer getR() {
+    public String getRx() {
+        return rx;
+    }
+
+    public void setRx(String rx) {
+        this.rx = rx;
+    }
+
+    public String getRy() {
+        return ry;
+    }
+
+    public void setRy(String ry) {
+        this.ry = ry;
+    }
+
+    public String getR() {
         return r;
     }
 
-    public void setR(Integer r) {
+    public void setR(String r) {
         this.r = r;
     }
 
-    public Integer getCx() {
+    public String getCx() {
         return cx;
     }
 
-    public void setCx(Integer cx) {
+    public void setCx(String cx) {
         this.cx = cx;
     }
 
-    public Integer getCy() {
+    public String getCy() {
         return cy;
     }
 
-    public void setCy(Integer cy) {
+    public void setCy(String cy) {
         this.cy = cy;
     }
 
