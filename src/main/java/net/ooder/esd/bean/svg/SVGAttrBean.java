@@ -77,6 +77,7 @@ public class SVGAttrBean implements CustomBean {
     }
 
     public SVGAttrBean(SVGAttr properties) {
+
         Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
 

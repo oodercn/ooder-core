@@ -2,12 +2,12 @@ package net.ooder.esd.bean.svg;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.svg.SVGAnnotation;
 import net.ooder.esd.annotation.ui.VisibilityType;
 import net.ooder.esd.tool.properties.svg.SVGProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;

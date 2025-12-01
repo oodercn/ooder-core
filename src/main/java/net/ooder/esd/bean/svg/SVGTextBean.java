@@ -5,6 +5,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomClass;
+import net.ooder.esd.annotation.svg.SVGAttrAnnotation;
 import net.ooder.esd.annotation.svg.SVGTextAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CursorType;
@@ -110,7 +111,11 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
             if (annotation instanceof SVGTextAnnotation) {
                 fillData((SVGTextAnnotation) annotation);
             }
+            if (annotation instanceof SVGAttrAnnotation) {
+                 AnnotationUtil.fillBean(annotation, this);
+            }
         }
+        attr = new SVGAttrBean(annotations);
         svgBean = new SVGBean(annotations);
 
     }
@@ -224,12 +229,25 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
 
     public SVGTextBean clone() {
         SVGTextBean textBean = new SVGTextBean();
+        textBean.setFontSize(fontSize);
+        textBean.setFill(fill);
+        textBean.setFontWeight(fontWeight);
+        textBean.setFontFamily(fontFamily);
+        textBean.setFontStyle(fontStyle);
+        textBean.setStrokeWidth(strokeWidth);
+        textBean.setStroke(stroke);
+        textBean.setText(text);
+        textBean.setTitle(title);
+        textBean.setCursor(cursor);
+
+        OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(this), Map.class), textBean, false, false);
         if (svgBean != null) {
             textBean.setSvgBean(svgBean.clone());
         }
         if (attr != null) {
             textBean.setAttr(attr.clone());
         }
+
         return textBean;
     }
 
