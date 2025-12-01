@@ -15,9 +15,9 @@ import java.util.Set;
 
 @AnnotationType(clazz = CircleKeyAnnotation.class)
 public class CircleKey extends Key {
-    public Integer cx = 0;
-    public Integer cy = 0;
-    public Integer r = 25;
+    public String cx = "0";
+    public String cy = "0";
+    public String r = "25";
 
 
     public CircleKey(SVGProperties properties) {
@@ -48,28 +48,27 @@ public class CircleKey extends Key {
         return AnnotationUtil.fillBean(annotation, this);
     }
 
-
-    public int getCx() {
+    public String getCx() {
         return cx;
     }
 
-    public void setCx(int cx) {
+    public void setCx(String cx) {
         this.cx = cx;
     }
 
-    public int getCy() {
+    public String getCy() {
         return cy;
     }
 
-    public void setCy(int cy) {
+    public void setCy(String cy) {
         this.cy = cy;
     }
 
-    public int getR() {
+    public String getR() {
         return r;
     }
 
-    public void setR(int r) {
+    public void setR(String r) {
         this.r = r;
     }
 

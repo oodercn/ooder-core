@@ -9,19 +9,19 @@ import java.util.List;
 
 public class SVGAttr  {
 
-    Integer rx;
+    String rx;
 
-    Integer ry;
+    String ry;
 
     String x;
 
     String y;
 
-    Integer r;
+    String r;
 
-    Integer cx;
+    String cx;
 
-    Integer cy;
+    String cy;
 
     String stroke;
 
@@ -80,13 +80,6 @@ public class SVGAttr  {
         this.text = text;
     }
 
-    public Integer getR() {
-        return r;
-    }
-
-    public void setR(Integer r) {
-        this.r = r;
-    }
 
 
     public Long getStrokeopacity() {
@@ -105,35 +98,43 @@ public class SVGAttr  {
         this.strokelinejoin = strokelinejoin;
     }
 
-    public Integer getRx() {
+    public String getRx() {
         return rx;
     }
 
-    public void setRx(Integer rx) {
+    public void setRx(String rx) {
         this.rx = rx;
     }
 
-    public Integer getRy() {
+    public String getRy() {
         return ry;
     }
 
-    public void setRy(Integer ry) {
+    public void setRy(String ry) {
         this.ry = ry;
     }
 
-    public Integer getCx() {
+    public String getR() {
+        return r;
+    }
+
+    public void setR(String r) {
+        this.r = r;
+    }
+
+    public String getCx() {
         return cx;
     }
 
-    public void setCx(Integer cx) {
+    public void setCx(String cx) {
         this.cx = cx;
     }
 
-    public Integer getCy() {
+    public String getCy() {
         return cy;
     }
 
-    public void setCy(Integer cy) {
+    public void setCy(String cy) {
         this.cy = cy;
     }
 

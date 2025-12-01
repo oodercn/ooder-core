@@ -99,8 +99,8 @@ public class ConnectorKey extends Key {
 
             if (start instanceof CircleKey) {
                 CircleKey circleKey = (CircleKey) start;
-                ssx = circleKey.getCx();
-                ssy = circleKey.getCy();
+                ssx = TypeUtils.castToInt(circleKey.getCx());
+                ssy = TypeUtils.castToInt(circleKey.getCy());
             } else if (start instanceof RectKey) {
                 RectKey rectKey = (RectKey) start;
                 ssx = TypeUtils.castToInt(rectKey.getX());
@@ -111,8 +111,8 @@ public class ConnectorKey extends Key {
 
             if (end instanceof CircleKey) {
                 CircleKey circleKey = (CircleKey) end;
-                eex = circleKey.getCx();
-                eey = circleKey.getCy();
+                eex = TypeUtils.castToInt(circleKey.getCx());
+                eey = TypeUtils.castToInt(circleKey.getCy());
             } else if (end instanceof RectKey) {
                 RectKey rectKey = (RectKey) end;
                 eex = TypeUtils.castToInt(rectKey.getX());
@@ -124,24 +124,24 @@ public class ConnectorKey extends Key {
 
             if (start instanceof CircleKey) {
                 CircleKey circleKey = (CircleKey) start;
-                int cSx = circleKey.getCx() - circleKey.getR();
+                int cSx = TypeUtils.castToInt(circleKey.getCx()) - TypeUtils.castToInt(circleKey.getR());
                 int cEx = eex + eew / 2;
                 if (cSx > cEx) {
                     sx = cSx - 2;
-                } else if (cSx <= cEx && cSx > cEx - circleKey.getR() * 2) {
-                    sx = cSx + circleKey.getR();
+                } else if (cSx <= cEx && cSx > cEx - TypeUtils.castToInt(circleKey.getR()) * 2) {
+                    sx = cSx + TypeUtils.castToInt(circleKey.getR());
                 } else {
-                    sx = cSx + circleKey.getR() * 2 + 2;
+                    sx = cSx + TypeUtils.castToInt(circleKey.getR()) * 2 + 2;
                 }
 
-                int csy = circleKey.getCy() - circleKey.getR();
+                int csy = TypeUtils.castToInt(circleKey.getCy()) - TypeUtils.castToInt(circleKey.getR());
                 int cEy = eey - eeh / 2;
                 if (csy > cEy) {
                     sy = csy - 2;
-                } else if (csy <= cEy - circleKey.getR() * 2) {
-                    sy = csy + circleKey.getR() * 2 + 2;
+                } else if (csy <= cEy - TypeUtils.castToInt(circleKey.getR()) * 2) {
+                    sy = csy + TypeUtils.castToInt(circleKey.getR()) * 2 + 2;
                 } else {
-                    sy = csy + circleKey.getR();
+                    sy = csy + TypeUtils.castToInt(circleKey.getR());
                 }
 
 
@@ -205,25 +205,25 @@ public class ConnectorKey extends Key {
 
             if (end instanceof CircleKey) {
                 CircleKey circleKey = (CircleKey) end;
-                int cEx = circleKey.getCx() - circleKey.getR();
+                int cEx = TypeUtils.castToInt(circleKey.getCx()) - TypeUtils.castToInt(circleKey.getR());
                 int cSx = ssx + ssw / 2;
 
                 if (cEx > cEx) {
                     ex = cSx - 5;
-                } else if (cEx <= cEx && cEx > cEx - circleKey.getR() * 2) {
-                    ex = cEx + circleKey.getR();
+                } else if (cEx <= cEx && cEx > cEx - TypeUtils.castToInt(circleKey.getR()) * 2) {
+                    ex = cEx + TypeUtils.castToInt(circleKey.getR());
                 } else {
-                    ex = cEx + circleKey.getR() * 2 + 5;
+                    ex = cEx + TypeUtils.castToInt(circleKey.getR()) * 2 + 5;
                 }
 
-                int cEy = circleKey.getCy() - circleKey.getR();
+                int cEy = TypeUtils.castToInt(circleKey.getCy()) - TypeUtils.castToInt(circleKey.getR());
                 int cSy = ssy - ssh / 2;
                 if (cEy > cSy) {
                     ey = cEy - 5;
-                } else if (cEy <= cSy - circleKey.getR() * 2) {
-                    ey = cEy + circleKey.getR() * 2 + 5;
+                } else if (cEy <= cSy - TypeUtils.castToInt(circleKey.getR()) * 2) {
+                    ey = cEy + TypeUtils.castToInt(circleKey.getR()) * 2 + 5;
                 } else {
-                    ey = cEy + circleKey.getR();
+                    ey = cEy + TypeUtils.castToInt(circleKey.getR());
                 }
 
             } else if (end instanceof RectKey) {
