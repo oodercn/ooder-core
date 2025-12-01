@@ -19,7 +19,6 @@ import net.ooder.esd.tool.properties.svg.text.SVGTextProperties;
 import net.ooder.esd.tool.properties.svg.text.TextAttr;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
-
 import java.lang.annotation.Annotation;
 import java.util.*;
 
