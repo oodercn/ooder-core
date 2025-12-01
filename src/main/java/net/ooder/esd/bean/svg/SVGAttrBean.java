@@ -57,7 +57,6 @@ public class SVGAttrBean implements CustomBean {
 
 
     @JSONField(name = "stroke-linejoin")
-
     String strokelinejoin;
 
     @JSONField(name = "stroke-miterlimit")

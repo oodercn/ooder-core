@@ -15,6 +15,7 @@ import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.SVGTextComponent;
 import net.ooder.esd.tool.properties.svg.text.SVGTextProperties;
+import net.ooder.esd.tool.properties.svg.text.TextAttr;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -75,11 +76,22 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
     }
 
     void init(SVGTextProperties properties) {
-        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
-        OgnlUtil.setProperties(valueMap, this, false, false);
-        if (properties.getAttr()!=null){
-            JSON.parseObject(JSON.toJSONString(properties.getAttr()),this.getClass());
+        TextAttr attr = properties.getAttr();
+        if (properties.getAttr() != null) {
+            this.fontSize = attr.getFontSize();
+            this.fill = attr.getFill();
+            this.fontWeight = attr.getFontWeight();
+            this.fontFamily = attr.getFontFamily();
+            this.fontStyle = attr.getFontStyle();
+            this.strokeWidth = attr.getStrokeWidth();
+            this.stroke = attr.getStroke();
+            this.title = attr.getTitle();
+            this.cursor = attr.getCursor();
+
         }
+        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
+
+        OgnlUtil.setProperties(valueMap, this, false, false);
     }
 
     @Override
