@@ -196,7 +196,6 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
                 init(moduleAnnotation);
             }
             try {
-
                 if (enumClass != null) {
                     this.enumsClassBean = new EnumsClassBean(enumClass);
                     List<LayoutListItem> layoutListItems = ESDEnumsUtil.getEnumItems(enumClass, LayoutListItem.class);

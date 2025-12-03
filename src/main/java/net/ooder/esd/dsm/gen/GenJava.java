@@ -134,15 +134,12 @@ public class GenJava {
             file.mkdirs();
         }
 
-
         try {
             pool.appendClassPath(javaBuildPath);
         } catch (NotFoundException e) {
             e.printStackTrace();
         }
-
         log.info("JAVA sourcePath ===>" + this.javaBuildPath);
-
 
     }
 
