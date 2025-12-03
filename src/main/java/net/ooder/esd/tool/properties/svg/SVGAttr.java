@@ -7,8 +7,8 @@ import net.ooder.esd.tool.properties.svg.comb.BGText;
 import net.ooder.esd.tool.properties.svg.comb.Text;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class SVGAttr {
 
@@ -36,7 +36,7 @@ public class SVGAttr {
 
     String src;
 
-    List<String> transform;
+    Set<String> transform;
 
     @JSONField(name = "stroke-width")
     Integer strokewidth;
@@ -79,7 +79,7 @@ public class SVGAttr {
 
     }
 
-   protected void fill(SVGAttrBean attrBean) {
+    protected void fill(SVGAttrBean attrBean) {
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(attrBean), Map.class), this, false, false);
     }
 
@@ -189,11 +189,11 @@ public class SVGAttr {
         this.y = y;
     }
 
-    public List<String> getTransform() {
+    public Set<String> getTransform() {
         return transform;
     }
 
-    public void setTransform(List<String> transform) {
+    public void setTransform(Set<String> transform) {
         this.transform = transform;
     }
 

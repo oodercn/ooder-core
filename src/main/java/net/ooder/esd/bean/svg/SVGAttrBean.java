@@ -40,7 +40,7 @@ public class SVGAttrBean implements CustomBean {
 
     String src;
 
-    List<String> transform;
+    Set<String> transform;
 
 
     @JSONField(name = "stroke-width")
@@ -197,11 +197,11 @@ public class SVGAttrBean implements CustomBean {
         this.src = src;
     }
 
-    public List<String> getTransform() {
+    public Set<String> getTransform() {
         return transform;
     }
 
-    public void setTransform(List<String> transform) {
+    public void setTransform(Set<String> transform) {
         this.transform = transform;
     }
 
