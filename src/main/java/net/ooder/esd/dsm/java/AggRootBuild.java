@@ -93,9 +93,6 @@ public class AggRootBuild {
     Step step = Step.startCreatView;
 
 
-    String[] steps = new String[]{};
-
-
     public AggRootBuild() {
 
     }
@@ -536,9 +533,8 @@ public class AggRootBuild {
                 }
             }
         }
-
-
     }
+
 
     public List<JavaSrcBean> getModuleJavaSrc() {
         List<JavaSrcBean> allSrcBean = new ArrayList<>();
