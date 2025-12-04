@@ -7,6 +7,7 @@ import net.ooder.esd.annotation.ui.PositionType;
 import net.ooder.esd.bean.CustomDivBean;
 import net.ooder.esd.bean.CustomPanelBean;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.field.CustomBlockFieldBean;
 import net.ooder.esd.bean.field.CustomPanelFieldBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;

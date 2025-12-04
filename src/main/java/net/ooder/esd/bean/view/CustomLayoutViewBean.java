@@ -113,7 +113,6 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
                                 javaSrcBeans.addAll(cModuleBean.getJavaSrcBeans());
                             }
                         }
-
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     }

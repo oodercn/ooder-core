@@ -39,6 +39,10 @@ public class CustomFieldBlockComponent extends BlockComponent {
         this.setAlias(field.getFieldname());
         //存在集合属性
         CustomBlockFieldBean blockFieldBean = field.getWidgetConfig();
+        BlockProperties blockProperties = new BlockProperties();
+        if (field.getContainerBean() != null) {
+            blockProperties.init(field.getContainerBean());
+        }
         if (field.getMethodConfig() != null && field.getMethodConfig().getView() != null && field.getMethodConfig().getView() instanceof CustomBlockFormViewBean) {
             CustomBlockFormViewBean customComponentViewBean = (CustomBlockFormViewBean) field.getMethodConfig().getView();
             CustomModuleBean customModuleBean = customComponentViewBean.getModuleBean();
@@ -54,15 +58,16 @@ public class CustomFieldBlockComponent extends BlockComponent {
             }
 
             CustomBlockBean blockBean = customModuleBean.getBlockBean();
-            BlockProperties blockProperties = new BlockProperties(blockBean);
+            blockProperties = new BlockProperties(blockBean);
             blockProperties.init(blockFieldBean);
             this.setProperties(blockProperties);
             init(euModule, customComponentViewBean, valueMap);
-        } else {
+
+        } else if (blockFieldBean != null) {
             blockFieldBean.setContainerBean(field.getContainerBean());
-            BlockProperties blockProperties = new BlockProperties(blockFieldBean);
-            this.setProperties(blockProperties);
+            blockProperties.init(blockFieldBean);
         }
+        this.setProperties(blockProperties);
         this.setTarget(target);
     }
 
