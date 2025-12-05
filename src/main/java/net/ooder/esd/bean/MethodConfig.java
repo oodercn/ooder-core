@@ -186,7 +186,6 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
             requestUrl = StringUtility.formatUrl(requestUrl);
         }
         requestBody = menuItem.getRequestBody();
-
         if (this.getParamSet().size() == 1) {
             Class clazz = this.getParamSet().iterator().next().getParamClass();
             if (!MethodUtil.checkType(clazz.getSimpleName()) && !clazz.equals(String.class)) {
@@ -198,6 +197,8 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
         init(requestMethodBean);
     }
 
+
+
     public MethodConfig(Method method, ApiClassConfig sourceClassConfig) {
         this.domainId = sourceClassConfig.getDomainId();
         this.sourceClassConfig = sourceClassConfig;
@@ -207,7 +208,6 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
         this.requestMethodBean = new RequestMethodBean(method, requestMappingBean, domainId);
         init(requestMethodBean);
     }
-
 
     public MethodConfig(CustomMethodInfo customMethodInfo) {
         this.method = customMethodInfo.getInnerMethod();
@@ -294,6 +294,41 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
                 e.printStackTrace();
             }
         }
+
+    }
+    public MethodConfig(CustomMethodInfo customMethodInfo, CustomMenuItem menuItem, AggEntityConfig aggregationConfig) {
+
+
+        this.domainId = aggregationConfig.getDomainId();
+        this.method = customMethodInfo.getInnerMethod();
+        this.name = customMethodInfo.getName();
+        this.methodName = method.getName();
+        String urlName = name;
+        if (customMethodInfo.isModule()) {
+            urlName = OODUtil.formatJavaName(customMethodInfo.getName(), true);
+        } else {
+            urlName = methodName;
+        }
+
+        this.fieldName = customMethodInfo.getFieldName();
+        this.index = customMethodInfo.getIndex();
+        this.sourceClassName = aggregationConfig.getSourceClassName();
+
+        if (customMethodInfo.getViewType() != null) {
+            this.getModuleBean().setModuleViewType(ModuleViewType.getModuleViewByViewType(customMethodInfo.getViewType()));
+        }
+        RequestMappingBean requestMappingBean = new RequestMappingBean(urlName, aggregationConfig.getUrl());
+        this.requestMethodBean = new RequestMethodBean(method, requestMappingBean, domainId);
+        init(requestMethodBean);
+
+        if (menuItem==null){
+            menuItem=this.getDefaultMenuItem();;
+        }
+        if (menuItem != null) {
+            urlName = menuItem.getDefaultMethodName();
+            this.requestMapping = new RequestMappingBean(urlName, aggregationConfig.getUrl());
+        }
+
 
     }
 

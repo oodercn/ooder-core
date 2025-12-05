@@ -123,7 +123,7 @@ public class ApiClassConfig {
 
         Collections.sort(esdMethods);
         for (CustomMethodInfo field : esdMethods) {
-            CustomMethodInfo methodField = (CustomMethodInfo) field;
+            CustomMethodInfo methodField =  field;
             RequestMethodBean methodBean = null;
             if (config != null) {
                 methodBean = config.getMethodByName(methodField.getInnerMethod().getName());

@@ -169,33 +169,6 @@ public class CustomFieldBlockComponent extends BlockComponent {
                 if (fieldInfo.getComboConfig() != null && (fieldInfo.getWidgetConfig() instanceof ComboInputFieldBean) && !componentType.equals(ComponentType.MODULE)) {
                     componentType = ComponentType.COMBOINPUT;
                 }
-
-//                if (fieldInfo.getComboConfig() != null && (fieldInfo.getWidgetConfig() instanceof ComboInputFieldBean) && !componentType.equals(ComponentType.LAYOUT)) {
-//                    ModuleViewType moduleViewType = fieldInfo.getMethodConfig().getModuleViewType();
-//                    if (moduleViewType != null) {
-//                        switch (moduleViewType) {
-//                            case NAVMENUBARCONFIG:
-//                                componentType = ComponentType.MENUBAR;
-//                                break;
-//                            case NAVGALLERYCONFIG:
-//                                componentType = ComponentType.GALLERY;
-//                                break;
-//                            case NAVTREECONFIG:
-//                                componentType = ComponentType.TREEVIEW;
-//                                break;
-//
-//                            case NAVBUTTONLAYOUTCONFIG:
-//                                componentType = ComponentType.BUTTONLAYOUT;
-//                                break;
-//
-//                            case NAVFOLDINGTREECONFIG:
-//                                componentType = ComponentType.FOLDINGTABS;
-//                                break;
-//                        }
-//                    }
-//
-//                }
-
                 Object value = null;
                 if (valueMap != null) {
                     value = valueMap.get(fieldInfo.getFieldname());

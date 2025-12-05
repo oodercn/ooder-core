@@ -1,26 +1,22 @@
 package net.ooder.esd.dsm.aggregation;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import javassist.NotFoundException;
+import net.ooder.annotation.CustomBean;
+import net.ooder.annotation.SimpleCustomBean;
 import net.ooder.common.JDSException;
 import net.ooder.common.database.bpm.DefaultColEnum;
 import net.ooder.common.util.CaselessStringKeyHashMap;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.common.util.StringUtility;
-import net.ooder.annotation.CustomBean;
-import net.ooder.annotation.SimpleCustomBean;
-import net.ooder.esd.annotation.ui.CustomMenuItem;
-import net.ooder.esd.annotation.event.CustomEvent;
-import net.ooder.esd.annotation.event.CustomFieldEvent;
-import net.ooder.esd.annotation.event.CustomFormEvent;
-import net.ooder.esd.annotation.event.CustomHotKeyEvent;
-import net.ooder.esd.annotation.event.CustomContentBlockEvent;
-import net.ooder.esd.annotation.event.CustomGalleryEvent;
-import net.ooder.esd.annotation.event.CustomTitleBlockEvent;
-import net.ooder.esd.annotation.event.CustomGridEvent;
-import net.ooder.esd.annotation.event.CustomTabsEvent;
-import net.ooder.esd.annotation.event.CustomTreeEvent;
+import net.ooder.esd.annotation.ModuleAnnotation;
+import net.ooder.esd.annotation.event.*;
+import net.ooder.esd.annotation.field.APIEventAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.bean.*;
+import net.ooder.esd.annotation.ui.CustomMenuItem;
+import net.ooder.esd.bean.MethodChinaBean;
+import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.RepositoryBean;
 import net.ooder.esd.custom.CustomMethodInfo;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.custom.ESDField;
@@ -29,10 +25,10 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.ref.AggEntityRef;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
-import net.ooder.web.AggregationBean;
-import net.ooder.web.EntityBean;
-import net.ooder.web.RequestMappingBean;
-import net.ooder.web.ViewBean;
+import net.ooder.esd.tool.component.APICallerComponent;
+import net.ooder.esd.tool.properties.APICallerProperties;
+import net.ooder.web.*;
+import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.MethodUtil;
 import org.springframework.stereotype.Controller;
 
@@ -289,139 +285,167 @@ public class AggEntityConfig {
         return rootClass;
     }
 
-    void  initClass(ESDClass esdClass) {
-        List<CustomMethodInfo> esdMethods = new ArrayList<>();
-        esdMethods.addAll(esdClass.getMethodsList());
-        // esdMethods.addAll(esdClass.getOtherMethodsList());
-        Collections.sort(esdMethods);
-        this.currClassName = esdClass.getClassName();
-        this.entityBean = esdClass.getEntityBean();
-        this.menuBarBean = esdClass.getMenuBarBean();
-        this.entityClassName = esdClass.getEntityClassName();
-        this.methodChinaBean = esdClass.getMethodChinaBean();
-        this.aggregationBean = esdClass.getAggregationBean();
-        if (aggregationBean != null) {
-            if (aggregationBean.getSourceClass() != null) {
-                this.sourceClassName = aggregationBean.getSourceClass().getName();
+    void initClass(ESDClass esdClass) {
+        try {
+            APIConfig config = APIConfigFactory.getInstance().getAPIConfig(esdClass.getClassName());
+            MethodConfig methodAPIBean = null;
+            List<CustomMethodInfo> esdMethods = new ArrayList<>();
+            esdMethods.addAll(esdClass.getMethodsList());
+            Collections.sort(esdMethods);
+            this.currClassName = esdClass.getClassName();
+            this.entityBean = esdClass.getEntityBean();
+            this.menuBarBean = esdClass.getMenuBarBean();
+            this.entityClassName = esdClass.getEntityClassName();
+            this.methodChinaBean = esdClass.getMethodChinaBean();
+            this.aggregationBean = esdClass.getAggregationBean();
+            if (aggregationBean != null) {
+                if (aggregationBean.getSourceClass() != null) {
+                    this.sourceClassName = aggregationBean.getSourceClass().getName();
+                } else {
+                    this.sourceClassName = esdClass.getCtClass().getName();
+                }
+                if (aggregationBean.getRootClass() == null) {
+                    aggregationBean.setRootClass(esdClass.getCtClass());
+                }
+                if (aggregationBean.getEntityClass() != null) {
+                    this.entityClassName = aggregationBean.getEntityClass().getName();
+                }
+
             } else {
                 this.sourceClassName = esdClass.getCtClass().getName();
             }
-            if (aggregationBean.getRootClass() == null) {
-                aggregationBean.setRootClass(esdClass.getCtClass());
-            }
-            if (aggregationBean.getEntityClass() != null) {
-                this.entityClassName = aggregationBean.getEntityClass().getName();
-            }
 
-        } else {
-            this.sourceClassName = esdClass.getCtClass().getName();
-        }
+            this.domainId = esdClass.getDomainId();
+            this.viewBean = esdClass.getViewBean();
+            this.requestMappingBean = esdClass.getRequestMappingBean();
+            this.repositoryBean = esdClass.getRepositoryBean();
+            try {
+                DomainInst domainInst = DSMFactory.getInstance().getAggregationManager().getDomainInstById(domainId, null);
+                String baseUrl = domainInst.getProjectVersionName() + "/" + domainInst.getSpace() + "/";
+                if (requestMappingBean == null) {
+                    String beanPath = esdClass.getEntityClass().getName().toLowerCase();
+                    if (viewBean != null) {
+                        beanPath = StringUtility.formatUrl(beanPath);
+                    }
 
-        this.domainId = esdClass.getDomainId();
-        this.viewBean = esdClass.getViewBean();
-        this.requestMappingBean = esdClass.getRequestMappingBean();
-        this.repositoryBean = esdClass.getRepositoryBean();
-        try {
-            DomainInst domainInst = DSMFactory.getInstance().getAggregationManager().getDomainInstById(domainId, null);
-            String baseUrl = domainInst.getProjectVersionName() + "/" + domainInst.getSpace() + "/";
-            if (requestMappingBean == null) {
-                String beanPath = esdClass.getEntityClass().getName().toLowerCase();
-                if (viewBean != null) {
-                    beanPath = StringUtility.formatUrl(beanPath);
-                }
+                    if (esdClass.isProxy()) {
+                        requestMappingBean = new RequestMappingBean(baseUrl + "/" + beanPath, "");
+                    } else {
+                        requestMappingBean = new RequestMappingBean(beanPath, "");
+                    }
 
-                if (esdClass.isProxy()) {
-                    requestMappingBean = new RequestMappingBean(baseUrl + "/" + beanPath, "");
                 } else {
-                    requestMappingBean = new RequestMappingBean(beanPath, "");
+                    url = requestMappingBean.getFristUrl();
+                    if (url.startsWith("/")) {
+                        url = url.substring(1);
+                    }
+                    if (esdClass.isProxy()) {
+                        if (!url.startsWith(baseUrl)) {
+                            requestMappingBean = new RequestMappingBean(baseUrl + "/" + url, "");
+                        }
+                    }
                 }
-
-            } else {
                 url = requestMappingBean.getFristUrl();
-                if (url.startsWith("/")) {
-                    url = url.substring(1);
+            } catch (JDSException e) {
+                e.printStackTrace();
+            }
+
+//
+//            for (ESDField esdField : esdClass.getFieldList()) {
+//                allFieldMap.put(esdField.getName(), new FieldAggConfig(esdField, domainId));
+//                fieldNames.add(esdField.getName());
+//            }
+//
+//            for (ESDField esdField : esdClass.getDisableFieldList()) {
+//                allFieldMap.put(esdField.getName(), new FieldAggConfig(esdField, domainId));
+//                if (!fieldNames.contains(esdField.getName())) {
+//                    fieldNames.add(esdField.getName());
+//                }
+//            }
+//
+//            for (CustomMethodInfo field : esdClass.getOtherMethodsList()) {
+//                 methodAPIBean = new MethodConfig(field, this);
+//                if (field.getComponentType().equals(ComponentType.MODULE)) {
+//                    if (!moduleMethodNames.contains(methodAPIBean.getMethodName())) {
+//                        moduleMethodNames.add(methodAPIBean.getMethodName());
+//                    }
+//                } else {
+//                    if (!otherMethodNames.contains(methodAPIBean.getMethodName())) {
+//                        otherMethodNames.add(methodAPIBean.getMethodName());
+//                    }
+//                }
+//                otherMethodMap.put(methodAPIBean.getMethodName(), methodAPIBean);
+//            }
+//
+//            for (ESDField field : esdClass.getDisableFieldList()) {
+//                if (field instanceof CustomMethodInfo) {
+//                    CustomMethodInfo methodField = (CustomMethodInfo) field;
+//                     methodAPIBean = new MethodConfig(methodField, this);
+//                    if (field.getComponentType().equals(ComponentType.MODULE)) {
+//                        if (!moduleMethodNames.contains(methodAPIBean.getMethodName())) {
+//                            moduleMethodNames.add(methodAPIBean.getMethodName());
+//                        }
+//                    } else {
+//                        if (!otherMethodNames.contains(methodAPIBean.getMethodName())) {
+//                            otherMethodNames.add(methodAPIBean.getMethodName());
+//                        }
+//                    }
+//                    otherMethodMap.put(methodAPIBean.getMethodName(), methodAPIBean);
+//                    if (!allMethodNames.contains(methodAPIBean.getMethodName())) {
+//                        allMethodNames.add(methodAPIBean.getMethodName());
+//                    }
+//                }
+//            }
+
+            for (CustomMethodInfo field : esdMethods) {
+                CustomMethodInfo methodField = field;
+                RequestMethodBean methodBean = null;
+                if (config != null) {
+                    methodBean = config.getMethodByName(methodField.getInnerMethod().getName());
                 }
-                if (esdClass.isProxy()) {
-                    if (!url.startsWith(baseUrl)) {
-                        requestMappingBean = new RequestMappingBean(baseUrl + "/" + url, "");
+                APIEventAnnotation apiEventAnnotation = AnnotationUtil.getMethodAnnotation(methodField.getInnerMethod(), APIEventAnnotation.class);
+                ModuleAnnotation moduleAnnotation = AnnotationUtil.getMethodAnnotation(methodField.getInnerMethod(), ModuleAnnotation.class);
+                if (methodBean != null && methodBean.getUrl() != null && !methodBean.getUrl().equals("")) {
+                    methodAPIBean = new MethodConfig(methodBean, domainId);
+                } else if (moduleAnnotation != null) {
+                    methodAPIBean = new MethodConfig(methodField, this);
+                } else if (apiEventAnnotation != null && apiEventAnnotation.bindMenu().length > 0) {
+                    CustomMenuItem customMenuItem = apiEventAnnotation.bindMenu()[0];
+                    methodAPIBean = new MethodConfig(methodField, customMenuItem, this);
+                } else if (field.getComponentType().equals(ComponentType.MODULE)) {
+                    methodAPIBean = new MethodConfig(methodField, this);
+                }
+
+                if (methodAPIBean != null && !methodField.getReturnType().equals(Void.class) && !methodField.getReturnType().equals(Enum.class)) {
+
+                    if (field.getComponentType().equals(ComponentType.MODULE)) {
+                        if (!moduleMethodNames.contains(methodAPIBean.getMethodName())) {
+                            moduleMethodNames.add(methodAPIBean.getMethodName());
+                        }
+                    } else if (MethodUtil.isGetMethod(methodAPIBean.getMethod()) || methodAPIBean.isModule()) {
+                        if (!fieldNames.contains(methodAPIBean.getFieldName())) {
+                            fieldNames.add(methodAPIBean.getFieldName());
+                        }
+                        allFieldMap.put(methodAPIBean.getFieldName(), new FieldAggConfig(field, domainId));
+                    }
+
+                    allMethodMap.put(methodAPIBean.getMethodName(), methodAPIBean);
+                    if (!allMethodNames.contains(methodAPIBean.getMethodName())){
+                        allMethodNames.add(methodAPIBean.getMethodName());
                     }
                 }
+
+
             }
-            url = requestMappingBean.getFristUrl();
-        } catch (JDSException e) {
+
+            for (ESDField refField : esdClass.getRefFields()) {
+                if (refField instanceof CustomMethodInfo) {
+                    AggEntityRef aggEntityRef = new AggEntityRef((CustomMethodInfo) refField, domainId);
+                    this.refs.add(aggEntityRef);
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-
-
-        for (ESDField esdField : esdClass.getFieldList()) {
-            allFieldMap.put(esdField.getName(), new FieldAggConfig(esdField, domainId));
-            fieldNames.add(esdField.getName());
-        }
-
-        for (ESDField esdField : esdClass.getDisableFieldList()) {
-            allFieldMap.put(esdField.getName(), new FieldAggConfig(esdField, domainId));
-            if (!fieldNames.contains(esdField.getName())) {
-                fieldNames.add(esdField.getName());
-            }
-        }
-
-        for (CustomMethodInfo field : esdClass.getOtherMethodsList()) {
-            MethodConfig methodAPIBean = new MethodConfig(field, this);
-            if (field.getComponentType().equals(ComponentType.MODULE)) {
-                if (!moduleMethodNames.contains(methodAPIBean.getMethodName())) {
-                    moduleMethodNames.add(methodAPIBean.getMethodName());
-                }
-            } else {
-                if (!otherMethodNames.contains(methodAPIBean.getMethodName())) {
-                    otherMethodNames.add(methodAPIBean.getMethodName());
-                }
-            }
-            otherMethodMap.put(methodAPIBean.getMethodName(), methodAPIBean);
-        }
-
-        for (ESDField field : esdClass.getDisableFieldList()) {
-            if (field instanceof CustomMethodInfo) {
-                CustomMethodInfo methodField = (CustomMethodInfo) field;
-                MethodConfig methodAPIBean = new MethodConfig(methodField, this);
-                if (field.getComponentType().equals(ComponentType.MODULE)) {
-                    if (!moduleMethodNames.contains(methodAPIBean.getMethodName())) {
-                        moduleMethodNames.add(methodAPIBean.getMethodName());
-                    }
-                } else {
-                    if (!otherMethodNames.contains(methodAPIBean.getMethodName())) {
-                        otherMethodNames.add(methodAPIBean.getMethodName());
-                    }
-                }
-                otherMethodMap.put(methodAPIBean.getMethodName(), methodAPIBean);
-                if (!allMethodNames.contains(methodAPIBean.getMethodName())) {
-                    allMethodNames.add(methodAPIBean.getMethodName());
-                }
-            }
-        }
-
-        for (CustomMethodInfo field : esdMethods) {
-            MethodConfig methodAPIBean = new MethodConfig(field, this);
-            if (field.getComponentType().equals(ComponentType.MODULE)) {
-                if (!moduleMethodNames.contains(methodAPIBean.getMethodName())) {
-                    moduleMethodNames.add(methodAPIBean.getMethodName());
-                }
-            } else if (MethodUtil.isGetMethod(methodAPIBean.getMethod()) || methodAPIBean.isModule()) {
-                if (!fieldNames.contains(methodAPIBean.getFieldName())) {
-                    fieldNames.add(methodAPIBean.getFieldName());
-                }
-                allFieldMap.put(methodAPIBean.getFieldName(), new FieldAggConfig(field, domainId));
-            }
-            allMethodMap.put(methodAPIBean.getMethodName(), methodAPIBean);
-            allMethodNames.remove(methodAPIBean.getMethodName());
-            allMethodNames.add(methodAPIBean.getMethodName());
-
-        }
-
-        for (ESDField refField : esdClass.getRefFields()) {
-            if (refField instanceof CustomMethodInfo) {
-                AggEntityRef aggEntityRef = new AggEntityRef((CustomMethodInfo) refField, domainId);
-                this.refs.add(aggEntityRef);
-            }
         }
     }
 

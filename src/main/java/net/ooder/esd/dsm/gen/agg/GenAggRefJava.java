@@ -7,7 +7,6 @@ import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.DomainInst;
-import net.ooder.esd.dsm.aggregation.context.AggDomainRoot;
 import net.ooder.esd.dsm.aggregation.context.AggEntityRefRoot;
 import net.ooder.esd.dsm.aggregation.ref.AggEntityRef;
 import net.ooder.esd.dsm.aggregation.ref.AggEntityRefProxy;

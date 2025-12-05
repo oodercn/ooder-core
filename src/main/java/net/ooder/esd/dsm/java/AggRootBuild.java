@@ -364,15 +364,14 @@ public class AggRootBuild {
                     chrome.printLog("重新绑定视图关系：" + serviceBean.getClassName(), true);
                     GenJava javaGen = GenJava.getInstance(domainInst.getProjectVersionName());
                     JavaTemp javaTemp = javaGenSource.getJavatemp();
-                    JavaRoot javaRoot = BuildFactory.getInstance().buildJavaRoot(viewRoot, customViewBean, moduleName, javaGenSource.getClassName());
-                    File file = javaGen.createJava(javaTemp, javaRoot, chrome);
-                    ViewInst defaultView = domainInst.getViewInst();
-                    BuildFactory.getInstance().getTempManager().genJavaSrc(file, defaultView, javaTemp.getJavaTempId());
-                    BuildFactory.getInstance().createSource(javaGenSource.getClassName(), viewRoot, javaTemp, javaGenSource.getSrcBean());
-
+                    if (javaTemp != null) {
+                        JavaRoot javaRoot = BuildFactory.getInstance().buildJavaRoot(viewRoot, customViewBean, moduleName, javaGenSource.getClassName());
+                        File file = javaGen.createJava(javaTemp, javaRoot, chrome);
+                        ViewInst defaultView = domainInst.getViewInst();
+                        BuildFactory.getInstance().getTempManager().genJavaSrc(file, defaultView, javaTemp.getJavaTempId());
+                        BuildFactory.getInstance().createSource(javaGenSource.getClassName(), viewRoot, javaTemp, javaGenSource.getSrcBean());
+                    }
                 }
-
-
             }
             step = Step.endReBindService;
         }
