@@ -273,10 +273,10 @@ public class AggRootBuild {
 
     public List<JavaGenSource> loadJavaGenSoruce(List<String> classNameList) {
         List<JavaGenSource> javaGenSources = new ArrayList<>();
-        List<JavaSrcBean> javaSrcList = domainInst.loadJavaSrc(classNameList);
-        for (JavaSrcBean javaSrcBean : javaSrcList) {
+        for (String className : classNameList) {
             JavaGenSource genSource = null;
             try {
+                JavaSrcBean javaSrcBean = domainInst.getJavaSrcByClassName(className);
                 genSource = buildViewContext(javaSrcBean);
             } catch (JDSException e) {
                 e.printStackTrace();
@@ -477,10 +477,11 @@ public class AggRootBuild {
         }
 
         if (viewJavaSrcBean.getViewClassList() != null) {
-            List<JavaSrcBean> srcBeans = viewInst.loadJavaSrc(viewJavaSrcBean.getViewClassList());
-            for (JavaSrcBean srcBean : srcBeans) {
+
+            for (String className : viewJavaSrcBean.getViewClassList()) {
                 try {
-                    javaViewSource.add(this.buildViewContext(srcBean));
+                    JavaSrcBean javaSrcBean = viewInst.getJavaSrcByClassName(className);
+                    javaViewSource.add(this.buildViewContext(javaSrcBean));
                 } catch (JDSException e) {
                     e.printStackTrace();
                 }
@@ -508,10 +509,10 @@ public class AggRootBuild {
         }
 
         if (viewJavaSrcBean.getRepositoryClassList() != null) {
-            List<JavaSrcBean> repositoryBeans = repositoryInst.loadJavaSrc(viewJavaSrcBean.getRepositoryClassList());
-            for (JavaSrcBean srcBean : repositoryBeans) {
+            for (String className : viewJavaSrcBean.getRepositoryClassList()) {
                 try {
-                    repositorySource.add(this.buildViewContext(srcBean));
+                    JavaSrcBean javaSrcBean = viewInst.getJavaSrcByClassName(className);
+                    repositorySource.add(this.buildViewContext(javaSrcBean));
                 } catch (JDSException e) {
                     e.printStackTrace();
                 }

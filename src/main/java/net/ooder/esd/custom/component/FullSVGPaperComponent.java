@@ -27,7 +27,6 @@ import net.ooder.esd.tool.properties.APICallerProperties;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Condition;
 import net.ooder.esd.tool.properties.UrlPathData;
-import net.ooder.esd.tool.properties.svg.SVGPaperProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,8 +122,6 @@ public class FullSVGPaperComponent extends CustomModuleComponent<CustomFieldSVGP
         }
 
         CustomFieldSVGPaperComponent currComponent = new CustomFieldSVGPaperComponent(euModule, methodConfig, valueMap);
-        SVGPaperProperties blockProperties = (SVGPaperProperties) currComponent.getProperties();
-        blockProperties.setDock(Dock.fill);
 
         this.addChildLayoutNav(currComponent);
         this.setCurrComponent(currComponent);

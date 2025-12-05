@@ -99,17 +99,19 @@ public abstract class DSMInst {
         return childPackage;
     }
 
-
-    public List<JavaSrcBean> loadJavaSrc(List<String> classNameList) {
-        List<JavaSrcBean> javaSrcList = new ArrayList<>();
-        for (String className : classNameList) {
-            JavaSrcBean javaSrcBean = getJavaSrcByClassName(className);
-            if (javaSrcBean != null && !javaSrcList.contains(javaSrcBean)) {
-                javaSrcList.add(javaSrcBean);
-            }
-        }
-        return javaSrcList;
-    }
+//
+//    public List<JavaSrcBean> loadJavaSrc(List<String> classNameList) {
+//        synchronized (classNameList) {
+//            List<JavaSrcBean> javaSrcList = new ArrayList<>();
+//            for (String className : classNameList) {
+//                JavaSrcBean javaSrcBean = getJavaSrcByClassName(className);
+//                if (javaSrcBean != null && !javaSrcList.contains(javaSrcBean)) {
+//                    javaSrcList.add(javaSrcBean);
+//                }
+//            }
+//            return javaSrcList;
+//        }
+//    }
 
     public void addJavaBean(JavaSrcBean srcBean) {
         List<JavaSrcBean> javaSrcBeans = this.getJavaEntities();
