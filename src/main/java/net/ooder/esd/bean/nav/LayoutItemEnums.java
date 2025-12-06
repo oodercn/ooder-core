@@ -5,12 +5,14 @@ import net.ooder.esd.annotation.ui.OverflowType;
 import net.ooder.esd.annotation.ui.PosType;
 
 public enum LayoutItemEnums implements LayoutItem {
-    before(PosType.before, OverflowType.hidden, false, true, false, 260, 100, 1000),
-    main(PosType.main, OverflowType.hidden, true, true, false, -1, 100, 1000);
+
+
+    before(PosType.before, OverflowType.hidden, false, true, false,false,false,true, 260, 100, 1000),
+    main(PosType.main, OverflowType.hidden, true,true, false,false,false,  false, -1, 100, 1000);
+    private final boolean flexSize;
     private String name;
     private String imageClass;
     private final Class[] bindClass;
-    private final boolean iniFold;
     private boolean dynDestory;
     private boolean dynLoad;
     private boolean lazyLoad;
@@ -20,16 +22,25 @@ public enum LayoutItemEnums implements LayoutItem {
     private final boolean transparent;
     private final PosType pos;
     private final OverflowType overflow;
+    private final boolean hidden;
+    private final boolean folded;
+    private final boolean locked;
+    private final boolean cmd;
 
 
-    LayoutItemEnums(PosType pos, OverflowType overflow, boolean flexSize, boolean transparent, boolean iniFold, int size, int min, int max, Class... bindClass) {
+    LayoutItemEnums(PosType pos, OverflowType overflow, boolean flexSize, boolean transparent, boolean folded,boolean hidden,boolean locked,boolean cmd,int size, int min, int max, Class... bindClass) {
+
         this.pos = pos;
         this.overflow = overflow;
-        this.iniFold = iniFold;
+        this.flexSize=flexSize;
         this.transparent = transparent;
+        this.folded = folded;
+        this.hidden = hidden;
+        this.locked = locked;
+        this.cmd = cmd;
+        this.size = size;
         this.min = min;
         this.max = max;
-        this.size = size;
         this.bindClass = bindClass;
 
     }
@@ -77,7 +88,39 @@ public enum LayoutItemEnums implements LayoutItem {
 
     @Override
     public boolean isIniFold() {
-        return iniFold;
+        return folded;
+    }
+
+    public boolean isFlexSize() {
+        return flexSize;
+    }
+
+    public void setDynDestory(boolean dynDestory) {
+        this.dynDestory = dynDestory;
+    }
+
+    public void setDynLoad(boolean dynLoad) {
+        this.dynLoad = dynLoad;
+    }
+
+    public void setLazyLoad(boolean lazyLoad) {
+        this.lazyLoad = lazyLoad;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public boolean isFolded() {
+        return folded;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public boolean isCmd() {
+        return cmd;
     }
 
     @Override

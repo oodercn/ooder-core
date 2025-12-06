@@ -273,11 +273,15 @@ public class AggRootBuild {
 
     public List<JavaGenSource> loadJavaGenSoruce(List<String> classNameList) {
         List<JavaGenSource> javaGenSources = new ArrayList<>();
-        for (String className : classNameList) {
+        List<String> classNames = new ArrayList<>();
+        classNames.addAll(classNameList);
+        for (String className : classNames) {
             JavaGenSource genSource = null;
             try {
                 JavaSrcBean javaSrcBean = domainInst.getJavaSrcByClassName(className);
-                genSource = buildViewContext(javaSrcBean);
+                if (javaSrcBean != null) {
+                    genSource = buildViewContext(javaSrcBean);
+                }
             } catch (JDSException e) {
                 e.printStackTrace();
             }
@@ -481,7 +485,13 @@ public class AggRootBuild {
             for (String className : viewJavaSrcBean.getViewClassList()) {
                 try {
                     JavaSrcBean javaSrcBean = viewInst.getJavaSrcByClassName(className);
-                    javaViewSource.add(this.buildViewContext(javaSrcBean));
+                    if (javaSrcBean != null) {
+                        JavaGenSource javaGenSource = buildViewContext(javaSrcBean);
+                        if (!javaViewSource.contains(javaGenSource)) {
+                            javaViewSource.add(javaGenSource);
+                        }
+
+                    }
                 } catch (JDSException e) {
                     e.printStackTrace();
                 }
@@ -497,6 +507,7 @@ public class AggRootBuild {
         }
 
         if (viewJavaSrcBean.getChildClassList() != null) {
+
             childBeans = loadJavaGenSoruce(viewJavaSrcBean.getChildClassList());
         } else {
             childBeans = new ArrayList<>();
@@ -512,7 +523,14 @@ public class AggRootBuild {
             for (String className : viewJavaSrcBean.getRepositoryClassList()) {
                 try {
                     JavaSrcBean javaSrcBean = viewInst.getJavaSrcByClassName(className);
-                    repositorySource.add(this.buildViewContext(javaSrcBean));
+                    if (javaSrcBean != null) {
+                        JavaGenSource javaGenSource = buildViewContext(javaSrcBean);
+                        if (!repositorySource.contains(javaGenSource)) {
+                            repositorySource.add(javaGenSource);
+                        }
+
+                    }
+
                 } catch (JDSException e) {
                     e.printStackTrace();
                 }
@@ -526,7 +544,11 @@ public class AggRootBuild {
                 JavaSrcBean srcBean = domainInst.getJavaSrcByClassName(serviceClassName);
                 try {
                     if (srcBean != null) {
-                        aggServiceRootBean.add(buildViewContext(srcBean));
+                        JavaGenSource javaGenSource = buildViewContext(srcBean);
+                        if (!aggServiceRootBean.contains(javaGenSource)) {
+                            aggServiceRootBean.add(javaGenSource);
+                        }
+
                     }
                 } catch (JDSException e) {
                     e.printStackTrace();
