@@ -182,8 +182,6 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                 genChildModule = genAPI(moduleComponent, component);
             } else if (!skipType(component)) {
                 FieldComponentBean widgetConfig = fieldFormConfig.getWidgetConfig();
-
-
                 if (widgetConfig == null) {
                     widgetConfig = fieldFormConfig.createDefaultWidget(componentType, moduleComponent, component);
                 }
@@ -209,8 +207,6 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                 tasks.add(genChildModule);
             }
         }
-
-
         return tasks;
     }
 

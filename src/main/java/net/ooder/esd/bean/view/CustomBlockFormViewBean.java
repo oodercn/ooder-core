@@ -1,5 +1,6 @@
 package net.ooder.esd.bean.view;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.NotNull;
 import net.ooder.common.JDSException;
@@ -10,6 +11,7 @@ import net.ooder.esd.annotation.ui.StretchType;
 import net.ooder.esd.bean.ContainerBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.dsm.DSMFactory;
+import net.ooder.esd.dsm.gen.view.GenFormChildModule;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.tool.component.BlockComponent;
@@ -45,6 +47,10 @@ public class CustomBlockFormViewBean extends BaseFormViewBean {
     @NotNull
     StretchType stretchHeight;
 
+    @JSONField(serialize = false)
+    List<GenFormChildModule> childModules;
+
+
 
     public CustomBlockFormViewBean() {
 
@@ -66,11 +72,8 @@ public class CustomBlockFormViewBean extends BaseFormViewBean {
         } else {
             currComponent = (BlockComponent) moduleComponent.getMainBoxComponent();
         }
-
-
         super.updateBaseModule(moduleComponent);
         initMenuBar();
-
         this.name = OODUtil.formatJavaName(currComponent.getAlias(), false);
         if (moduleBean != null) {
             moduleBean.updateComponent(currComponent);
@@ -82,19 +85,17 @@ public class CustomBlockFormViewBean extends BaseFormViewBean {
         }
 
         List<Component> components = currComponent.getChildren();//this.cloneComponentList(currComponent.getChildren());
-
-        List<FieldFormConfig> fieldFormConfigs = genChildComponent(moduleComponent, components);
-        for (FieldFormConfig fieldFormConfig : fieldFormConfigs) {
+        for(Component component:components){
+            FieldFormConfig fieldFormConfig = findFieldByCom(component);
             this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
-            javaSrcBeans.addAll(fieldFormConfig.getAllJavaSrcBeans());
         }
-        addChildJavaSrc(javaSrcBeans);
+
+        this.childModules = genChildComponent(moduleComponent, components);
         try {
             DSMFactory.getInstance().saveCustomViewEntity(this);
         } catch (JDSException e) {
             e.printStackTrace();
         }
-
         return javaSrcBeans;
     }
 
@@ -107,6 +108,14 @@ public class CustomBlockFormViewBean extends BaseFormViewBean {
             AnnotationUtil.fillBean(paperAnnotation, this);
         }
 
+    }
+
+    public List<GenFormChildModule> getChildModules() {
+        return childModules;
+    }
+
+    public void setChildModules(List<GenFormChildModule> childModules) {
+        this.childModules = childModules;
     }
 
     public Integer getDefaultRowHeight() {

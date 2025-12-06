@@ -140,7 +140,6 @@ public class AggRootBuild {
         this.repositoryInst = domainInst.getRepositoryInst();
         this.javaGen = GenJava.getInstance(domainInst.getProjectVersionName());
         this.serviceBeans = new ArrayList<>();
-
         this.reSetViewBean(customViewBean);
     }
 

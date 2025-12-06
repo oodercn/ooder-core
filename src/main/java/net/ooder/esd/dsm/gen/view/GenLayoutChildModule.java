@@ -1,5 +1,6 @@
 package net.ooder.esd.dsm.gen.view;
 
+import net.ooder.common.JDSException;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.ui.ComponentType;
@@ -16,22 +17,26 @@ import java.util.List;
 
 public class GenLayoutChildModule extends BaseGenChildModule<CustomLayoutViewBean> {
     private final LayoutListItem currListItem;
+    private final String projectName;
 
+    @Override
+    public AggRootBuild genAggBuild() throws JDSException {
+        AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, cEuClassName, projectName);
+        return aggRootBuild;
+    }
 
     public GenLayoutChildModule(ModuleComponent moduleComponent, Component childComponent, CustomLayoutViewBean layoutViewBean) {
         super(moduleComponent, childComponent, layoutViewBean);
         this.currListItem = layoutViewBean.findTabItem(target);
-
+        projectName = moduleComponent.getProjectName();
     }
 
 
     @Override
-    public AggRootBuild call() throws Exception {
-        AggRootBuild aggRootBuild = null;
+    public List<JavaGenSource> call() throws Exception {
+        AggRootBuild aggRootBuild = genAggBuild();
         JDSActionContext.setContext(autoruncontext);
-        String projectName = moduleComponent.getProjectName();
         if (!childComponent.getKey().equals(ComponentType.MODULE.getType())) {
-            aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, cEuClassName, projectName);
             List<JavaGenSource> serviceList = aggRootBuild.getAggServiceRootBean();
             if (serviceList == null || serviceList.isEmpty()) {
                 serviceList = aggRootBuild.build();
@@ -46,7 +51,7 @@ public class GenLayoutChildModule extends BaseGenChildModule<CustomLayoutViewBea
             }
             cModuleBean.reBindMethod(customViewBean.getMethodConfig());
         }
-        return aggRootBuild;
+        return aggRootBuild.getAllGenBean();
     }
 
     public LayoutListItem getCurrListItem() {

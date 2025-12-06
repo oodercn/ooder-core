@@ -11,6 +11,8 @@ import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.java.AggRootBuild;
+import net.ooder.esd.dsm.java.JavaGenSource;
+import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
@@ -19,9 +21,10 @@ import net.ooder.esd.util.OODUtil;
 import net.ooder.server.context.MinServerActionContextImpl;
 import ognl.OgnlContext;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
-public abstract class BaseGenChildModule<T extends CustomViewBean> implements Callable<AggRootBuild> {
+public abstract class BaseGenChildModule<T extends CustomViewBean> implements Callable<List<JavaGenSource>> {
     protected final String cEuClassName;
     protected final String target;
     protected CustomModuleBean cModuleBean;
@@ -32,6 +35,7 @@ public abstract class BaseGenChildModule<T extends CustomViewBean> implements Ca
     T customViewBean;
     String parentClassName;
     String childRealPath;
+
 
     public BaseGenChildModule(ModuleComponent moduleComponent, Component childComponent, T customViewBean) {
         JDSContext context = JDSActionContext.getActionContext();
@@ -97,6 +101,8 @@ public abstract class BaseGenChildModule<T extends CustomViewBean> implements Ca
 
     }
 
+    public  abstract AggRootBuild genAggBuild() throws JDSException;
+
     public T genChildViewBean(ModuleComponent moduleComponent, Component childComponent, String cEuClassName) throws JDSException {
         T customViewBean = null;
         DomainInst domainInst = DSMFactory.getInstance().getDefaultDomain(moduleComponent.getProjectName(), UserSpace.VIEW);
@@ -117,9 +123,9 @@ public abstract class BaseGenChildModule<T extends CustomViewBean> implements Ca
         cmoduleComponent.setClassName(cEuClassName);
         customViewBean = (T) DSMFactory.getInstance().getViewManager().getDefaultViewBean(cmoduleComponent, domainId);
         cmoduleComponent.setClassName(cEuClassName);
-
         return customViewBean;
     }
+
 
 
     protected CustomModuleBean createModuleBean(ModuleComponent cmoduleComponent) {

@@ -1,5 +1,6 @@
 package net.ooder.esd.dsm.gen.view;
 
+import net.ooder.common.JDSException;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.bean.MethodConfig;
@@ -20,19 +21,27 @@ import java.util.Set;
 
 public class GenTabsChildModule extends BaseGenChildModule<BaseTabsViewBean> {
     private final TabListItem currListItem;
+    private final String projectName;
+
 
     public GenTabsChildModule(ModuleComponent moduleComponent, Component childComponent, BaseTabsViewBean tabsViewBean) {
         super(moduleComponent, childComponent, tabsViewBean);
         currListItem = tabsViewBean.findTabItem(target, tabsViewBean.getTabItems());
+        projectName = moduleComponent.getProjectName();
+
     }
 
     @Override
-    public AggRootBuild call() throws Exception {
-        AggRootBuild aggRootBuild = null;
+    public AggRootBuild genAggBuild() throws JDSException {
+        AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, cEuClassName, projectName);
+        return aggRootBuild;
+    }
+
+    @Override
+    public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
-        String projectName = moduleComponent.getProjectName();
+        AggRootBuild aggRootBuild = genAggBuild();
         if (customViewBean != null) {
-            aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, cEuClassName, projectName);
             List<JavaGenSource> serviceList = aggRootBuild.getAggServiceRootBean();
             if (aggRootBuild.getAggServiceRootBean().isEmpty() || aggRootBuild.getRepositorySrcList().isEmpty() || aggRootBuild.getViewSrcList().isEmpty()) {
                 serviceList = aggRootBuild.build();
@@ -49,9 +58,7 @@ public class GenTabsChildModule extends BaseGenChildModule<BaseTabsViewBean> {
             cModuleBean.reBindMethod(customViewBean.getMethodConfig());
             aggRootBuild.update();
         }
-
-
-        return aggRootBuild;
+        return aggRootBuild.getAllGenBean();
     }
 
 
