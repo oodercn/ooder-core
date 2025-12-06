@@ -41,9 +41,8 @@ public class ProgressBarFieldBean extends FieldBaseBean<ProgressBarComponent> {
     LayoutType layoutType;
 
     @Override
-    public List<JavaSrcBean>  update(ModuleComponent moduleComponent, ProgressBarComponent component) {
+    public void  update(ModuleComponent moduleComponent, ProgressBarComponent component) {
 
-       return new ArrayList<>();
     }
 
     public ProgressBarFieldBean(ProgressBarComponent component) {

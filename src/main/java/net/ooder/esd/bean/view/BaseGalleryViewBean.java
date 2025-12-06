@@ -23,6 +23,7 @@ import net.ooder.esd.util.OODUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
 public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends CustomEvent> extends CustomViewBean<FieldFormConfig, TabListItem, GalleryComponent> implements ComponentBean<GalleryComponent> {
 
@@ -48,8 +49,8 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
     }
 
 
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+    public List<Callable> updateModule(ModuleComponent moduleComponent) {
+        List<Callable> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         Component component = moduleComponent.getCurrComponent();
         if (moduleComponent != null && moduleComponent.getMethodAPIBean() != null) {
@@ -60,7 +61,7 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
         }
 
         this.name = OODUtil.formatJavaName(component.getAlias(), false);
-        return javaSrcBeans;
+        return tasks;
     }
 
 

@@ -36,6 +36,7 @@ import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = NavMenuBarAnnotation.class)
 public class NavMenuBarViewBean extends NavComboBaseViewBean<TreeListItem> {
@@ -61,8 +62,8 @@ public class NavMenuBarViewBean extends NavComboBaseViewBean<TreeListItem> {
 
 
     @Override
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
-        List<JavaSrcBean> javaSrcBeans = super.updateModule(moduleComponent);
+    public List<Callable> updateModule(ModuleComponent moduleComponent) {
+        List<Callable> tasks = super.updateModule(moduleComponent);
         if (moduleComponent.getCurrComponent() instanceof MenuBarComponent) {
             MenuBarComponent component = (MenuBarComponent) moduleComponent.getCurrComponent();
             MenuBarProperties menuBarProperties = component.getProperties();
@@ -72,8 +73,7 @@ public class NavMenuBarViewBean extends NavComboBaseViewBean<TreeListItem> {
             moduleBean.update(moduleComponent);
             this.init(menuBarProperties, moduleComponent.getProjectName());
         }
-        addChildJavaSrc(javaSrcBeans);
-        return javaSrcBeans;
+        return tasks;
     }
 
 

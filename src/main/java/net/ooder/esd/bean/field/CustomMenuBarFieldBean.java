@@ -87,11 +87,11 @@ public class CustomMenuBarFieldBean extends BaseWidgetBean<NavMenuBarViewBean, F
         return viewBean;
     }
 
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, FormLayoutComponent component) {
+    public void update(ModuleComponent parentModuleComponent, FormLayoutComponent component) {
         this.initWidget(parentModuleComponent,component);
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         if (component.getChildren() != null && component.getChildren().size() > 0) {
-            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+            super.update(parentModuleComponent, component);
         }
         if (containerBean == null) {
             containerBean = new ContainerBean(component);
@@ -104,7 +104,6 @@ public class CustomMenuBarFieldBean extends BaseWidgetBean<NavMenuBarViewBean, F
         this.backgroundColor = formLayoutProperties.getPanelBgClr();
         this.borderType = formLayoutProperties.getBorderType();
 
-        return javaSrcBeans;
     }
 
 

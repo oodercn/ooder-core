@@ -33,6 +33,8 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
+import net.ooder.esd.dsm.gen.view.BaseGenChildModule;
+import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
 import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.java.ViewJavaSrcBean;
@@ -53,6 +55,7 @@ import net.ooder.esd.util.json.EnumSetDeserializer;
 import net.ooder.esd.util.json.EsdFieldMapDeserializer;
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
+import net.ooder.web.RemoteConnectionManager;
 import net.ooder.web.RequestMethodBean;
 import net.ooder.web.RequestParamBean;
 import net.ooder.web.util.AnnotationUtil;
@@ -62,6 +65,10 @@ import ognl.OgnlRuntime;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 
 public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem, M extends Component> implements CustomView<T, U>, FieldComponentBean<M> {
@@ -126,8 +133,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
     public CaselessStringKeyHashMap<String, FieldModuleConfig> itemConfigMap;
 
     public List<U> tabItems = new ArrayList<>();
-
-    public Set<String> childClassNameSet = new HashSet<>();
 
     @JSONField(deserializeUsing = EsdFieldMapDeserializer.class)
     public CaselessStringKeyHashMap<String, T> fieldConfigMap = new CaselessStringKeyHashMap<>();
@@ -211,7 +216,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         }
     }
 
-    public abstract List<JavaSrcBean> updateModule(ModuleComponent moduleComponent);
+    public abstract List<? extends Callable> updateModule(ModuleComponent moduleComponent);
 
     @Override
     @JSONField(serialize = false)
@@ -235,11 +240,11 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, M component) {
+    public void update(ModuleComponent moduleComponent, M component) {
         if (!(component instanceof ModuleComponent)) {
             moduleComponent.setCurrComponent(component);
         }
-        return updateModule(moduleComponent);
+        updateModule(moduleComponent);
     }
 
     public void updateContainerBean(Component component) {
@@ -248,6 +253,29 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         } else {
             containerBean.update(component);
         }
+    }
+
+
+    public List<JavaSrcBean> build(List<? extends Callable<AggRootBuild>> tasks) {
+        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        List<Future<AggRootBuild>> futures = null;
+        try {
+            ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
+            futures = service.invokeAll(tasks);
+            for (Future<AggRootBuild> resultFuture : futures) {
+                try {
+                    AggRootBuild aggRootBuild = resultFuture.get();
+                    javaSrcBeans.addAll(aggRootBuild.getAllSrcBean());
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+            service.shutdownNow();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return javaSrcBeans;
     }
 
     protected void updateBaseModule(ModuleComponent moduleComponent) {
@@ -1705,13 +1733,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         return viewJavaSrcBean;
     }
 
-    public Set<String> getChildClassNameSet() {
-        return childClassNameSet;
-    }
-
-    public void setChildClassNameSet(Set<String> childClassNameSet) {
-        this.childClassNameSet = childClassNameSet;
-    }
 
     public void setViewJavaSrcBean(ViewJavaSrcBean viewJavaSrcBean) {
         this.viewJavaSrcBean = viewJavaSrcBean;

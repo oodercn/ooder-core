@@ -20,6 +20,7 @@ import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
+import net.ooder.esd.dsm.gen.view.GenFormChildModule;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
@@ -34,6 +35,7 @@ import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = FormAnnotation.class)
 public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
@@ -126,9 +128,9 @@ public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
 
 
     @Override
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
+    public List<GenFormChildModule> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(FormAnnotation.class, this);
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        List<GenFormChildModule> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         updateBar();
         FormLayoutComponent currComponent = (FormLayoutComponent) moduleComponent.getCurrComponent();
@@ -138,21 +140,15 @@ public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
         } else {
             containerBean.update(currComponent);
         }
-
         List<Component> components = cloneComponentList(currComponent.getChildren());
-        List<FieldFormConfig> fieldFormConfigs = genChildComponent(moduleComponent, components);
-        for (FieldFormConfig fieldFormConfig : fieldFormConfigs) {
-            this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
-            javaSrcBeans.addAll(fieldFormConfig.getAllJavaSrcBeans());
-        }
+        tasks= genChildComponent(moduleComponent, components);
         initFormLayout(moduleComponent);
-        addChildJavaSrc(javaSrcBeans);
         try {
             DSMFactory.getInstance().saveCustomViewEntity(this);
         } catch (JDSException e) {
             e.printStackTrace();
         }
-        return javaSrcBeans;
+        return tasks;
     }
 
 

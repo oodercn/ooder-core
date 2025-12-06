@@ -47,15 +47,14 @@ public class CustomFoldingTabsFieldBean extends BaseWidgetBean<NavFoldingTabsVie
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, FoldingTabsComponent component) {
+    public void update(ModuleComponent parentModuleComponent, FoldingTabsComponent component) {
         this.initWidget(parentModuleComponent,component);
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         if (component.getChildren() != null && component.getChildren().size() > 0) {
-            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+            super.update(parentModuleComponent, component);
         }else if (component.getProperties().getItems().size()>0){
             this.viewBean=genViewBean();
         }
-        return javaSrcBeans;
 
     }
 

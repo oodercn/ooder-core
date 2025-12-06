@@ -41,9 +41,8 @@ public class FileUploadFieldBean extends FieldBaseBean<FileUploadComponent> {
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, FileUploadComponent component) {
+    public void update(ModuleComponent moduleComponent, FileUploadComponent component) {
 
-        return new ArrayList<>();
     }
 
     public FileUploadFieldBean(FileUploadComponent fileUploadComponent) {

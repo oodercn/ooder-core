@@ -1,5 +1,6 @@
 package net.ooder.esd.bean.field;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.TensorAnnotation;
@@ -11,13 +12,12 @@ import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.TensorComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 @CustomClass(clazz = CustomTensorComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.TENSOR
@@ -41,9 +41,10 @@ public class TensorFieldBean extends FieldBaseBean<TensorComponent> {
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, TensorComponent component) {
+    public void update(ModuleComponent moduleComponent, TensorComponent component) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(component.getProperties()), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
 
-        return new ArrayList<>();
     }
 
     public TensorFieldBean(TensorComponent component) {

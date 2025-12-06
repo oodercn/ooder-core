@@ -19,6 +19,7 @@ import net.ooder.web.util.AnnotationUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 public abstract class NavComboBaseViewBean<U extends TabListItem> extends NavBaseViewBean<LayoutListItem, U, TabsComponent> {
 
@@ -40,7 +41,7 @@ public abstract class NavComboBaseViewBean<U extends TabListItem> extends NavBas
 
 
     @Override
-    public List<JavaSrcBean> updateModule(ModuleComponent parentModuleComponent) {
+    public List<Callable> updateModule(ModuleComponent parentModuleComponent) {
         if (layoutViewBean != null) {
             AnnotationUtil.fillDefaultValue(LayoutAnnotation.class, layoutViewBean);
         }
@@ -49,10 +50,10 @@ public abstract class NavComboBaseViewBean<U extends TabListItem> extends NavBas
             AnnotationUtil.fillDefaultValue(TabsAnnotation.class, tabsViewBean);
         }
 
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        List<Callable> tasks = new ArrayList<>();
         super.updateBaseModule(parentModuleComponent);
-        addChildJavaSrc(javaSrcBeans);
-        return javaSrcBeans;
+
+        return tasks;
 
     }
 

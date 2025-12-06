@@ -102,9 +102,9 @@ public class ComboInputFieldBean<M extends ComboInputComponent> implements Combo
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, M component) {
+    public void update(ModuleComponent moduleComponent, M component) {
         this.update(component.getProperties());
-        return new ArrayList<>();
+
 
     }
 

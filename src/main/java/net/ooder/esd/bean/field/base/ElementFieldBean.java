@@ -61,8 +61,8 @@ public class ElementFieldBean implements FieldComponentBean<ElementComponent> {
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, ElementComponent component) {
-        return new ArrayList<>();
+    public void update(ModuleComponent moduleComponent, ElementComponent component) {
+
     }
 
     public ElementFieldBean(Set<Annotation> annotations) {

@@ -169,7 +169,9 @@ public class ColorPickerFieldBean  extends FieldBaseBean<ColorPickerComponent> {
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, ColorPickerComponent component) {
-        return new ArrayList<>();
+    public void update(ModuleComponent moduleComponent, ColorPickerComponent component) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(component.getProperties()), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+
     }
 }

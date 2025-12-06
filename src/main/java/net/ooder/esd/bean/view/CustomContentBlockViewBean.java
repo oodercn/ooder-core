@@ -32,6 +32,7 @@ import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = ContentBlockAnnotation.class)
 public class CustomContentBlockViewBean extends BaseGalleryViewBean<ContentBlockMenu, CustomContentBlockEvent> implements ContextMenuBar, ToolsBar {
@@ -85,8 +86,8 @@ public class CustomContentBlockViewBean extends BaseGalleryViewBean<ContentBlock
     }
 
 
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+    public List<Callable> updateModule(ModuleComponent moduleComponent) {
+        List<Callable> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         ContentBlockComponent contentBlockComponent = (ContentBlockComponent) moduleComponent.getCurrComponent();
         ContentBlockProperties contentBlockProperties = contentBlockComponent.getProperties();
@@ -115,8 +116,8 @@ public class CustomContentBlockViewBean extends BaseGalleryViewBean<ContentBlock
             }
         }
         this.name = OODUtil.formatJavaName(contentBlockComponent.getAlias(), false);
-        addChildJavaSrc(javaSrcBeans);
-        return javaSrcBeans;
+
+        return tasks;
     }
 
 

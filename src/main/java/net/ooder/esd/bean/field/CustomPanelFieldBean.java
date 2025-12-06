@@ -139,15 +139,15 @@ public class CustomPanelFieldBean extends BaseWidgetBean<CustomPanelFormViewBean
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, PanelComponent component) {
+    public void update(ModuleComponent parentModuleComponent, PanelComponent component) {
         this.initWidget(parentModuleComponent,component);
         updateFieldBean(component);
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
-        if (component.getChildren() != null && component.getChildren().size() > 0) {
-            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
-        }
-        return javaSrcBeans;
 
+        if (component.getChildren() != null && component.getChildren().size() > 0) {
+           super.update(parentModuleComponent, component);
+        }
+//
     }
 
     @Override

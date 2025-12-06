@@ -56,9 +56,8 @@ public class LabelFieldBean extends FieldBaseBean<LabelComponent> {
     String excelCellFormula;
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, LabelComponent component) {
+    public void update(ModuleComponent moduleComponent, LabelComponent component) {
 
-        return new ArrayList<>();
     }
 
     public LabelFieldBean(Set<Annotation> annotations) {

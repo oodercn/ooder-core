@@ -30,6 +30,7 @@ import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = OpinionAnnotation.class)
 public class CustomOpinionViewBean extends BaseGalleryViewBean<OpinionMenu, CustomOpinionEvent> implements ContextMenuBar, ToolsBar {
@@ -74,8 +75,8 @@ public class CustomOpinionViewBean extends BaseGalleryViewBean<OpinionMenu, Cust
         this.updateModule(moduleComponent);
     }
 
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+    public List<Callable> updateModule(ModuleComponent moduleComponent) {
+        List<Callable> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         OpinionComponent opinionComponent = (OpinionComponent) moduleComponent.getCurrComponent();
         OpinionProperties opinionProperties = opinionComponent.getProperties();
@@ -104,7 +105,7 @@ public class CustomOpinionViewBean extends BaseGalleryViewBean<OpinionMenu, Cust
             }
         }
         this.name = OODUtil.formatJavaName(opinionComponent.getAlias(), false);
-        return javaSrcBeans;
+        return tasks;
     }
 
 

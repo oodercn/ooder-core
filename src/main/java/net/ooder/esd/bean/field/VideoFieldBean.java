@@ -1,5 +1,6 @@
 package net.ooder.esd.bean.field;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.VideoAnnotation;
@@ -11,13 +12,12 @@ import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.VideoComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 @CustomClass(clazz = CustomVideoComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.VIDEO
@@ -51,9 +51,10 @@ public class VideoFieldBean extends FieldBaseBean<VideoComponent> {
     String poster;
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, VideoComponent component) {
+    public void update(ModuleComponent moduleComponent, VideoComponent component) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(component.getProperties()), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
 
-        return new ArrayList<>();
     }
 
     public VideoFieldBean(VideoComponent component) {

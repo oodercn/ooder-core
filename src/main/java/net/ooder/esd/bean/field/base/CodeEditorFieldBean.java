@@ -73,9 +73,8 @@ public class CodeEditorFieldBean extends FieldBaseBean<CodeEditorComponent> {
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, CodeEditorComponent component) {
+    public void update(ModuleComponent moduleComponent, CodeEditorComponent component) {
 
-        return new ArrayList<>();
 
     }
 

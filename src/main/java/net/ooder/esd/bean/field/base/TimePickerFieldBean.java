@@ -122,8 +122,7 @@ public class TimePickerFieldBean<T extends ComboInputProperties>  extends FieldB
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, ComboInputComponent component) {
+    public void update(ModuleComponent moduleComponent, ComboInputComponent component) {
 
-        return new ArrayList<>();
     }
 }

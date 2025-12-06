@@ -250,7 +250,7 @@ public class CustomModuleEmbedFieldBean  implements FieldComponentBean<ModuleCom
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, ModuleComponent component) {
-        return new ArrayList<>();
+    public void update(ModuleComponent moduleComponent, ModuleComponent component) {
+
     }
 }

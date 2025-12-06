@@ -152,7 +152,7 @@ public class AnimBinderBean extends FieldBaseBean<AnimBinderComponent> {
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, AnimBinderComponent component) {
-        return new ArrayList<>();
+    public void update(ModuleComponent moduleComponent, AnimBinderComponent component) {
+
     }
 }

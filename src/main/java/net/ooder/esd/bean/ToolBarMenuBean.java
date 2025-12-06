@@ -18,7 +18,6 @@ import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.custom.component.CustomToolsBar;
 import net.ooder.esd.dsm.DSMFactory;
-import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.ToolBarComponent;
 import net.ooder.esd.tool.properties.ToolBarProperties;
@@ -98,7 +97,7 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
     }
 
     public ToolBarMenuBean(ModuleComponent moduleComponent, ToolBarComponent component) {
-        this.update(moduleComponent,component);
+        this.update(moduleComponent, component);
     }
 
     public void update(ToolBarComponent toolBarComponent) {
@@ -118,10 +117,10 @@ public class ToolBarMenuBean<T extends Enum> extends FieldBaseBean<ToolBarCompon
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, ToolBarComponent component) {
+    public void update(ModuleComponent moduleComponent, ToolBarComponent component) {
         this.update(component);
         customListBean = new CustomListBean();
-        return customListBean.update(moduleComponent, component);
+        customListBean.update(moduleComponent, component);
     }
 
     public ToolBarMenuBean(ToolBarComponent toolBarComponent) {

@@ -51,9 +51,8 @@ public class SVGPathBean implements FieldComponentBean<SVGPathComponent> {
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, SVGPathComponent component) {
+    public void update(ModuleComponent moduleComponent, SVGPathComponent component) {
         init(component.getProperties());
-        return new ArrayList<>();
     }
 
     void init(PathProperties properties) {

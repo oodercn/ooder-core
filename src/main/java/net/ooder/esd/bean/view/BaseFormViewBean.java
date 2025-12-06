@@ -128,9 +128,9 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         }
     }
 
-    public FieldFormConfig buildField(ModuleComponent moduleComponent, Component component) {
-        FieldFormConfig fieldFormConfig = null;
-        List<FieldFormConfig> fieldFormConfigs = genChildComponent(moduleComponent, Arrays.asList(component));
+    public GenFormChildModule buildField(ModuleComponent moduleComponent, Component component) {
+        GenFormChildModule fieldFormConfig = null;
+        List<GenFormChildModule> fieldFormConfigs = genChildComponent(moduleComponent, Arrays.asList(component));
         if (fieldFormConfigs.size() > 0) {
             fieldFormConfig = fieldFormConfigs.get(0);
         }
@@ -155,9 +155,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                         fieldFormConfigs.add(fieldFormConfig);
                         if (fieldFormConfig.getWidgetConfig() != null && fieldFormConfig.getWidgetConfig() instanceof WidgetBean) {
                             AggRootBuild build = ((WidgetBean) fieldFormConfig.getWidgetConfig()).getFieldRootBuild();
-                            if (build != null) {
-                                this.childClassNameSet.add(build.getEuClassName());
-                            }
+
                         }
                     }
                 }
@@ -171,8 +169,8 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
     }
 
 
-    protected List<FieldFormConfig> genChildComponent(ModuleComponent moduleComponent, List<Component> components) {
-        List<FieldFormConfig> fieldFormConfigs = new ArrayList<>();
+    protected List<GenFormChildModule> genChildComponent(ModuleComponent moduleComponent, List<Component> components) {
+       // List<FieldFormConfig> fieldFormConfigs = new ArrayList<>();
         List<GenFormChildModule> tasks = new ArrayList<>();
         for (Component component : components) {
             FieldFormConfig fieldFormConfig = findFieldByCom(component);
@@ -209,17 +207,11 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
             }
             if (genChildModule != null) {
                 tasks.add(genChildModule);
-            } else {
-                fieldFormConfigs.add(fieldFormConfig);
             }
         }
 
 
-        if (tasks.size() > 0) {
-            fieldFormConfigs.addAll(this.buildField(tasks));
-        }
-
-        return fieldFormConfigs;
+        return tasks;
     }
 
 

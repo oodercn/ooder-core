@@ -85,9 +85,9 @@ public class CustomFormLayoutFieldBean extends BaseWidgetBean<CustomFormViewBean
         return viewBean;
     }
 
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, FormLayoutComponent component) {
+    public void update(ModuleComponent parentModuleComponent, FormLayoutComponent component) {
         this.initWidget(parentModuleComponent,component);
-        List<JavaSrcBean> javaSrcBeans = super.update(parentModuleComponent, component);
+         super.update(parentModuleComponent, component);
         if (containerBean == null) {
             containerBean = new ContainerBean(component);
         } else {
@@ -98,7 +98,6 @@ public class CustomFormLayoutFieldBean extends BaseWidgetBean<CustomFormViewBean
         this.imageClass = formLayoutProperties.getImageClass();
         this.backgroundColor = formLayoutProperties.getPanelBgClr();
         this.borderType = formLayoutProperties.getBorderType();
-        return javaSrcBeans;
     }
 
 

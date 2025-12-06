@@ -32,6 +32,7 @@ import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = FChartAnnotation.class)
 public class CustomFChartViewBean extends CustomViewBean<FieldFormConfig, UIItem,FullFChartComponent> implements CustomBean {
@@ -100,8 +101,8 @@ public class CustomFChartViewBean extends CustomViewBean<FieldFormConfig, UIItem
         updateModule(moduleComponent);
     }
 
-    public  List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+    public  List<Callable> updateModule(ModuleComponent moduleComponent) {
+        List<Callable> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         FChartComponent chartComponent = (FChartComponent) moduleComponent.getCurrComponent();
         FChartProperties chartProperties = chartComponent.getProperties();
@@ -138,8 +139,7 @@ public class CustomFChartViewBean extends CustomViewBean<FieldFormConfig, UIItem
             }
         }
         this.init(chartProperties);
-        addChildJavaSrc(javaSrcBeans);
-        return javaSrcBeans;
+        return tasks;
     }
 
 

@@ -97,9 +97,10 @@ public class CustomComboFieldBean<M extends ComboInputComponent> implements Comb
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, M component) {
+    public void update(ModuleComponent moduleComponent, M component) {
         this.update(component.getProperties());
-        return new ArrayList<>();
+        Map valueMap = JSON.parseObject(JSON.toJSONString(component.getProperties()), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
 
     }
 

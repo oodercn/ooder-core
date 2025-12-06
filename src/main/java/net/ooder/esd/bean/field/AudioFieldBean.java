@@ -166,8 +166,8 @@ public class AudioFieldBean extends FieldBaseBean<AudioComponent> {
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, AudioComponent component) {
-        return new ArrayList<>();
+    public void update(ModuleComponent moduleComponent, AudioComponent component) {
+
     }
 
     @Override

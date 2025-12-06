@@ -38,6 +38,7 @@ import net.ooder.web.util.JSONGenUtil;
 
 import java.lang.reflect.Constructor;
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = MGridAnnotation.class)
 public class CustomMGridViewBean extends CustomViewBean<FieldGridConfig, UIItem, MTreeGridComponent> implements ContextMenuBar, ToolsBar {
@@ -198,8 +199,8 @@ public class CustomMGridViewBean extends CustomViewBean<FieldGridConfig, UIItem,
 
 
     @Override
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+    public List<Callable> updateModule(ModuleComponent moduleComponent) {
+        List<Callable> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         TreeGridComponent gridComponent = (TreeGridComponent) moduleComponent.getCurrComponent();
         List<Component> allComponent = moduleComponent.getChildrenRecursivelyList();
@@ -260,7 +261,7 @@ public class CustomMGridViewBean extends CustomViewBean<FieldGridConfig, UIItem,
         }
 
 
-        return javaSrcBeans;
+        return tasks;
     }
 
 

@@ -67,9 +67,8 @@ public class TextEditorFieldBean extends FieldBaseBean<RichEditorComponent> {
 
 
     @Override
-    public List<JavaSrcBean>  update(ModuleComponent moduleComponent, RichEditorComponent component) {
+    public void  update(ModuleComponent moduleComponent, RichEditorComponent component) {
 
-        return new ArrayList<>();
     }
 
     public TextEditorFieldBean(RichEditorComponent component) {

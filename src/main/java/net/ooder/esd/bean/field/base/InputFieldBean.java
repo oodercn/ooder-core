@@ -43,9 +43,8 @@ public class InputFieldBean extends FieldBaseBean<InputComponent> {
     public Integer autoexpand;
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, InputComponent component) {
+    public void update(ModuleComponent moduleComponent, InputComponent component) {
 
-        return new ArrayList<>();
     }
 
     public InputFieldBean(InputComponent component) {

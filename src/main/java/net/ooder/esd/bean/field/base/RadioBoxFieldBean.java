@@ -1,5 +1,6 @@
 package net.ooder.esd.bean.field.base;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
@@ -19,13 +20,11 @@ import net.ooder.esd.tool.component.ListComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.RadioBoxComponent;
 import net.ooder.esd.tool.properties.form.RadioBoxProperties;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @CustomClass(clazz = CustomRadioBoxComponent.class,
         viewType = CustomViewType.COMPONENT,
@@ -55,15 +54,16 @@ public class RadioBoxFieldBean extends FieldBaseBean<RadioBoxComponent> {
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, RadioBoxComponent component) {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+    public void update(ModuleComponent parentModuleComponent, RadioBoxComponent component) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(component.getProperties()), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+
         if (listFieldBean == null) {
             listFieldBean = new CustomListBean();
         }
-        javaSrcBeans.addAll(listFieldBean.update(parentModuleComponent, component));
+        listFieldBean.update(parentModuleComponent, component);
         listBean = new ListFieldBean(component.getProperties());
 
-        return javaSrcBeans;
     }
 
 

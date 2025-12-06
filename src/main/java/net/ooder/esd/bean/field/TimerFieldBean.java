@@ -121,7 +121,9 @@ public class TimerFieldBean<T extends TimerProperties>    extends FieldBaseBean<
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, TimerComponent component) {
-        return new ArrayList<>();
+    public void update(ModuleComponent moduleComponent, TimerComponent component) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(component.getProperties()), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+
     }
 }

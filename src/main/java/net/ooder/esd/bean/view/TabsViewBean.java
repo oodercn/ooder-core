@@ -16,19 +16,14 @@ import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.custom.properties.NavTabsProperties;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
-import net.ooder.esd.dsm.java.AggRootBuild;
-import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.web.RemoteConnectionManager;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 
 @AnnotationType(clazz = TabsAnnotation.class)
 public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<CustomTabsEvent, U> {
@@ -38,10 +33,8 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
     Set<CustomTabsEvent> event = new HashSet<>();
 
 
-
     public TabsViewBean() {
         super();
-
     }
 
     public TabsViewBean(Class clazz, CustomTreeViewBean parentItem) {
@@ -85,10 +78,8 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
     }
 
 
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+    public List<GenTabsChildModule> updateModule(ModuleComponent moduleComponent) {
         super.updateBaseModule(moduleComponent);
-        List<CustomModuleBean> navModuleBeans = new ArrayList<>();
         Component currComponent = moduleComponent.getCurrComponent();
         TabsComponent tabsComponent = null;
         if (currComponent instanceof LayoutComponent) {
@@ -108,8 +99,6 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
                 tabsComponent.setTarget(PosType.main.name());
                 currComponent.addChildren(tabsComponent);
             }
-
-
         } else if (currComponent instanceof TabsComponent) {
             tabsComponent = (TabsComponent) currComponent;
         } else {
@@ -126,7 +115,8 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
         if (tabItems == null || tabItems.isEmpty()) {
             tabItems = (List<U>) tabsProperties.getItems();
         }
-
+        this.setTabItems(tabItems);
+        tabsProperties.setItems(tabItems);
         List<GenTabsChildModule> tasks = new ArrayList<GenTabsChildModule>();
         if (components != null && components.size() > 0) {
             for (Component childComponent : components) {
@@ -136,42 +126,8 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
                     tasks.add(genChildModule);
                 }
             }
-            try {
-                ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
-                List<Future<AggRootBuild>> futures = service.invokeAll(tasks);
-                for (Future<AggRootBuild> resultFuture : futures) {
-                    try {
-                        AggRootBuild aggRootBuild = resultFuture.get();
-                        childClassNameSet.add(aggRootBuild.getEuClassName());
-                        CustomModuleBean cModuleBean = aggRootBuild.getCustomModuleBean();
-                        if (navModuleBeans != null && !navModuleBeans.contains(cModuleBean)) {
-                            navModuleBeans.add(cModuleBean);
-                            if (cModuleBean.getJavaSrcBeans() != null) {
-                                javaSrcBeans.addAll(cModuleBean.getJavaSrcBeans());
-                            }
-
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                service.shutdownNow();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
         }
-
-        this.setModuleBeans(navModuleBeans);
-        this.setTabItems(tabItems);
-        tabsProperties.setItems(tabItems);
-        this.initProperties(tabsProperties);
-//        try {
-//            DSMFactory.getInstance().saveCustomViewBean(this);
-//        } catch (JDSException e) {
-//            e.printStackTrace();
-//        }
-        return javaSrcBeans;
+        return tasks;
     }
 
 

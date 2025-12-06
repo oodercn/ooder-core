@@ -88,9 +88,7 @@ public class CustomModuleRefFieldBean implements FieldComponentBean<Component> {
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, Component component) {
-
-        return new ArrayList<>();
+    public void update(ModuleComponent moduleComponent, Component component) {
 
     }
 

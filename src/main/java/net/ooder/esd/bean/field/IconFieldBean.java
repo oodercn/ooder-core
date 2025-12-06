@@ -51,9 +51,8 @@ public class IconFieldBean extends FieldBaseBean<IconComponent> {
     String iconColor;
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, IconComponent component) {
+    public void update(ModuleComponent moduleComponent, IconComponent component) {
 
-        return new ArrayList<>();
     }
 
     public IconFieldBean(IconComponent component) {

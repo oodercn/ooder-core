@@ -89,7 +89,6 @@ public class GenViewDicJava extends GenJavaTask {
                     File file = javaGen.createJava(javatemp, dicViewRoot, chrome);
                     JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, viewInst, javatemp.getJavaTempId());
                     dicClass = javaGen.dynCompile(srcBean.getClassName(), srcBean.getContent());
-
                     javaSrcBeans.add(srcBean);
                     BuildFactory.getInstance().createSource(srcBean.getClassName(), dicViewRoot, javatemp, srcBean);
                     classList.add(srcBean.getClassName());
@@ -97,6 +96,7 @@ public class GenViewDicJava extends GenJavaTask {
                     log.warn(e.getMessage());
                 }
             }
+
             for (JavaSrcBean srcBean : javaSrcBeans) {
                 viewInst.updateView(srcBean);
             }
@@ -104,6 +104,7 @@ public class GenViewDicJava extends GenJavaTask {
 
         return javaSrcBeans;
     }
+
 
     public Class getDicClass() {
         return dicClass;

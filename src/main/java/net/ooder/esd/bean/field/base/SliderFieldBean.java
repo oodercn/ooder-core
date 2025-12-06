@@ -22,6 +22,8 @@ import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+import java.util.concurrent.Callable;
+
 @CustomClass(clazz = CustomSliderComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.SLIDER
@@ -261,7 +263,7 @@ public class SliderFieldBean    extends FieldBaseBean<CustomSliderComponent> {
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, CustomSliderComponent component) {
-        return new ArrayList<>();
+    public void update(ModuleComponent moduleComponent, CustomSliderComponent component) {
+
     }
 }

@@ -1,5 +1,6 @@
 package net.ooder.esd.bean.svg;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomClass;
@@ -13,13 +14,12 @@ import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.SVGImageComponent;
 import net.ooder.esd.tool.properties.svg.SVGProperties;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 @CustomClass(clazz = CustomSVGImageComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.SVGIMAGE
@@ -49,8 +49,10 @@ public class SVGImageBean implements FieldComponentBean<SVGImageComponent> {
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, SVGImageComponent component) {
-        return new ArrayList<>();
+    public void update(ModuleComponent moduleComponent, SVGImageComponent component) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(component.getProperties()), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+
     }
 
     public SVGImageBean(Set<Annotation> annotations) {

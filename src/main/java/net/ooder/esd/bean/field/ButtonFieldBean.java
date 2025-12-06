@@ -52,9 +52,8 @@ public class ButtonFieldBean extends FieldBaseBean<ButtonComponent> {
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, ButtonComponent component) {
+    public void update(ModuleComponent moduleComponent, ButtonComponent component) {
 
-        return new ArrayList<>();
     }
 
     public ButtonFieldBean(ButtonComponent component) {

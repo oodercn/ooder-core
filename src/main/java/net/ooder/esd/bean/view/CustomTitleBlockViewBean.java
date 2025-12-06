@@ -32,6 +32,7 @@ import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = TitleBlockAnnotation.class)
 public class CustomTitleBlockViewBean extends BaseGalleryViewBean<TitleBlockMenu, CustomTitleBlockEvent> implements ContextMenuBar, ToolsBar {
@@ -77,9 +78,9 @@ public class CustomTitleBlockViewBean extends BaseGalleryViewBean<TitleBlockMenu
     }
 
 
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
+    public List<Callable> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(TitleBlockAnnotation.class, this);
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        List<Callable> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         TitleBlockComponent titleBlockComponent = (TitleBlockComponent) moduleComponent.getCurrComponent();
         TitleBlockProperties titleBlockProperties = titleBlockComponent.getProperties();
@@ -107,8 +108,8 @@ public class CustomTitleBlockViewBean extends BaseGalleryViewBean<TitleBlockMenu
             }
         }
         this.name = OODUtil.formatJavaName(titleBlockComponent.getAlias(), false);
-        addChildJavaSrc(javaSrcBeans);
-        return javaSrcBeans;
+
+        return tasks;
     }
 
 

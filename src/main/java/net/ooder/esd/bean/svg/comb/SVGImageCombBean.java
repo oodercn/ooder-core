@@ -67,8 +67,8 @@ public class SVGImageCombBean implements FieldComponentBean<SVGImageCombComponen
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, SVGImageCombComponent component) {
-        return new ArrayList<>();
+    public void update(ModuleComponent moduleComponent, SVGImageCombComponent component) {
+
     }
 
 

@@ -56,6 +56,7 @@ public class CustomBlockFormViewBean extends BaseFormViewBean {
     }
 
 
+    @Override
     public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(BlockFormAnnotation.class, this);
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();

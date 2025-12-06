@@ -60,10 +60,9 @@ public class ComboxFieldBean<M extends ComboInputComponent> extends ComboInputFi
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, M component) {
+    public void update(ModuleComponent moduleComponent, M component) {
         this.update(component.getProperties());
-
-        return listBean.update(moduleComponent, component);
+         listBean.update(moduleComponent, component);
     }
 
 

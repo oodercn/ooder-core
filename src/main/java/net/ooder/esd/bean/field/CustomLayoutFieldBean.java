@@ -42,13 +42,13 @@ public class CustomLayoutFieldBean extends BaseWidgetBean<CustomViewBean, Layout
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, LayoutComponent component) {
+    public void update(ModuleComponent parentModuleComponent, LayoutComponent component) {
         this.initWidget(parentModuleComponent,component);
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
-        if (component.getChildren() != null && component.getChildren().size() > 0) {
-            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
-        }
-        return javaSrcBeans;
+//        if (component.getChildren() != null && component.getChildren().size() > 0) {
+//            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+//        }
+//        return javaSrcBeans;
 
     }
 

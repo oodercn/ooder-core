@@ -125,30 +125,28 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
 
 
     public AggRootBuild initAggRootBuild(ModuleComponent parentModuleComponent, M component) throws JDSException {
-
         if (viewBean == null) {
             viewBean = genViewBean();
         }
         fieldRootBuild = BuildFactory.getInstance().getAggRootBuild(viewBean, euClassName, null);
-
         return fieldRootBuild;
     }
 
 
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, M component) {
+    public void update(ModuleComponent parentModuleComponent, M component) {
         if (moduleProperties == null) {
             initWidget(parentModuleComponent, component);
         }
         List<JavaSrcBean> allSrc = new ArrayList<>();
         try {
             initAggRootBuild(parentModuleComponent, component);
-            if (!euClassName.equals(parentModuleComponent.getClassName())) {
-                allSrc.addAll(build());
-            }
+//            if (!euClassName.equals(parentModuleComponent.getClassName())) {
+//                allSrc.addAll(build());
+//            }
         } catch (JDSException e) {
             e.printStackTrace();
         }
-        return allSrc;
+
     }
 
     @JSONField(serialize = false)

@@ -42,6 +42,7 @@ import net.ooder.web.util.JSONGenUtil;
 
 import java.lang.reflect.Constructor;
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = NavGroupAnnotation.class)
 public class NavGroupViewBean extends NavBaseViewBean<GroupItemBean, GalleryItem, BlockComponent> {
@@ -85,8 +86,8 @@ public class NavGroupViewBean extends NavBaseViewBean<GroupItemBean, GalleryItem
     }
 
 
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+    public List<Callable> updateModule(ModuleComponent moduleComponent) {
+        List<Callable> javaSrcBeans = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         itemBeans = new ArrayList<>();
         BlockComponent currComponent = (BlockComponent) moduleComponent.getCurrComponent();
@@ -109,9 +110,7 @@ public class NavGroupViewBean extends NavBaseViewBean<GroupItemBean, GalleryItem
                 itemBean.update(groupComponent);
             }
             CustomModuleBean customModuleBean = new CustomModuleBean(groupComponent);
-            if (customModuleBean.getJavaSrcBeans() != null) {
-                javaSrcBeans.addAll(customModuleBean.getJavaSrcBeans());
-            }
+
             if (itemBean.getMethodConfig() != null) {
                 customModuleBean.reBindMethod(itemBean.getMethodConfig());
             }
@@ -128,7 +127,6 @@ public class NavGroupViewBean extends NavBaseViewBean<GroupItemBean, GalleryItem
 
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(blockProperties), Map.class), this, false, false);
 
-        addChildJavaSrc(javaSrcBeans);
         return javaSrcBeans;
     }
 

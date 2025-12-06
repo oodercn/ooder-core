@@ -87,12 +87,11 @@ public class MQTTBean implements FieldComponentBean<MQTTComponent> {
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, MQTTComponent component) {
+    public void update(ModuleComponent moduleComponent, MQTTComponent component) {
         this.xpath = component.getPath();
         Map valueMap = JSON.parseObject(JSON.toJSONString(component.getProperties()), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
 
-        return new ArrayList<>();
 
     }
 

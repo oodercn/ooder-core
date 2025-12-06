@@ -219,8 +219,8 @@ public class CustomAPICallBean implements FieldComponentBean<APICallerComponent>
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, APICallerComponent component) {
-        return new ArrayList<>();
+    public void update(ModuleComponent moduleComponent, APICallerComponent component) {
+
     }
 
     public CustomAPICallBean(MethodConfig methodConfig) {

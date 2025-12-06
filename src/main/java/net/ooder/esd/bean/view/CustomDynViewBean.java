@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = DynLoadAnnotation.class)
 public class CustomDynViewBean extends CustomViewBean<FieldFormConfig, UIItem, Component> {
@@ -79,10 +80,9 @@ public class CustomDynViewBean extends CustomViewBean<FieldFormConfig, UIItem, C
 
     }
 
-    public List<JavaSrcBean> updateModule(ModuleComponent parentModuleComponent) {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+    public List<Callable> updateModule(ModuleComponent parentModuleComponent) {
+        List<Callable> javaSrcBeans = new ArrayList<>();
         super.updateBaseModule(parentModuleComponent);
-        addChildJavaSrc(javaSrcBeans);
         return javaSrcBeans;
     }
 

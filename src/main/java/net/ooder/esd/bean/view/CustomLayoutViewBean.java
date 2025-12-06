@@ -17,6 +17,7 @@ import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
+import net.ooder.esd.dsm.gen.view.BaseGenChildModule;
 import net.ooder.esd.dsm.gen.view.GenLayoutChildModule;
 import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaGenSource;
@@ -79,57 +80,32 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
     }
 
     @Override
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+    public List<GenLayoutChildModule> updateModule(ModuleComponent moduleComponent) {
         super.updateBaseModule(moduleComponent);
-        List<CustomModuleBean> navModuleBeans = new ArrayList<>();
-        LayoutComponent currComponent = (LayoutComponent) moduleComponent.getCurrComponent();
-        List<Component> components = this.cloneComponentList(currComponent.getChildren());
-        LayoutProperties layoutProperties = currComponent.getProperties();
+        component = moduleComponent.getCurrComponent();
+        List<Component> components = this.cloneComponentList(component.getChildren());
+        LayoutProperties layoutProperties = (LayoutProperties) component.getProperties();
         if (tabItems == null || tabItems.isEmpty()) {
             tabItems = layoutProperties.getItems();
         }
+        this.setTabItems(tabItems);
+        List<CustomModuleBean> navModuleBeans = new ArrayList<>();
         List<GenLayoutChildModule> tasks = new ArrayList<GenLayoutChildModule>();
         if (components != null && components.size() > 0) {
             for (Component childComponent : components) {
                 ModuleViewType comModuleViewType = ModuleViewType.getModuleViewByCom(ComponentType.fromType(childComponent.getKey()));
                 if (!comModuleViewType.equals(ModuleViewType.NONE)) {
                     GenLayoutChildModule genChildModule = new GenLayoutChildModule(moduleComponent, childComponent, this);
+                    navModuleBeans.add(genChildModule.getcModuleBean());
                     tasks.add(genChildModule);
                 }
             }
-            List<Future<AggRootBuild>> futures = null;
-            try {
-                ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
-                futures = service.invokeAll(tasks);
-                for (Future<AggRootBuild> resultFuture : futures) {
-                    try {
-                        AggRootBuild aggRootBuild = resultFuture.get();
-                        childClassNameSet.add(aggRootBuild.getEuClassName());
-                        CustomModuleBean cModuleBean = aggRootBuild.getCustomModuleBean();
-                        if (navModuleBeans != null && !navModuleBeans.contains(cModuleBean)) {
-                            navModuleBeans.add(cModuleBean);
-                            if (cModuleBean.getJavaSrcBeans() != null) {
-                                javaSrcBeans.addAll(cModuleBean.getJavaSrcBeans());
-                            }
-                        }
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                }
-                service.shutdownNow();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
         }
-
         this.setModuleBeans(navModuleBeans);
-        this.setTabItems(tabItems);
         this.init(layoutProperties, moduleComponent.getProjectName());
-        this.addChildJavaSrc(javaSrcBeans);
-        return javaSrcBeans;
+        return tasks;
     }
+
 
     public ComponentBean findComByPos(PosType posType) {
         CustomLayoutItemBean itemBean = this.getLayoutItem(posType);

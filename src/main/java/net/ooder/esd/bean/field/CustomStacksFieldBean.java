@@ -46,17 +46,17 @@ public class CustomStacksFieldBean extends BaseWidgetBean<StacksViewBean, Stacks
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, StacksComponent component) {
+    public void update(ModuleComponent parentModuleComponent, StacksComponent component) {
         this.initWidget(parentModuleComponent,component);
         this.initProperties(component);
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         AbsListProperties listProperties= component.getProperties();
         if (component.getChildren() != null && component.getChildren().size() > 0) {
-            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+           super.update(parentModuleComponent, component);
         } else if (listProperties.getItems().size()>0){
             this.viewBean=genViewBean();
         }
-        return javaSrcBeans;
+
 
     }
 

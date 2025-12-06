@@ -65,9 +65,8 @@ public class JavaEditorFieldBean extends FieldBaseBean<JavaEditorComponent> {
     }
 
     @Override
-    public List<JavaSrcBean>  update(ModuleComponent moduleComponent, JavaEditorComponent component) {
+    public void  update(ModuleComponent moduleComponent, JavaEditorComponent component) {
 
-        return new ArrayList<>();
     }
 
     public JavaEditorFieldBean(JavaEditorComponent component) {

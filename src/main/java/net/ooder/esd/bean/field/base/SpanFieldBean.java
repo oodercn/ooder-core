@@ -91,8 +91,8 @@ public class SpanFieldBean extends FieldBaseBean<SpanComponent> {
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, SpanComponent component) {
-        return new ArrayList<>();
+    public void update(ModuleComponent moduleComponent, SpanComponent component) {
+
     }
 
     @Override

@@ -105,23 +105,20 @@ public class CustomTitleBlockFieldBean extends BaseWidgetBean<CustomTitleBlockVi
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, TitleBlockComponent component) {
+    public void update(ModuleComponent parentModuleComponent, TitleBlockComponent component) {
         this.component = component;
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         TitleBlockProperties listProperties = component.getProperties();
         if (component.getChildren() != null && component.getChildren().size() > 0) {
-            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+            super.update(parentModuleComponent, component);
         } else if (listProperties.getItems().size() > 0) {
-            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+            super.update(parentModuleComponent, component);
             this.viewBean = genViewBean();
         }
         if (customListBean != null) {
             List<JavaSrcBean> srcBeanList = customListBean.update(parentModuleComponent, component);
             javaSrcBeans.addAll(srcBeanList);
         }
-
-        return javaSrcBeans;
-
 
     }
 

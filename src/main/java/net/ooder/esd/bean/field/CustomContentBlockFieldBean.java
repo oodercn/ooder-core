@@ -27,7 +27,6 @@ import net.ooder.esd.tool.properties.ContentBlockProperties;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.item.ContentBlockItem;
 import net.ooder.esd.tool.properties.list.AbsListProperties;
-import net.ooder.esd.tool.properties.list.AbsUIListProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -76,16 +75,16 @@ public class CustomContentBlockFieldBean extends BaseWidgetBean<CustomContentBlo
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, ContentBlockComponent component) {
-        this.initWidget(parentModuleComponent,component);
+    public void update(ModuleComponent parentModuleComponent, ContentBlockComponent component) {
+        this.initWidget(parentModuleComponent, component);
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
 
         AbsListProperties listProperties = component.getProperties();
 
         if (component.getChildren() != null && component.getChildren().size() > 0) {
-            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+            super.update(parentModuleComponent, component);
         } else if (listProperties.getItems().size() > 0) {
-            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+            super.update(parentModuleComponent, component);
             this.viewBean = genViewBean();
         }
         if (customListBean != null) {
@@ -93,7 +92,6 @@ public class CustomContentBlockFieldBean extends BaseWidgetBean<CustomContentBlo
             javaSrcBeans.addAll(srcBeanList);
         }
 
-        return javaSrcBeans;
 
     }
 

@@ -34,6 +34,7 @@ import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = CustomListAnnotation.class)
 public class CustomListBean<T extends AbsListProperties> implements ComponentBean {
@@ -62,9 +63,9 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
     }
 
 
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, Component<T, ?> component) {
+    public List<GenViewDicJava> update(ModuleComponent moduleComponent, Component<T, ?> component) {
         T listProperties = component.getProperties();
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        List<GenViewDicJava> tasks = new ArrayList<>();
         this.update(listProperties);
         try {
             if (listProperties.getItems() != null && !listProperties.getItems().isEmpty()) {
@@ -84,7 +85,7 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
                 if (bindClass == null || bindClass.equals(Void.class)) {
                     if (enumClass == null || enumClass.equals(Enum.class)) {
                         GenViewDicJava genViewDicJava = new GenViewDicJava(domainInst.getViewInst(), module.toLowerCase(), listProperties.getItems(), euClassName, null);
-                        javaSrcBeans.addAll(BuildFactory.getInstance().syncTasks(euClassName, Arrays.asList(genViewDicJava)));
+                        tasks.add(genViewDicJava);
                         bindClass = genViewDicJava.getDicClass();
                         if (bindClass != null && bindClass.isEnum()) {
                             enumClass = bindClass;
@@ -96,7 +97,7 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
         } catch (JDSException e) {
             e.printStackTrace();
         }
-        return javaSrcBeans;
+        return tasks;
     }
 
     private void update(T properties) {

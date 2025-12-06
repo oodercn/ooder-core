@@ -31,6 +31,7 @@ import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @CustomClass(clazz = CustomFieldGalleryComponent.class,
         moduleType = ModuleViewType.GALLERYCONFIG,
@@ -64,21 +65,20 @@ public class CustomGalleryFieldBean extends BaseWidgetBean<CustomGalleryViewBean
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, GalleryComponent component) {
+    public void update(ModuleComponent parentModuleComponent, GalleryComponent component) {
         this.initWidget(parentModuleComponent,component);
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         GalleryProperties contentBlockProperties = component.getProperties();
         if (component.getChildren() != null && component.getChildren().size() > 0) {
-            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+            super.update(parentModuleComponent, component);
         } else if (contentBlockProperties.getItems().size() > 0) {
-            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+            super.update(parentModuleComponent, component);
             this.viewBean = genViewBean();
         }
         if (customListBean != null) {
             List<JavaSrcBean> srcBeanList = customListBean.update(parentModuleComponent, component);
             javaSrcBeans.addAll(srcBeanList);
         }
-        return javaSrcBeans;
 
     }
 

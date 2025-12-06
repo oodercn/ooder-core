@@ -94,9 +94,9 @@ public class SVGTextBean implements FieldComponentBean<SVGTextComponent> {
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, SVGTextComponent component) {
+    public void update(ModuleComponent moduleComponent, SVGTextComponent component) {
         this.init(component.getProperties());
-        return new ArrayList<>();
+
     }
 
     public SVGTextBean(SVGTextProperties properties) {

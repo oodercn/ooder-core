@@ -51,8 +51,9 @@ public abstract class SVGFieldBaseBean<T extends Key,M extends SVGBaseComponent>
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, M component) {
-        return new ArrayList<>();
+    public void update(ModuleComponent moduleComponent, M component) {
+
+
     }
 
     @JSONField(serialize = false)

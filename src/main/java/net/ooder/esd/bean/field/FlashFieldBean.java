@@ -40,9 +40,10 @@ public class FlashFieldBean extends FieldBaseBean<FlashComponent> {
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, FlashComponent component) {
+    public void update(ModuleComponent moduleComponent, FlashComponent component) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(component.getProperties()), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
 
-        return new ArrayList<>();
     }
 
     public FlashFieldBean(Set<Annotation> annotations) {

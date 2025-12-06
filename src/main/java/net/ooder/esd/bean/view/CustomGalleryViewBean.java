@@ -30,6 +30,7 @@ import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = GalleryAnnotation.class)
 public class CustomGalleryViewBean extends BaseGalleryViewBean<CustomGalleryMenu, CustomGalleryEvent> implements ContextMenuBar, ToolsBar {
@@ -74,9 +75,9 @@ public class CustomGalleryViewBean extends BaseGalleryViewBean<CustomGalleryMenu
     }
 
 
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
+    public List<Callable> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(GalleryAnnotation.class, this);
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        List<Callable> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         if (moduleComponent != null && moduleComponent.getMethodAPIBean() != null) {
             MethodConfig sourceMethod = moduleComponent.getMethodAPIBean();
@@ -107,8 +108,7 @@ public class CustomGalleryViewBean extends BaseGalleryViewBean<CustomGalleryMenu
                 }
             }
         }
-        addChildJavaSrc(javaSrcBeans);
-        return javaSrcBeans;
+        return tasks;
     }
 
 

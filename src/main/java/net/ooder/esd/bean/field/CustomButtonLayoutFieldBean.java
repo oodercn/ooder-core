@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 @CustomClass(clazz = CustomFieldButtonLayoutComponent.class,
         viewType = CustomViewType.COMPONENT,
@@ -44,17 +45,15 @@ public class CustomButtonLayoutFieldBean extends BaseWidgetBean<CustomButtonLayo
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, ButtonLayoutComponent component) {
+    public void update(ModuleComponent parentModuleComponent, ButtonLayoutComponent component) {
         this.initWidget(parentModuleComponent, component);
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         AbsListProperties listProperties = component.getProperties();
         if (component.getChildren() != null && component.getChildren().size() > 0) {
-            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+           super.update(parentModuleComponent, component);
         } else if (listProperties.getItems().size() > 0) {
-            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+          super.update(parentModuleComponent, component);
             this.viewBean = genViewBean();
         }
-        return javaSrcBeans;
 
     }
 

@@ -28,6 +28,7 @@ import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = EChartAnnotation.class)
 public class CustomEChartViewBean extends CustomViewBean<FieldFormConfig, UIItem, EChartComponent> implements CustomBean {
@@ -134,9 +135,9 @@ public class CustomEChartViewBean extends CustomViewBean<FieldFormConfig, UIItem
     }
 
     @Override
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
+    public List<Callable> updateModule(ModuleComponent moduleComponent) {
         updateBaseModule(moduleComponent);
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        List<Callable> javaSrcBeans = new ArrayList<>();
         EChartComponent chartComponent = (EChartComponent) moduleComponent.getCurrComponent();
         EChartProperties chartProperties = chartComponent.getProperties();
         this.init(chartProperties);

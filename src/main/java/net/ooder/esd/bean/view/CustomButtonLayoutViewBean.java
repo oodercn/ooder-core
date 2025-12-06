@@ -39,6 +39,7 @@ import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = ButtonLayoutAnnotation.class)
 public class CustomButtonLayoutViewBean extends CustomViewBean<FieldGalleryConfig, ButtonLayoutItem, ButtonLayoutComponent> implements ContextMenuBar, ToolsBar {
@@ -129,10 +130,10 @@ public class CustomButtonLayoutViewBean extends CustomViewBean<FieldGalleryConfi
         this.updateModule(moduleComponent);
     }
 
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
+    public List<Callable> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(ButtonLayoutAnnotation.class, this);
         super.updateBaseModule(moduleComponent);
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        List<Callable> tasks = new ArrayList<>();
         ButtonLayoutComponent component = (ButtonLayoutComponent) moduleComponent.getCurrComponent();
         ButtonLayoutProperties layoutProperties = component.getProperties();
         this.init(layoutProperties);
@@ -148,8 +149,8 @@ public class CustomButtonLayoutViewBean extends CustomViewBean<FieldGalleryConfi
                 }
             }
         }
-        addChildJavaSrc(javaSrcBeans);
-        return javaSrcBeans;
+
+        return tasks;
     }
 
     void init(ButtonLayoutProperties opinionProperties) {

@@ -80,11 +80,10 @@ public class StatusButtonsFieldBean extends FieldBaseBean<StatusButtonsComponent
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, StatusButtonsComponent component) {
+    public void update(ModuleComponent moduleComponent, StatusButtonsComponent component) {
         this.update(component.getProperties());
         customListBean = new CustomListBean();
         javaSrcBeans = customListBean.update(moduleComponent, component);
-        return javaSrcBeans;
 
     }
 

@@ -2,6 +2,7 @@ package net.ooder.esd.bean.view;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.CaselessStringKeyHashMap;
@@ -42,6 +43,9 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
 
     Set<CustomTabsEvent> event = new HashSet<>();
 
+    @JSONField(serialize = false)
+    List<GenTabsChildModule> tasks=new ArrayList<>();
+
     public CustomButtonViewsViewBean() {
         super();
     }
@@ -59,13 +63,11 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
             clazz = methodAPIBean.getViewClass().getCtClass();
         }
         this.init(clazz);
-
     }
 
 
     @Override
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+    public List<GenTabsChildModule> updateModule(ModuleComponent moduleComponent) {
         super.updateBaseModule(moduleComponent);
         List<CustomModuleBean> navModuleBeans = new ArrayList<>();
         ButtonViewsComponent buttonViewsComponent = (ButtonViewsComponent) moduleComponent.getCurrComponent();
@@ -76,45 +78,22 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
         }
         ButtonViewsProperties buttonViewsProperties = buttonViewsComponent.getProperties();
         this.init(buttonViewsProperties);
-        List<GenTabsChildModule> tasks = new ArrayList<GenTabsChildModule>();
+       // List<GenTabsChildModule> tasks = new ArrayList<GenTabsChildModule>();
         if (components != null && components.size() > 0) {
             for (Component childComponent : components) {
                 ModuleViewType comModuleViewType = ModuleViewType.getModuleViewByCom(ComponentType.fromType(childComponent.getKey()));
                 if (!(childComponent instanceof ModulePlaceHolder) && !comModuleViewType.equals(ModuleViewType.NONE)) {
                     GenTabsChildModule genChildModule = new GenTabsChildModule(moduleComponent, childComponent, this);
                     tasks.add(genChildModule);
+                    navModuleBeans.add(genChildModule.getcModuleBean());
+                }
+            }
 
-                }
-            }
-            try {
-                ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
-                List<Future<AggRootBuild>> futures = service.invokeAll(tasks);
-                for (Future<AggRootBuild> resultFuture : futures) {
-                    try {
-                        AggRootBuild aggRootBuild = resultFuture.get();
-                        childClassNameSet.add(aggRootBuild.getEuClassName());
-                        CustomModuleBean cModuleBean = aggRootBuild.getCustomModuleBean();
-                        javaSrcBeans.addAll(aggRootBuild.getAllSrcBean());
-                        if (navModuleBeans != null && cModuleBean != null && !navModuleBeans.contains(cModuleBean)) {
-                            navModuleBeans.add(cModuleBean);
-                        }
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                service.shutdown();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             this.setTabItems(tabItems);
             buttonViewsProperties.setItems(tabItems);
         }
         this.setModuleBeans(navModuleBeans);
-        addChildJavaSrc(javaSrcBeans);
-
-        return javaSrcBeans;
+        return tasks;
     }
 
 

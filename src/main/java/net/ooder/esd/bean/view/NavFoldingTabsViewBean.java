@@ -7,6 +7,8 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomFoldingTabsFieldBean;
 import net.ooder.esd.custom.properties.NavFoldingTabsListItem;
 import net.ooder.esd.custom.properties.NavFoldingTabsProperties;
+import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
+import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.FoldingTabsComponent;
 import net.ooder.esd.tool.DSMProperties;
@@ -15,6 +17,7 @@ import net.ooder.annotation.AnnotationType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = NavFoldingTabsAnnotation.class)
 public class NavFoldingTabsViewBean extends TabsViewBean<NavFoldingTabsListItem> {
@@ -45,15 +48,15 @@ public class NavFoldingTabsViewBean extends TabsViewBean<NavFoldingTabsListItem>
     }
 
     @Override
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+    public List<GenTabsChildModule> updateModule(ModuleComponent moduleComponent) {
+        List<GenTabsChildModule> tasks = new ArrayList<>();
         super.updateModule(moduleComponent);
         if (moduleComponent.getCurrComponent() instanceof FoldingTabsComponent) {
             FoldingTabsComponent component = (FoldingTabsComponent) moduleComponent.getCurrComponent();
             NavFoldingTabsProperties tabsProperties = component.getProperties();
             this.initProperties(tabsProperties);
         }
-        return javaSrcBeans;
+        return tasks;
 
     }
 

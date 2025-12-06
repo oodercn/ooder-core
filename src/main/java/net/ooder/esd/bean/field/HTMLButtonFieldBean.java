@@ -52,9 +52,8 @@ public class HTMLButtonFieldBean extends FieldBaseBean<HTMLButtonComponent> {
 
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, HTMLButtonComponent component) {
+    public void update(ModuleComponent moduleComponent, HTMLButtonComponent component) {
 
-        return new ArrayList<>();
     }
 
     public HTMLButtonFieldBean(HTMLButtonComponent component) {

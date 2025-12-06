@@ -432,7 +432,7 @@ public class CustomGroupFieldBean implements FieldComponentBean<GroupComponent> 
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, GroupComponent component) {
+    public void update(ModuleComponent moduleComponent, GroupComponent component) {
         this.initProperties(component.getProperties());
         this.euClassName = component.getProperties().getEuClassName();
         try {
@@ -456,7 +456,7 @@ public class CustomGroupFieldBean implements FieldComponentBean<GroupComponent> 
         } catch (JDSException e) {
             e.printStackTrace();
         }
-        return new ArrayList<>();
+
 
     }
 

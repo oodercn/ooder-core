@@ -134,14 +134,14 @@ public class CustomBlockFieldBean extends BaseWidgetBean<CustomBlockFormViewBean
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, BlockComponent component) {
+    public void update(ModuleComponent parentModuleComponent, BlockComponent component) {
         this.initWidget(parentModuleComponent,component);
         updateFieldBean(component);
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         if (component.getChildren() != null && component.getChildren().size() > 0) {
-            javaSrcBeans.addAll(super.update(parentModuleComponent, component));
+            super.update(parentModuleComponent, component);
         }
-        return javaSrcBeans;
+
 
     }
 

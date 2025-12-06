@@ -177,7 +177,7 @@ public class DatePickerFieldBean extends FieldBaseBean<DatePickerComponent> {
     }
 
     @Override
-    public List<JavaSrcBean> update(ModuleComponent moduleComponent, DatePickerComponent component) {
-        return new ArrayList<>();
+    public void update(ModuleComponent moduleComponent, DatePickerComponent component) {
+
     }
 }
