@@ -17,11 +17,9 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.ESDField;
-import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.gen.view.GenViewDicJava;
-import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.CS;
@@ -34,7 +32,6 @@ import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
-import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = CustomListAnnotation.class)
 public class CustomListBean<T extends AbsListProperties> implements ComponentBean {
@@ -61,6 +58,7 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
     public CustomListBean() {
 
     }
+
 
 
     public List<GenViewDicJava> update(ModuleComponent moduleComponent, Component<T, ?> component) {

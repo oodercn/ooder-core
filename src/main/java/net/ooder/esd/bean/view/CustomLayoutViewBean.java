@@ -78,6 +78,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
     @Override
     public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
         super.updateBaseModule(moduleComponent);
+        childModules=new ArrayList<>();
         component = moduleComponent.getCurrComponent();
         List<Component> components = this.cloneComponentList(component.getChildren());
         LayoutProperties layoutProperties = (LayoutProperties) component.getProperties();

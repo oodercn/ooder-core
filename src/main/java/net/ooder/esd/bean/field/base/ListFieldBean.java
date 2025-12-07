@@ -14,14 +14,11 @@ import net.ooder.esd.bean.field.CustomListBean;
 import net.ooder.esd.bean.field.FieldBaseBean;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.custom.component.form.field.CustomListComponent;
-import net.ooder.esd.dsm.java.JavaSrcBean;
-import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.FieldComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.list.ListFieldProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
-import org.checkerframework.checker.units.qual.C;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -76,8 +73,10 @@ public class ListFieldBean<T extends ListFieldProperties, M extends FieldCompone
     @Override
     public void update(ModuleComponent moduleComponent, M component) {
         this.update((T) component.getProperties());
-//        customListBean = new CustomListBean();
-//        javaSrcBeans = customListBean.update(moduleComponent, (Component<T, ?>) component);
+        if (customListBean == null) {
+            customListBean = new CustomListBean();
+        }
+        customListBean.update(moduleComponent, component);
     }
 
 
