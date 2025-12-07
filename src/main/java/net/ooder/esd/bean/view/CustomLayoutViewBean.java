@@ -78,7 +78,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
     @Override
     public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
         super.updateBaseModule(moduleComponent);
-        childModules=new ArrayList<>();
+        childModules = new ArrayList<>();
         component = moduleComponent.getCurrComponent();
         List<Component> components = this.cloneComponentList(component.getChildren());
         LayoutProperties layoutProperties = (LayoutProperties) component.getProperties();
@@ -103,14 +103,17 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
     }
 
     public List<JavaGenSource> buildAll() {
+        List<JavaGenSource> allSourceList = new ArrayList<>();
         List<Callable<List<JavaGenSource>>> callableList = new ArrayList<>();
         for (Callable childModule : childModules) {
             GenLayoutChildModule genFormChildModule = (GenLayoutChildModule) childModule;
             callableList.add(childModule);
             CustomViewBean customViewBean = genFormChildModule.getCustomViewBean();
-            callableList.addAll(customViewBean.getChildModules());
+            allSourceList.addAll(customViewBean.buildAll());
         }
-        return build(callableList);
+        List<JavaGenSource> sourceList = build(callableList);
+        allSourceList.addAll(sourceList);
+        return allSourceList;
     }
 
 

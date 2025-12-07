@@ -24,6 +24,7 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
 import net.ooder.esd.dsm.gen.view.GenFormChildModule;
+import net.ooder.esd.dsm.gen.view.GenLayoutChildModule;
 import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
@@ -142,15 +143,20 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
 
 
     public List<JavaGenSource> buildAll() {
+        List<JavaGenSource> allSourceList = new ArrayList<>();
         List<Callable<List<JavaGenSource>>> callableList = new ArrayList<>();
         for (Callable childModule : childModules) {
             GenFormChildModule genFormChildModule = (GenFormChildModule) childModule;
             callableList.add(childModule);
-            CustomViewBean viewBean = genFormChildModule.getFieldFormConfig().getWidgetConfig().getViewBean();
-            callableList.addAll(viewBean.getChildModules());
+            CustomViewBean customViewBean = genFormChildModule.getFieldFormConfig().getWidgetConfig().getViewBean();
+            allSourceList.addAll(customViewBean.buildAll());
         }
-        return build(callableList);
+        List<JavaGenSource> sourceList = build(callableList);
+        allSourceList.addAll(sourceList);
+        return allSourceList;
     }
+
+
 
 
     protected List<Callable<List<JavaGenSource>>> genChildComponent(ModuleComponent moduleComponent, List<Component> components) {

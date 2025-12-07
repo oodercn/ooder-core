@@ -23,6 +23,8 @@ import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.dsm.DSMFactory;
+import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.engine.ESDFacrory;
@@ -40,6 +42,7 @@ import ognl.OgnlException;
 
 import java.lang.reflect.Constructor;
 import java.util.*;
+import java.util.concurrent.Callable;
 
 public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListItem> extends CustomViewBean<FieldFormConfig, U, TabsComponent> implements ComponentBean<TabsComponent>, ToolsBar {
 
@@ -155,6 +158,19 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
         return null;
     }
 
+    public List<JavaGenSource> buildAll() {
+        List<JavaGenSource> allSourceList = new ArrayList<>();
+        List<Callable<List<JavaGenSource>>> callableList = new ArrayList<>();
+        for (Callable childModule : childModules) {
+            GenTabsChildModule genFormChildModule = (GenTabsChildModule) childModule;
+            callableList.add(childModule);
+            CustomViewBean customViewBean = genFormChildModule.getCustomViewBean();
+            allSourceList.addAll(customViewBean.buildAll());
+        }
+        List<JavaGenSource> sourceList = build(callableList);
+        allSourceList.addAll(sourceList);
+        return allSourceList;
+    }
 
     @Override
     public ComponentBean findComByPath(String path) {

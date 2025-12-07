@@ -46,16 +46,6 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
     }
 
 
-    public List<JavaGenSource> buildAll() {
-        List<Callable<List<JavaGenSource>>> callableList = new ArrayList<>();
-        for (Callable childModule : childModules) {
-            GenTabsChildModule genFormChildModule = (GenTabsChildModule) childModule;
-            callableList.add(childModule);
-            CustomViewBean viewBean = genFormChildModule.getCustomViewBean();
-            callableList.addAll(viewBean.getChildModules());
-        }
-        return build(callableList);
-    }
 
     public TabsViewBean(Class<? extends TabListItem> clazz) {
         init(clazz);
