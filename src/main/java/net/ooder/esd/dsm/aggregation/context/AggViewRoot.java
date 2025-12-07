@@ -16,7 +16,6 @@ import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.UIType;
 import net.ooder.esd.annotation.view.*;
 import net.ooder.esd.bean.CustomViewBean;
-import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.dsm.DSMInst;
@@ -109,7 +108,7 @@ public class AggViewRoot implements JavaRoot {
     }
 
 
-    public AggViewRoot(DSMInst dsmBean, String className, CustomModuleBean moduleBean) {
+    public AggViewRoot(DSMInst dsmBean, String className, CustomViewBean customViewBean) {
         this.dsmBean = dsmBean;
         this.className = className;
         this.packageName = className.substring(0, className.lastIndexOf("."));
@@ -136,7 +135,12 @@ public class AggViewRoot implements JavaRoot {
         }
 
 
-        this.moduleBean = moduleBean;
+        this.moduleBean = customViewBean.getModuleBean();
+        if (moduleBean == null) {
+            if (customViewBean.getMethodConfig() != null) {
+                moduleBean = customViewBean.getMethodConfig().getModuleBean();
+            }
+        }
         this.methodRoot = new MethodRoot(moduleBean);
 
         List<CustomBean> customBeans = methodRoot.getAnnotationBeans();
@@ -154,20 +158,18 @@ public class AggViewRoot implements JavaRoot {
             imports.add(clazz.getPackage().getName() + ".*");
         }
 
-        MethodConfig methodConfig = moduleBean.getMethodConfig();
-        if (methodConfig != null) {
-            CustomViewBean viewBean = methodConfig.getView();
-            if (viewBean != null && viewBean.getViewClassName() != null) {
-                Set<Class> otherClass = viewBean.getOtherClass();
-                if (otherClass != null) {
-                    for (Class other : otherClass) {
-                        if (other != null) {
-                            imports.add(other.getPackage().getName() + ".*");
-                        }
+
+        if (customViewBean != null && customViewBean.getViewClassName() != null) {
+            Set<Class> otherClass = customViewBean.getOtherClass();
+            if (otherClass != null) {
+                for (Class other : otherClass) {
+                    if (other != null) {
+                        imports.add(other.getPackage().getName() + ".*");
                     }
                 }
             }
         }
+
 
         String basePackage = packageName.substring(0, className.lastIndexOf("."));
 
@@ -180,62 +182,6 @@ public class AggViewRoot implements JavaRoot {
 
         }
 
-
-//        Set<String> basePackages1 = new HashSet();
-//        Map<String, Class> classMap = new HashMap<>();
-//        classMap.putAll(ClassUtility.getDynClassMap());
-//
-//        Set<Map.Entry<String, Class>> dynClassSet = classMap.entrySet();
-//        for (Map.Entry<String, Class> classEntry : dynClassSet) {
-//            Class dynClass = classEntry.getValue();
-//            for (String basePackage : basePackages) {
-//                if (dynClass.getPackage().getName().startsWith(basePackage)) {
-//                    this.imports.add(dynClass.getPackage().getName() + ".*");
-//                }
-//            }
-//
-//        }
-//
-//
-//
-//        for (Package pack : Package.getPackages()) {
-//            for (String packName : innerPacks) {
-//                for (String basePackage : basePackages) {
-//                    if (pack.getName().startsWith(basePackage + "." + packName)) {
-//                        this.imports.add(pack.getName() + ".*");
-//                    }
-//                }
-//            }
-//        }
-//
-//
-//        for (Package pack : ClassUtility.getAllDynPacks()) {
-//            for (String basePackage : basePackages) {
-//                if (pack.getName().startsWith(basePackage)) {
-//                    this.imports.add(pack.getName() + ".*");
-//                }
-//            }
-//        }
-//
-//
-//        try {
-//            Set<String> javaTempIds = dsmBean.getJavaTempIds();
-//            for (String javaTempId : javaTempIds) {
-//                JavaTemp javaTemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaTempId);
-//                if (javaTemp != null && javaTemp.getAggregationType() != null && javaTemp.getAggregationType().equals(AggregationType.MODULE)) {
-//                    for (String basePackage : basePackages) {
-//                        if (javaTemp.getPackagePostfix() == null || javaTemp.getPackagePostfix().equals("..")) {
-//                            this.imports.add(basePackage + ".*");
-//                        } else {
-//                            this.imports.add(basePackage + "." + javaTemp.getPackagePostfix() + ".*");
-//                        }
-//                    }
-//                }
-//            }
-//
-//        } catch (JDSException e) {
-//            e.printStackTrace();
-//        }
         this.imports.remove(packageName + ".*");
     }
 

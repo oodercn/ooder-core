@@ -41,7 +41,7 @@ public class GenLayoutChildModule extends BaseGenChildModule<CustomLayoutViewBea
             if (serviceList == null || serviceList.isEmpty()) {
                 serviceList = aggRootBuild.build();
             }
-            customViewBean.bindItem(serviceList, currListItem);
+            parentViewBean.bindItem(serviceList, currListItem);
             for (JavaGenSource genSource : serviceList) {
                 JavaSrcBean javaSrcBean = genSource.getSrcBean();
                 if (javaSrcBean.getTarget() != null && javaSrcBean.getTarget().equals(target)) {

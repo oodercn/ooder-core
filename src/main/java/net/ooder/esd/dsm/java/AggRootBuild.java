@@ -460,17 +460,9 @@ public class AggRootBuild {
     }
 
     public void reSetViewBean(CustomViewBean customViewBean) {
-
         this.customViewBean = customViewBean;
         this.customViewBean.setDomainId(domainId);
-        this.customModuleBean = customViewBean.getModuleBean();
-        if (customModuleBean == null) {
-            if (customViewBean.getMethodConfig() != null) {
-                customModuleBean = customViewBean.getMethodConfig().getModuleBean();
-            }
-        }
-        this.viewRoot = new AggViewRoot(domainInst, euClassName, customModuleBean);
-
+        this.viewRoot = new AggViewRoot(domainInst, euClassName, customViewBean);
         ViewJavaSrcBean viewJavaSrcBean = customViewBean.getViewJavaSrcBean();
         if (viewJavaSrcBean == null) {
             viewJavaSrcBean = new ViewJavaSrcBean(packageName, euClassName);
@@ -480,7 +472,6 @@ public class AggRootBuild {
         }
 
         if (viewJavaSrcBean.getViewClassList() != null) {
-
             for (String className : viewJavaSrcBean.getViewClassList()) {
                 try {
                     JavaSrcBean javaSrcBean = viewInst.getJavaSrcByClassName(className);

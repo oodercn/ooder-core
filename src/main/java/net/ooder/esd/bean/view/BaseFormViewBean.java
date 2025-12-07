@@ -24,7 +24,6 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
 import net.ooder.esd.dsm.gen.view.GenFormChildModule;
-import net.ooder.esd.dsm.gen.view.GenLayoutChildModule;
 import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
@@ -157,48 +156,44 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
     }
 
 
-
-
     protected List<Callable<List<JavaGenSource>>> genChildComponent(ModuleComponent moduleComponent, List<Component> components) {
         List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         for (Component component : components) {
             FieldFormConfig fieldFormConfig = findFieldByCom(component);
-            if (fieldFormConfig.getWidgetConfig() != null) {
-                ComponentType componentType = ComponentType.fromType(component.getKey());
-                GenFormChildModule genChildModule = null;
-                if (componentType.isBar()) {
-                    genChildModule = genBar(moduleComponent, component);
-                } else if (Arrays.asList(ComponentType.getCustomAPIComponents()).contains(componentType)) {
-                    genChildModule = genAPI(moduleComponent, component);
-                } else if (!skipType(component)) {
-                    FieldComponentBean widgetConfig = fieldFormConfig.getWidgetConfig();
-                    if (widgetConfig == null) {
-                        widgetConfig = fieldFormConfig.createDefaultWidget(componentType, moduleComponent, component);
-                    }
-                    if (widgetConfig != null && widgetConfig instanceof WidgetBean) {
-                        if (component.getChildren() != null && component.getChildren().size() == 1 && componentType.equals(ComponentType.BLOCK)) {
-                            component = component.getChildren().get(0);
-                            if (component instanceof ModuleComponent) {
-                                if (((ModuleComponent) component).getCurrComponent() != null) {
-                                    component = ((ModuleComponent) component).getCurrComponent().clone();
-                                    genChildModule = new GenFormChildModule(moduleComponent, component, fieldFormConfig);
-                                }
-                            } else {
+            ComponentType componentType = ComponentType.fromType(component.getKey());
+            GenFormChildModule genChildModule = null;
+            if (componentType.isBar()) {
+                genChildModule = genBar(moduleComponent, component);
+            } else if (Arrays.asList(ComponentType.getCustomAPIComponents()).contains(componentType)) {
+                genChildModule = genAPI(moduleComponent, component);
+            } else if (!skipType(component)) {
+                FieldComponentBean widgetConfig = fieldFormConfig.getWidgetConfig();
+                if (widgetConfig == null) {
+                    widgetConfig = fieldFormConfig.createDefaultWidget(componentType, moduleComponent, component);
+                }
+                if (widgetConfig != null && widgetConfig instanceof WidgetBean) {
+                    if (component.getChildren() != null && component.getChildren().size() == 1 && componentType.equals(ComponentType.BLOCK)) {
+                        component = component.getChildren().get(0);
+                        if (component instanceof ModuleComponent) {
+                            if (((ModuleComponent) component).getCurrComponent() != null) {
+                                component = ((ModuleComponent) component).getCurrComponent().clone();
                                 genChildModule = new GenFormChildModule(moduleComponent, component, fieldFormConfig);
                             }
                         } else {
                             genChildModule = new GenFormChildModule(moduleComponent, component, fieldFormConfig);
                         }
-                    } else if (component.getChildren() != null && component.getChildren().size() > 0) {
+                    } else {
                         genChildModule = new GenFormChildModule(moduleComponent, component, fieldFormConfig);
                     }
-                }
-                if (genChildModule != null) {
-                    tasks.add(genChildModule);
+                } else if (component.getChildren() != null && component.getChildren().size() > 0) {
+                    genChildModule = new GenFormChildModule(moduleComponent, component, fieldFormConfig);
                 }
             }
-
+            if (genChildModule != null) {
+                tasks.add(genChildModule);
+            }
         }
+
         return tasks;
     }
 
@@ -206,7 +201,11 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
     private boolean skipType(Component childComponent) {
         String alias = childComponent.getAlias();
         ComponentType componentType = ComponentType.fromType(childComponent.getKey());
-        if (componentType.equals(ComponentType.BLOCK)) {
+        if (alias.indexOf("StatusBottom") > -1) {
+            return true;
+        } else if (alias.endsWith(ModuleComponent.DefaultTopBoxfix)) {
+            return true;
+        } else if (componentType.equals(ComponentType.BLOCK)) {
             BlockComponent blockComponent = (BlockComponent) childComponent;
             if (alias.indexOf(CustomBlockFieldBean.skipStr) > -1) {
                 return true;
@@ -217,8 +216,10 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
             } else if ((blockComponent.getChildren() == null || blockComponent.getChildren().isEmpty()) && Arrays.asList(ComponentType.getContainerComponents()).contains(componentType)) {
                 return true;
             }
-        } else if (alias.indexOf("StatusBottom") > -1) {
-            return true;
+        } else if (componentType.equals(ComponentType.PANEL) || componentType.equals(ComponentType.DIV)) {
+            if ((childComponent.getChildren() == null || childComponent.getChildren().isEmpty()) && Arrays.asList(ComponentType.getContainerComponents()).contains(componentType)) {
+                return true;
+            }
         } else if (alias.equals(ModuleComponent.PAGECTXNAME)) {
             return true;
         } else if (childComponent.getProperties() instanceof AbsListProperties) {

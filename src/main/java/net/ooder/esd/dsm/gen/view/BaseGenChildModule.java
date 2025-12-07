@@ -31,14 +31,16 @@ public abstract class BaseGenChildModule<T extends CustomViewBean> implements Ca
     protected OgnlContext onglContext;
     Component childComponent;
     ModuleComponent moduleComponent;
-    T customViewBean;
+    CustomViewBean customViewBean;
+    T parentViewBean;
     String parentClassName;
     String childRealPath;
 
 
-    public BaseGenChildModule(ModuleComponent moduleComponent, Component childComponent, T customViewBean) {
+    public BaseGenChildModule(ModuleComponent moduleComponent, Component childComponent, T parentViewBean) {
         JDSContext context = JDSActionContext.getActionContext();
         this.moduleComponent = moduleComponent;
+        this.parentViewBean = parentViewBean;
         this.childComponent = childComponent;
         this.parentClassName = moduleComponent.getClassName();
         String simClass = OODUtil.formatJavaName(moduleComponent.getCurrComponent().getAlias(), true);
@@ -46,7 +48,7 @@ public abstract class BaseGenChildModule<T extends CustomViewBean> implements Ca
             this.parentClassName = parentClassName.toLowerCase() + "." + simClass;
         }
         String childSimClass = OODUtil.formatJavaName(childComponent.getAlias(), true);
-        childRealPath = customViewBean.getXpath();
+        childRealPath = parentViewBean.getXpath();
         if (!childRealPath.toLowerCase().endsWith("." + childSimClass.toLowerCase())) {
             this.childRealPath = childRealPath.toLowerCase() + "." + childSimClass;
         }
@@ -96,14 +98,13 @@ public abstract class BaseGenChildModule<T extends CustomViewBean> implements Ca
         } catch (Exception e) {
             e.printStackTrace();
         }
-        this.customViewBean = customViewBean;
 
     }
 
     public abstract AggRootBuild genAggBuild() throws JDSException;
 
     public T genChildViewBean(ModuleComponent moduleComponent, Component childComponent, String cEuClassName) throws JDSException {
-        T customViewBean = null;
+
         DomainInst domainInst = DSMFactory.getInstance().getDefaultDomain(moduleComponent.getProjectName(), UserSpace.VIEW);
         String domainId = domainInst.getDomainId();
         ModuleComponent cmoduleComponent = new ModuleComponent(childComponent);
@@ -113,15 +114,17 @@ public abstract class BaseGenChildModule<T extends CustomViewBean> implements Ca
         if (dsmProperties != null) {
             cdsmProperties.setDomainId(dsmProperties.getDomainId());
         }
-        cdsmProperties.setRealPath(childRealPath);
-        customViewBean.setDomainId(domainId);
-        customViewBean.setXpath(childRealPath);
         cmoduleProperties.setMethodName(OODUtil.getGetMethodName(childComponent.getAlias()));
         cmoduleProperties.setDsmProperties(cdsmProperties);
         cmoduleComponent.setProperties(cmoduleProperties);
         cmoduleComponent.setClassName(cEuClassName);
-        customViewBean = (T) DSMFactory.getInstance().getViewManager().getDefaultViewBean(cmoduleComponent, domainId);
-        cmoduleComponent.setClassName(cEuClassName);
+        cdsmProperties.setRealPath(childRealPath);
+
+        T customViewBean = (T) DSMFactory.getInstance().getViewManager().getDefaultViewBean(cmoduleComponent, domainId);
+        customViewBean.setDomainId(domainId);
+        customViewBean.setXpath(childRealPath);
+        customViewBean.updateModule(cmoduleComponent);
+
         return customViewBean;
     }
 
@@ -185,11 +188,11 @@ public abstract class BaseGenChildModule<T extends CustomViewBean> implements Ca
         this.moduleComponent = moduleComponent;
     }
 
-    public T getCustomViewBean() {
+    public CustomViewBean getCustomViewBean() {
         return customViewBean;
     }
 
-    public void setCustomViewBean(T customViewBean) {
+    public void setCustomViewBean(CustomViewBean customViewBean) {
         this.customViewBean = customViewBean;
     }
 

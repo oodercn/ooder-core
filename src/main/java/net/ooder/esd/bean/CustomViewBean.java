@@ -218,7 +218,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         }
     }
 
-    public abstract List<JavaGenSource> buildAll() ;
+    public abstract List<JavaGenSource> buildAll();
 
     public abstract List<? extends Callable> updateModule(ModuleComponent moduleComponent);
 
@@ -268,7 +268,13 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
             futures = service.invokeAll(tasks);
             for (Future<List<JavaGenSource>> resultFuture : futures) {
                 try {
-                    javaSrcBeans.addAll(resultFuture.get());
+                    List<JavaGenSource> childBeans = resultFuture.get();
+                    for (JavaGenSource javaGenSource : childBeans) {
+                        if (!javaSrcBeans.contains(javaGenSource)) {
+                            javaSrcBeans.add(javaGenSource);
+                        }
+                    }
+
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }

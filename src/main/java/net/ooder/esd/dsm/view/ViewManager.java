@@ -487,7 +487,7 @@ public class ViewManager {
             ViewInst defaultView = domainInst.getViewInst();
             javaSrcBean = defaultView.getJavaSrcBeanByMethod(methodConfig);
         }
-        AggViewRoot viewRoot = new AggViewRoot(domainInst, euClassName, methodConfig.getModuleBean());
+        AggViewRoot viewRoot = new AggViewRoot(domainInst, euClassName, methodConfig.getView());
         euClassName = javaSrcBean.getClassName();
         GenCustomViewJava customViewJava = new GenCustomViewJava(viewRoot, formViewBean, euClassName, chrome);
         tasks.add(customViewJava);
@@ -708,7 +708,7 @@ public class ViewManager {
             formViewBean.setCaption(viewClass.getDesc() == null ? viewClass.getCaption() : viewClass.getDesc());
         }
         if (euClassName != null && formViewBean != null) {
-            AggViewRoot viewRoot = new AggViewRoot(domainInst, euClassName, methodConfig.getModuleBean());
+            AggViewRoot viewRoot = new AggViewRoot(domainInst, euClassName, methodConfig.getView());
             GenCustomViewJava viewJava = new GenCustomViewJava(viewRoot, formViewBean, euClassName, chrome);
             customViewTasks.add(viewJava);
         }

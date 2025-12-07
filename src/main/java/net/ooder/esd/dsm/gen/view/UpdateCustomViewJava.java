@@ -45,7 +45,7 @@ public class UpdateCustomViewJava extends GenJavaTask {
             DomainInst domainInst = DSMFactory.getInstance().getAggregationManager().getDomainInstById(viewBean.getDomainId());
             ViewInst defaultView = domainInst.getViewInst();
             GenJava javaGen = GenJava.getInstance(domainInst.getProjectVersionName());
-            AggViewRoot viewRoot = new AggViewRoot(defaultView, euClassName, viewBean.getModuleBean());
+            AggViewRoot viewRoot = new AggViewRoot(defaultView, euClassName, viewBean);
             JavaTemp javaTemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaSrcBean.getJavaTempId());
             JavaRoot javaRoot = BuildFactory.getInstance().buildJavaRoot(viewRoot, viewBean, moduleName, javaSrcBean.getClassName());
             File file = javaGen.createJava(javaTemp, javaRoot, chrome);
