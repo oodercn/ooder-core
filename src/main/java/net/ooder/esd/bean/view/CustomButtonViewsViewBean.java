@@ -69,14 +69,19 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
 
 
     public List<JavaGenSource> buildAll() {
+
+        List<JavaGenSource> allSourceList = new ArrayList<>();
         List<Callable<List<JavaGenSource>>> callableList = new ArrayList<>();
         for (Callable childModule : childModules) {
             GenTabsChildModule genFormChildModule = (GenTabsChildModule) childModule;
             callableList.add(childModule);
             CustomViewBean customViewBean = genFormChildModule.getCustomViewBean();
-            callableList.addAll(customViewBean.getChildModules());
+            allSourceList.addAll(customViewBean.buildAll());
         }
-        return build(callableList);
+        List<JavaGenSource> sourceList = build(callableList);
+        allSourceList.addAll(sourceList);
+        return allSourceList;
+
     }
 
     @Override
