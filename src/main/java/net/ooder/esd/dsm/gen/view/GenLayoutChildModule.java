@@ -41,11 +41,11 @@ public class GenLayoutChildModule extends BaseGenChildModule<CustomLayoutViewBea
             if (serviceList == null || serviceList.isEmpty()) {
                 serviceList = aggRootBuild.build();
             }
-            parentViewBean.bindItem(serviceList, currListItem);
             for (JavaGenSource genSource : serviceList) {
                 JavaSrcBean javaSrcBean = genSource.getSrcBean();
-                if (javaSrcBean.getTarget() != null && javaSrcBean.getTarget().equals(target)) {
+                if (javaSrcBean.getTarget() == null || javaSrcBean.getTarget().equals(target)) {
                     Class bindService = ClassUtility.loadClass(javaSrcBean.getClassName());
+                    javaSrcBean.setTarget(target);
                     customViewBean.reBindService(bindService);
                 }
             }

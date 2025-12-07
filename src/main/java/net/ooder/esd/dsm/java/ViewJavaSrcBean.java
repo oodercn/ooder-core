@@ -42,6 +42,12 @@ public class ViewJavaSrcBean {
         if (serviceClassList != null) {
             allClassNames.addAll(rootServicesClassName);
         }
+        if (childClassList != null) {
+            allClassNames.addAll(childClassList);
+        }
+
+
+
         return allClassNames;
     }
 

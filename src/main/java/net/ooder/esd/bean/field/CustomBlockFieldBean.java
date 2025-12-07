@@ -60,10 +60,7 @@ public class CustomBlockFieldBean extends BaseWidgetBean<CustomBlockFormViewBean
 
 
     public CustomBlockFieldBean(ModuleComponent parentModuleComponent, BlockComponent component) {
-
         this.update(parentModuleComponent, component);
-
-
     }
 
 
@@ -91,14 +88,12 @@ public class CustomBlockFieldBean extends BaseWidgetBean<CustomBlockFormViewBean
     public CustomBlockFieldBean(Set<Annotation> annotations) {
         AnnotationUtil.fillDefaultValue(BlockFieldAnnotation.class, this);
         init(annotations);
-
     }
 
     @Override
     @JSONField(serialize = false)
     public Set<Class> getOtherClass() {
         Set<Class> otherClass = new HashSet<>();
-
         if (viewBean != null) {
             otherClass.addAll(viewBean.getOtherClass());
         }
@@ -135,7 +130,7 @@ public class CustomBlockFieldBean extends BaseWidgetBean<CustomBlockFormViewBean
 
     @Override
     public void update(ModuleComponent parentModuleComponent, BlockComponent component) {
-        this.initWidget(parentModuleComponent,component);
+        this.initWidget(parentModuleComponent, component);
         updateFieldBean(component);
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         if (component.getChildren() != null && component.getChildren().size() > 0) {

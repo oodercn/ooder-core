@@ -33,11 +33,15 @@ import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
+import net.ooder.web.RemoteConnectionManager;
 import net.ooder.web.RequestParamBean;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 @AnnotationType(clazz = LayoutAnnotation.class)
 public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, LayoutListItem, LayoutComponent> implements ToolsBar {
@@ -102,6 +106,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         return childModules;
     }
 
+    @Override
     public List<JavaGenSource> buildAll() {
         List<JavaGenSource> allSourceList = new ArrayList<>();
         List<Callable<List<JavaGenSource>>> callableList = new ArrayList<>();
@@ -111,10 +116,49 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
             CustomViewBean customViewBean = genFormChildModule.getCustomViewBean();
             allSourceList.addAll(customViewBean.buildAll());
         }
-        List<JavaGenSource> sourceList = build(callableList);
+        List<JavaGenSource> sourceList = buildChild(callableList);
         allSourceList.addAll(sourceList);
+        List childClassList = new ArrayList();
+        for (JavaGenSource javaGenSource : sourceList) {
+            if (!childClassList.contains(javaGenSource.getClassName())) {
+                childClassList.add(javaGenSource.getClassName());
+            }
+        }
+        this.getViewJavaSrcBean().setChildClassList(childClassList);
 
         return allSourceList;
+    }
+
+    public List<JavaGenSource> buildChild(List<Callable<List<JavaGenSource>>> tasks) {
+        List<JavaGenSource> javaSrcBeans = new ArrayList<>();
+        List<Future<List<JavaGenSource>>> futures = null;
+        try {
+            ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
+            futures = service.invokeAll(tasks);
+            for (Future<List<JavaGenSource>> resultFuture : futures) {
+                try {
+                    List<JavaGenSource> childBeans = resultFuture.get();
+                    for (JavaGenSource javaGenSource : childBeans) {
+                        if (!javaSrcBeans.contains(javaGenSource)) {
+                            javaSrcBeans.add(javaGenSource);
+                        }
+                        String target = javaGenSource.getSrcBean().getTarget();
+                        if (target != null) {
+                            LayoutListItem currListItem = this.findTabItem(target);
+                            bindItem(Arrays.asList(javaGenSource), currListItem);
+                        }
+                    }
+
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+            service.shutdownNow();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return javaSrcBeans;
     }
 
 
@@ -278,9 +322,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
             }
         }
 
-
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(layoutProperties), Map.class), this, false, false);
-
         tabItems = layoutProperties.getItems();
         for (LayoutListItem layoutItem : tabItems) {
             CustomLayoutItemBean customLayoutItemBean = new CustomLayoutItemBean(layoutItem);
@@ -340,7 +382,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         if (currListItem.getBindClass() != null && currListItem.getBindClass().length > 0) {
             for (Class clazz : currListItem.getBindClass()) {
                 try {
-                    if (clazz != null && clazz.equals(Void.class)) {
+                    if (clazz != null && !clazz.equals(Void.class)) {
                         classList.add(ClassUtility.loadClass(clazz.getName()));
                     }
                 } catch (ClassNotFoundException e) {
@@ -359,9 +401,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
                         currListItem.fillParams(requestParamBeanArr, null);
                         methodConfigs.add(editorMethod);
                     }
-
                     Class clazz = ClassUtility.loadClass(srcBean.getClassName());
-
                     if (clazz != null && !classList.contains(clazz)) {
                         classList.add(clazz);
                     }
