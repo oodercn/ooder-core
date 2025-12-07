@@ -3,16 +3,16 @@ package net.ooder.esd.bean.view;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.util.TypeUtils;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.common.JDSException;
 import net.ooder.config.ResultModel;
 import net.ooder.esd.annotation.BottomBarMenu;
+import net.ooder.esd.annotation.FormAnnotation;
 import net.ooder.esd.annotation.MenuBarMenu;
 import net.ooder.esd.annotation.RightContextMenu;
-import net.ooder.esd.annotation.field.ToolBarMenu;
-import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.event.CustomFormEvent;
+import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.annotation.menu.CustomFormMenu;
-import net.ooder.esd.annotation.FormAnnotation;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.field.FieldBean;
@@ -21,7 +21,6 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
 import net.ooder.esd.dsm.gen.view.GenFormChildModule;
-import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.Component;
@@ -30,12 +29,10 @@ import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.form.*;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
-import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = FormAnnotation.class)
 public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
@@ -105,7 +102,6 @@ public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
 
     Set<CustomFormEvent> event = new LinkedHashSet<>();
 
-    Set<CustomFormEvent> mevent = new LinkedHashSet<>();
 
     @JSONField(serialize = false)
     DBTableBean dbTableBean;
@@ -152,7 +148,7 @@ public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
         } catch (JDSException e) {
             e.printStackTrace();
         }
-        return   childModules;
+        return childModules;
     }
 
 
@@ -356,7 +352,7 @@ public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
 
         RightContextMenu contextMenu = AnnotationUtil.getClassAnnotation(clazz, RightContextMenu.class);
         if (contextMenu != null) {
-            contextMenuBean = new RightContextMenuBean(this.getId(),contextMenu);
+            contextMenuBean = new RightContextMenuBean(this.getId(), contextMenu);
         }
         if (toolBarMenu != null && toolBarMenu.size() > 0) {
             if (this.toolBar == null) {
