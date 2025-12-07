@@ -130,7 +130,6 @@ public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
     @Override
     public List<GenFormChildModule> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(FormAnnotation.class, this);
-        List<GenFormChildModule> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         updateBar();
         FormLayoutComponent currComponent = (FormLayoutComponent) moduleComponent.getCurrComponent();
@@ -141,14 +140,19 @@ public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
             containerBean.update(currComponent);
         }
         List<Component> components = cloneComponentList(currComponent.getChildren());
-        tasks= genChildComponent(moduleComponent, components);
+
+        for (Component component : components) {
+            FieldFormConfig fieldFormConfig = findFieldByCom(component);
+            this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
+        }
+        this.childModules = genChildComponent(moduleComponent, components);
         initFormLayout(moduleComponent);
         try {
             DSMFactory.getInstance().saveCustomViewEntity(this);
         } catch (JDSException e) {
             e.printStackTrace();
         }
-        return tasks;
+        return   childModules;
     }
 
 

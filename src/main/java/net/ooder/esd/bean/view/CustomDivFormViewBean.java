@@ -7,6 +7,7 @@ import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.bean.ContainerBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.dsm.DSMFactory;
+import net.ooder.esd.dsm.gen.view.GenFormChildModule;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.tool.component.Component;
@@ -33,10 +34,10 @@ public class CustomDivFormViewBean extends BaseFormViewBean {
     }
 
 
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
+    @Override
+    public List<GenFormChildModule> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(DivFormAnnotation.class, this);
         super.updateBaseModule(moduleComponent);
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         initMenuBar();
         DivComponent currComponent = (DivComponent) moduleComponent.getCurrComponent();
         this.name = OODUtil.formatJavaName(currComponent.getAlias(), false);
@@ -49,18 +50,18 @@ public class CustomDivFormViewBean extends BaseFormViewBean {
             containerBean.update(currComponent);
         }
         List<Component> components = this.cloneComponentList(currComponent.getChildren());
-        List<FieldFormConfig> fieldFormConfigs = genChildComponent(moduleComponent, components);
-        for (FieldFormConfig fieldFormConfig : fieldFormConfigs) {
+        for (Component component : components) {
+            FieldFormConfig fieldFormConfig = findFieldByCom(component);
             this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
-            javaSrcBeans.addAll(fieldFormConfig.getAllJavaSrcBeans());
         }
-        this.addChildJavaSrc(javaSrcBeans);
+        this.childModules = genChildComponent(moduleComponent, components);
+
         try {
             DSMFactory.getInstance().saveCustomViewEntity(this);
         } catch (JDSException e) {
             e.printStackTrace();
         }
-        return javaSrcBeans;
+        return childModules;
     }
 
 

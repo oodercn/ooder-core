@@ -10,7 +10,7 @@ import net.ooder.esd.bean.ContainerBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomSVGPaperFieldBean;
 import net.ooder.esd.dsm.DSMFactory;
-import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.dsm.gen.view.GenFormChildModule;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
@@ -22,7 +22,6 @@ import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,9 +44,8 @@ public class CustomSVGPaperViewBean extends BaseFormViewBean {
 
 
     @Override
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
+    public List<GenFormChildModule> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(SVGPaperFormAnnotation.class, this);
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         updateBaseModule(moduleComponent);
         initMenuBar();
         SVGPaperComponent currComponent = null;
@@ -65,19 +63,18 @@ public class CustomSVGPaperViewBean extends BaseFormViewBean {
         }
         this.init(currComponent.getProperties());
         svgPaperFieldBean = new CustomSVGPaperFieldBean(currComponent.getProperties());
-        List<Component> components = this.cloneComponentList(currComponent.getChildren());
-        List<FieldFormConfig> fieldFormConfigs = genChildComponent(moduleComponent, components);
-        for (FieldFormConfig fieldFormConfig : fieldFormConfigs) {
+        List<Component> components = cloneComponentList(currComponent.getChildren());
+        for (Component component : components) {
+            FieldFormConfig fieldFormConfig = findFieldByCom(component);
             this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
-            javaSrcBeans.addAll(fieldFormConfig.getAllJavaSrcBeans());
         }
-        addChildJavaSrc(javaSrcBeans);
+        this.childModules = genChildComponent(moduleComponent, components);
         try {
             DSMFactory.getInstance().saveCustomViewEntity(this);
         } catch (JDSException e) {
             e.printStackTrace();
         }
-        return javaSrcBeans;
+        return childModules;
     }
 
     public CustomSVGPaperViewBean(MethodConfig methodAPIBean) {

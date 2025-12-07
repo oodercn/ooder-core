@@ -8,6 +8,7 @@ import net.ooder.esd.bean.view.BaseFormViewBean;
 import net.ooder.esd.bean.ContainerBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.dsm.DSMFactory;
+import net.ooder.esd.dsm.gen.view.GenFormChildModule;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.tool.component.Component;
@@ -41,9 +42,8 @@ public class CustomPanelFormViewBean extends BaseFormViewBean {
     }
 
 
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
+    public List<GenFormChildModule> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(PanelFormAnnotation.class, this);
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         initMenuBar();
         PanelComponent currComponent = (PanelComponent) moduleComponent.getCurrComponent();
@@ -56,20 +56,20 @@ public class CustomPanelFormViewBean extends BaseFormViewBean {
         } else {
             containerBean.update(currComponent);
         }
-        List<Component> components = this.cloneComponentList(currComponent.getChildren());
-        List<FieldFormConfig> fieldFormConfigs = genChildComponent(moduleComponent, components);
-        for (FieldFormConfig fieldFormConfig : fieldFormConfigs) {
+        List<Component> components = cloneComponentList(currComponent.getChildren());
+
+        for (Component component : components) {
+            FieldFormConfig fieldFormConfig = findFieldByCom(component);
             this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
-            javaSrcBeans.addAll(fieldFormConfig.getAllJavaSrcBeans());
         }
-        addChildJavaSrc(javaSrcBeans);
+        this.childModules = genChildComponent(moduleComponent, components);
         try {
             DSMFactory.getInstance().saveCustomViewEntity(this);
         } catch (JDSException e) {
             e.printStackTrace();
         }
 
-        return javaSrcBeans;
+        return childModules;
 
 
     }

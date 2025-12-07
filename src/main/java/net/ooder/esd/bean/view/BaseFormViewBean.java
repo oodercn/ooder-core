@@ -57,6 +57,10 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
 
     Set<CustomFormEvent> event = new LinkedHashSet<>();
 
+    @JSONField(serialize = false)
+    List<GenFormChildModule> childModules;
+
+
     public BaseFormViewBean() {
 
     }
@@ -170,7 +174,6 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
 
 
     protected List<GenFormChildModule> genChildComponent(ModuleComponent moduleComponent, List<Component> components) {
-       // List<FieldFormConfig> fieldFormConfigs = new ArrayList<>();
         List<GenFormChildModule> tasks = new ArrayList<>();
         for (Component component : components) {
             FieldFormConfig fieldFormConfig = findFieldByCom(component);
@@ -470,6 +473,14 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
     private GenFormChildModule genBar(ModuleComponent moduleComponent, Component component) {
         //todo
         return null;
+    }
+
+    public List<GenFormChildModule> getChildModules() {
+        return childModules;
+    }
+
+    public void setChildModules(List<GenFormChildModule> childModules) {
+        this.childModules = childModules;
     }
 
     @Override

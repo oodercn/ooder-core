@@ -33,9 +33,9 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
-import net.ooder.esd.dsm.gen.view.BaseGenChildModule;
-import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
+import net.ooder.esd.dsm.gen.view.GenFormChildModule;
 import net.ooder.esd.dsm.java.AggRootBuild;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.java.ViewJavaSrcBean;
 import net.ooder.esd.dsm.view.field.*;
@@ -157,6 +157,11 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
     public ComponentList customComponentBeans;
 
 
+    @JSONField(serialize = false)
+    List<? extends Callable<List<JavaGenSource>>> childModules;
+
+
+
     public XPathBean xpathBean;
 
     public List<ModuleFormulaInst> formulas = new ArrayList<ModuleFormulaInst>();
@@ -256,8 +261,8 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
     }
 
 
-    public List<JavaSrcBean> build(List<? extends Callable<AggRootBuild>> tasks) {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+    public List<JavaGenSource> build(List<? extends Callable<AggRootBuild>> tasks) {
+        List<JavaGenSource> javaSrcBeans = new ArrayList<>();
         List<Future<AggRootBuild>> futures = null;
         try {
             ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
@@ -265,7 +270,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
             for (Future<AggRootBuild> resultFuture : futures) {
                 try {
                     AggRootBuild aggRootBuild = resultFuture.get();
-                    javaSrcBeans.addAll(aggRootBuild.getAllSrcBean());
+                    javaSrcBeans.addAll(aggRootBuild.getAllGenBean());
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }

@@ -40,7 +40,6 @@ public class CustomGroupFormViewBean extends BaseFormViewBean {
 
     public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(GroupFormAnnotation.class, this);
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         GroupComponent currComponent = (GroupComponent) moduleComponent.getCurrComponent();
         super.updateBaseModule(moduleComponent);
         initMenuBar();
@@ -55,21 +54,20 @@ public class CustomGroupFormViewBean extends BaseFormViewBean {
             containerBean.update(currComponent);
         }
 
-        List<Component> components = currComponent.getChildren();//this.cloneComponentList(currComponent.getChildren());
-        List<FieldFormConfig> fieldFormConfigs = genChildComponent(moduleComponent, components);
+        List<Component> components = cloneComponentList(currComponent.getChildren());
 
-        for (FieldFormConfig fieldFormConfig : fieldFormConfigs) {
+        for (Component component : components) {
+            FieldFormConfig fieldFormConfig = findFieldByCom(component);
             this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
-            javaSrcBeans.addAll(fieldFormConfig.getAllJavaSrcBeans());
         }
-        addChildJavaSrc(javaSrcBeans);
+        this.childModules = genChildComponent(moduleComponent, components);
         try {
             DSMFactory.getInstance().saveCustomViewEntity(this);
         } catch (JDSException e) {
             e.printStackTrace();
         }
 
-        return javaSrcBeans;
+        return childModules;
     }
 
 
