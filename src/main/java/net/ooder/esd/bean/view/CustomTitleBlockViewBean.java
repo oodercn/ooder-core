@@ -18,6 +18,7 @@ import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.Dock;
 import net.ooder.esd.annotation.ui.SelModeType;
 import net.ooder.esd.bean.gallery.TitleBlockItemBean;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.TitleBlockComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
@@ -184,6 +185,10 @@ public class CustomTitleBlockViewBean extends BaseGalleryViewBean<TitleBlockMenu
 
     public void setTitleBlockItemBeans(List<TitleBlockItemBean> titleBlockItemBeans) {
         this.titleBlockItemBeans = titleBlockItemBeans;
+    }
+
+    public List<JavaGenSource> buildAll() {
+        return build(childModules);
     }
 
 

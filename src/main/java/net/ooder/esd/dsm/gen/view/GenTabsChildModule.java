@@ -54,8 +54,8 @@ public class GenTabsChildModule extends BaseGenChildModule<BaseTabsViewBean> {
                     customViewBean.reBindService(bindService);
                 }
             }
-            cModuleBean.setJavaSrcBeans(aggRootBuild.getAllSrcBean());
-            cModuleBean.reBindMethod(customViewBean.getMethodConfig());
+            cmoduleBean.setJavaSrcBeans(aggRootBuild.getAllSrcBean());
+            cmoduleBean.reBindMethod(customViewBean.getMethodConfig());
             aggRootBuild.update();
         }
         return aggRootBuild.getAllGenBean();

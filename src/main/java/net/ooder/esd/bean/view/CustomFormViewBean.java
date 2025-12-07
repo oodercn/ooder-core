@@ -21,6 +21,7 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
 import net.ooder.esd.dsm.gen.view.GenFormChildModule;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.Component;
@@ -33,6 +34,7 @@ import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = FormAnnotation.class)
 public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
@@ -124,7 +126,7 @@ public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
 
 
     @Override
-    public List<GenFormChildModule> updateModule(ModuleComponent moduleComponent) {
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(FormAnnotation.class, this);
         super.updateBaseModule(moduleComponent);
         updateBar();
@@ -304,10 +306,17 @@ public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
         return names;
     }
 
+    public DBTableBean getDbTableBean() {
+        return dbTableBean;
+    }
+
+    public void setDbTableBean(DBTableBean dbTableBean) {
+        this.dbTableBean = dbTableBean;
+    }
 
     @Override
     public FieldFormConfig getFieldByName(String name) {
-        FieldFormConfig fieldFormConfig = (FieldFormConfig) super.getFieldByName(name);
+        FieldFormConfig fieldFormConfig =  super.getFieldByName(name);
         return fieldFormConfig;
     }
 

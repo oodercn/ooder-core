@@ -30,7 +30,7 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.gen.view.GenViewDicJava;
-import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.view.field.FieldTreeConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.Component;
@@ -152,6 +152,16 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
 
     public CustomTreeViewBean() {
 
+    }
+
+
+    public List<JavaGenSource> buildAll() {
+        List<Callable<List<JavaGenSource>>> callableList = new ArrayList<>();
+        for (Callable childModule : childModules) {
+            GenViewDicJava genFormChildModule = (GenViewDicJava) childModule;
+            callableList.add(childModule);
+        }
+        return build(callableList);
     }
 
     public CustomTreeViewBean(ModuleComponent moduleComponent) {
@@ -376,7 +386,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                                 }
                             }
                             String euClassName = packageName + "." + simClass;
-                            GenViewDicJava    genViewDicJava = new GenViewDicJava(domainInst.getViewInst(), module.toLowerCase(), listItem.getSub(), euClassName, null);
+                            GenViewDicJava genViewDicJava = new GenViewDicJava(domainInst.getViewInst(), module.toLowerCase(), listItem.getSub(), euClassName, null);
                             tasks.add(genViewDicJava);
 //                            GenViewDicJava genViewDicJava = dicTaskMap.get(euClassName);
 //                            List<JavaSrcBean> dicBeans = new ArrayList<>();
@@ -435,7 +445,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                                     String euClassName = packageName + "." + simClass;
 
 
-                                    GenViewDicJava    genViewDicJava = new GenViewDicJava(domainInst.getViewInst(), module.toLowerCase(), listItem.getSub(), euClassName, null);
+                                    GenViewDicJava genViewDicJava = new GenViewDicJava(domainInst.getViewInst(), module.toLowerCase(), listItem.getSub(), euClassName, null);
 
 //                                    tasks.add(genViewDicJava);
 //                                    List<JavaSrcBean> dicBeans = new ArrayList<>();
@@ -486,7 +496,6 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
 
         return tasks;
     }
-
 
 
     private ChildTreeViewBean createChildTreeViewBean(TreeListItem listItem, Class serviceClass, String simClass) throws JDSException {

@@ -18,6 +18,7 @@ import net.ooder.esd.annotation.ui.BorderType;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.Dock;
 import net.ooder.esd.annotation.ui.SelModeType;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ContentBlockComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
@@ -79,6 +80,12 @@ public class CustomContentBlockViewBean extends BaseGalleryViewBean<ContentBlock
     public CustomContentBlockViewBean() {
 
     }
+
+    public List<JavaGenSource> buildAll() {
+
+        return build(childModules);
+    }
+
 
     public void init(ContentBlockProperties ContentBlockProperties) {
         Map valueMap = JSON.parseObject(JSON.toJSONString(ContentBlockProperties), Map.class);

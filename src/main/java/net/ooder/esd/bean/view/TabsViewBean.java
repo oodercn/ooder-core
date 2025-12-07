@@ -10,12 +10,14 @@ import net.ooder.esd.annotation.event.CustomTabsEvent;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.PosType;
+import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.custom.properties.NavTabsProperties;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.ESDEnumsUtil;
@@ -24,6 +26,7 @@ import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = TabsAnnotation.class)
 public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<CustomTabsEvent, U> {
@@ -40,6 +43,18 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
     public TabsViewBean(Class clazz, CustomTreeViewBean parentItem) {
         this.domainId = parentItem.getDomainId();
         init(clazz);
+    }
+
+
+    public List<JavaGenSource> buildAll() {
+        List<Callable<List<JavaGenSource>>> callableList = new ArrayList<>();
+        for (Callable childModule : childModules) {
+            GenTabsChildModule genFormChildModule = (GenTabsChildModule) childModule;
+            callableList.add(childModule);
+            CustomViewBean viewBean = genFormChildModule.getCustomViewBean();
+            callableList.addAll(viewBean.getChildModules());
+        }
+        return build(callableList);
     }
 
     public TabsViewBean(Class<? extends TabListItem> clazz) {

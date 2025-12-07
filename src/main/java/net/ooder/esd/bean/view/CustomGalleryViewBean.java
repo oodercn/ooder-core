@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.StringUtility;
 import net.ooder.esd.annotation.ui.ModuleViewType;
+import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.bar.ContextMenuBar;
 import net.ooder.esd.bean.bar.ToolsBar;
@@ -17,6 +18,8 @@ import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.Dock;
 import net.ooder.esd.annotation.ui.SelModeType;
 import net.ooder.esd.bean.gallery.GalleryItemBean;
+import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.GalleryComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
@@ -115,6 +118,11 @@ public class CustomGalleryViewBean extends BaseGalleryViewBean<CustomGalleryMenu
     public CustomGalleryViewBean(Class clazz) {
         super.initViewClass(clazz);
         init(clazz);
+    }
+
+    public List<JavaGenSource> buildAll() {
+
+        return build(childModules);
     }
 
 

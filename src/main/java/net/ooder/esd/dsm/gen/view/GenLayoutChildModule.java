@@ -49,7 +49,7 @@ public class GenLayoutChildModule extends BaseGenChildModule<CustomLayoutViewBea
                     customViewBean.reBindService(bindService);
                 }
             }
-            cModuleBean.reBindMethod(customViewBean.getMethodConfig());
+            cmoduleBean.reBindMethod(customViewBean.getMethodConfig());
         }
         return aggRootBuild.getAllGenBean();
     }

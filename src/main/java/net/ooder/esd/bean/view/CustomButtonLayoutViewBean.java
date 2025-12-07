@@ -24,6 +24,7 @@ import net.ooder.esd.annotation.ui.SelModeType;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldGalleryConfig;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
@@ -124,6 +125,13 @@ public class CustomButtonLayoutViewBean extends CustomViewBean<FieldGalleryConfi
 
 
     }
+
+
+    public List<JavaGenSource> buildAll() {
+
+        return build(childModules);
+    }
+
 
 
     public CustomButtonLayoutViewBean(ModuleComponent<ButtonLayoutComponent> moduleComponent) {

@@ -106,9 +106,6 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
     Component component;
 
     @JSONField(serialize = false)
-    List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
-
-    @JSONField(serialize = false)
     ESDField esdField;
 
     DBFieldBean dbFieldBean;
@@ -243,7 +240,6 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
         this.fieldname = aggConfig.getFieldname();
         this.methodName = aggConfig.getMethodName();
         this.componentType = aggConfig.getComponentType();
-
         if (this.id == null) {
             this.id = aggConfig.getId();
         }
@@ -255,8 +251,8 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
         }
     }
 
-    public List<JavaSrcBean> update(ModuleComponent parentModuleComponent, Component component) {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+
+    public void update(ModuleComponent parentModuleComponent, Component component) {
         this.component = component;
         this.init(component);
         CustomViewBean viewConfig = null;
@@ -264,6 +260,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
             this.widgetConfig = this.createDefaultWidget(componentType, parentModuleComponent, component);
         } else {
             widgetConfig.update(parentModuleComponent, component);
+
         }
         if (widgetConfig != null) {
             if (widgetConfig instanceof WidgetBean) {
@@ -275,22 +272,14 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
                 }
             }
 
-            if (widgetConfig.getJavaSrcBeans() != null) {
-                javaSrcBeans.addAll(widgetConfig.getJavaSrcBeans());
-            }
-
             if (componentType.equals(ComponentType.COMBOINPUT)) {
                 ComboInputProperties comboInputProperties = (ComboInputProperties) component.getProperties();
                 if (comboConfig == null) {
                     this.comboConfig = this.createDefaultCombo(comboInputProperties.getType(), component);
                 }
             }
-            this.javaSrcBeans = javaSrcBeans;
+
         }
-
-
-        return javaSrcBeans;
-
     }
 
     @JSONField(serialize = false)
@@ -1053,7 +1042,6 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
     @JSONField(serialize = false)
     public List<JavaSrcBean> getAllJavaSrcBeans() {
         List<JavaSrcBean> allJavaSrc = new ArrayList<>();
-        allJavaSrc.addAll(javaSrcBeans);
 
         if (widgetConfig != null && widgetConfig.getJavaSrcBeans() != null) {
             List<JavaSrcBean> allWidgetJavaSrc = widgetConfig.getJavaSrcBeans();
@@ -1083,10 +1071,6 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
         this.component = component;
     }
 
-    public List<JavaSrcBean> getJavaSrcBeans() {
-        return javaSrcBeans;
-    }
-
     public void setEsdField(ESDField esdField) {
         this.esdField = esdField;
     }
@@ -1097,10 +1081,6 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
 
     public void setDbFieldBean(DBFieldBean dbFieldBean) {
         this.dbFieldBean = dbFieldBean;
-    }
-
-    public void setJavaSrcBeans(List<JavaSrcBean> javaSrcBeans) {
-        this.javaSrcBeans = javaSrcBeans;
     }
 
     public SearchFieldBean getSearchFieldBean() {

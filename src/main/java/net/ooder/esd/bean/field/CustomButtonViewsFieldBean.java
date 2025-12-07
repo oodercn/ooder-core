@@ -40,7 +40,6 @@ public class CustomButtonViewsFieldBean extends BaseWidgetBean<CustomButtonViews
     }
 
     public CustomButtonViewsFieldBean(ModuleComponent parentModuleComponent, ButtonViewsComponent buttonViewsComponent) {
-
         update(parentModuleComponent, buttonViewsComponent);
     }
 
@@ -70,7 +69,6 @@ public class CustomButtonViewsFieldBean extends BaseWidgetBean<CustomButtonViews
     @Override
     public void update(ModuleComponent parentModuleComponent, ButtonViewsComponent component) {
         this.initWidget(parentModuleComponent,component);
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         if (component.getChildren() != null && component.getChildren().size() > 0) {
             super.update(parentModuleComponent, component);
         }else if (component.getProperties().getItems().size()>0){

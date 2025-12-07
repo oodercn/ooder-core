@@ -16,6 +16,8 @@ import net.ooder.esd.bean.*;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
+import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
@@ -142,6 +144,12 @@ public class CustomEChartViewBean extends CustomViewBean<FieldFormConfig, UIItem
         EChartProperties chartProperties = chartComponent.getProperties();
         this.init(chartProperties);
         return javaSrcBeans;
+    }
+
+
+    public List<JavaGenSource> buildAll() {
+
+        return build(childModules);
     }
 
     public CustomEChartViewBean(EChartAnnotation annotation) {

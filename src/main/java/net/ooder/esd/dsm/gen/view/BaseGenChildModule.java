@@ -12,7 +12,6 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaGenSource;
-import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
@@ -27,7 +26,7 @@ import java.util.concurrent.Callable;
 public abstract class BaseGenChildModule<T extends CustomViewBean> implements Callable<List<JavaGenSource>> {
     protected final String cEuClassName;
     protected final String target;
-    protected CustomModuleBean cModuleBean;
+    protected CustomModuleBean cmoduleBean;
     protected MinServerActionContextImpl autoruncontext;
     protected OgnlContext onglContext;
     Component childComponent;
@@ -92,7 +91,7 @@ public abstract class BaseGenChildModule<T extends CustomViewBean> implements Ca
                 customViewBean.updateModule(cmoduleComponent);
             }
             customViewBean.setXpath(childRealPath);
-            this.cModuleBean = createModuleBean(cmoduleComponent);
+            this.cmoduleBean = createModuleBean(cmoduleComponent);
             cmoduleComponent.setClassName(cEuClassName);
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,7 +100,7 @@ public abstract class BaseGenChildModule<T extends CustomViewBean> implements Ca
 
     }
 
-    public  abstract AggRootBuild genAggBuild() throws JDSException;
+    public abstract AggRootBuild genAggBuild() throws JDSException;
 
     public T genChildViewBean(ModuleComponent moduleComponent, Component childComponent, String cEuClassName) throws JDSException {
         T customViewBean = null;
@@ -127,7 +126,6 @@ public abstract class BaseGenChildModule<T extends CustomViewBean> implements Ca
     }
 
 
-
     protected CustomModuleBean createModuleBean(ModuleComponent cmoduleComponent) {
         CustomModuleBean cModuleBean = new CustomModuleBean(cmoduleComponent);
         cModuleBean.reBindMethod(cmoduleComponent.getMethodAPIBean());
@@ -147,12 +145,12 @@ public abstract class BaseGenChildModule<T extends CustomViewBean> implements Ca
         return target;
     }
 
-    public CustomModuleBean getcModuleBean() {
-        return cModuleBean;
+    public CustomModuleBean getCmoduleBean() {
+        return cmoduleBean;
     }
 
-    public void setcModuleBean(CustomModuleBean cModuleBean) {
-        this.cModuleBean = cModuleBean;
+    public void setCmoduleBean(CustomModuleBean cmoduleBean) {
+        this.cmoduleBean = cmoduleBean;
     }
 
     public MinServerActionContextImpl getAutoruncontext() {

@@ -20,6 +20,7 @@ import net.ooder.esd.bean.fchart.items.CategorieListItemBean;
 import net.ooder.esd.bean.fchart.items.LineListItemBean;
 import net.ooder.esd.bean.fchart.items.RawDataItemBean;
 import net.ooder.esd.custom.component.FullFChartComponent;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
@@ -91,6 +92,11 @@ public class CustomFChartViewBean extends CustomViewBean<FieldFormConfig, UIItem
 
     Set<CustomFieldEvent> event = new LinkedHashSet<>();
 
+
+    public List<JavaGenSource> buildAll() {
+
+        return build(childModules);
+    }
 
     public CustomFChartViewBean() {
 

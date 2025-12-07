@@ -17,7 +17,6 @@ import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
-import net.ooder.esd.dsm.gen.view.BaseGenChildModule;
 import net.ooder.esd.dsm.gen.view.GenLayoutChildModule;
 import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaGenSource;
@@ -34,14 +33,11 @@ import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.web.RemoteConnectionManager;
 import net.ooder.web.RequestParamBean;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = LayoutAnnotation.class)
 public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, LayoutListItem, LayoutComponent> implements ToolsBar {
@@ -80,7 +76,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
     }
 
     @Override
-    public List<GenLayoutChildModule> updateModule(ModuleComponent moduleComponent) {
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
         super.updateBaseModule(moduleComponent);
         component = moduleComponent.getCurrComponent();
         List<Component> components = this.cloneComponentList(component.getChildren());
@@ -90,20 +86,30 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         }
         this.setTabItems(tabItems);
         List<CustomModuleBean> navModuleBeans = new ArrayList<>();
-        List<GenLayoutChildModule> tasks = new ArrayList<GenLayoutChildModule>();
         if (components != null && components.size() > 0) {
             for (Component childComponent : components) {
                 ModuleViewType comModuleViewType = ModuleViewType.getModuleViewByCom(ComponentType.fromType(childComponent.getKey()));
                 if (!comModuleViewType.equals(ModuleViewType.NONE)) {
                     GenLayoutChildModule genChildModule = new GenLayoutChildModule(moduleComponent, childComponent, this);
-                    navModuleBeans.add(genChildModule.getcModuleBean());
-                    tasks.add(genChildModule);
+                    navModuleBeans.add(genChildModule.getCmoduleBean());
+                    childModules.add(genChildModule);
                 }
             }
         }
         this.setModuleBeans(navModuleBeans);
         this.init(layoutProperties, moduleComponent.getProjectName());
-        return tasks;
+        return childModules;
+    }
+
+    public List<JavaGenSource> buildAll() {
+        List<Callable<List<JavaGenSource>>> callableList = new ArrayList<>();
+        for (Callable childModule : childModules) {
+            GenLayoutChildModule genFormChildModule = (GenLayoutChildModule) childModule;
+            callableList.add(childModule);
+            CustomViewBean customViewBean = genFormChildModule.getCustomViewBean();
+            callableList.addAll(customViewBean.getChildModules());
+        }
+        return build(callableList);
     }
 
 

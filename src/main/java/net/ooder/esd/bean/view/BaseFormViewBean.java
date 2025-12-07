@@ -24,7 +24,7 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
 import net.ooder.esd.dsm.gen.view.GenFormChildModule;
-import net.ooder.esd.dsm.java.AggRootBuild;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.OODTypeMapping;
@@ -35,13 +35,11 @@ import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.item.UIItem;
 import net.ooder.esd.tool.properties.list.AbsListProperties;
 import net.ooder.esd.util.OODUtil;
-import net.ooder.web.RemoteConnectionManager;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import java.util.concurrent.Callable;
 
 public abstract class BaseFormViewBean<M extends Component> extends CustomViewBean<FieldFormConfig, UIItem, M> implements ComponentBean<M> {
 
@@ -56,9 +54,6 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
     List<CustomFormMenu> bottombarMenu = new ArrayList<>();
 
     Set<CustomFormEvent> event = new LinkedHashSet<>();
-
-    @JSONField(serialize = false)
-    List<GenFormChildModule> childModules;
 
 
     public BaseFormViewBean() {
@@ -132,49 +127,34 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         }
     }
 
-    public GenFormChildModule buildField(ModuleComponent moduleComponent, Component component) {
-        GenFormChildModule fieldFormConfig = null;
-        List<GenFormChildModule> fieldFormConfigs = genChildComponent(moduleComponent, Arrays.asList(component));
-        if (fieldFormConfigs.size() > 0) {
-            fieldFormConfig = fieldFormConfigs.get(0);
-        }
-        return fieldFormConfig;
-    }
-
-    public List<FieldFormConfig> buildField(List<GenFormChildModule> tasks) {
-        List<FieldFormConfig> fieldFormConfigs = new ArrayList<>();
-        if (tasks.size() > 0) {
-            try {
-                String taskIds = this.getXpath() + "[" + System.currentTimeMillis() + "]";
-                ExecutorService service = RemoteConnectionManager.createConntctionService(taskIds);
-                List<Future<FieldFormConfig>> futures = service.invokeAll(tasks);
-                for (Future<FieldFormConfig> resultFuture : futures) {
-                    FieldFormConfig fieldFormConfig = null;
-                    try {
-                        fieldFormConfig = resultFuture.get();
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                    }
-                    if (fieldFormConfig != null) {
-                        fieldFormConfigs.add(fieldFormConfig);
-                        if (fieldFormConfig.getWidgetConfig() != null && fieldFormConfig.getWidgetConfig() instanceof WidgetBean) {
-                            AggRootBuild build = ((WidgetBean) fieldFormConfig.getWidgetConfig()).getFieldRootBuild();
-
-                        }
-                    }
-                }
-                service.shutdownNow();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    public List<Callable> createBuild(ModuleComponent moduleComponent, Component component) {
+        List<Callable> callableList = new ArrayList<>();
+        List<Callable<List<JavaGenSource>>> childModules = genChildComponent(moduleComponent, Arrays.asList(component));
+        for (Callable childModule : childModules) {
+            GenFormChildModule genFormChildModule = (GenFormChildModule) childModule;
+            callableList.add(childModule);
+            CustomViewBean viewBean = genFormChildModule.getFieldFormConfig().getWidgetConfig().getViewBean();
+            callableList.addAll(viewBean.getChildModules());
         }
 
-        return fieldFormConfigs;
+        return callableList;
     }
 
 
-    protected List<GenFormChildModule> genChildComponent(ModuleComponent moduleComponent, List<Component> components) {
-        List<GenFormChildModule> tasks = new ArrayList<>();
+    public List<JavaGenSource> buildAll() {
+        List<Callable<List<JavaGenSource>>> callableList = new ArrayList<>();
+        for (Callable childModule : childModules) {
+            GenFormChildModule genFormChildModule = (GenFormChildModule) childModule;
+            callableList.add(childModule);
+            CustomViewBean viewBean = genFormChildModule.getFieldFormConfig().getWidgetConfig().getViewBean();
+            callableList.addAll(viewBean.getChildModules());
+        }
+        return build(callableList);
+    }
+
+
+    protected List<Callable<List<JavaGenSource>>> genChildComponent(ModuleComponent moduleComponent, List<Component> components) {
+        List<Callable<List<JavaGenSource>>>  tasks = new ArrayList<>();
         for (Component component : components) {
             FieldFormConfig fieldFormConfig = findFieldByCom(component);
             ComponentType componentType = ComponentType.fromType(component.getKey());
@@ -473,14 +453,6 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
     private GenFormChildModule genBar(ModuleComponent moduleComponent, Component component) {
         //todo
         return null;
-    }
-
-    public List<GenFormChildModule> getChildModules() {
-        return childModules;
-    }
-
-    public void setChildModules(List<GenFormChildModule> childModules) {
-        this.childModules = childModules;
     }
 
     @Override

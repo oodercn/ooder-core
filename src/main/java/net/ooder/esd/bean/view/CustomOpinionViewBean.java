@@ -16,6 +16,7 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.bar.ContextMenuBar;
 import net.ooder.esd.bean.bar.ToolsBar;
 import net.ooder.esd.bean.gallery.OpinionItemBean;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.tool.component.OpinionComponent;
 import net.ooder.esd.custom.properties.OpinionProperties;
 import net.ooder.esd.dsm.java.JavaSrcBean;
@@ -179,6 +180,11 @@ public class CustomOpinionViewBean extends BaseGalleryViewBean<OpinionMenu, Cust
         return ComponentType.OPINION;
     }
 
+
+    public List<JavaGenSource> buildAll() {
+
+        return build(childModules);
+    }
 
     public String getFlagText() {
         return flagText;

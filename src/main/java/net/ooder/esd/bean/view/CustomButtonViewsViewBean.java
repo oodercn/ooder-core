@@ -11,12 +11,15 @@ import net.ooder.esd.annotation.event.CustomTabsEvent;
 import net.ooder.esd.annotation.field.TabItem;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
+import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.custom.properties.ButtonViewsListItem;
 import net.ooder.esd.dsm.DSMFactory;
+import net.ooder.esd.dsm.gen.view.GenLayoutChildModule;
 import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
 import net.ooder.esd.dsm.java.AggRootBuild;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.ButtonViewsComponent;
@@ -30,6 +33,7 @@ import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -43,8 +47,6 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
 
     Set<CustomTabsEvent> event = new HashSet<>();
 
-    @JSONField(serialize = false)
-    List<GenTabsChildModule> tasks=new ArrayList<>();
 
     public CustomButtonViewsViewBean() {
         super();
@@ -66,8 +68,19 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
     }
 
 
+    public List<JavaGenSource> buildAll() {
+        List<Callable<List<JavaGenSource>>> callableList = new ArrayList<>();
+        for (Callable childModule : childModules) {
+            GenTabsChildModule genFormChildModule = (GenTabsChildModule) childModule;
+            callableList.add(childModule);
+            CustomViewBean customViewBean = genFormChildModule.getCustomViewBean();
+            callableList.addAll(customViewBean.getChildModules());
+        }
+        return build(callableList);
+    }
+
     @Override
-    public List<GenTabsChildModule> updateModule(ModuleComponent moduleComponent) {
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
         super.updateBaseModule(moduleComponent);
         List<CustomModuleBean> navModuleBeans = new ArrayList<>();
         ButtonViewsComponent buttonViewsComponent = (ButtonViewsComponent) moduleComponent.getCurrComponent();
@@ -78,14 +91,13 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
         }
         ButtonViewsProperties buttonViewsProperties = buttonViewsComponent.getProperties();
         this.init(buttonViewsProperties);
-       // List<GenTabsChildModule> tasks = new ArrayList<GenTabsChildModule>();
         if (components != null && components.size() > 0) {
             for (Component childComponent : components) {
                 ModuleViewType comModuleViewType = ModuleViewType.getModuleViewByCom(ComponentType.fromType(childComponent.getKey()));
                 if (!(childComponent instanceof ModulePlaceHolder) && !comModuleViewType.equals(ModuleViewType.NONE)) {
                     GenTabsChildModule genChildModule = new GenTabsChildModule(moduleComponent, childComponent, this);
-                    tasks.add(genChildModule);
-                    navModuleBeans.add(genChildModule.getcModuleBean());
+                    childModules.add(genChildModule);
+                    navModuleBeans.add(genChildModule.getCmoduleBean());
                 }
             }
 
@@ -93,7 +105,7 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
             buttonViewsProperties.setItems(tabItems);
         }
         this.setModuleBeans(navModuleBeans);
-        return tasks;
+        return childModules;
     }
 
 

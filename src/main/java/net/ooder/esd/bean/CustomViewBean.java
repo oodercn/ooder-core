@@ -33,7 +33,6 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
-import net.ooder.esd.dsm.gen.view.GenFormChildModule;
 import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
@@ -156,10 +155,8 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
     @JSONField(deserializeUsing = ComponentsDeserializer.class)
     public ComponentList customComponentBeans;
 
-
     @JSONField(serialize = false)
-    List<? extends Callable<List<JavaGenSource>>> childModules;
-
+    public List<Callable<List<JavaGenSource>>> childModules;
 
 
     public XPathBean xpathBean;
@@ -221,6 +218,8 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         }
     }
 
+    public abstract List<JavaGenSource> buildAll() ;
+
     public abstract List<? extends Callable> updateModule(ModuleComponent moduleComponent);
 
     @Override
@@ -261,16 +260,15 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
     }
 
 
-    public List<JavaGenSource> build(List<? extends Callable<AggRootBuild>> tasks) {
+    public List<JavaGenSource> build(List<Callable<List<JavaGenSource>>> tasks) {
         List<JavaGenSource> javaSrcBeans = new ArrayList<>();
-        List<Future<AggRootBuild>> futures = null;
+        List<Future<List<JavaGenSource>>> futures = null;
         try {
             ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
             futures = service.invokeAll(tasks);
-            for (Future<AggRootBuild> resultFuture : futures) {
+            for (Future<List<JavaGenSource>> resultFuture : futures) {
                 try {
-                    AggRootBuild aggRootBuild = resultFuture.get();
-                    javaSrcBeans.addAll(aggRootBuild.getAllGenBean());
+                    javaSrcBeans.addAll(resultFuture.get());
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
@@ -482,6 +480,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         }
 
     }
+
 
     public <M extends CustomMenu> List<M> parBottomBar(StatusButtonsComponent customBottomBar) {
         List<CmdItem> buttomItems = customBottomBar.getProperties().getItems();
@@ -1738,6 +1737,13 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         return viewJavaSrcBean;
     }
 
+    public List<Callable<List<JavaGenSource>>> getChildModules() {
+        return childModules;
+    }
+
+    public void setChildModules(List<Callable<List<JavaGenSource>>> childModules) {
+        this.childModules = childModules;
+    }
 
     public void setViewJavaSrcBean(ViewJavaSrcBean viewJavaSrcBean) {
         this.viewJavaSrcBean = viewJavaSrcBean;

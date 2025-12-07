@@ -10,6 +10,7 @@ import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.custom.ESDClass;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.tool.component.Component;
@@ -102,6 +103,11 @@ public class CustomDynViewBean extends CustomViewBean<FieldFormConfig, UIItem, C
 
     public CustomDynViewBean fillData(DynLoadAnnotation annotation) {
         return AnnotationUtil.fillBean(annotation, this);
+    }
+
+    public List<JavaGenSource> buildAll() {
+
+        return build(childModules);
     }
 
 

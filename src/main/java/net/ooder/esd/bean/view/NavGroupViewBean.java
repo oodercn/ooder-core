@@ -23,6 +23,7 @@ import net.ooder.esd.bean.nav.GroupItemBean;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.context.MethodRoot;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
@@ -123,10 +124,7 @@ public class NavGroupViewBean extends NavBaseViewBean<GroupItemBean, GalleryItem
         this.name = blockProperties.getName();
         itemConfigMap = new CaselessStringKeyHashMap<>();
         itemNames = new LinkedHashSet<String>();
-
-
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(blockProperties), Map.class), this, false, false);
-
         return javaSrcBeans;
     }
 
@@ -299,8 +297,13 @@ public class NavGroupViewBean extends NavBaseViewBean<GroupItemBean, GalleryItem
         } catch (JDSException e) {
             e.printStackTrace();
         }
-
     }
+
+    public List<JavaGenSource> buildAll() {
+
+        return build(childModules);
+    }
+
 
     @Override
     public ComponentBean findComByPath(String path) {

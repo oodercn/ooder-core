@@ -24,6 +24,7 @@ import net.ooder.esd.bean.grid.RowHeadBean;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldGridConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
@@ -184,6 +185,11 @@ public class CustomMGridViewBean extends CustomViewBean<FieldGridConfig, UIItem,
         }
 
 
+    }
+
+    public List<JavaGenSource> buildAll() {
+
+        return build(childModules);
     }
 
 

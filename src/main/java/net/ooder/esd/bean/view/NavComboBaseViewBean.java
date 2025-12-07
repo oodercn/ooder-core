@@ -9,7 +9,7 @@ import net.ooder.esd.annotation.ui.PosType;
 import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.NavBaseViewBean;
-import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.TabsComponent;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
@@ -57,6 +57,12 @@ public abstract class NavComboBaseViewBean<U extends TabListItem> extends NavBas
 
     }
 
+    public List<JavaGenSource> buildAll() {
+        List<JavaGenSource> javaGenSources = new ArrayList<>();
+        javaGenSources.addAll(tabsViewBean.buildAll());
+        javaGenSources.addAll(layoutViewBean.buildAll());
+        return javaGenSources;
+    }
 
     public abstract CustomViewBean getCurrViewBean();
 
@@ -67,8 +73,6 @@ public abstract class NavComboBaseViewBean<U extends TabListItem> extends NavBas
         if (tabsViewBean == null) {
             tabsViewBean = new TabsViewBean(methodAPIBean);
         }
-
-
     }
 
 
