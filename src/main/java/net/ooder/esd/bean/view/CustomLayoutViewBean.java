@@ -113,6 +113,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         }
         List<JavaGenSource> sourceList = build(callableList);
         allSourceList.addAll(sourceList);
+
         return allSourceList;
     }
 

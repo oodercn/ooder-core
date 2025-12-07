@@ -4,6 +4,7 @@ import net.ooder.common.JDSException;
 import net.ooder.context.JDSActionContext;
 import net.ooder.context.JDSContext;
 import net.ooder.esd.bean.WidgetBean;
+import net.ooder.esd.bean.field.FieldComponentBean;
 import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
@@ -13,6 +14,7 @@ import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.server.context.MinServerActionContextImpl;
 import ognl.OgnlContext;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -22,10 +24,10 @@ public class GenFormChildModule implements Callable<List<JavaGenSource>> {
     Component component;
     List<JavaSrcBean> javaSrcBeans;
     ModuleComponent moduleComponent;
-    FieldFormConfig<? extends WidgetBean, ?> fieldFormConfig;
+    FieldFormConfig fieldFormConfig;
     AggRootBuild build;
 
-    public GenFormChildModule(ModuleComponent moduleComponent, Component component, FieldFormConfig<? extends WidgetBean, ?> fieldFormConfig) {
+    public GenFormChildModule(ModuleComponent moduleComponent, Component component, FieldFormConfig fieldFormConfig) {
         this.moduleComponent = moduleComponent;
         this.component = component;
         this.fieldFormConfig = fieldFormConfig;
@@ -40,20 +42,26 @@ public class GenFormChildModule implements Callable<List<JavaGenSource>> {
         autoruncontext.setSessionMap(context.getSession());
         onglContext = autoruncontext.getOgnlContext();
         fieldFormConfig.update(moduleComponent, component);
-        WidgetBean widgetConfig = fieldFormConfig.getWidgetConfig();
-        try {
-            build = widgetConfig.getFieldRootBuild();
-        } catch (JDSException e) {
-            e.printStackTrace();
+        FieldComponentBean widgetConfig = fieldFormConfig.getWidgetConfig();
+        if (widgetConfig != null && widgetConfig instanceof WidgetBean) {
+            try {
+                build = ((WidgetBean) widgetConfig).getFieldRootBuild();
+            } catch (JDSException e) {
+                e.printStackTrace();
+            }
         }
 
     }
 
     @Override
     public List<JavaGenSource> call() throws Exception {
-        JDSActionContext.setContext(autoruncontext);
-        build.build();
-        return build.getAllGenBean();
+        List<JavaGenSource> javaGenSources = new ArrayList<>();
+        if (build != null) {
+            JDSActionContext.setContext(autoruncontext);
+            build.build();
+            javaGenSources.addAll(build.getAllGenBean());
+        }
+        return javaGenSources;
     }
 
     public Component getComponent() {
@@ -72,11 +80,11 @@ public class GenFormChildModule implements Callable<List<JavaGenSource>> {
         this.moduleComponent = moduleComponent;
     }
 
-    public FieldFormConfig<? extends WidgetBean, ?> getFieldFormConfig() {
+    public FieldFormConfig getFieldFormConfig() {
         return fieldFormConfig;
     }
 
-    public void setFieldFormConfig(FieldFormConfig<? extends WidgetBean, ?> fieldFormConfig) {
+    public void setFieldFormConfig(FieldFormConfig fieldFormConfig) {
         this.fieldFormConfig = fieldFormConfig;
     }
 
