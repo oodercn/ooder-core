@@ -14,6 +14,7 @@ import net.ooder.esd.dsm.aggregation.ref.AggEntityRef;
 import net.ooder.esd.dsm.enums.RangeType;
 import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
@@ -45,11 +46,11 @@ public class GenAggChildMethodJava extends GenJavaTask {
     }
 
     @Override
-    public List<JavaSrcBean> call() throws Exception {
+    public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
         String projectName = domainInst.getProjectVersionName();
         GenJava javaGen = GenJava.getInstance(projectName);
-        List<JavaSrcBean> srcFiles = new ArrayList<>();
+        List<JavaGenSource> genSources = new ArrayList<>();
         if (methodConfig.getViewClass() != null) {
             String entityClassName = methodConfig.getViewClass().getClassName();
             AggEntityConfig esdClassConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(entityClassName,true);
@@ -71,12 +72,13 @@ public class GenAggChildMethodJava extends GenJavaTask {
             JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, domainInst, javatemp.getJavaTempId());
             srcBean.setSourceClassName(methodConfig.getSourceClassName());
             srcBean.setMethodName(methodConfig.getMethodName());
-            srcFiles.add(srcBean);
-            BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+
+            JavaGenSource javaGenSource=  BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+            genSources.add(javaGenSource);
             classList.add(srcBean.getClassName());
         }
 
-        return srcFiles;
+        return genSources;
     }
 
 }

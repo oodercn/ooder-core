@@ -311,8 +311,8 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
         }
     }
 
-    public List<Callable> updateModule(ModuleComponent parentModuleComponent) {
-        List<Callable> tasks = new ArrayList<>();
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent parentModuleComponent) {
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         this.updateBaseModule(parentModuleComponent);
         updateBar();
         childTreeBeans = new ArrayList<>();

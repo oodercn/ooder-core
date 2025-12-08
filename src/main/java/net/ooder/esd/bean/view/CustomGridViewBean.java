@@ -125,8 +125,8 @@ public class CustomGridViewBean extends CustomViewBean<FieldGridConfig, UIItem, 
     }
 
     @Override
-    public List<Callable> updateModule(ModuleComponent moduleComponent) {
-        List<Callable> tasks = new ArrayList<>();
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         TreeGridComponent gridComponent = (TreeGridComponent) moduleComponent.getCurrComponent();
         List<Component> allComponent = moduleComponent.getChildrenRecursivelyList();

@@ -1,5 +1,6 @@
 package net.ooder.esd.dsm.gen.agg;
 
+import net.ooder.annotation.AggregationType;
 import net.ooder.common.logging.ChromeProxy;
 import net.ooder.common.util.StringUtility;
 import net.ooder.context.JDSActionContext;
@@ -9,12 +10,11 @@ import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMInst;
 import net.ooder.esd.dsm.JavaRoot;
 import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
-import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.gen.GenJavaTask;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
-
-import net.ooder.annotation.AggregationType;
 import net.ooder.jds.core.esb.EsbUtil;
 
 import java.io.File;
@@ -39,7 +39,7 @@ public class GenAggCustomViewJava extends GenJavaTask {
     }
 
     @Override
-    public List<JavaSrcBean> call() throws Exception {
+    public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
         GenJava javaGen = GenJava.getInstance(viewRoot.getDsmBean().getProjectVersionName());
         DSMInst domainInst = viewRoot.getDsmBean();
@@ -50,7 +50,7 @@ public class GenAggCustomViewJava extends GenJavaTask {
         }
 
         JavaRoot javaRoot = BuildFactory.getInstance().buildJavaRoot(viewRoot, viewBean, moduleName, className);
-        List<JavaSrcBean> srcFiles = new ArrayList<>();
+        List<JavaGenSource>  genSources= new ArrayList<>();
         List<JavaTemp> viewTemps = BuildFactory.getInstance().getTempManager().getAggregationTemps(AggregationType.VIEW);
         String simClassName = className.substring(className.lastIndexOf(".") + 1);
         for (JavaTemp javatemp : viewTemps) {
@@ -79,15 +79,16 @@ public class GenAggCustomViewJava extends GenJavaTask {
                     javaRoot.setPackageName(packageName);
                     File file = javaGen.createJava(javatemp, javaRoot, null);
                     JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, domainInst, javatemp.getJavaTempId());
-                    srcFiles.add(srcBean);
+
                     domainInst.addJavaBean(srcBean);
-                    BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                    JavaGenSource javaGenSource=BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                    genSources.add(javaGenSource);
                     classList.add(srcBean.getClassName());
                 }
             }
         }
 
-        return srcFiles;
+        return genSources;
 
     }
 }

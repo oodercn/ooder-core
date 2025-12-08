@@ -9,6 +9,7 @@ import net.ooder.esd.custom.properties.NavFoldingTabsListItem;
 import net.ooder.esd.custom.properties.NavFoldingTabsProperties;
 import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
 import net.ooder.esd.dsm.java.AggRootBuild;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.FoldingTabsComponent;
 import net.ooder.esd.tool.DSMProperties;
@@ -48,8 +49,8 @@ public class NavFoldingTabsViewBean extends TabsViewBean<NavFoldingTabsListItem>
     }
 
     @Override
-    public List<GenTabsChildModule> updateModule(ModuleComponent moduleComponent) {
-        List<GenTabsChildModule> tasks = new ArrayList<>();
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         super.updateModule(moduleComponent);
         if (moduleComponent.getCurrComponent() instanceof FoldingTabsComponent) {
             FoldingTabsComponent component = (FoldingTabsComponent) moduleComponent.getCurrComponent();

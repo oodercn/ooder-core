@@ -41,7 +41,7 @@ public abstract class NavComboBaseViewBean<U extends TabListItem> extends NavBas
 
 
     @Override
-    public List<Callable> updateModule(ModuleComponent parentModuleComponent) {
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent parentModuleComponent) {
         if (layoutViewBean != null) {
             AnnotationUtil.fillDefaultValue(LayoutAnnotation.class, layoutViewBean);
         }
@@ -50,7 +50,7 @@ public abstract class NavComboBaseViewBean<U extends TabListItem> extends NavBas
             AnnotationUtil.fillDefaultValue(TabsAnnotation.class, tabsViewBean);
         }
 
-        List<Callable> tasks = new ArrayList<>();
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         super.updateBaseModule(parentModuleComponent);
 
         return tasks;

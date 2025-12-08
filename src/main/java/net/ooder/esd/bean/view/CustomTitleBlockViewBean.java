@@ -79,9 +79,9 @@ public class CustomTitleBlockViewBean extends BaseGalleryViewBean<TitleBlockMenu
     }
 
 
-    public List<Callable> updateModule(ModuleComponent moduleComponent) {
+    public  List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(TitleBlockAnnotation.class, this);
-        List<Callable> tasks = new ArrayList<>();
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         TitleBlockComponent titleBlockComponent = (TitleBlockComponent) moduleComponent.getCurrComponent();
         TitleBlockProperties titleBlockProperties = titleBlockComponent.getProperties();

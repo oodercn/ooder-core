@@ -167,6 +167,12 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
 
     }
 
+
+    public abstract List<JavaGenSource> buildAll();
+
+    public abstract List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent);
+
+
     public CustomViewBean(MethodConfig methodAPIBean) {
         this.methodConfig = methodAPIBean;
         this.moduleBean = new CustomModuleBean(methodAPIBean.getCustomMethodInfo());
@@ -218,9 +224,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         }
     }
 
-    public abstract List<JavaGenSource> buildAll();
-
-    public abstract List<? extends Callable> updateModule(ModuleComponent moduleComponent);
 
     @Override
     @JSONField(serialize = false)

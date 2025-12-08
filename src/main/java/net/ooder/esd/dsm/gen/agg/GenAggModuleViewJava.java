@@ -10,6 +10,7 @@ import net.ooder.esd.dsm.aggregation.context.AggModuleViewRoot;
 import net.ooder.esd.dsm.enums.RangeType;
 import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.annotation.AggregationType;
@@ -35,12 +36,12 @@ public class GenAggModuleViewJava extends GenJavaTask {
     }
 
     @Override
-    public List<JavaSrcBean> call() throws Exception {
+    public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
         String projectName = domainInst.getProjectVersionName();
         GenJava javaGen = GenJava.getInstance(projectName);
         AggModuleViewRoot javaRoot = new AggModuleViewRoot(domainInst, className, moduleBeans);
-        List<JavaSrcBean> srcFiles = new ArrayList<>();
+        List<JavaGenSource> genSources = new ArrayList<>();
         String simpleClassName = className.substring(className.lastIndexOf(".") + 1);
         String packageName = className.substring(0, className.lastIndexOf("."));
         List<JavaTemp> javatemps = BuildFactory.getInstance().getTempManager().getAggregationTemps(AggregationType.VIEW);
@@ -59,12 +60,13 @@ public class GenAggModuleViewJava extends GenJavaTask {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                srcFiles.add(srcBean);
-                BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+
+                JavaGenSource javaGenSource=    BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                genSources.add(javaGenSource);
                 classList.add(srcBean.getClassName());
             }
         }
-        return srcFiles;
+        return genSources;
 
     }
 }

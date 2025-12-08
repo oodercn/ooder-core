@@ -10,6 +10,7 @@ import net.ooder.esd.dsm.enums.DSMType;
 import net.ooder.esd.dsm.enums.RangeType;
 import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.repository.RepositoryInst;
 import net.ooder.esd.dsm.repository.database.context.TableRoot;
@@ -41,9 +42,9 @@ public class GenTableJava extends GenJavaTask {
     }
 
     @Override
-    public List<JavaSrcBean> call() throws Exception {
+    public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
-        List<JavaSrcBean> srcFiles = new ArrayList<>();
+        List<JavaGenSource> genSources = new ArrayList<>();
         if (chrome == null) {
             chrome = this.getCurrChromeDriver();
         }
@@ -67,13 +68,14 @@ public class GenTableJava extends GenJavaTask {
                 root.setPackageName(packageName);
                 File file = GenJava.getInstance(repositoryInst.getProjectVersionName()).createJava(javatemp, root, chrome);
                 JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, repositoryInst, javaTempId);
-                srcFiles.add(srcBean);
-                BuildFactory.getInstance().createSource(srcBean.getClassName(), root, javatemp, srcBean);
+
+                JavaGenSource javaGenSource=    BuildFactory.getInstance().createSource(srcBean.getClassName(), root, javatemp, srcBean);
+                genSources.add(javaGenSource);
                 classList.add(srcBean.getClassName());
             }
         }
 
-        return srcFiles;
+        return genSources;
     }
 
     public ChromeProxy getCurrChromeDriver() {

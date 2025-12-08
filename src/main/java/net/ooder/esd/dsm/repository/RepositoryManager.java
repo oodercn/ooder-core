@@ -19,16 +19,15 @@ import net.ooder.common.util.StringUtility;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esb.config.manager.EsbBeanFactory;
 import net.ooder.esd.bean.CustomRefBean;
-import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.custom.ESDClassManager;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
-import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
 import net.ooder.esd.dsm.enums.RepositoryType;
 import net.ooder.esd.dsm.gen.repository.*;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.repository.config.EntityConfig;
 import net.ooder.esd.dsm.repository.database.FDTFactory;
@@ -82,8 +81,6 @@ public class RepositoryManager {
     private Folder entityConfigFolder;
 
 
-
-
     public static RepositoryManager getInstance(MySpace space) {
         String path = space.getPath();
         RepositoryManager manager = managerMap.get(path);
@@ -130,7 +127,6 @@ public class RepositoryManager {
             }
         }
     }
-
 
 
     public void updateEntityConfig(EntityConfig entityConfig) throws JDSException {
@@ -676,8 +672,8 @@ public class RepositoryManager {
     }
 
 
-    public List<Callable<List<JavaSrcBean>>> genBPMFormTask(RepositoryInst repositoryInst, Set<String> tempIds, List<String> tableNames, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> repositoryTasks = new ArrayList<>();
+    public List<Callable<List<JavaGenSource>>> genBPMFormTask(RepositoryInst repositoryInst, Set<String> tempIds, List<String> tableNames, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> repositoryTasks = new ArrayList<>();
         if (chrome == null) {
             chrome = this.getCurrChromeDriver();
         }
@@ -711,17 +707,17 @@ public class RepositoryManager {
     }
 
 
-    public List<JavaSrcBean> genTableJava(DSMTableProxy tableProxy, RepositoryInst repositoryInst, Set<String> tempIds, UserSpace userSpace, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> repositoryTasks = new ArrayList<>();
+    public List<JavaGenSource> genTableJava(DSMTableProxy tableProxy, RepositoryInst repositoryInst, Set<String> tempIds, UserSpace userSpace, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> repositoryTasks = new ArrayList<>();
         GenTableJava genTableJava = new GenTableJava(repositoryInst, tableProxy, tempIds, userSpace, chrome);
         repositoryTasks.add(genTableJava);
-        List<JavaSrcBean> srcBeans = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), repositoryTasks);
+        List<JavaGenSource> srcBeans = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), repositoryTasks);
         return srcBeans;
     }
 
 
-    public List<Callable<List<JavaSrcBean>>> genTableJavaTask(RepositoryInst repositoryInst, Set<String> temps, UserSpace userSpace, List<String> tableNames, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> repositoryTasks = new ArrayList<>();
+    public List<Callable<List<JavaGenSource>>> genTableJavaTask(RepositoryInst repositoryInst, Set<String> temps, UserSpace userSpace, List<String> tableNames, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> repositoryTasks = new ArrayList<>();
         if (chrome == null) {
             chrome = this.getCurrChromeDriver();
         }
@@ -770,20 +766,20 @@ public class RepositoryManager {
         return repositoryTasks;
     }
 
-    public List<JavaSrcBean> genTableJava(RepositoryInst repositoryInst, Set<String> temps, UserSpace userSpace, List<String> tableNames, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> repositoryTasks = genTableJavaTask(repositoryInst, temps, userSpace, tableNames, chrome);
-        List<JavaSrcBean> srcBeans = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), repositoryTasks);
+    public List<JavaGenSource> genTableJava(RepositoryInst repositoryInst, Set<String> temps, UserSpace userSpace, List<String> tableNames, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> repositoryTasks = genTableJavaTask(repositoryInst, temps, userSpace, tableNames, chrome);
+        List<JavaGenSource> srcBeans = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), repositoryTasks);
         return srcBeans;
     }
 
-    public List<JavaSrcBean> genBPMTableJava(RepositoryInst repositoryInst, Set<String> temps, List<String> tableNames, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> repositoryTasks = genTableJavaTask(repositoryInst, temps, UserSpace.FORM, tableNames, chrome);
-        List<JavaSrcBean> srcBeans = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), repositoryTasks);
+    public List<JavaGenSource> genBPMTableJava(RepositoryInst repositoryInst, Set<String> temps, List<String> tableNames, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> repositoryTasks = genTableJavaTask(repositoryInst, temps, UserSpace.FORM, tableNames, chrome);
+        List<JavaGenSource> srcBeans = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), repositoryTasks);
         return srcBeans;
     }
 
-    private List<Callable<List<JavaSrcBean>>> genEntityJavaTask(RepositoryInst repositoryInst, Set<String> temps, ChromeProxy chrome) {
-        List<Callable<List<JavaSrcBean>>> repositoryTasks = new ArrayList<>();
+    private List<Callable<List<JavaGenSource>>> genEntityJavaTask(RepositoryInst repositoryInst, Set<String> temps, ChromeProxy chrome) {
+        List<Callable<List<JavaGenSource>>> repositoryTasks = new ArrayList<>();
         for (String className : repositoryInst.getEntityNames()) {
             EntityConfig entityConfig = this.getEntityConfig(className, true);
             if (entityConfig != null) {
@@ -799,60 +795,65 @@ public class RepositoryManager {
         return repositoryTasks;
     }
 
-    public List<JavaSrcBean> genEntityJava(RepositoryInst repositoryInst, Set<String> temps, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> repositoryTasks = genEntityJavaTask(repositoryInst, temps, chrome);
-        List<JavaSrcBean> srcBeans = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), repositoryTasks);
+    public List<JavaGenSource> genEntityJava(RepositoryInst repositoryInst, Set<String> temps, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> repositoryTasks = genEntityJavaTask(repositoryInst, temps, chrome);
+        List<JavaGenSource> srcBeans = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), repositoryTasks);
         return srcBeans;
     }
 
 
     public void buildTableByRepositoryType(RepositoryInst repositoryInst, List<String> tableNames, ChromeProxy chrome, RepositoryType... repositoryTypes) throws JDSException {
         Set<String> temps = getRepositoryTypeTemps(repositoryTypes);
-        List<Callable<List<JavaSrcBean>>> tableTasks = genTableJavaTask(repositoryInst, temps, UserSpace.CRUD, tableNames, chrome);
-        List<JavaSrcBean> srcBeans = buildTasks(repositoryInst, tableTasks, chrome);
+        List<Callable<List<JavaGenSource>>> tableTasks = genTableJavaTask(repositoryInst, temps, UserSpace.CRUD, tableNames, chrome);
+        List<JavaGenSource> srcBeans = buildTasks(repositoryInst, tableTasks, chrome);
     }
 
 
     public void buildCurdTable(RepositoryInst repositoryInst, Set<String> temps, List<String> tableNames, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> tableTasks = genTableJavaTask(repositoryInst, temps, UserSpace.CRUD, tableNames, chrome);
-        List<JavaSrcBean> srcBeans = buildTasks(repositoryInst, tableTasks, chrome);
+        List<Callable<List<JavaGenSource>>> tableTasks = genTableJavaTask(repositoryInst, temps, UserSpace.CRUD, tableNames, chrome);
+        List<JavaGenSource> srcBeans = buildTasks(repositoryInst, tableTasks, chrome);
     }
 
     public void buildBpmFormTable(RepositoryInst repositoryInst, Set<String> temps, List<String> tableNames, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> tableTasks = genBPMFormTask(repositoryInst, temps, tableNames, chrome);
-        List<JavaSrcBean> srcBeans = buildTasks(repositoryInst, tableTasks, chrome);
+        List<Callable<List<JavaGenSource>>> tableTasks = genBPMFormTask(repositoryInst, temps, tableNames, chrome);
+        List<JavaGenSource> srcBeans = buildTasks(repositoryInst, tableTasks, chrome);
     }
 
-    private List<JavaSrcBean> buildTasks(RepositoryInst repositoryInst, List<Callable<List<JavaSrcBean>>> tableTasks, ChromeProxy chrome) throws JDSException {
-        List<JavaSrcBean> srcBeans = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), tableTasks);
-        repositoryInst.updateBeans(new HashSet<>(srcBeans));
-        for (JavaSrcBean javaSrcBean : srcBeans) {
-            reloadEntityConfig(javaSrcBean.getClassName());
+    private List<JavaGenSource> buildTasks(RepositoryInst repositoryInst, List<Callable<List<JavaGenSource>>> tableTasks, ChromeProxy chrome) throws JDSException {
+        List<JavaGenSource> javaGenSources = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), tableTasks);
+      List<JavaSrcBean>   srcBeans=new ArrayList<>();
+        for (JavaGenSource genSource : javaGenSources) {
+            reloadEntityConfig(genSource.getClassName());
+            srcBeans.add(genSource.getSrcBean());
         }
+         repositoryInst.updateBeans(new HashSet(srcBeans));
+
         BuildFactory.getInstance().compileJavaSrc(srcBeans, repositoryInst.getProjectVersionName(), chrome);
-        return srcBeans;
+        return javaGenSources;
     }
 
     public void buildRepository(RepositoryInst repositoryInst, Set<String> temps, List<String> tableNames, ChromeProxy chrome) throws JDSException {
         if (chrome == null) {
             chrome = getCurrChromeDriver();
         }
-        List<Callable<List<JavaSrcBean>>> repositoryTasks = new ArrayList<>();
+        List<Callable<List<JavaGenSource>>> repositoryTasks = new ArrayList<>();
         for (UserSpace userSpace : UserSpace.values()) {
             if (!userSpace.equals(UserSpace.FORM)) {
-                List<Callable<List<JavaSrcBean>>> tableTasks = genTableJavaTask(repositoryInst, temps, userSpace, tableNames, chrome);
+                List<Callable<List<JavaGenSource>>> tableTasks = genTableJavaTask(repositoryInst, temps, userSpace, tableNames, chrome);
                 repositoryTasks.addAll(tableTasks);
             }
         }
 
-        List<Callable<List<JavaSrcBean>>> bpmFormTask = genBPMFormTask(repositoryInst, temps, tableNames, chrome);
+        List<Callable<List<JavaGenSource>>> bpmFormTask = genBPMFormTask(repositoryInst, temps, tableNames, chrome);
 
         repositoryTasks.addAll(bpmFormTask);
-        List<JavaSrcBean> srcBeans = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), repositoryTasks);
+        List<JavaGenSource> javaGenSources = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), repositoryTasks);
         // srcBeans.addAll(genTableJava(repositoryInst, temps, chrome));
-        repositoryInst.updateBeans(new HashSet<>(srcBeans));
-        for (JavaSrcBean javaSrcBean : srcBeans) {
+        List<JavaSrcBean> srcBeans = new ArrayList<>();
+        repositoryInst.updateBeans(new HashSet(javaGenSources));
+        for (JavaGenSource javaSrcBean : javaGenSources) {
             reloadEntityConfig(javaSrcBean.getClassName());
+            srcBeans.add(javaSrcBean.getSrcBean());
         }
         BuildFactory.getInstance().compileJavaSrc(srcBeans, repositoryInst.getProjectVersionName(), chrome);
     }
@@ -894,26 +895,26 @@ public class RepositoryManager {
 //        return javaSrcBeans;
 //    }
 
-    public List<JavaSrcBean> genDicJava(RepositoryInst repositoryInst, List<? extends TabListItem> items, String moduleName, String className, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> dicTasks = new ArrayList<>();
-        List<JavaSrcBean> rootBeans = new ArrayList<>();
+    public List<JavaGenSource> genDicJava(RepositoryInst repositoryInst, List<? extends TabListItem> items, String moduleName, String className, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> dicTasks = new ArrayList<>();
+        List<JavaGenSource> rootBeans = new ArrayList<>();
         for (TabListItem subItem : items) {
-            List<Callable<List<JavaSrcBean>>> genJavaTasks = genDicJavaTask(repositoryInst, subItem, moduleName + "." + OODUtil.formatJavaName(subItem.getId(), false), OODUtil.formatJavaName(subItem.getId(), true), chrome);
+            List<Callable<List<JavaGenSource>>> genJavaTasks = genDicJavaTask(repositoryInst, subItem, moduleName + "." + OODUtil.formatJavaName(subItem.getId(), false), OODUtil.formatJavaName(subItem.getId(), true), chrome);
             dicTasks.addAll(genJavaTasks);
         }
-        List<JavaSrcBean> javaSrcBeans = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), dicTasks);
+        List<JavaGenSource> genSources = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), dicTasks);
         //重做一遍重新绑定
-        javaSrcBeans = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), dicTasks);
+        genSources = BuildFactory.getInstance().syncTasks(repositoryInst.getDsmId(), dicTasks);
         try {
             GenDicJava genDicJava = new GenDicJava(repositoryInst, items, moduleName, className);
             rootBeans = genDicJava.call();
-            javaSrcBeans.addAll(rootBeans);
+            genSources.addAll(rootBeans);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        for (JavaSrcBean srcBean : javaSrcBeans) {
-            repositoryInst.addJavaBean(srcBean);
+        for (JavaGenSource genSource : genSources) {
+            repositoryInst.addJavaBean(genSource.getSrcBean());
         }
         this.updateRepositoryInst(repositoryInst, true);
         return rootBeans;
@@ -921,8 +922,8 @@ public class RepositoryManager {
     }
 
 
-    public List<Callable<List<JavaSrcBean>>> genDicJavaTask(RepositoryInst repositoryInst, TabListItem tabItem, String moduleName, String className, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> dicTasks = new ArrayList<>();
+    public List<Callable<List<JavaGenSource>>> genDicJavaTask(RepositoryInst repositoryInst, TabListItem tabItem, String moduleName, String className, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> dicTasks = new ArrayList<>();
         if (tabItem instanceof TreeListItem) {
             TreeListItem treeItem = (TreeListItem) tabItem;
             List<TreeListItem> items = treeItem.getSub();
@@ -932,7 +933,7 @@ public class RepositoryManager {
                     if (treeListItems != null && treeListItems.size() > 0) {
                         GenDicJava genDicJava = new GenDicJava(repositoryInst, treeListItems, moduleName, className);
                         dicTasks.add(genDicJava);
-                        List<Callable<List<JavaSrcBean>>> genJavaTasks = genDicJavaTask(repositoryInst, subItem, moduleName + "." + OODUtil.formatJavaName(subItem.getId(), false), OODUtil.formatJavaName(subItem.getId(), true), chrome);
+                        List<Callable<List<JavaGenSource>>> genJavaTasks = genDicJavaTask(repositoryInst, subItem, moduleName + "." + OODUtil.formatJavaName(subItem.getId(), false), OODUtil.formatJavaName(subItem.getId(), true), chrome);
                         dicTasks.addAll(genJavaTasks);
                     }
                 }

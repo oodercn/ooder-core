@@ -76,8 +76,8 @@ public class CustomOpinionViewBean extends BaseGalleryViewBean<OpinionMenu, Cust
         this.updateModule(moduleComponent);
     }
 
-    public List<Callable> updateModule(ModuleComponent moduleComponent) {
-        List<Callable> tasks = new ArrayList<>();
+    public  List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         OpinionComponent opinionComponent = (OpinionComponent) moduleComponent.getCurrComponent();
         OpinionProperties opinionProperties = opinionComponent.getProperties();

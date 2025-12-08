@@ -11,6 +11,7 @@ import net.ooder.esd.dsm.enums.DSMType;
 import net.ooder.esd.dsm.enums.RangeType;
 import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.repository.RepositoryInst;
 import net.ooder.esd.dsm.temp.JavaTemp;
@@ -39,13 +40,13 @@ public class GenCustomDic extends GenJavaTask {
     }
 
     @Override
-    public List<JavaSrcBean> call() throws Exception {
+    public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
         GenJava javaGen = GenJava.getInstance(repositoryInst.getProjectVersionName());
         if (chrome == null) {
             chrome = this.getCurrChromeDriver();
         }
-        List<JavaSrcBean> srcFiles = new ArrayList<>();
+        List<JavaGenSource> genSources = new ArrayList<>();
         List<JavaTemp> viewTemps = BuildFactory.getInstance().getTempManager().getDSMTypeTemps(DSMType.REPOSITORY);
         if (simClassName.indexOf(".") > 0) {
             simClassName = simClassName.substring(simClassName.lastIndexOf(".") + 1);
@@ -77,22 +78,23 @@ public class GenCustomDic extends GenJavaTask {
                     if (clazz == null) {
                         File file = javaGen.createJava(javatemp, javaRoot, chrome);
                         srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, repositoryInst, javatemp.getJavaTempId());
-                        srcFiles.add(srcBean);
+
                         repositoryInst.addJavaBean(srcBean);
                     } else {
                         srcBean = repositoryInst.getJavaSrcByClassName(realClassName);
                         if (srcBean != null && srcBean.getJavaTempId() == null) {
                             srcBean.setJavaTempId(javatemp.getJavaTempId());
                         }
-                        srcFiles.add(srcBean);
+
                     }
-                    BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                    JavaGenSource javaGenSource=   BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                    genSources.add(javaGenSource);
                     classList.add(srcBean.getClassName());
                 }
             }
         }
 
-        return srcFiles;
+        return genSources;
     }
 
     public ChromeProxy getCurrChromeDriver() {

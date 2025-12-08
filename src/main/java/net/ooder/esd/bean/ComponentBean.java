@@ -14,7 +14,6 @@ public interface ComponentBean<M extends Component> extends CustomBean {
 
     String getXpath();
 
-
     @JSONField(serialize = false)
     List<CustomBean> getAnnotationBeans();
 

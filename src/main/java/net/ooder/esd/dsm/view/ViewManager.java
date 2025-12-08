@@ -39,6 +39,7 @@ import net.ooder.esd.dsm.gen.view.GenCustomViewJava;
 import net.ooder.esd.dsm.gen.view.GenViewDicJava;
 import net.ooder.esd.dsm.gen.view.GenViewEntityRefJava;
 import net.ooder.esd.dsm.gen.view.UpdateCustomViewJava;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.context.ActionViewRoot;
@@ -472,8 +473,8 @@ public class ViewManager {
     }
 
 
-    private List<Callable<List<JavaSrcBean>>> genUpdateViewJavaTask(MethodConfig methodConfig, ViewInst viewInst, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> tasks = new ArrayList<>();
+    private List<Callable<List<JavaGenSource>>> genUpdateViewJavaTask(MethodConfig methodConfig, ViewInst viewInst, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         DomainInst domainInst = DSMFactory.getInstance().getAggregationManager().getDomainInstById(methodConfig.getDomainId(), viewInst.getProjectVersionName());
         JavaSrcBean javaSrcBean = viewInst.getJavaSrcBeanByMethod(methodConfig);
         String euClassName = methodConfig.getEUClassName();
@@ -495,32 +496,32 @@ public class ViewManager {
         return tasks;
     }
 
-    public List<Callable<List<JavaSrcBean>>> genMethodTask(MethodConfig methodConfig, ViewInst viewInst, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> tasks = new ArrayList<>();
+    public List<Callable<List<JavaGenSource>>> genMethodTask(MethodConfig methodConfig, ViewInst viewInst, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         List<MethodConfig> childMethods = methodConfig.getAllChildViewMethod();
         for (MethodConfig childMethod : childMethods) {
-            List<Callable<List<JavaSrcBean>>> childTasks = genUpdateViewJavaTask(childMethod, viewInst, chrome);
+            List<Callable<List<JavaGenSource>>> childTasks = genUpdateViewJavaTask(childMethod, viewInst, chrome);
             tasks.addAll(childTasks);
         }
-        List<Callable<List<JavaSrcBean>>> methodTasks = genUpdateViewJavaTask(methodConfig, viewInst, chrome);
+        List<Callable<List<JavaGenSource>>> methodTasks = genUpdateViewJavaTask(methodConfig, viewInst, chrome);
         tasks.addAll(methodTasks);
         return tasks;
     }
 
 
-    public List<JavaSrcBean> buildView(MethodConfig methodConfig, ViewInst viewInst, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> tasks = genMethodTask(methodConfig, viewInst, chrome);
-        List<JavaSrcBean> javaSrcBeans = BuildFactory.getInstance().syncTasks(viewInst.getViewInstId(), tasks);
+    public List<JavaGenSource> buildView(MethodConfig methodConfig, ViewInst viewInst, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> tasks = genMethodTask(methodConfig, viewInst, chrome);
+        List<JavaGenSource> javaSrcBeans = BuildFactory.getInstance().syncTasks(viewInst.getViewInstId(), tasks);
 
         return javaSrcBeans;
     }
 
-    public List<JavaSrcBean> buildView(ApiClassConfig esdClassConfig, ViewInst viewInst, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> tasks = new ArrayList<>();
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+    public List<JavaGenSource> buildView(ApiClassConfig esdClassConfig, ViewInst viewInst, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
+        List<JavaGenSource> javaSrcBeans = new ArrayList<>();
         List<MethodConfig> currViewConfigs = esdClassConfig.getAllViewMethods();
         for (MethodConfig childMethod : currViewConfigs) {
-            List<Callable<List<JavaSrcBean>>> childtasks = genMethodTask(childMethod, viewInst, chrome);
+            List<Callable<List<JavaGenSource>>> childtasks = genMethodTask(childMethod, viewInst, chrome);
             tasks.addAll(childtasks);
         }
         javaSrcBeans = BuildFactory.getInstance().syncTasks(viewInst.getViewInstId(), tasks);
@@ -538,9 +539,9 @@ public class ViewManager {
 
     }
 
-    public List<JavaSrcBean> reBuildESDClassView(DomainInst dsmInst, List<ESDClass> viewEntityList, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> tasks = genESDClassTask(dsmInst, viewEntityList, chrome);
-        List<JavaSrcBean> viewBeans = BuildFactory.getInstance().syncTasks(dsmInst.getDomainId(), tasks);
+    public List<JavaGenSource> reBuildESDClassView(DomainInst dsmInst, List<ESDClass> viewEntityList, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> tasks = genESDClassTask(dsmInst, viewEntityList, chrome);
+        List<JavaGenSource> viewBeans = BuildFactory.getInstance().syncTasks(dsmInst.getDomainId(), tasks);
         return viewBeans;
     }
 
@@ -625,7 +626,7 @@ public class ViewManager {
      * @param chrome
      * @throws JDSException
      */
-    public List<JavaSrcBean> buildView(DomainInst domainInst, String serviceClassName, ChromeProxy chrome) throws JDSException {
+    public List<JavaGenSource> buildView(DomainInst domainInst, String serviceClassName, ChromeProxy chrome) throws JDSException {
         List<ESDClass> esdClassList = new ArrayList<>();
         try {
             ESDClass esdClass = BuildFactory.getInstance().getClassManager().getAggEntityByName(serviceClassName, false);
@@ -635,12 +636,12 @@ public class ViewManager {
         } catch (JDSException e) {
             e.printStackTrace();
         }
-        List<Callable<List<JavaSrcBean>>> tasks = genESDClassTask(domainInst, esdClassList, chrome);
-        List<JavaSrcBean> viewBeans = BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), tasks);
+        List<Callable<List<JavaGenSource>>> tasks = genESDClassTask(domainInst, esdClassList, chrome);
+        List<JavaGenSource> viewBeans = BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), tasks);
         ViewInst viewInst = this.createDefaultView(domainInst);
 
-        for (JavaSrcBean srcBean : viewBeans) {
-            viewInst.updateView(srcBean);
+        for (JavaGenSource javaGenSource : viewBeans) {
+            viewInst.updateView(javaGenSource.getSrcBean());
         }
         this.updateViewInst(viewInst, true);
         return viewBeans;
@@ -648,11 +649,11 @@ public class ViewManager {
     }
 
 
-    public List<Callable<List<JavaSrcBean>>> genESDClassTask(DomainInst domainInst, List<ESDClass> esdClassList, ChromeProxy chrome) throws JDSException {
+    public List<Callable<List<JavaGenSource>>> genESDClassTask(DomainInst domainInst, List<ESDClass> esdClassList, ChromeProxy chrome) throws JDSException {
         if (chrome == null) {
             chrome = getCurrChromeDriver();
         }
-        List<Callable<List<JavaSrcBean>>> customViewTasks = new ArrayList<>();
+        List<Callable<List<JavaGenSource>>> customViewTasks = new ArrayList<>();
         chrome.printLog("共发现" + esdClassList.size() + "视图", true);
         for (ESDClass esdClass : esdClassList) {
             ViewEntityConfig esdClassConfig = this.getViewEntityConfig(esdClass.getClassName(), esdClass.getDomainId());
@@ -660,7 +661,7 @@ public class ViewManager {
                 esdClassConfig = this.createViewEntityConfig(esdClass.getClassName(), esdClass.getDomainId());
             }
             chrome.printLog("开始创建" + esdClass.getCtClass().getName() + "(" + esdClass.getDesc() + ")", true);
-            List<Callable<List<JavaSrcBean>>> customViewEntityTasks = genEntityTask(domainInst, esdClassConfig, chrome);
+            List<Callable<List<JavaGenSource>>> customViewEntityTasks = genEntityTask(domainInst, esdClassConfig, chrome);
             customViewTasks.addAll(customViewEntityTasks);
         }
         return customViewTasks;
@@ -668,11 +669,11 @@ public class ViewManager {
     }
 
 
-    private List<Callable<List<JavaSrcBean>>> genEntityTask(DomainInst domainInst, ViewEntityConfig esdClassConfig, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> customViewTasks = new ArrayList<>();
+    private List<Callable<List<JavaGenSource>>> genEntityTask(DomainInst domainInst, ViewEntityConfig esdClassConfig, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> customViewTasks = new ArrayList<>();
         List<MethodConfig> methodAPIBeans = esdClassConfig.getSourceConfig().getAllViewMethods();
         for (MethodConfig methodConfig : methodAPIBeans) {
-            List<Callable<List<JavaSrcBean>>> genViewJavaTask = genMethodTask(methodConfig, domainInst, chrome);
+            List<Callable<List<JavaGenSource>>> genViewJavaTask = genMethodTask(methodConfig, domainInst, chrome);
             customViewTasks.addAll(genViewJavaTask);
         }
 
@@ -686,13 +687,13 @@ public class ViewManager {
         return customViewTasks;
     }
 
-    public List<JavaSrcBean> reBuildMethodJava(MethodConfig methodConfig, DomainInst domainInst, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> customViewTasks = genMethodTask(methodConfig, domainInst, chrome);
+    public List<JavaGenSource> reBuildMethodJava(MethodConfig methodConfig, DomainInst domainInst, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> customViewTasks = genMethodTask(methodConfig, domainInst, chrome);
         return BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), customViewTasks);
     }
 
-    public List<Callable<List<JavaSrcBean>>> genMethodTask(MethodConfig methodConfig, DomainInst domainInst, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> customViewTasks = new ArrayList<>();
+    public List<Callable<List<JavaGenSource>>> genMethodTask(MethodConfig methodConfig, DomainInst domainInst, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> customViewTasks = new ArrayList<>();
         String euClassName = methodConfig.getEUClassName();
         if (euClassName.indexOf(".") == -1 || !methodConfig.getViewClass().isProxy()) {
             String packageName = domainInst.getEuPackage() + "." + methodConfig.getSourceClass().getTopSourceClass().getEntityClass().getName().toLowerCase();
@@ -725,7 +726,7 @@ public class ViewManager {
     public GenCustomViewJava genCustomViewJava(AggViewRoot viewRoot, CustomViewBean viewBean, String className, boolean autocommit, ChromeProxy chrome) throws JDSException {
         DomainInst domainInst = (DomainInst) viewRoot.getDsmBean();
         ViewInst viewInst = this.createDefaultView(domainInst);
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        List<JavaGenSource> javaSrcBeans = new ArrayList<>();
         GenCustomViewJava customViewJava = null;
         boolean canCreate = true;
         if (viewBean instanceof CustomBlockFormViewBean) {
@@ -739,7 +740,7 @@ public class ViewManager {
         }
         if (canCreate) {
             customViewJava = new GenCustomViewJava(viewRoot, viewBean, className, chrome);
-            List<JavaSrcBean> viewFileList = BuildFactory.getInstance().syncTasks(viewRoot.getDsmBean().getDsmId(), Arrays.asList(customViewJava));
+            List<JavaGenSource> viewFileList = BuildFactory.getInstance().syncTasks(viewRoot.getDsmBean().getDsmId(), Arrays.asList(customViewJava));
             javaSrcBeans.addAll(viewFileList);
         }
 
@@ -935,26 +936,26 @@ public class ViewManager {
     }
 
 
-    public GenViewDicJava genDicJava1(ViewInst viewInst, List<TabListItem> items, String moduleName, String className, ChromeProxy chrome) throws JDSException {
-        GenViewDicJava genViewDicJava = new GenViewDicJava(viewInst, moduleName, items, className, chrome);
-        List<JavaSrcBean> srcBeans = BuildFactory.getInstance().syncTasks(className, Arrays.asList(genViewDicJava));
-        return genViewDicJava;
-    }
+//    public GenViewDicJava genDicJava(ViewInst viewInst, List<TabListItem> items, String moduleName, String className, ChromeProxy chrome) throws JDSException {
+//        GenViewDicJava genViewDicJava = new GenViewDicJava(viewInst, moduleName, items, className, chrome);
+//        List<JavaGenSource> srcBeans = BuildFactory.getInstance().syncTasks(className, Arrays.asList(genViewDicJava));
+//        return genViewDicJava;
+//    }
 
 
-    public List<JavaSrcBean> genViewsBySrc(DomainInst domainInst, List<JavaSrcBean> srcBeanList, ChromeProxy chrome) throws JDSException {
+    public List<JavaGenSource> genViewsBySrc(DomainInst domainInst, List<JavaGenSource> srcBeanList, ChromeProxy chrome) throws JDSException {
         List<ESDClass> esdClassList = new ArrayList<>();
-        for (JavaSrcBean srcBean : srcBeanList) {
+        for (JavaGenSource srcBean : srcBeanList) {
             ESDClass esdClass = BuildFactory.getInstance().getClassManager().getAggEntityByName(srcBean.getClassName(), false);
             if (esdClass != null && !esdClassList.contains(esdClass)) {
                 esdClassList.add(esdClass);
             }
         }
-        List<Callable<List<JavaSrcBean>>> tasks = genESDClassTask(domainInst, esdClassList, chrome);
-        List<JavaSrcBean> viewBeans = BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), tasks);
+        List<Callable<List<JavaGenSource>>> tasks = genESDClassTask(domainInst, esdClassList, chrome);
+        List<JavaGenSource> viewBeans = BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), tasks);
         ViewInst viewInst = this.createDefaultView(domainInst);
-        for (JavaSrcBean srcBean : viewBeans) {
-            viewInst.updateView(srcBean);
+        for (JavaGenSource javaGenSource : viewBeans) {
+            viewInst.updateView(javaGenSource.getSrcBean());
         }
         this.updateViewInst(viewInst, true);
 

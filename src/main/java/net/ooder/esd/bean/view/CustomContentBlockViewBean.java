@@ -93,8 +93,8 @@ public class CustomContentBlockViewBean extends BaseGalleryViewBean<ContentBlock
     }
 
 
-    public List<Callable> updateModule(ModuleComponent moduleComponent) {
-        List<Callable> tasks = new ArrayList<>();
+    public  List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         ContentBlockComponent contentBlockComponent = (ContentBlockComponent) moduleComponent.getCurrComponent();
         ContentBlockProperties contentBlockProperties = contentBlockComponent.getProperties();

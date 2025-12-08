@@ -87,8 +87,8 @@ public class NavGroupViewBean extends NavBaseViewBean<GroupItemBean, GalleryItem
     }
 
 
-    public List<Callable> updateModule(ModuleComponent moduleComponent) {
-        List<Callable> javaSrcBeans = new ArrayList<>();
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
+        List<Callable<List<JavaGenSource>>> javaSrcBeans = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         itemBeans = new ArrayList<>();
         BlockComponent currComponent = (BlockComponent) moduleComponent.getCurrComponent();

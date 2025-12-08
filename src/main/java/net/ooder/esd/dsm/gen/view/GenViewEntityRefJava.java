@@ -12,6 +12,7 @@ import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.enums.RangeType;
 import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.repository.EntityRefRoot;
 import net.ooder.esd.dsm.repository.RepositoryInst;
@@ -47,9 +48,9 @@ public class GenViewEntityRefJava extends GenJavaTask {
     }
 
     @Override
-    public List<JavaSrcBean> call() throws Exception {
+    public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
-        List<JavaSrcBean> srcFiles = new ArrayList<>();
+        List<JavaGenSource> genSources = new ArrayList<>();
         if (methodConfig.getViewClass() != null) {
             List<ViewEntityRef> dsmRefs = DSMFactory.getInstance().getViewManager().getViewEntityRefByName(methodConfig.getViewClass().getClassName(), domainInst.getDomainId());
             ViewEntityRoot root = new ViewEntityRoot(domainInst, methodConfig, dsmRefs);
@@ -77,15 +78,16 @@ public class GenViewEntityRefJava extends GenJavaTask {
                     JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, domainInst, javatemp.getJavaTempId());
                     srcBean.setSourceClassName(methodConfig.getSourceClassName());
                     srcBean.setMethodName(methodConfig.getMethodName());
-                    srcFiles.add(srcBean);
-                    BuildFactory.getInstance().createSource(srcBean.getClassName(), tempRoot, javatemp, srcBean);
+
+                    JavaGenSource javaGenSource=  BuildFactory.getInstance().createSource(srcBean.getClassName(), tempRoot, javatemp, srcBean);
+                    genSources.add(javaGenSource);
                     classList.add(srcBean.getClassName());
                 }
             }
 
         }
 
-        return srcFiles;
+        return genSources;
     }
 
     public ChromeProxy getCurrChromeDriver() {

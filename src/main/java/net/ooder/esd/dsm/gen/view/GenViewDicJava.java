@@ -11,6 +11,7 @@ import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.gen.GenJavaTask;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.ViewInst;
@@ -46,12 +47,12 @@ public class GenViewDicJava extends GenJavaTask {
     }
 
     @Override
-    public List<JavaSrcBean> call() throws Exception {
+    public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
         return genDic(dicViewRoot);
     }
 
-    List<JavaSrcBean> genDic(DicViewRoot dicViewRoot) {
+    List<JavaGenSource> genDic(DicViewRoot dicViewRoot) {
         List<TabListItem> items = dicViewRoot.getItems();
         String className = dicViewRoot.getFullClassName();
         Class clazz = null;
@@ -60,15 +61,15 @@ public class GenViewDicJava extends GenJavaTask {
         } catch (Throwable e) {
             log.warn(e.getMessage());
         }
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        List<JavaGenSource> javaGenSources = new ArrayList<>();
         if (clazz == null) {
             for (TabListItem listItem : items) {
                 if (listItem instanceof TreeListItem) {
-                    List<JavaSrcBean> srcBeanList = genChildTree((TreeListItem) listItem, className);
+                    List<JavaGenSource> srcBeanList = genChildTree((TreeListItem) listItem, className);
                     if (srcBeanList != null) {
-                        for (JavaSrcBean srcBean : srcBeanList) {
-                            if (srcBean != null && !javaSrcBeans.contains(srcBean)) {
-                                javaSrcBeans.addAll(srcBeanList);
+                        for (JavaGenSource srcBean : srcBeanList) {
+                            if (srcBean != null && !javaGenSources.contains(srcBean)) {
+                                javaGenSources.addAll(srcBeanList);
                                 classList.add(srcBean.getClassName());
                             }
                         }
@@ -89,20 +90,20 @@ public class GenViewDicJava extends GenJavaTask {
                     File file = javaGen.createJava(javatemp, dicViewRoot, chrome);
                     JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, viewInst, javatemp.getJavaTempId());
                     dicClass = javaGen.dynCompile(srcBean.getClassName(), srcBean.getContent());
-                    javaSrcBeans.add(srcBean);
-                    BuildFactory.getInstance().createSource(srcBean.getClassName(), dicViewRoot, javatemp, srcBean);
+                    JavaGenSource javaGenSource = BuildFactory.getInstance().createSource(srcBean.getClassName(), dicViewRoot, javatemp, srcBean);
+                    javaGenSources.add(javaGenSource);
                     classList.add(srcBean.getClassName());
                 } catch (Exception e) {
                     log.warn(e.getMessage());
                 }
             }
 
-            for (JavaSrcBean srcBean : javaSrcBeans) {
-                viewInst.updateView(srcBean);
+            for (JavaGenSource srcBean : javaGenSources) {
+                viewInst.updateView(srcBean.getSrcBean());
             }
         }
 
-        return javaSrcBeans;
+        return javaGenSources;
     }
 
 
@@ -114,8 +115,8 @@ public class GenViewDicJava extends GenJavaTask {
         this.dicClass = dicClass;
     }
 
-    List<JavaSrcBean> genChildTree(TreeListItem item, String className) {
-        List<JavaSrcBean> srcBeanList = new ArrayList<>();
+    List<JavaGenSource> genChildTree(TreeListItem item, String className) {
+        List<JavaGenSource> srcBeanList = new ArrayList<>();
         List<TabListItem> treeListItems = item.getSub();
         Set<Class> bindClass = new HashSet<>();
         if (treeListItems != null && treeListItems.size() > 0) {
@@ -129,18 +130,16 @@ public class GenViewDicJava extends GenJavaTask {
             if (bindClassName == null) {
                 bindClassName = packageName + "." + OODUtil.formatJavaName(name + item.getId(), true);
             }
-            try {
-                DicViewRoot childRoot = new DicViewRoot(viewInst, moduleName, treeListItems, bindClassName);
-                srcBeanList = genDic(childRoot);
-                for (JavaSrcBean srcBean : srcBeanList) {
-                    Class clazz = srcBean.loadClass();
-                    if (clazz != null) {
-                        bindClass.add(clazz);
-                    }
+
+            DicViewRoot childRoot = new DicViewRoot(viewInst, moduleName, treeListItems, bindClassName);
+            srcBeanList = genDic(childRoot);
+            for (JavaGenSource srcBean : srcBeanList) {
+                Class clazz = srcBean.getSrcBean().getClass();
+                if (clazz != null) {
+                    bindClass.add(clazz);
                 }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
             }
+
             item.setBindClass(bindClass.toArray(new Class[]{}));
         }
 

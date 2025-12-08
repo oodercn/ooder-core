@@ -21,6 +21,7 @@ import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.enums.DSMTempType;
 import net.ooder.esd.dsm.enums.DSMType;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.repository.RepositoryInst;
 import net.ooder.esd.dsm.repository.RepositoryManager;
@@ -468,7 +469,7 @@ public class DSMFactory {
     public void reBuildTableView(RepositoryInst repositoryInst, UserSpace userSpace, ChromeProxy chrome) throws JDSException {
         DomainInst domainInst = DSMFactory.getInstance().getDefaultDomain(repositoryInst.getProjectVersionName(), userSpace);
         List<ESDClass> tableList = domainInst.getEntityList(AggregationType.REPOSITORY, false);
-        List<Callable<List<JavaSrcBean>>> tasks = viewManager.genESDClassTask(domainInst, tableList, chrome);
+        List<Callable<List<JavaGenSource>>> tasks = viewManager.genESDClassTask(domainInst, tableList, chrome);
         BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), tasks);
         ViewInst viewInst = domainInst.getViewInst();
         compileViewInst(viewInst, chrome);
@@ -478,7 +479,7 @@ public class DSMFactory {
     public void genRepository(RepositoryInst repositoryInst, UserSpace userSpace, ChromeProxy chrome) throws JDSException {
         DomainInst domainInst = DSMFactory.getInstance().getDefaultDomain(repositoryInst.getProjectVersionName(), userSpace);
         List<ESDClass> tableList = domainInst.getEntityList(AggregationType.REPOSITORY, false);
-        List<Callable<List<JavaSrcBean>>> tasks = viewManager.genESDClassTask(domainInst, tableList, chrome);
+        List<Callable<List<JavaGenSource>>> tasks = viewManager.genESDClassTask(domainInst, tableList, chrome);
         BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), tasks);
         ViewInst viewInst = domainInst.getViewInst();
         compileViewInst(viewInst, chrome);
@@ -510,7 +511,7 @@ public class DSMFactory {
         ViewInst viewInst = domainInst.getViewInst();
         try {
             List<ESDClass> tableList = domainInst.getEntityList(AggregationType.REPOSITORY, false);
-            List<Callable<List<JavaSrcBean>>> tasks = viewManager.genESDClassTask(domainInst, tableList, chrome);
+            List<Callable<List<JavaGenSource>>> tasks = viewManager.genESDClassTask(domainInst, tableList, chrome);
             BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), tasks);
             if (compile) {
                 compileViewInst(viewInst, chrome);
@@ -529,7 +530,7 @@ public class DSMFactory {
         try {
             List<ESDClass> entityList = domainInst.getEntityList(AggregationType.ENTITY, false);
             ;
-            List<Callable<List<JavaSrcBean>>> tasks = viewManager.genESDClassTask(domainInst, entityList, chrome);
+            List<Callable<List<JavaGenSource>>> tasks = viewManager.genESDClassTask(domainInst, entityList, chrome);
             BuildFactory.getInstance().syncTasks(viewInst.getViewInstId(), tasks);
             if (compile) {
                 compileViewInst(viewInst, chrome);

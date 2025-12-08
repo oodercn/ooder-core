@@ -414,7 +414,6 @@ public class GenJava {
         return compileJavaSrc(Arrays.asList(javaSrcBean), log);
     }
 
-    ;
 
     public boolean compileJavaSrc(List<JavaSrcBean> javaSrcBeans, ChromeProxy log) throws JDSException {
         if (log == null) {

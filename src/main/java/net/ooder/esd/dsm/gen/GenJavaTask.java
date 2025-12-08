@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-public abstract class GenJavaTask implements Callable<List<JavaSrcBean>> {
+public abstract class GenJavaTask implements Callable<List<JavaGenSource>> {
     protected Log log = LogFactory.getLog(JDSConstants.CONFIG_KEY, GenJavaTask.class);
     protected MinServerActionContextImpl autoruncontext;
     public ChromeProxy chrome;

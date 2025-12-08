@@ -83,7 +83,7 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
     }
 
 
-    public List<GenTabsChildModule> updateModule(ModuleComponent moduleComponent) {
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
         super.updateBaseModule(moduleComponent);
         Component currComponent = moduleComponent.getCurrComponent();
         TabsComponent tabsComponent = null;
@@ -122,7 +122,7 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
         }
         this.setTabItems(tabItems);
         tabsProperties.setItems(tabItems);
-        List<GenTabsChildModule> tasks = new ArrayList<GenTabsChildModule>();
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList();
         if (components != null && components.size() > 0) {
             for (Component childComponent : components) {
                 ModuleViewType comModuleViewType = ModuleViewType.getModuleViewByCom(ComponentType.fromType(childComponent.getKey()));

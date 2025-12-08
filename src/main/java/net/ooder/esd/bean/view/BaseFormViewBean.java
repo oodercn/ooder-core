@@ -14,7 +14,6 @@ import net.ooder.esd.annotation.menu.CustomFormMenu;
 import net.ooder.esd.annotation.ui.ComboInputType;
 import net.ooder.esd.annotation.ui.ComboType;
 import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.field.CustomBlockFieldBean;
 import net.ooder.esd.bean.field.CustomFieldBean;
@@ -108,13 +107,6 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
     }
 
 
-    @Override
-    public abstract ModuleViewType getModuleViewType();
-
-
-    public abstract void setModuleViewType(ModuleViewType moduleViewType);
-
-
     public void initMenuBar() {
         if (getBottomBar() != null && getBottomBar().getEnumItems() != null) {
             bottombarMenu = getBottomBar().getEnumItems();
@@ -127,8 +119,8 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         }
     }
 
-    public List<Callable> createBuild(ModuleComponent moduleComponent, Component component) {
-        List<Callable> callableList = new ArrayList<>();
+    public List<Callable<List<JavaGenSource>>> createBuild(ModuleComponent moduleComponent, Component component) {
+        List<Callable<List<JavaGenSource>>> callableList = new ArrayList<>();
         List<Callable<List<JavaGenSource>>> childModules = genChildComponent(moduleComponent, Arrays.asList(component));
         for (Callable childModule : childModules) {
             GenFormChildModule genFormChildModule = (GenFormChildModule) childModule;
@@ -137,7 +129,6 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
             CustomViewBean viewBean = ((WidgetBean) fieldComponentBean).getViewBean();
             callableList.addAll(viewBean.getChildModules());
         }
-
         return callableList;
     }
 
@@ -145,7 +136,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
     public List<JavaGenSource> buildAll() {
         List<JavaGenSource> allSourceList = new ArrayList<>();
         List<Callable<List<JavaGenSource>>> callableList = new ArrayList<>();
-        if (childModules!=null){
+        if (childModules != null) {
             for (Callable childModule : childModules) {
                 GenFormChildModule genFormChildModule = (GenFormChildModule) childModule;
                 callableList.add(childModule);
@@ -473,9 +464,6 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         //todo
         return null;
     }
-
-    @Override
-    public abstract ComponentType getComponentType();
 
 
     public CustomWidgetBean getWidgetBean() {

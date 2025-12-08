@@ -12,6 +12,7 @@ import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
 import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.ViewInst;
@@ -45,7 +46,7 @@ public class GenCustomViewJava extends GenJavaTask {
 
 
     @Override
-    public List<JavaSrcBean> call() throws Exception {
+    public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
         if (chrome == null) {
             chrome = this.getCurrChromeDriver();
@@ -57,7 +58,7 @@ public class GenCustomViewJava extends GenJavaTask {
         DomainInst domainInst = (DomainInst) viewRoot.getDsmBean();
         ViewInst defaultView = domainInst.getViewInst();
         JavaRoot javaRoot = BuildFactory.getInstance().buildJavaRoot(viewRoot, viewBean, moduleName, className);
-        List<JavaSrcBean> srcFiles = new ArrayList<>();
+        List<JavaGenSource> srcFiles = new ArrayList<>();
 
         for (JavaTemp javatemp : viewTemps) {
             boolean canGen = true;
@@ -78,9 +79,10 @@ public class GenCustomViewJava extends GenJavaTask {
                 javaRoot.setPackageName(packageName);
                 File file = javaGen.createJava(javatemp, javaRoot, chrome);
                 JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, defaultView, javatemp.getJavaTempId());
-                srcFiles.add(srcBean);
+
                 defaultView.addJavaBean(srcBean);
-                BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+               JavaGenSource javaGenSource= BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                srcFiles.add(javaGenSource);
                 classList.add(srcBean.getClassName());
 
             }

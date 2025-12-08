@@ -10,6 +10,7 @@ import net.ooder.esd.dsm.aggregation.context.AggProxyRoot;
 import net.ooder.esd.dsm.enums.RangeType;
 import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.gen.GenJavaTask;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
 
@@ -36,10 +37,10 @@ public class GenAggAPIJava extends GenJavaTask {
     }
 
     @Override
-    public List<JavaSrcBean> call() throws Exception {
+    public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
         GenJava javaGen = GenJava.getInstance(domainInst.getProjectVersionName());
-        List<JavaSrcBean> srcFiles = new ArrayList<>();
+        List<JavaGenSource> genSources = new ArrayList<>();
         String simClassName = esdClassConfig.getSourceClass().getName();
         String className = esdClassConfig.getSourceClass().getClassName();
         allTemps.addAll(esdClassConfig.getJavaTempIds());
@@ -53,12 +54,13 @@ public class GenAggAPIJava extends GenJavaTask {
                 File file = javaGen.createJava(javatemp, javaRoot, chrome);
                 JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, domainInst, javaTempId);
                 srcBean.setEntityClassName(esdClassConfig.getESDClass().getEntityClass().getClassName());
-                srcFiles.add(srcBean);
-                BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+
+                JavaGenSource javaGenSource=   BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                genSources.add(javaGenSource);
                 classList.add(srcBean.getClassName());
             }
         }
-        return srcFiles;
+        return genSources;
     }
 
 }

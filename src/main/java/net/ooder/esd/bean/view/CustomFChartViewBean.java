@@ -107,8 +107,8 @@ public class CustomFChartViewBean extends CustomViewBean<FieldFormConfig, UIItem
         updateModule(moduleComponent);
     }
 
-    public  List<Callable> updateModule(ModuleComponent moduleComponent) {
-        List<Callable> tasks = new ArrayList<>();
+    public  List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         FChartComponent chartComponent = (FChartComponent) moduleComponent.getCurrComponent();
         FChartProperties chartProperties = chartComponent.getProperties();

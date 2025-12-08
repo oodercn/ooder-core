@@ -5,17 +5,14 @@ import net.ooder.common.logging.LogSetpLog;
 import net.ooder.common.util.StringUtility;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.dsm.BuildFactory;
-import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.enums.DSMType;
 import net.ooder.esd.dsm.enums.RangeType;
-import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.gen.GenJavaTask;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.repository.RepositoryInst;
-import net.ooder.esd.dsm.repository.RepositoryRoot;
 import net.ooder.esd.dsm.repository.database.context.TableRefRoot;
-import net.ooder.esd.dsm.repository.database.context.TableRoot;
-import net.ooder.esd.dsm.repository.database.proxy.DSMTableProxy;
 import net.ooder.esd.dsm.repository.database.ref.TableRef;
 import net.ooder.esd.dsm.repository.database.ref.TableRefProxy;
 import net.ooder.esd.dsm.temp.JavaTemp;
@@ -24,7 +21,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 public class GenTableRefJava extends GenJavaTask {
 
@@ -42,9 +38,9 @@ public class GenTableRefJava extends GenJavaTask {
     }
 
     @Override
-    public List<JavaSrcBean> call() throws Exception {
+    public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
-        List<JavaSrcBean> srcFiles = new ArrayList<>();
+        List<JavaGenSource> srcFiles = new ArrayList<>();
         TableRefProxy proxy = new TableRefProxy(ref);
         TableRefRoot tempRoot = new TableRefRoot(repositoryInst, new TableRefProxy(ref));
         if (tempIds == null) {
@@ -66,8 +62,9 @@ public class GenTableRefJava extends GenJavaTask {
                 tempRoot.setPackageName(packageName);
                 File file = GenJava.getInstance(repositoryInst.getProjectVersionName()).createJava(javatemp, tempRoot, chrome);
                 JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, repositoryInst, javaTempId);
-                srcFiles.add(srcBean);
-                BuildFactory.getInstance().createSource(srcBean.getClassName(), tempRoot, javatemp, srcBean);
+
+                JavaGenSource genSource = BuildFactory.getInstance().createSource(srcBean.getClassName(), tempRoot, javatemp, srcBean);
+                srcFiles.add(genSource);
                 classList.add(srcBean.getClassName());
             }
         }
@@ -76,8 +73,8 @@ public class GenTableRefJava extends GenJavaTask {
 
     public ChromeProxy getCurrChromeDriver() {
         ChromeProxy chrome = JDSActionContext.getActionContext().Par("$currChromeDriver", ChromeProxy.class);
-        if (chrome==null){
-            chrome=new LogSetpLog();
+        if (chrome == null) {
+            chrome = new LogSetpLog();
         }
         return chrome;
     }

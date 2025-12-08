@@ -17,6 +17,7 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.ESDField;
+import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.gen.view.GenViewDicJava;
@@ -60,7 +61,6 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
     }
 
 
-
     public List<GenViewDicJava> update(ModuleComponent moduleComponent, Component<T, ?> component) {
         T listProperties = component.getProperties();
         List<GenViewDicJava> tasks = new ArrayList<>();
@@ -84,6 +84,7 @@ public class CustomListBean<T extends AbsListProperties> implements ComponentBea
                     if (enumClass == null || enumClass.equals(Enum.class)) {
                         GenViewDicJava genViewDicJava = new GenViewDicJava(domainInst.getViewInst(), module.toLowerCase(), listProperties.getItems(), euClassName, null);
                         tasks.add(genViewDicJava);
+                        BuildFactory.getInstance().syncTasks(euClassName, Arrays.asList(genViewDicJava));
                         bindClass = genViewDicJava.getDicClass();
                         if (bindClass != null && bindClass.isEnum()) {
                             enumClass = bindClass;

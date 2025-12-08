@@ -11,6 +11,7 @@ import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
 import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.gen.GenJavaTask;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.ViewInst;
@@ -38,9 +39,9 @@ public class UpdateCustomViewJava extends GenJavaTask {
     }
 
     @Override
-    public List<JavaSrcBean> call() throws Exception {
+    public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        List<JavaGenSource> genSources = new ArrayList<>();
         if (euClassName != null && viewBean != null) {
             DomainInst domainInst = DSMFactory.getInstance().getAggregationManager().getDomainInstById(viewBean.getDomainId());
             ViewInst defaultView = domainInst.getViewInst();
@@ -50,11 +51,12 @@ public class UpdateCustomViewJava extends GenJavaTask {
             JavaRoot javaRoot = BuildFactory.getInstance().buildJavaRoot(viewRoot, viewBean, moduleName, javaSrcBean.getClassName());
             File file = javaGen.createJava(javaTemp, javaRoot, chrome);
             JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, defaultView, javaTemp.getJavaTempId());
-            javaSrcBeans.add(srcBean);
-            BuildFactory.getInstance().createSource(srcBean.getClassName(), viewRoot, javaTemp, srcBean);
+
+            JavaGenSource javaGenSource= BuildFactory.getInstance().createSource(srcBean.getClassName(), viewRoot, javaTemp, srcBean);
+            genSources.add(javaGenSource);
             classList.add(srcBean.getClassName());
         }
-        return javaSrcBeans;
+        return genSources;
     }
 
 

@@ -34,6 +34,7 @@ import net.ooder.esd.dsm.enums.DSMType;
 import net.ooder.esd.dsm.enums.RangeType;
 import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.gen.agg.*;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
@@ -327,12 +328,12 @@ public class AggregationManager {
         return esdClassList;
     }
 
-    public List<JavaSrcBean> reBuildServiceBean(DomainInst dsmInst, List<AggEntityConfig> entityConfigList, AggregationType aggregationType, ChromeProxy chrome, boolean compile) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> buildTasks = new ArrayList<>();
+    public List<JavaGenSource> reBuildServiceBean(DomainInst dsmInst, List<AggEntityConfig> entityConfigList, AggregationType aggregationType, ChromeProxy chrome, boolean compile) throws JDSException {
+        List<Callable<List<JavaGenSource>>> buildTasks = new ArrayList<>();
         if (chrome == null) {
             chrome = this.getCurrChromeDriver();
         }
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        List<JavaGenSource> javaGenSources = new ArrayList<>();
         for (AggEntityConfig entityConfig : entityConfigList) {
             if (entityConfig.getAggregationBean() != null) {
                 if (entityConfig.getESDClass().isProxy()) {
@@ -343,18 +344,22 @@ public class AggregationManager {
 
             }
         }
-        javaSrcBeans = BuildFactory.getInstance().syncTasks(dsmInst.getDomainId(), buildTasks);
-        chrome.printLog("共创建:" + javaSrcBeans.size() + "个 ，开始编译动态编译...", true);
+        javaGenSources = BuildFactory.getInstance().syncTasks(dsmInst.getDomainId(), buildTasks);
+        chrome.printLog("共创建:" + javaGenSources.size() + "个 ，开始编译动态编译...", true);
         if (compile) {
             GenJava javaGen = GenJava.getInstance(dsmInst.getProjectVersionName());
+            List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+            for (JavaGenSource javaGenSource : javaGenSources) {
+                javaSrcBeans.add(javaGenSource.getSrcBean());
+            }
             javaGen.compileJavaSrc(javaSrcBeans, chrome);
         }
         updateDomainInst(dsmInst, true);
-        return javaSrcBeans;
+        return javaGenSources;
     }
 
-    private List<Callable<List<JavaSrcBean>>> genAggAPIJavaTask(DomainInst domainInst, AggEntityConfig esdClassConfig, Set<String> allTemps, ChromeProxy chrome) {
-        List<Callable<List<JavaSrcBean>>> buildTasks = new ArrayList<>();
+    private List<Callable<List<JavaGenSource>>> genAggAPIJavaTask(DomainInst domainInst, AggEntityConfig esdClassConfig, Set<String> allTemps, ChromeProxy chrome) {
+        List<Callable<List<JavaGenSource>>> buildTasks = new ArrayList<>();
         GenAggAPIJava genAggAPIJava = new GenAggAPIJava(domainInst, esdClassConfig, allTemps, chrome);
         buildTasks.add(genAggAPIJava);
         return buildTasks;
@@ -655,9 +660,14 @@ public class AggregationManager {
         for (String esdClassName : esdClassNames) {
             esdClassList.add(BuildFactory.getInstance().getClassManager().getAggEntityByName(esdClassName, true));
         }
-        List<JavaSrcBean> srcBeans = DSMFactory.getInstance().getViewManager().reBuildESDClassView(domainInst, esdClassList, chrome);
+        List<JavaGenSource> javaGenSources = DSMFactory.getInstance().getViewManager().reBuildESDClassView(domainInst, esdClassList, chrome);
         chrome.printLog("共完成编译" + esdClassList.size() + "个", true);
         if (buildDomain) {
+            List<JavaSrcBean> srcBeans = new ArrayList<>();
+            for (JavaGenSource javaGenSource : javaGenSources) {
+                srcBeans.add(javaGenSource.getSrcBean());
+            }
+
             BuildFactory.getInstance().compileJavaSrc(srcBeans, projectName, chrome);
             chrome.printLog("共完成编译" + esdClassList.size() + "个", true);
         }
@@ -668,7 +678,7 @@ public class AggregationManager {
     public void addAggTable(String domainId, Set<String> esdClassNames, String projectName, boolean buildDomain, ChromeProxy chrome) throws JDSException {
         DomainInst domainInst = getDomainInstById(domainId, projectName);
         List<ESDClass> esdClassList = new ArrayList<>();
-        List<JavaSrcBean> srcBeans = new ArrayList<>();
+        List<JavaGenSource> javaGenSources = new ArrayList<>();
         if (chrome == null) {
             chrome = this.getCurrChromeDriver();
         }
@@ -676,17 +686,21 @@ public class AggregationManager {
         for (String esdClassName : esdClassNames) {
             esdClassList.add(BuildFactory.getInstance().getClassManager().getAggEntityByName(esdClassName, true));
         }
-        List<JavaSrcBean> javaSrcBeans = DSMFactory.getInstance().getViewManager().reBuildESDClassView(domainInst, esdClassList, chrome);
-        srcBeans.addAll(javaSrcBeans);
+        List<JavaGenSource> javaSrcBeans = DSMFactory.getInstance().getViewManager().reBuildESDClassView(domainInst, esdClassList, chrome);
+        javaGenSources.addAll(javaSrcBeans);
         for (String esdClassName : esdClassNames) {
             try {
-                List<JavaSrcBean> moduleBeans = this.buildAggModule(domainInst, AggregationType.REPOSITORY, esdClassName, chrome);
-                srcBeans.addAll(moduleBeans);
+                List<JavaGenSource> moduleBeans = this.buildAggModule(domainInst, AggregationType.REPOSITORY, esdClassName, chrome);
+                javaGenSources.addAll(moduleBeans);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         if (buildDomain) {
+            List<JavaSrcBean> srcBeans = new ArrayList<>();
+            for (JavaGenSource javaGenSource : javaGenSources) {
+                srcBeans.add(javaGenSource.getSrcBean());
+            }
             BuildFactory.getInstance().compileJavaSrc(srcBeans, projectName, chrome);
             chrome.printLog("共完成编译" + esdClassList.size() + "个", true);
         }
@@ -694,10 +708,10 @@ public class AggregationManager {
         updateDomainInst(domainInst, true);
     }
 
-    public List<JavaSrcBean> buildAggTableView(String domainId, Set<String> esdClassNames, String projectName, ChromeProxy chrome) throws JDSException {
+    public List<JavaGenSource> buildAggTableView(String domainId, Set<String> esdClassNames, String projectName, ChromeProxy chrome) throws JDSException {
         DomainInst domainInst = getDomainInstById(domainId, projectName);
         List<ESDClass> esdClassList = new ArrayList<>();
-        List<JavaSrcBean> srcBeans = new ArrayList<>();
+        List<JavaGenSource> srcBeans = new ArrayList<>();
         if (chrome == null) {
             chrome = this.getCurrChromeDriver();
         }
@@ -705,7 +719,7 @@ public class AggregationManager {
         for (String esdClassName : esdClassNames) {
             esdClassList.add(BuildFactory.getInstance().getClassManager().getAggEntityByName(esdClassName, true));
         }
-        List<JavaSrcBean> javaSrcBeans = DSMFactory.getInstance().getViewManager().reBuildESDClassView(domainInst, esdClassList, chrome);
+        List<JavaGenSource> javaSrcBeans = DSMFactory.getInstance().getViewManager().reBuildESDClassView(domainInst, esdClassList, chrome);
         srcBeans.addAll(javaSrcBeans);
 
         return srcBeans;
@@ -745,7 +759,7 @@ public class AggregationManager {
     }
 
 
-    public List<JavaSrcBean> buildAggModule(DomainInst dsmInst, AggregationType aggregationType, String esdClassName, ChromeProxy chrome) throws JDSException, IOException {
+    public List<JavaGenSource> buildAggModule(DomainInst dsmInst, AggregationType aggregationType, String esdClassName, ChromeProxy chrome) throws JDSException, IOException {
         Set<String> tempList = new LinkedHashSet<>();
         for (String javaTempId : dsmInst.getJavaTempIds()) {
             JavaTemp javatemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaTempId);
@@ -1114,13 +1128,13 @@ public class AggregationManager {
 
     }
 
-    public List<JavaSrcBean> buildAggEntity(DomainInst dsmInst, AggEntityConfig entityConfig, AggregationType aggregationType, ChromeProxy chrome) throws JDSException, IOException {
+    public List<JavaGenSource> buildAggEntity(DomainInst dsmInst, AggEntityConfig entityConfig, AggregationType aggregationType, ChromeProxy chrome) throws JDSException, IOException {
         return buildAggEntity(dsmInst, entityConfig, aggregationType, null, chrome);
     }
 
-    public List<JavaSrcBean> buildAggEntity(DomainInst dsmInst, AggEntityConfig entityConfig, AggregationType aggregationType, Set<String> temps, ChromeProxy chrome) throws JDSException, IOException {
-        List<Callable<List<JavaSrcBean>>> buildTasks = new ArrayList<>();
-        List<JavaSrcBean> aggEntities = new ArrayList<>();
+    public List<JavaGenSource> buildAggEntity(DomainInst dsmInst, AggEntityConfig entityConfig, AggregationType aggregationType, Set<String> temps, ChromeProxy chrome) throws JDSException, IOException {
+        List<Callable<List<JavaGenSource>>> buildTasks = new ArrayList<>();
+        List<JavaGenSource> aggEntities = new ArrayList<>();
         if (temps == null) {
             temps = dsmInst.getJavaTempIds();
         }
@@ -1136,33 +1150,33 @@ public class AggregationManager {
         }
         buildTasks.add(new GenAggModuleJava(dsmInst, temps, chrome));
         aggEntities = BuildFactory.getInstance().syncTasks(dsmInst.getDomainId(), buildTasks);
-        for (JavaSrcBean srcBean : aggEntities) {
-            dsmInst.addJavaBean(srcBean);
+        for (JavaGenSource srcBean : aggEntities) {
+            dsmInst.addJavaBean(srcBean.getSrcBean());
         }
 
         this.updateDomainInst(dsmInst, true);
         return aggEntities;
     }
 
-    private List<Callable<List<JavaSrcBean>>> genAggEntityJavaTask(DomainInst domainInst, AggEntityConfig esdClassConfig, AggregationType aggregationType, Set<String> allTemps, ChromeProxy chrome) {
-        List<Callable<List<JavaSrcBean>>> buildTasks = new ArrayList<>();
+    private List<Callable<List<JavaGenSource>>> genAggEntityJavaTask(DomainInst domainInst, AggEntityConfig esdClassConfig, AggregationType aggregationType, Set<String> allTemps, ChromeProxy chrome) {
+        List<Callable<List<JavaGenSource>>> buildTasks = new ArrayList<>();
         GenAggEntityJava genAggMenuJava = new GenAggEntityJava(domainInst, esdClassConfig, aggregationType, allTemps, chrome);
         buildTasks.add(genAggMenuJava);
         return buildTasks;
     }
 
-    public List<JavaSrcBean> buildAggModule(DomainInst dsmInst, AggregationType aggregationType, String serviceClassName, Set<String> temps, ChromeProxy chrome) throws JDSException, IOException {
+    public List<JavaGenSource> buildAggModule(DomainInst dsmInst, AggregationType aggregationType, String serviceClassName, Set<String> temps, ChromeProxy chrome) throws JDSException, IOException {
         AggEntityConfig entityConfig = this.getAggEntityConfig(serviceClassName, false);
-        List<JavaSrcBean> aggBeans = buildAggEntity(dsmInst, entityConfig, aggregationType, temps, chrome);
-        for (JavaSrcBean srcBean : aggBeans) {
-            dsmInst.addJavaBean(srcBean);
+        List<JavaGenSource> aggBeans = buildAggEntity(dsmInst, entityConfig, aggregationType, temps, chrome);
+        for (JavaGenSource srcBean : aggBeans) {
+            dsmInst.addJavaBean(srcBean.getSrcBean());
         }
         this.updateDomainInst(dsmInst, true);
         return aggBeans;
     }
 
     public void buildAggregation(DomainInst domainInst, AggregationType aggregationType, Set<String> temps, String projectName, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> buildTasks = new ArrayList<>();
+        List<Callable<List<JavaGenSource>>> buildTasks = new ArrayList<>();
         List<AggEntityConfig> aggEntityConfigs = new ArrayList<>();
 
         List<ESDClass> esdClassList = domainInst.getEntityList(AggregationType.ENTITY, true);
@@ -1199,18 +1213,18 @@ public class AggregationManager {
 
 
         for (AggEntityConfig entityConfig : aggEntityConfigs) {
-            List<Callable<List<JavaSrcBean>>> entiryTasks = genChildAggEntityTask(domainInst, null, entityConfig, temps, chrome);
+            List<Callable<List<JavaGenSource>>> entiryTasks = genChildAggEntityTask(domainInst, null, entityConfig, temps, chrome);
             buildTasks.addAll(entiryTasks);
             if (this.getEntityRefByName(entityConfig.getESDClass().getClassName(), domainInst.getDomainId(), projectName).size() > 0) {
-                List<Callable<List<JavaSrcBean>>> refTasks = genAggRefJavaTask(domainInst, entityConfig, temps, chrome);
+                List<Callable<List<JavaGenSource>>> refTasks = genAggRefJavaTask(domainInst, entityConfig, temps, chrome);
                 buildTasks.addAll(refTasks);
             }
 
         }
         buildTasks.add(new GenAggModuleJava(domainInst, domainInst.getJavaTempIds(), chrome));
-        List<JavaSrcBean> aggBeans = BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), buildTasks);
-        for (JavaSrcBean srcBean : aggBeans) {
-            domainInst.addJavaBean(srcBean);
+        List<JavaGenSource> aggBeans = BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), buildTasks);
+        for (JavaGenSource genSource : aggBeans) {
+            domainInst.addJavaBean(genSource.getSrcBean());
         }
         this.updateDomainInst(domainInst, true);
 
@@ -1246,7 +1260,7 @@ public class AggregationManager {
         return srcFiles;
     }
 
-    public JavaSrcBean genAggViewJava(AggViewRoot aggViewRoot, CustomViewBean viewBean, ChromeProxy chrome) throws JDSException {
+    public JavaGenSource genAggViewJava(AggViewRoot aggViewRoot, CustomViewBean viewBean, ChromeProxy chrome) throws JDSException {
         String className = aggViewRoot.getClassName();
         String moduleName = className.substring(0, className.lastIndexOf(".")).toLowerCase();
         return genAggViewJava(aggViewRoot, viewBean, moduleName, className, chrome);
@@ -1268,7 +1282,7 @@ public class AggregationManager {
     }
 
 
-    public JavaSrcBean genAggViewJava(AggViewRoot aggViewRoot, CustomViewBean viewBean, String className, ChromeProxy chrome) throws JDSException {
+    public JavaGenSource genAggViewJava(AggViewRoot aggViewRoot, CustomViewBean viewBean, String className, ChromeProxy chrome) throws JDSException {
         String moduleName = className.substring(className.lastIndexOf(".") + 1).toLowerCase();
         return genAggViewJava(aggViewRoot, viewBean, moduleName, className, chrome);
     }
@@ -1292,30 +1306,30 @@ public class AggregationManager {
      *
      * @throws IOException
      */
-    public JavaSrcBean genAggViewJava(AggViewRoot aggViewRoot, CustomViewBean viewBean, String moduleName, String className, ChromeProxy chrome) throws JDSException {
-        JavaSrcBean javaSrcBean = null;
+    public JavaGenSource genAggViewJava(AggViewRoot aggViewRoot, CustomViewBean viewBean, String moduleName, String className, ChromeProxy chrome) throws JDSException {
+        JavaGenSource javaGenSource = null;
         DomainInst domainInst = (DomainInst) aggViewRoot.getDsmBean();
         List<GenAggCustomViewJava> aggViewJavaTask = genAggViewJavaTask(aggViewRoot, viewBean, moduleName, className, chrome);
-        List<JavaSrcBean> srcFiles = BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), aggViewJavaTask);
-        for (JavaSrcBean srcBean : srcFiles) {
-            domainInst.addJavaBean(srcBean);
+        List<JavaGenSource> srcFiles = BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), aggViewJavaTask);
+        for (JavaGenSource genSource : srcFiles) {
+            domainInst.addJavaBean(genSource.getSrcBean());
         }
         if (srcFiles.size() > 0) {
-            javaSrcBean = srcFiles.get(0);
+            javaGenSource = srcFiles.get(0);
         }
         this.updateDomainInst(domainInst, true);
-        return javaSrcBean;
+        return javaGenSource;
     }
 
-    private List<Callable<List<JavaSrcBean>>> genAggModuleViewJavaTask(DomainInst domainInst, String className, List<CustomModuleBean> moduleBeans, ChromeProxy chrome) {
-        List<Callable<List<JavaSrcBean>>> buildTasks = new ArrayList<>();
+    private List<Callable<List<JavaGenSource>>> genAggModuleViewJavaTask(DomainInst domainInst, String className, List<CustomModuleBean> moduleBeans, ChromeProxy chrome) {
+        List<Callable<List<JavaGenSource>>> buildTasks = new ArrayList<>();
         GenAggModuleViewJava genAggMenuJava = new GenAggModuleViewJava(domainInst, moduleBeans, className, chrome);
         buildTasks.add(genAggMenuJava);
         return buildTasks;
     }
 
-    private List<Callable<List<JavaSrcBean>>> genAggRefJavaTask(DomainInst domainInst, AggEntityConfig esdClassConfig, Set<String> allTemps, ChromeProxy chrome) {
-        List<Callable<List<JavaSrcBean>>> buildTasks = new ArrayList<>();
+    private List<Callable<List<JavaGenSource>>> genAggRefJavaTask(DomainInst domainInst, AggEntityConfig esdClassConfig, Set<String> allTemps, ChromeProxy chrome) {
+        List<Callable<List<JavaGenSource>>> buildTasks = new ArrayList<>();
         GenAggRefJava genAggMenuJava = new GenAggRefJava(domainInst, esdClassConfig, allTemps, chrome);
         buildTasks.add(genAggMenuJava);
         return buildTasks;
@@ -1377,37 +1391,37 @@ public class AggregationManager {
         }
     }
 
-    public List<JavaSrcBean> genAggRootJava(DomainInst domainInst, AggEntityConfig esdClassConfig, Set<String> allTemps, ChromeProxy chrome) throws JDSException {
+    public List<JavaGenSource> genAggRootJava(DomainInst domainInst, AggEntityConfig esdClassConfig, Set<String> allTemps, ChromeProxy chrome) throws JDSException {
         if (allTemps == null) {
             allTemps = domainInst.getJavaTempIds();
         }
-        List<Callable<List<JavaSrcBean>>> tasks = genAggRootJavaTask(domainInst, esdClassConfig, allTemps, chrome);
+        List<Callable<List<JavaGenSource>>> tasks = genAggRootJavaTask(domainInst, esdClassConfig, allTemps, chrome);
         return BuildFactory.getInstance().syncTasks(domainInst.getDomainId(), tasks);
     }
 
-    private List<Callable<List<JavaSrcBean>>> genAggRootJavaTask(DomainInst domainInst, AggEntityConfig esdClassConfig, Set<String> allTemps, ChromeProxy chrome) {
-        List<Callable<List<JavaSrcBean>>> buildTasks = new ArrayList<>();
+    private List<Callable<List<JavaGenSource>>> genAggRootJavaTask(DomainInst domainInst, AggEntityConfig esdClassConfig, Set<String> allTemps, ChromeProxy chrome) {
+        List<Callable<List<JavaGenSource>>> buildTasks = new ArrayList<>();
         GenAggRootJava genAggMenuJava = new GenAggRootJava(domainInst, esdClassConfig, allTemps, chrome);
         buildTasks.add(genAggMenuJava);
         return buildTasks;
     }
 
-    private List<Callable<List<JavaSrcBean>>> genAggMenuJavaTask(DomainInst domainInst, AggEntityConfig esdClassConfig, Set<String> allTemps, ChromeProxy chrome) {
-        List<Callable<List<JavaSrcBean>>> buildTasks = new ArrayList<>();
+    private List<Callable<List<JavaGenSource>>> genAggMenuJavaTask(DomainInst domainInst, AggEntityConfig esdClassConfig, Set<String> allTemps, ChromeProxy chrome) {
+        List<Callable<List<JavaGenSource>>> buildTasks = new ArrayList<>();
         GenAggMenuJava genAggMenuJava = new GenAggMenuJava(domainInst, esdClassConfig, allTemps, chrome);
         buildTasks.add(genAggMenuJava);
         return buildTasks;
     }
 
-    private List<Callable<List<JavaSrcBean>>> genAggMapJavaTask(DomainInst domainInst, AggEntityConfig esdClassConfig, Set<String> allTemps, ChromeProxy chrome) {
-        List<Callable<List<JavaSrcBean>>> buildTasks = new ArrayList<>();
+    private List<Callable<List<JavaGenSource>>> genAggMapJavaTask(DomainInst domainInst, AggEntityConfig esdClassConfig, Set<String> allTemps, ChromeProxy chrome) {
+        List<Callable<List<JavaGenSource>>> buildTasks = new ArrayList<>();
         GenAggMenuJava genAggMenuJava = new GenAggMenuJava(domainInst, esdClassConfig, allTemps, chrome);
         buildTasks.add(genAggMenuJava);
         return buildTasks;
     }
 
-    public List<Callable<List<JavaSrcBean>>> genChildAggEntityTask(DomainInst domainInst, String moduleName, AggEntityConfig esdClassConfig, Set<String> allTemps, ChromeProxy chrome) throws JDSException {
-        List<Callable<List<JavaSrcBean>>> buildTasks = new ArrayList<>();
+    public List<Callable<List<JavaGenSource>>> genChildAggEntityTask(DomainInst domainInst, String moduleName, AggEntityConfig esdClassConfig, Set<String> allTemps, ChromeProxy chrome) throws JDSException {
+        List<Callable<List<JavaGenSource>>> buildTasks = new ArrayList<>();
         List<FieldModuleConfig> methodAPIBeans = esdClassConfig.getModuleMethods();
         for (String javaTempId : allTemps) {
             JavaTemp javatemp = BuildFactory.getInstance().getTempManager().getJavaTempById(javaTempId);

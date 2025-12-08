@@ -62,8 +62,8 @@ public class NavMenuBarViewBean extends NavComboBaseViewBean<TreeListItem> {
 
 
     @Override
-    public List<Callable> updateModule(ModuleComponent moduleComponent) {
-        List<Callable> tasks = super.updateModule(moduleComponent);
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
+        List<Callable<List<JavaGenSource>>> tasks = super.updateModule(moduleComponent);
         if (moduleComponent.getCurrComponent() instanceof MenuBarComponent) {
             MenuBarComponent component = (MenuBarComponent) moduleComponent.getCurrComponent();
             MenuBarProperties menuBarProperties = component.getProperties();

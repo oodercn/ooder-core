@@ -13,6 +13,7 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.enums.RangeType;
 import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.ViewInst;
@@ -49,14 +50,14 @@ public class GenActionJava extends GenJavaTask {
     }
 
     @Override
-    public List<JavaSrcBean> call() throws Exception {
+    public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
         Class clazz = null;
         try {
             clazz = ClassUtility.loadClass(className);
         } catch (ClassNotFoundException e) {
         }
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        List<JavaGenSource> genSources = new ArrayList<>();
         if (clazz == null) {
             for (TreeListItem listItem : items) {
                 genChildAction(viewInst, listItem, menuBarBean, paramBeans, events, className);
@@ -73,14 +74,15 @@ public class GenActionJava extends GenJavaTask {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    javaSrcBeans.add(srcBean);
-                    BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+
+                    JavaGenSource javaGenSource=     BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                    genSources.add(javaGenSource);
                     classList.add(srcBean.getClassName());
                 }
             }
 
         }
-        return javaSrcBeans;
+        return genSources;
     }
 
 

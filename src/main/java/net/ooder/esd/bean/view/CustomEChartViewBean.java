@@ -137,9 +137,9 @@ public class CustomEChartViewBean extends CustomViewBean<FieldFormConfig, UIItem
     }
 
     @Override
-    public List<Callable> updateModule(ModuleComponent moduleComponent) {
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
         updateBaseModule(moduleComponent);
-        List<Callable> javaSrcBeans = new ArrayList<>();
+        List<Callable<List<JavaGenSource>>> javaSrcBeans = new ArrayList<>();
         EChartComponent chartComponent = (EChartComponent) moduleComponent.getCurrComponent();
         EChartProperties chartProperties = chartComponent.getProperties();
         this.init(chartProperties);

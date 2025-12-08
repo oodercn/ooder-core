@@ -10,6 +10,7 @@ import net.ooder.esd.annotation.field.ToolBarMenu;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.gallery.GalleryItemBean;
 import net.ooder.esd.bean.grid.PageBarBean;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.dsm.view.field.FieldGalleryConfig;
@@ -49,8 +50,8 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
     }
 
 
-    public List<Callable> updateModule(ModuleComponent moduleComponent) {
-        List<Callable> tasks = new ArrayList<>();
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         Component component = moduleComponent.getCurrComponent();
         if (moduleComponent != null && moduleComponent.getMethodAPIBean() != null) {

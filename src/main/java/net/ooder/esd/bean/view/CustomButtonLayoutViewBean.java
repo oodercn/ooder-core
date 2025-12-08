@@ -138,10 +138,10 @@ public class CustomButtonLayoutViewBean extends CustomViewBean<FieldGalleryConfi
         this.updateModule(moduleComponent);
     }
 
-    public List<Callable> updateModule(ModuleComponent moduleComponent) {
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(ButtonLayoutAnnotation.class, this);
         super.updateBaseModule(moduleComponent);
-        List<Callable> tasks = new ArrayList<>();
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         ButtonLayoutComponent component = (ButtonLayoutComponent) moduleComponent.getCurrComponent();
         ButtonLayoutProperties layoutProperties = component.getProperties();
         this.init(layoutProperties);

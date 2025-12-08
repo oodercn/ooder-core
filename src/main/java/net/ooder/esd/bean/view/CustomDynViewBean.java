@@ -81,8 +81,8 @@ public class CustomDynViewBean extends CustomViewBean<FieldFormConfig, UIItem, C
 
     }
 
-    public List<Callable> updateModule(ModuleComponent parentModuleComponent) {
-        List<Callable> javaSrcBeans = new ArrayList<>();
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent parentModuleComponent) {
+        List<Callable<List<JavaGenSource>>> javaSrcBeans = new ArrayList<>();
         super.updateBaseModule(parentModuleComponent);
         return javaSrcBeans;
     }

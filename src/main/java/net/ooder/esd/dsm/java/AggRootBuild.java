@@ -405,8 +405,8 @@ public class AggRootBuild {
         chrome.printLog("3.2绑定资源层接口...", true);
         List<JavaGenSource> repositoryBeans = this.getRepositorySource();
         if (repositoryBeans != null && !repositoryBeans.isEmpty()) {
-            List<JavaSrcBean> aggServerBeans = rebuildAggServiceBean(repositoryBeans);
-            for (JavaSrcBean javaSrcBean : aggServerBeans) {
+            List<JavaGenSource> aggServerBeans = rebuildAggServiceBean(repositoryBeans);
+            for (JavaGenSource javaSrcBean : aggServerBeans) {
                 JavaGenSource javaSource = BuildFactory.getInstance().getJavaGenSource(javaSrcBean.getClassName());
                 if (javaSource != null && !aggServerBeans.contains(javaSource)) {
                     aggServiceRoots.add(javaSource);
@@ -427,7 +427,7 @@ public class AggRootBuild {
      * @return
      * @throws JDSException
      */
-    public List<JavaSrcBean> rebuildAggServiceBean(List<JavaGenSource> repositorySource) throws JDSException {
+    public List<JavaGenSource> rebuildAggServiceBean(List<JavaGenSource> repositorySource) throws JDSException {
 
         AggregationManager aggregationManager = DSMFactory.getInstance().getAggregationManager();
         List<String> serviceNames = new ArrayList<>();
@@ -455,7 +455,7 @@ public class AggRootBuild {
         }
 
         chrome.printLog("重新创建绑定聚合关系...", true);
-        List<JavaSrcBean> reBindBean = aggregationManager.reBuildServiceBean(domainInst, aggEntityConfigs, AggregationType.ENTITY, chrome, true);
+        List<JavaGenSource> reBindBean = aggregationManager.reBuildServiceBean(domainInst, aggEntityConfigs, AggregationType.ENTITY, chrome, true);
         return reBindBean;
     }
 

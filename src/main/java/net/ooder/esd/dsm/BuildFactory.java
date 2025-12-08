@@ -223,17 +223,17 @@ public class BuildFactory {
         this.tempCustomViewBeanMap = tempCustomViewBeanMap;
     }
 
-    public List<JavaSrcBean> syncTasks(String taskId, List<? extends Callable<List<JavaSrcBean>>> buildTasks) {
-        List<JavaSrcBean> srcBeans = new ArrayList<>();
+    public List<JavaGenSource> syncTasks(String taskId, List<? extends Callable<List<JavaGenSource>>> buildTasks) {
+        List<JavaGenSource> srcBeans = new ArrayList<>();
         try {
             if (taskId == null) {
                 taskId = DSMFactory.DefaultDsmName;
             }
             ExecutorService executorService = RemoteConnectionManager.createConntctionService(taskId);
-            List<Future<List<JavaSrcBean>>> projectFutures = executorService.invokeAll(buildTasks);
-            for (Future<List<JavaSrcBean>> resultFuture : projectFutures) {
+            List<Future<List<JavaGenSource>>> projectFutures = executorService.invokeAll(buildTasks);
+            for (Future<List<JavaGenSource>> resultFuture : projectFutures) {
                 try {
-                    List<JavaSrcBean> result = resultFuture.get();
+                    List<JavaGenSource> result = resultFuture.get();
                     srcBeans.addAll(result);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

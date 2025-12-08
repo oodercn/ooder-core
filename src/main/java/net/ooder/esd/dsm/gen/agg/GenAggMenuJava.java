@@ -15,6 +15,7 @@ import net.ooder.esd.dsm.aggregation.ref.AggEntityRef;
 import net.ooder.esd.dsm.enums.RangeType;
 import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
 
@@ -42,11 +43,11 @@ public class GenAggMenuJava extends GenJavaTask {
     }
 
     @Override
-    public List<JavaSrcBean> call() throws Exception {
+    public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
         String projectName=domainInst.getProjectVersionName();
         GenJava javaGen = GenJava.getInstance(projectName);
-        List<JavaSrcBean> srcFiles = new ArrayList<>();
+        List<JavaGenSource> srcFiles = new ArrayList<>();
         List<AggEntityRef> dsmRefs = DSMFactory.getInstance().getAggregationManager().getEntityRefByName(esdClassConfig.getSourceClassName(), domainInst.getDomainId(), projectName);
         if (allTemps == null || allTemps.isEmpty()) {
             allTemps = domainInst.getJavaTempIds();
@@ -68,8 +69,8 @@ public class GenAggMenuJava extends GenJavaTask {
                 File file = javaGen.createJava(javatemp, javaRoot, chrome);
                 JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, domainInst, javaTempId);
                 srcBean.setEntityClassName(esdClassConfig.getESDClass().getEntityClassName());
-                srcFiles.add(srcBean);
-                BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                JavaGenSource genSource=BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                srcFiles.add(genSource);
                 classList.add(srcBean.getClassName());
             }
         }

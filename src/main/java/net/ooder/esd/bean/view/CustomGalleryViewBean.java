@@ -78,9 +78,9 @@ public class CustomGalleryViewBean extends BaseGalleryViewBean<CustomGalleryMenu
     }
 
 
-    public List<Callable> updateModule(ModuleComponent moduleComponent) {
+    public  List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(GalleryAnnotation.class, this);
-        List<Callable> tasks = new ArrayList<>();
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         if (moduleComponent != null && moduleComponent.getMethodAPIBean() != null) {
             MethodConfig sourceMethod = moduleComponent.getMethodAPIBean();
