@@ -210,7 +210,10 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
             this.domainId = methodConfig.getDomainId();
             this.sourceMethodName = methodConfig.getMethodName();
             this.methodName = methodConfig.getMethodName();
-            this.euClassName = methodConfig.getEUClassName();
+            this.euClassName = methodConfig.getViewClassName();
+            if (euClassName == null) {
+                euClassName = methodConfig.getEUClassName();
+            }
             this.alias = OODUtil.formatJavaName(methodName, true);
             this.id = OODUtil.formatJavaName(methodName, true);
         }

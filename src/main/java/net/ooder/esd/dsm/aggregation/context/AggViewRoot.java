@@ -16,6 +16,7 @@ import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.UIType;
 import net.ooder.esd.annotation.view.*;
 import net.ooder.esd.bean.CustomViewBean;
+import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.dsm.DSMInst;
@@ -121,7 +122,7 @@ public class AggViewRoot implements JavaRoot {
         this.baseUrl = StringUtility.replace(packageName, ".", "/");
         this.space = dsmBean.getSpace();
         this.basepath = dsmBean.getPackageName();
-
+        MethodConfig methodConfig = customViewBean.getMethodConfig();
         if (moduleBean != null) {
             if (moduleBean.getModuleComponent() == null) {
                 ModuleComponent moduleComponent = new ModuleComponent();
@@ -134,13 +135,15 @@ public class AggViewRoot implements JavaRoot {
             moduleBean.setEuClassName(className);
         }
 
-
         this.moduleBean = customViewBean.getModuleBean();
-        if (moduleBean == null) {
-            if (customViewBean.getMethodConfig() != null) {
-                moduleBean = customViewBean.getMethodConfig().getModuleBean();
+        if (methodConfig != null) {
+            if (moduleBean == null) {
+                moduleBean = methodConfig.getModuleBean();
             }
+            moduleBean.reBindMethod(methodConfig);
         }
+
+        moduleBean.setEuClassName(className);
         this.methodRoot = new MethodRoot(moduleBean);
 
         List<CustomBean> customBeans = methodRoot.getAnnotationBeans();

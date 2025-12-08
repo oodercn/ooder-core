@@ -15,7 +15,6 @@ import net.ooder.esd.bean.field.CustomFieldBean;
 import net.ooder.esd.bean.field.combo.CustomModuleRefFieldBean;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.dsm.DSMFactory;
-import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.util.OODUtil;
@@ -52,7 +51,6 @@ public class MethodRoot {
     }
 
     public void update(CustomModuleBean moduleBean, Component component) {
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         ModuleComponent moduleComponent = moduleBean.getModuleComponent();
         List<RequestParamBean> paramBeans = new ArrayList<>();
         ModuleComponent parentModuleComponent = null;
@@ -69,12 +67,10 @@ public class MethodRoot {
                     paramBeans.add(requestParamBean);
                 }
             }
-        }
-
-        if (parentModuleComponent != null) {
+        } else if (parentModuleComponent != null) {
             String parentModuleClassName = parentModuleComponent.getClassName();
             String simClass = OODUtil.formatJavaName(component.getAlias(), true);
-            if (!parentModuleClassName.equals("." + simClass)) {
+            if (!parentModuleClassName.endsWith("." + simClass)) {
                 if (euClassName == null) {
                     euClassName = parentModuleClassName.toLowerCase() + "." + simClass;
                 } else if (!parentModuleClassName.equals(euClassName) && moduleBean.getSourceClassName() == null) {
