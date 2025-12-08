@@ -1014,6 +1014,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
                 WidgetBean widgetBean = (WidgetBean) this.getWidgetConfig();
                 if (widgetBean.getViewBean() != null && widgetBean.getViewBean().getModuleBean() != null) {
                     moduleBean = widgetBean.getViewBean().getModuleBean();
+                    moduleBean.reBindMethod(widgetBean.getViewBean().getMethodConfig());
                 }
             } else if (this.getWidgetConfig() instanceof CustomModuleRefFieldBean) {
                 CustomModuleRefFieldBean refFieldBean = (CustomModuleRefFieldBean) this.getWidgetConfig();
