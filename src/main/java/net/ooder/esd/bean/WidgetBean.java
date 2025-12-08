@@ -5,6 +5,7 @@ import net.ooder.annotation.CustomBean;
 import net.ooder.common.JDSException;
 import net.ooder.esd.bean.field.FieldComponentBean;
 import net.ooder.esd.dsm.java.AggRootBuild;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.Component;
 
@@ -16,7 +17,7 @@ public interface WidgetBean<T extends CustomViewBean, M extends Component> exten
 
     public AggRootBuild getFieldRootBuild() throws JDSException;
 
-    public List<JavaSrcBean> build() throws JDSException;
+    public List<JavaGenSource> build() throws JDSException;
 
     @JSONField(serialize = false)
     T getViewBean();

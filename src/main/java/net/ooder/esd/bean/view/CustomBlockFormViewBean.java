@@ -68,12 +68,16 @@ public class CustomBlockFormViewBean extends BaseFormViewBean {
     public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(BlockFormAnnotation.class, this);
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
-        BlockComponent currComponent = null;
-        if (moduleComponent.getCurrComponent() instanceof BlockComponent) {
-            currComponent = (BlockComponent) moduleComponent.getCurrComponent();
-        } else {
-            currComponent = (BlockComponent) moduleComponent.getMainBoxComponent();
+        BlockComponent currComponent = (BlockComponent) component;
+
+        if (currComponent==null){
+            if (moduleComponent.getCurrComponent() instanceof BlockComponent) {
+                currComponent = (BlockComponent) moduleComponent.getCurrComponent();
+            } else {
+                currComponent = (BlockComponent) moduleComponent.getMainBoxComponent();
+            }
         }
+
         super.updateBaseModule(moduleComponent);
         initMenuBar();
         this.name = OODUtil.formatJavaName(currComponent.getAlias(), false);

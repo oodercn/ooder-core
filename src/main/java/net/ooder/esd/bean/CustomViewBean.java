@@ -262,28 +262,29 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
 
     public List<JavaGenSource> build(List<Callable<List<JavaGenSource>>> tasks) {
         List<JavaGenSource> javaSrcBeans = new ArrayList<>();
-        List<Future<List<JavaGenSource>>> futures = null;
-        try {
-            ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
-            futures = service.invokeAll(tasks);
-            for (Future<List<JavaGenSource>> resultFuture : futures) {
-                try {
-                    List<JavaGenSource> childBeans = resultFuture.get();
-                    for (JavaGenSource javaGenSource : childBeans) {
-                        if (!javaSrcBeans.contains(javaGenSource)) {
-                            javaSrcBeans.add(javaGenSource);
+        if (tasks != null && tasks.size() > 0) {
+            List<Future<List<JavaGenSource>>> futures = null;
+            try {
+                ExecutorService service = RemoteConnectionManager.createConntctionService(this.getXpath());
+                futures = service.invokeAll(tasks);
+                for (Future<List<JavaGenSource>> resultFuture : futures) {
+                    try {
+                        List<JavaGenSource> childBeans = resultFuture.get();
+                        for (JavaGenSource javaGenSource : childBeans) {
+                            if (!javaSrcBeans.contains(javaGenSource)) {
+                                javaSrcBeans.add(javaGenSource);
+                            }
                         }
+
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
                     }
-
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
                 }
+                service.shutdownNow();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            service.shutdownNow();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
-
         return javaSrcBeans;
     }
 

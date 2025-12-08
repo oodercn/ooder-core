@@ -258,9 +258,6 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
         CustomViewBean viewConfig = null;
         if (this.widgetConfig == null || !widgetConfig.getComponentType().equals(componentType)) {
             this.widgetConfig = this.createDefaultWidget(componentType, parentModuleComponent, component);
-        } else {
-            widgetConfig.update(parentModuleComponent, component);
-
         }
         if (widgetConfig != null) {
             if (widgetConfig instanceof WidgetBean) {
@@ -270,15 +267,15 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
                     this.setServiceClassName(viewConfig.getSourceClassName());
                     this.setMethodName(viewConfig.getSourceMethodName());
                 }
-            }
 
+            }
             if (componentType.equals(ComponentType.COMBOINPUT)) {
                 ComboInputProperties comboInputProperties = (ComboInputProperties) component.getProperties();
                 if (comboConfig == null) {
                     this.comboConfig = this.createDefaultCombo(comboInputProperties.getType(), component);
                 }
             }
-
+            widgetConfig.update(parentModuleComponent, component);
         }
     }
 

@@ -51,20 +51,20 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
     public abstract T createViewBean(ModuleComponent currModuleComponent, M component);
 
 
-    public List<JavaSrcBean> build() throws JDSException {
-        List<JavaSrcBean> allSrc = new ArrayList<>();
+    public List<JavaGenSource> build() throws JDSException {
+        List<JavaGenSource> serviceList = new ArrayList<>();
         AggRootBuild fieldRootBuild = getFieldRootBuild();
         if (fieldRootBuild.getAggServiceRootBean().isEmpty() || fieldRootBuild.getRepositorySrcList().isEmpty() || fieldRootBuild.getViewSrcList().isEmpty()) {
-            List<JavaGenSource> serviceList = fieldRootBuild.build();
+            serviceList = fieldRootBuild.build();
             if (serviceList.size() > 0) {
                 viewBean = (T) fieldRootBuild.getCustomViewBean();
                 viewBean.getModuleBean().reBindMethod(viewBean.getMethodConfig());
                 DSMFactory.getInstance().saveCustomViewBean(viewBean);
             }
         } else {
-            allSrc.addAll(fieldRootBuild.getAllSrcBean());
+            serviceList = fieldRootBuild.getAllGenBean();
         }
-        return allSrc;
+        return serviceList;
     }
 
     public AggRootBuild getFieldRootBuild() throws JDSException {
@@ -137,12 +137,8 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
         if (moduleProperties == null) {
             initWidget(parentModuleComponent, component);
         }
-        List<JavaSrcBean> allSrc = new ArrayList<>();
         try {
             initAggRootBuild(parentModuleComponent, component);
-//            if (!euClassName.equals(parentModuleComponent.getClassName())) {
-//                allSrc.addAll(build());
-//            }
         } catch (JDSException e) {
             e.printStackTrace();
         }
