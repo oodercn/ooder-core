@@ -1,7 +1,6 @@
 package net.ooder.esd.custom.component.form.field.svg;
 
 import com.alibaba.fastjson.JSON;
-import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.bean.svg.SVGPathBean;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.EUModule;
@@ -16,8 +15,8 @@ import java.util.Map;
 public class CustomSVGPathComponent extends SVGPathComponent {
 
 
-    public CustomSVGPathComponent(EUModule euModule, FieldFormConfig<SVGPathBean, ?> field, String target, Object value, Map valueMap)  {
-        super(field.getId() + ComponentType.SVGPATH.getType());
+    public CustomSVGPathComponent(EUModule euModule, FieldFormConfig<SVGPathBean, ?> field, String target, Object value, Map valueMap) {
+        super(field.getId());
         SVGPathBean svgPathBean = field.getWidgetConfig().clone();
         if (value != null && value instanceof Key) {
             String json = JSON.toJSONString(value);

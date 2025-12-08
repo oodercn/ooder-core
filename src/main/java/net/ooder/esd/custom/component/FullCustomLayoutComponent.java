@@ -17,6 +17,7 @@ import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.LayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.LayoutProperties;
+import net.ooder.esd.tool.properties.item.LayoutListItem;
 
 import java.util.List;
 import java.util.Map;
@@ -70,10 +71,27 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                             layoutComponent.addChildren(moduleComponent);
                         }
                     }
-
                 }
             }
 
+            List<LayoutListItem> layoutListItems = viewBean.getTabItems();
+            for (LayoutListItem layoutListItem : layoutListItems) {
+                Class[] classes = layoutListItem.getBindClass();
+                if (classes != null) {
+                    for (Class clazz : classes) {
+                        MethodConfig bindMethod = viewBean.findEditorMethod(clazz);
+                        if (bindMethod != null && bindMethod.isModule()) {
+                            EUModule euModule = bindMethod.getModule(valueMap, projectName);
+                            if (euModule != null && euModule.getComponent() != null) {
+                                Component currComponent = euModule.getComponent().getCurrComponent();
+                                currComponent.setTarget(layoutListItem.getId());
+                                layoutComponent.addChildren(currComponent);
+                            }
+                        }
+
+                    }
+                }
+            }
             this.addChildLayoutNav(layoutComponent);
             super.fillAction(viewBean);
             this.fillToolBar(viewBean, layoutComponent);

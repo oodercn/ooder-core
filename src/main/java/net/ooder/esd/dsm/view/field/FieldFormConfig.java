@@ -537,6 +537,9 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
                     ESDClass esdClass = BuildFactory.getInstance().getClassManager().getAggEntityByName(getViewClassName(), false);
                     if (esdClass != null) {
                         esdField = esdClass.getField(fieldname);
+                        if (esdField == null) {
+                            esdField = esdClass.getField(id);
+                        }
                     }
                 }
             } catch (JDSException e) {
