@@ -1,5 +1,7 @@
 package net.ooder.esd.dsm.gen.agg;
 
+import net.ooder.annotation.AggregationType;
+import net.ooder.common.JDSException;
 import net.ooder.common.logging.ChromeProxy;
 import net.ooder.common.util.StringUtility;
 import net.ooder.context.JDSActionContext;
@@ -9,13 +11,11 @@ import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMInst;
 import net.ooder.esd.dsm.JavaRoot;
 import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
-import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
-
-import net.ooder.annotation.AggregationType;
 import net.ooder.jds.core.esb.EsbUtil;
 
 import java.io.File;
@@ -27,21 +27,43 @@ public class GenAggCustomJava extends GenJavaTask {
 
     public AggViewRoot viewRoot;
     public CustomViewBean viewBean;
-    public Set<String> allTemps;
     public AggregationType aggregationType;
     public String moduleName;
     public String className;
     public ChromeProxy chrome;
 
-    public GenAggCustomJava(AggViewRoot viewRoot, CustomViewBean viewBean, Set<String> allTemps, AggregationType aggregationType, String moduleName, String className, ChromeProxy chrome) {
+    public GenAggCustomJava(AggViewRoot viewRoot, CustomViewBean viewBean, ChromeProxy chrome) {
+
+        this.viewRoot = viewRoot;
+        this.viewBean = viewBean;
+        this.className = viewRoot.getClassName();
+        this.moduleName = className.substring(0, className.lastIndexOf(".")).toLowerCase();
+        this.aggregationType = AggregationType.NAVIGATION;
+        try {
+            viewTemps = BuildFactory.getInstance().getTempManager().getAggregationTemps(aggregationType);
+        } catch (JDSException e) {
+            e.printStackTrace();
+        }
+        ;
+
+        this.chrome = chrome;
+
+    }
+
+    public GenAggCustomJava(AggViewRoot viewRoot, CustomViewBean viewBean, AggregationType aggregationType, String moduleName, String className, ChromeProxy chrome) {
         super();
         this.viewRoot = viewRoot;
         this.viewBean = viewBean;
         this.moduleName = moduleName;
-        this.allTemps = allTemps;
+
         this.aggregationType = aggregationType;
         this.className = className;
         this.chrome = chrome;
+        try {
+            viewTemps = BuildFactory.getInstance().getTempManager().getAggregationTemps(aggregationType);
+        } catch (JDSException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -49,13 +71,13 @@ public class GenAggCustomJava extends GenJavaTask {
         JDSActionContext.setContext(autoruncontext);
         GenJava javaGen = GenJava.getInstance(viewRoot.getDsmBean().getProjectVersionName());
         DSMInst domainInst = viewRoot.getDsmBean();
+        Set allTemps = domainInst.getJavaTempIds();
         ModuleViewType moduleViewType = viewBean.getModuleViewType();
-        if (moduleName.startsWith( domainInst.getEuPackage() + ".")) {
-            moduleName = moduleName.substring(( domainInst.getEuPackage() + ".").length());
+        if (moduleName.startsWith(domainInst.getEuPackage() + ".")) {
+            moduleName = moduleName.substring((domainInst.getEuPackage() + ".").length());
         }
         JavaRoot javaRoot = BuildFactory.getInstance().buildJavaRoot(viewRoot, viewBean, moduleName, className);
         List<JavaGenSource> genSources = new ArrayList<>();
-        List<JavaTemp> viewTemps = BuildFactory.getInstance().getTempManager().getAggregationTemps(aggregationType);
         String simClassName = className.substring(className.lastIndexOf(".") + 1);
         for (JavaTemp javatemp : viewTemps) {
             if (javatemp.getRangeType() != null && javatemp.getViewType().equals(moduleViewType.getDefaultView()) && allTemps.contains(javatemp.getJavaTempId())) {
@@ -67,8 +89,8 @@ public class GenAggCustomJava extends GenJavaTask {
                 if (canGen) {
                     String genClassName = StringUtility.replace(javatemp.getNamePostfix(), "**", simClassName);
                     String packageName = domainInst.getPackageName();
-                    if (moduleName.startsWith( domainInst.getEuPackage() + ".")) {
-                        moduleName = moduleName.substring(( domainInst.getEuPackage()  + ".").length());
+                    if (moduleName.startsWith(domainInst.getEuPackage() + ".")) {
+                        moduleName = moduleName.substring((domainInst.getEuPackage() + ".").length());
                     }
 
                     if (!moduleName.equals("") && !moduleName.toLowerCase().equals(simClassName.toLowerCase())) {
@@ -88,7 +110,7 @@ public class GenAggCustomJava extends GenJavaTask {
                     JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, domainInst, javatemp.getJavaTempId());
 
                     domainInst.addJavaBean(srcBean);
-                    JavaGenSource javaGenSource=   BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                    JavaGenSource javaGenSource = BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
                     genSources.add(javaGenSource);
                     classList.add(srcBean.getClassName());
                 }

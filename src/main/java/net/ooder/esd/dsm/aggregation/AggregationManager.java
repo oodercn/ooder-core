@@ -1297,7 +1297,7 @@ public class AggregationManager {
 
     private GenAggCustomJava genAggMapJavaTask(AggViewRoot aggViewRoot, CustomViewBean viewBean, String moduleName, String className, ChromeProxy chrome) {
         DomainInst domainInst = (DomainInst) aggViewRoot.getDsmBean();
-        GenAggCustomJava genAggViewJava = new GenAggCustomJava(aggViewRoot, viewBean, domainInst.getJavaTempIds(), AggregationType.NAVIGATION, moduleName, className, chrome);
+        GenAggCustomJava genAggViewJava = new GenAggCustomJava(aggViewRoot, viewBean, AggregationType.NAVIGATION, moduleName, className, chrome);
         return genAggViewJava;
     }
 

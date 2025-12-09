@@ -21,7 +21,6 @@ import net.ooder.esd.bean.CustomRefBean;
 import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.TreeListItem;
-import net.ooder.esd.bean.view.CustomBlockFormViewBean;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.custom.ESDField;
@@ -36,7 +35,6 @@ import net.ooder.esd.dsm.enums.DSMType;
 import net.ooder.esd.dsm.enums.RangeType;
 import net.ooder.esd.dsm.gen.GenJava;
 import net.ooder.esd.dsm.gen.view.GenCustomViewJava;
-import net.ooder.esd.dsm.gen.view.GenViewDicJava;
 import net.ooder.esd.dsm.gen.view.GenViewEntityRefJava;
 import net.ooder.esd.dsm.gen.view.UpdateCustomViewJava;
 import net.ooder.esd.dsm.java.JavaGenSource;
@@ -44,7 +42,6 @@ import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.context.ActionViewRoot;
 import net.ooder.esd.dsm.view.context.ViewRoot;
-import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.dsm.view.ref.ViewEntityRef;
 import net.ooder.esd.engine.MySpace;
 import net.ooder.esd.engine.ProjectCacheManager;
@@ -55,7 +52,6 @@ import net.ooder.esd.engine.inner.INProject;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.MenuBarComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.tool.properties.list.ListFieldProperties;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.server.JDSServer;
@@ -722,31 +718,43 @@ public class ViewManager {
         BuildFactory.getInstance().syncTasks(viewBean.getDomainId(), Arrays.asList(updateViewJava));
     }
 
-
-    public GenCustomViewJava genCustomViewJava(AggViewRoot viewRoot, CustomViewBean viewBean, String className, boolean autocommit, ChromeProxy chrome) throws JDSException {
+    public GenCustomViewJava genCustomViewJavaTask(AggViewRoot viewRoot, CustomViewBean viewBean, String className, boolean autocommit, ChromeProxy chrome) throws JDSException {
         DomainInst domainInst = (DomainInst) viewRoot.getDsmBean();
         ViewInst viewInst = this.createDefaultView(domainInst);
         List<JavaGenSource> javaSrcBeans = new ArrayList<>();
-        GenCustomViewJava customViewJava = null;
-        boolean canCreate = true;
-        if (viewBean instanceof CustomBlockFormViewBean) {
-            if (viewBean.getAllFields().size() == 1 && (viewBean.getAllFields().get(0) instanceof FieldFormConfig)) {
-                FieldFormConfig fieldFormConfig = (FieldFormConfig) viewBean.getAllFields().get(0);
-                ComponentType componentType = fieldFormConfig.getComponentType();
-                if (componentType != null && componentType.equals(ComponentType.BLOCK) && fieldFormConfig.getFieldname().endsWith(ModuleComponent.DefaultTopBoxfix)) {
-                    canCreate = false;
-                }
-            }
-        }
-        if (canCreate) {
-            customViewJava = new GenCustomViewJava(viewRoot, viewBean, className, chrome);
-            List<JavaGenSource> viewFileList = BuildFactory.getInstance().syncTasks(viewRoot.getDsmBean().getDsmId(), Arrays.asList(customViewJava));
-            javaSrcBeans.addAll(viewFileList);
-        }
-
-        this.updateViewInst(viewInst, autocommit);
+        GenCustomViewJava customViewJava = new GenCustomViewJava(viewRoot, viewBean, className, chrome);
         return customViewJava;
     }
+//
+//    public GenCustomViewJava genCustomViewJavaTask(AggViewRoot viewRoot, CustomViewBean viewBean, String className, boolean autocommit, ChromeProxy chrome) throws JDSException {
+//        DomainInst domainInst = (DomainInst) viewRoot.getDsmBean();
+//        ViewInst viewInst = this.createDefaultView(domainInst);
+//        List<JavaGenSource> javaSrcBeans = new ArrayList<>();
+//        GenCustomViewJava customViewJava = null;
+//
+//        customViewJava = new GenCustomViewJava(viewRoot, viewBean, className, chrome);
+//        List<JavaGenSource> viewFileList = BuildFactory.getInstance().syncTasks(viewRoot.getDsmBean().getDsmId(), Arrays.asList(customViewJava));
+//        javaSrcBeans.addAll(viewFileList);
+//
+////        boolean canCreate = true;
+////        if (viewBean instanceof CustomBlockFormViewBean) {
+////            if (viewBean.getAllFields().size() == 1 && (viewBean.getAllFields().get(0) instanceof FieldFormConfig)) {
+////                FieldFormConfig fieldFormConfig = (FieldFormConfig) viewBean.getAllFields().get(0);
+////                ComponentType componentType = fieldFormConfig.getComponentType();
+////                if (componentType != null && componentType.equals(ComponentType.BLOCK) && fieldFormConfig.getFieldname().endsWith(ModuleComponent.DefaultTopBoxfix)) {
+////                    canCreate = false;
+////                }
+////            }
+////        }
+////        if (canCreate) {
+////            customViewJava = new GenCustomViewJava(viewRoot, viewBean, className, chrome);
+////            List<JavaGenSource> viewFileList = BuildFactory.getInstance().syncTasks(viewRoot.getDsmBean().getDsmId(), Arrays.asList(customViewJava));
+////            javaSrcBeans.addAll(viewFileList);
+////        }
+//
+//        this.updateViewInst(viewInst, autocommit);
+//        return customViewJava;
+//    }
 
     public CustomViewBean getDefaultViewBean(ModuleComponent moduleComponent, String domainId) {
         ModuleViewType moduleViewType = moduleComponent.getModuleViewType();

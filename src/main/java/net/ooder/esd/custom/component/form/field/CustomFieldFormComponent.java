@@ -6,7 +6,7 @@ import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.RequestPathTypeEnum;
 import net.ooder.esd.annotation.ui.ResponsePathTypeEnum;
 import net.ooder.esd.bean.MethodConfig;
-import net.ooder.esd.bean.field.CustomFormLayoutFieldBean;
+import net.ooder.esd.bean.field.CustomLayoutFieldBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;
 import net.ooder.esd.bean.view.CustomFormViewBean;
@@ -34,7 +34,7 @@ public class CustomFieldFormComponent extends FormLayoutComponent {
     EUModule euModule;
 
 
-    public CustomFieldFormComponent(EUModule euModule, FieldFormConfig<CustomFormLayoutFieldBean, ?> field, String target, Object value, Map valueMap) {
+    public CustomFieldFormComponent(EUModule euModule, FieldFormConfig<CustomLayoutFieldBean.CustomFormLayoutFieldBean, ?> field, String target, Object value, Map valueMap) {
         this.setAlias(field.getFieldname());
         //存在集合属性
         if (field.getMethodConfig() != null && field.getMethodConfig().getView() != null && field.getMethodConfig().getView() instanceof CustomFormViewBean) {

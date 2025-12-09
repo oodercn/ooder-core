@@ -31,7 +31,6 @@ import net.ooder.esd.dsm.gen.view.GenCustomViewJava;
 import net.ooder.esd.dsm.repository.RepositoryInst;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.ViewInst;
-import net.ooder.esd.dsm.view.ViewManager;
 import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.web.AggregationBean;
@@ -40,9 +39,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 public class AggRootBuild {
-
 
     GenCustomViewJava viewTask;
 
@@ -52,6 +51,8 @@ public class AggRootBuild {
 
     GenAggCustomViewJava rootTask;
 
+    GenAggCustomJava genAggCustomJava;
+
     AggViewRoot viewRoot;
 
     List<JavaGenSource> javaViewSource = new ArrayList<>();
@@ -59,6 +60,8 @@ public class AggRootBuild {
     List<JavaGenSource> repositorySource = new ArrayList<>();
 
     List<JavaGenSource> childBeans;
+
+    List<Callable<List<JavaGenSource>>> childTasks = new ArrayList<>();
 
     List<JavaGenSource> aggBeans;
 
@@ -140,16 +143,32 @@ public class AggRootBuild {
         this.repositoryInst = domainInst.getRepositoryInst();
         this.javaGen = GenJava.getInstance(domainInst.getProjectVersionName());
         this.serviceBeans = new ArrayList<>();
+
         this.reSetViewBean(customViewBean);
+
+        EUModule euModule = ESDFacrory.getAdminESDClient().getModule(euClassName, domainInst.getProjectVersionName());
+        this.childTasks = customViewBean.updateModule(euModule.getComponent());
+
+        this.viewTask = new GenCustomViewJava(viewRoot, customViewBean, euClassName, chrome);
+
+        this.voRepositoryTask = new GenRepositoryViewJava(repositoryInst.getViewRoot(), customViewBean, moduleName, euClassName, true, chrome, new RepositoryType[]{RepositoryType.VO, RepositoryType.VIEWBEAN, RepositoryType.REPOSITORY});
+
+        this.serviceRepositoryTask = new GenRepositoryViewJava(repositoryInst.getViewRoot(), customViewBean, moduleName, euClassName, true, chrome, new RepositoryType[]{RepositoryType.DO, RepositoryType.VIEWSERVICE, RepositoryType.REPOSITORYIMPL});
+
+        this.rootTask = new GenAggCustomViewJava(viewRoot, customViewBean, chrome);
+
+        this.genAggCustomJava = new GenAggCustomJava(viewRoot, customViewBean, chrome);
+
+
     }
 
 
     public void reBuildModule() throws JDSException {
         //1.1创建视图层
-        viewTask = genCustomViewJava();
+        buildView();
         this.javaViewSource = viewTask.getSourceList();
         //2.1创建资源层接口V
-        this.repositorySource = initRepositoryViewJava(true);
+        this.repositorySource = buildRepositoryView(true);
         //3.1预编译一次
         this.javaGen.dynCompile(getModuleJavaSrc());
 
@@ -157,7 +176,7 @@ public class AggRootBuild {
 
     public void buildRepository() throws JDSException {
         //2.1创建资源层接口V
-        this.repositorySource = initRepositoryViewJava(true);
+        this.repositorySource = buildRepositoryView(true);
         //3.1预编译一次
         this.javaGen.dynCompile(getModuleJavaSrc());
 
@@ -165,34 +184,35 @@ public class AggRootBuild {
 
     public void genBuildModule() throws JDSException {
         //1.1创建视图层
-
-        viewTask = genCustomViewJava();
-        this.javaViewSource = viewTask.getSourceList();
+        this.javaViewSource = buildView();
         buildRepository();
     }
 
     public List<JavaGenSource> build() throws JDSException {
-        //1.1创建视图层
-        viewTask = genCustomViewJava();
 
-        this.javaViewSource = viewTask.getSourceList();
+        //需要先创建子节点
+        if (childBeans == null || childBeans.isEmpty()) {
+            this.genChildJava();
+        }
+
+        //1.1创建视图层
+        this.javaViewSource = buildView();
 
         if (domainInst != null && domainInst.getUserSpace().equals(UserSpace.VIEW)) {
             //2.1创建资源层接口V
-            this.repositorySource = initRepositoryViewJava(true);
+            this.repositorySource = buildRepositoryView(true);
             //3.1预编译一次
             step = Step.startCompileView;
             this.javaGen.dynCompile(getModuleJavaSrc());
             step = Step.endCompileView;
             this.aggServiceRootBean = genRootBean();
-            reBindService();
+            reBindAPI();
+            updateBindItem();
         }
         //3.5重新编译视图
         this.javaGen.dynCompile(getAllSrcBean());
         updateViewBean(customViewBean);
-        if (childBeans == null || childBeans.isEmpty()) {
-            this.genChildJava();
-        }
+
 
         DSMFactory.getInstance().saveCustomViewBean(customViewBean);
         CustomViewFactory.getInstance().reLoad();
@@ -204,7 +224,7 @@ public class AggRootBuild {
         chrome.printLog("创建关联子对象...", true);
         EUModule euModule = ESDFacrory.getAdminESDClient().getModule(euClassName, domainInst.getProjectVersionName());
         if (euModule != null && euModule.getComponent() != null) {
-            childBeans = customViewBean.updateModule(euModule.getComponent());
+            childBeans = customViewBean.buildAll();
         }
         return childBeans;
     }
@@ -245,17 +265,15 @@ public class AggRootBuild {
      * @return
      * @throws JDSException
      */
-    public GenCustomViewJava genCustomViewJava() throws JDSException {
+    public List<JavaGenSource> buildView() throws JDSException {
         chrome.printLog("创建关联视图模型...", true);
         step = Step.startCreatView;
-        ViewManager viewManager = DSMFactory.getInstance().getViewManager();
         if (viewTask == null) {
-            this.viewTask = viewManager.genCustomViewJava(viewRoot, customViewBean, euClassName, false, chrome);
+            viewTask = new GenCustomViewJava(viewRoot, customViewBean, euClassName, chrome);
         }
+        List<JavaGenSource> viewFileList = BuildFactory.getInstance().syncTasks(viewRoot.getDsmBean().getDsmId(), Arrays.asList(viewTask));
         step = Step.endCreatView;
-        this.javaViewSource = viewTask.getSourceList();
-
-        return viewTask;
+        return viewFileList;
     }
 
     public JavaGenSource buildViewContext(JavaSrcBean javaSrcBean) throws JDSException {
@@ -320,9 +338,8 @@ public class AggRootBuild {
         return serviceRepositoryTask.getSourceList();
     }
 
-    public List<JavaGenSource> initRepositoryViewJava(boolean clear) throws JDSException {
+    public List<JavaGenSource> buildRepositoryView(boolean clear) throws JDSException {
         chrome.printLog("创建创库模型模型...", true);
-
         List<JavaGenSource> repositorySource = new ArrayList<>();
         repositorySource.addAll(reBuildRepositoryVO(clear));
         repositorySource.addAll(reBuildRepositoryService(clear));
@@ -331,12 +348,11 @@ public class AggRootBuild {
             repositoryClassList.add(javaSrcBean.getClassName());
             repositoryInst.addJavaBean(javaSrcBean.getSrcBean());
         }
-
         customViewBean.getViewJavaSrcBean().setRepositoryClassList(repositoryClassList);
         return repositorySource;
     }
 
-    private void reBindService() throws JDSException {
+    private void updateBindItem() throws JDSException {
         step = Step.startReBindService;
         customViewBean.setViewClassName(euClassName);
         for (JavaGenSource genSource : aggServiceRootBean) {
@@ -380,26 +396,8 @@ public class AggRootBuild {
         }
     }
 
-    public List<JavaGenSource> genRootBean() throws JDSException {
-        step = Step.startGenRootBean;
-        AggregationManager aggregationManager = DSMFactory.getInstance().getAggregationManager();
+    public List<JavaGenSource> reBindAPI() throws JDSException {
         List<JavaGenSource> aggServiceRoots = new ArrayList<>();
-        String className = viewRoot.getClassName();
-        String moduleName = className.substring(0, className.lastIndexOf(".")).toLowerCase();
-        if (rootTask == null) {
-            String taskId = className;
-            rootTask = new GenAggCustomViewJava(viewRoot, customViewBean, moduleName, className, chrome);
-            BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(rootTask));
-            step = Step.endGenRootBean;
-            step = Step.startGenAggMap;
-            GenAggCustomJava genAggCustomJava = aggregationManager.genAggMapJava(viewRoot, customViewBean, getCurrChromeDriver());
-            step = Step.endGenAggMap;
-            aggBeans.addAll(genAggCustomJava.getSourceList());
-        }
-
-
-        aggServiceRoots = rootTask.getSourceList();
-
         step = Step.startBindResourceService;
         //3.2创建资源层接口
         chrome.printLog("3.2绑定资源层接口...", true);
@@ -414,6 +412,21 @@ public class AggRootBuild {
             }
         }
         step = Step.endBindResourceService;
+        return aggServiceRoots;
+    }
+
+    public List<JavaGenSource> genRootBean() throws JDSException {
+        step = Step.startGenRootBean;
+
+        String className = viewRoot.getClassName();
+        String taskId = className;
+        List<JavaGenSource> aggServiceRoots = BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(rootTask));
+        step = Step.endGenRootBean;
+        step = Step.startGenAggMap;
+        List<JavaGenSource> aggGens = BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(genAggCustomJava));
+        step = Step.endGenAggMap;
+        aggBeans.addAll(aggGens);
+
 
         return aggServiceRoots;
 
@@ -497,7 +510,6 @@ public class AggRootBuild {
         }
 
         if (viewJavaSrcBean.getChildClassList() != null) {
-
             childBeans = loadJavaGenSoruce(viewJavaSrcBean.getChildClassList());
         } else {
             childBeans = new ArrayList<>();

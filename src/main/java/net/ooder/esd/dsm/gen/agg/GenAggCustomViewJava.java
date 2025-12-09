@@ -29,6 +29,14 @@ public class GenAggCustomViewJava extends GenJavaTask {
     public String className;
     public ChromeProxy chrome;
 
+    public GenAggCustomViewJava(AggViewRoot viewRoot, CustomViewBean viewBean, ChromeProxy chrome) {
+        this.viewRoot = viewRoot;
+        this.viewBean = viewBean;
+        this.className = viewRoot.getClassName();
+        this.moduleName =className.substring(0, className.lastIndexOf(".")).toLowerCase();
+        this.chrome = chrome;
+    }
+
     public GenAggCustomViewJava(AggViewRoot viewRoot, CustomViewBean viewBean, String moduleName, String className, ChromeProxy chrome) {
         super();
         this.viewRoot = viewRoot;

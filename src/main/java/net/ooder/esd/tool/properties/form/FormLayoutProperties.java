@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import net.ooder.esd.annotation.ui.Dock;
 import net.ooder.esd.annotation.ui.FormLayModeType;
 import net.ooder.esd.annotation.ui.StretchType;
+import net.ooder.esd.bean.field.CustomLayoutFieldBean;
 import net.ooder.esd.bean.view.CustomFormViewBean;
-import net.ooder.esd.bean.field.CustomFormLayoutFieldBean;
 import net.ooder.esd.tool.properties.PanelProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 
@@ -35,7 +35,7 @@ public class FormLayoutProperties extends PanelProperties {
         super(dock);
 
     }
-    public FormLayoutProperties(CustomFormViewBean viewBean,CustomFormLayoutFieldBean fieldBean) {
+    public FormLayoutProperties(CustomFormViewBean viewBean,CustomLayoutFieldBean.CustomFormLayoutFieldBean fieldBean) {
         super();
         if (viewBean.getContainerBean() != null) {
             this.init(viewBean.getContainerBean());
@@ -53,7 +53,7 @@ public class FormLayoutProperties extends PanelProperties {
 
     }
 
-    public void initFieldBean(CustomFormLayoutFieldBean fieldBean) {
+    public void initFieldBean(CustomLayoutFieldBean.CustomFormLayoutFieldBean fieldBean) {
         this.panelBgImg = fieldBean.getBgimg();
         this.imageClass = fieldBean.getImageClass();
         this.panelBgClr = fieldBean.getBackgroundColor();
