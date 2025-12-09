@@ -147,6 +147,7 @@ public class AggRootBuild {
         this.reSetViewBean(customViewBean);
 
         EUModule euModule = ESDFacrory.getAdminESDClient().getModule(euClassName, domainInst.getProjectVersionName());
+
         this.childTasks = customViewBean.updateModule(euModule.getComponent());
 
         this.viewTask = new GenCustomViewJava(viewRoot, customViewBean, euClassName, chrome);
