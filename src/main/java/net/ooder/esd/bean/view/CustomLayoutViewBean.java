@@ -532,17 +532,23 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
     @JSONField(serialize = false)
     public Set<Class> getOtherClass() {
         Set<Class> classSet = super.getOtherClass();
-        for (CustomLayoutItemBean layoutItemBean : layoutItems) {
-            if (layoutItemBean.getBindClass() != null && layoutItemBean.getBindClass().length > 0) {
-                classSet.addAll(Arrays.asList(layoutItemBean.getBindClass()));
+        if (layoutItems != null) {
+            for (CustomLayoutItemBean layoutItemBean : layoutItems) {
+                if (layoutItemBean.getBindClass() != null && layoutItemBean.getBindClass().length > 0) {
+                    classSet.addAll(Arrays.asList(layoutItemBean.getBindClass()));
+                }
+            }
+
+        }
+
+        if (tabItems != null) {
+            for (LayoutListItem layoutListItem : tabItems) {
+                if (layoutListItem.getBindClass() != null && layoutListItem.getBindClass().length > 0) {
+                    classSet.addAll(Arrays.asList(layoutListItem.getBindClass()));
+                }
             }
         }
 
-        for (LayoutListItem layoutListItem : tabItems) {
-            if (layoutListItem.getBindClass() != null && layoutListItem.getBindClass().length > 0) {
-                classSet.addAll(Arrays.asList(layoutListItem.getBindClass()));
-            }
-        }
         return ClassUtility.checkBase(classSet);
     }
 

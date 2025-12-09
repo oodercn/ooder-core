@@ -148,8 +148,9 @@ public class AggRootBuild {
 
         EUModule euModule = ESDFacrory.getAdminESDClient().getModule(euClassName, domainInst.getProjectVersionName());
 
-        this.childTasks = customViewBean.updateModule(euModule.getComponent());
-
+        if (euModule != null) {
+            this.childTasks = customViewBean.updateModule(euModule.getComponent());
+        }
         this.viewTask = new GenCustomViewJava(viewRoot, customViewBean, euClassName, chrome);
 
         this.voRepositoryTask = new GenRepositoryViewJava(repositoryInst.getViewRoot(), customViewBean, moduleName, euClassName, true, chrome, new RepositoryType[]{RepositoryType.VO, RepositoryType.VIEWBEAN, RepositoryType.REPOSITORY});
