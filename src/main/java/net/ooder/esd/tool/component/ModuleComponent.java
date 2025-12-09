@@ -179,16 +179,47 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
     void init(M currComponent) {
 
-
         if (components == null) {
             components = new HashMap<String, Component>();
         }
+        ComponentType componentType = ComponentType.fromType(currComponent.getKey());
+
+        ComponentType[] componentTypes = new ComponentType[]{ComponentType.BLOCK, ComponentType.PANEL, ComponentType.SVGPAPER, ComponentType.DIV};
+
         String moduleName = OODUtil.formatJavaName(currComponent.getAlias(), true);
-        BlockComponent blockComponent = new BlockComponent(Dock.fill, moduleName + DefaultTopBoxfix);
-        blockComponent.getProperties().setBorderType(BorderType.none);
-        blockComponent.addChildren(currComponent);
-        this.addChildren(blockComponent);
-        this.setCurrComponent(currComponent);
+
+
+        if (Arrays.asList(componentTypes).contains(componentType)) {
+            String alias = currComponent.getAlias();
+            if (!alias.endsWith(DefaultTopBoxfix)) {
+                currComponent.setAlias(currComponent.getAlias() + DefaultTopBoxfix);
+            }
+
+            this.setCurrComponent(currComponent);
+            this.addChildren(currComponent);
+
+            switch (componentType) {
+                case PANEL:
+                    this.getModuleBean().getPanelBean().update(currComponent);
+                    break;
+                case DIV:
+                    this.getModuleBean().getDivBean().update(currComponent);
+                    break;
+                case DIALOG:
+                    this.getModuleBean().getDialogBean().update((DialogComponent) currComponent);
+                    break;
+                default:
+                    this.getModuleBean().getBlockBean().update(currComponent);
+            }
+        } else {
+            BlockComponent blockComponent = new BlockComponent(Dock.fill, moduleName + DefaultTopBoxfix);
+            blockComponent.getProperties().setBorderType(BorderType.none);
+            blockComponent.addChildren(currComponent);
+            this.addChildren(blockComponent);
+            this.setCurrComponent(currComponent);
+        }
+
+
     }
 
 

@@ -102,6 +102,7 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
         }
         moduleProperties.setMethodName(OODUtil.getGetMethodName(component.getAlias()));
         moduleProperties.setDsmProperties(dsmProperties);
+
         Properties properties = component.getProperties();
         if (euClassName == null) {
             try {
@@ -188,6 +189,7 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
             CustomModuleBean customModuleBean = new CustomModuleBean(currModuleComponent);
             currModuleComponent.setProperties(moduleProperties);
             currModuleComponent.setClassName(euClassName);
+
             viewBean = this.createViewBean(currModuleComponent, component);
             viewBean.setModuleBean(customModuleBean);
             viewBean.setComponent(component);

@@ -17,8 +17,10 @@ import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.LayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.LayoutProperties;
+import net.ooder.esd.tool.properties.Properties;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -74,18 +76,34 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                 }
             }
 
-            List<LayoutListItem> layoutListItems = viewBean.getTabItems();
-            for (LayoutListItem layoutListItem : layoutListItems) {
+            List<CustomLayoutItemBean> layoutListItems = viewBean.getLayoutItems();
+
+            if (layoutListItems == null || layoutListItems.isEmpty()) {
+                layoutListItems = new ArrayList<>();
+                List<LayoutListItem> listItems = viewBean.getTabItems();
+                for (LayoutListItem listItem : listItems) {
+                    layoutListItems.add(new CustomLayoutItemBean(listItem));
+                }
+            }
+            for (CustomLayoutItemBean layoutListItem : layoutListItems) {
                 Class[] classes = layoutListItem.getBindClass();
                 if (classes != null) {
                     for (Class clazz : classes) {
                         MethodConfig bindMethod = viewBean.findEditorMethod(clazz);
                         if (bindMethod != null && bindMethod.isModule()) {
                             EUModule euModule = bindMethod.getModule(valueMap, projectName);
+                            Properties properties = euModule.getComponent().getCurrComponent().getProperties();
                             if (euModule != null && euModule.getComponent() != null) {
-                                Component currComponent = euModule.getComponent().getCurrComponent();
-                                currComponent.setTarget(layoutListItem.getId());
-                                layoutComponent.addChildren(currComponent);
+                                Component mainComponent = euModule.getComponent().getMainBoxComponent();
+                                mainComponent.setKey(euModule.getComponent().getCurrComponent().getKey());
+                                mainComponent.setProperties(properties);
+                                String alias = mainComponent.clone().getAlias();
+                                if (alias.endsWith(ModuleComponent.DefaultTopBoxfix)) {
+                                    alias = alias.substring(0, (alias.length() - ModuleComponent.DefaultTopBoxfix.length()));
+                                }
+                                mainComponent.setAlias(alias);
+                                mainComponent.setTarget(layoutListItem.getId());
+                                layoutComponent.addChildren(mainComponent);
                             }
                         }
 

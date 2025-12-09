@@ -7,7 +7,6 @@ import net.ooder.esd.annotation.ui.PositionType;
 import net.ooder.esd.bean.CustomDivBean;
 import net.ooder.esd.bean.CustomPanelBean;
 import net.ooder.esd.bean.MethodConfig;
-import net.ooder.esd.bean.field.CustomBlockFieldBean;
 import net.ooder.esd.bean.field.CustomPanelFieldBean;
 import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.bean.field.combo.ComboInputFieldBean;
@@ -47,8 +46,6 @@ public class CustomFieldPanelComponent extends PanelComponent<PanelProperties> {
             }
             this.events = component.getEvents();
         }
-
-
         if (field.getMethodConfig() != null && field.getMethodConfig().getView() != null && field.getMethodConfig().getView() instanceof CustomBlockFormViewBean) {
             CustomModuleBean customModuleBean = customComponentViewBean.getModuleBean();
             if (customModuleBean == null && customComponentViewBean.getMethodConfig() != null) {
@@ -91,7 +88,6 @@ public class CustomFieldPanelComponent extends PanelComponent<PanelProperties> {
         if (dbMap != null) {
             this.valueMap = dbMap;
         }
-
         List<FieldFormConfig> formFieldList = customComponentViewBean.getAllFields();
         List<FieldFormConfig> fieldList = new ArrayList<>();
         for (FieldFormConfig fieldFormConfig : formFieldList) {
