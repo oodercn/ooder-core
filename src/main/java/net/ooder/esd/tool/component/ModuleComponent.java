@@ -1471,7 +1471,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         PanelComponent panelComponent = null;
         CustomPanelBean panelBean = this.getModuleBean().getPanelBean();
         PanelType panelType = this.getModuleBean().getPanelType();
-        String panelAlias = euModule.getName() + DefaultTopBoxfix;
+        String panelAlias = this.getEuModule().getName() + DefaultTopBoxfix;
         Component component = this.findComponentByAlias(panelAlias);
         if (component != null && component instanceof PanelComponent) {
             panelComponent = (PanelComponent) component;
@@ -1502,7 +1502,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         BlockComponent blockComponent = null;
         CustomBlockBean blockBean = this.getModuleBean().getBlockBean();
         PanelType panelType = this.getModuleBean().getPanelType();
-        String panelAlias = euModule.getName() + DefaultTopBoxfix;
+        String panelAlias = this.getEuModule().getName() + DefaultTopBoxfix;
         Component component = this.findComponentByAlias(panelAlias);
 
         if (component != null && component instanceof BlockComponent) {
@@ -1510,12 +1510,12 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         }
 
         if (blockComponent == null && blockBean != null && panelType != null && panelType.equals(PanelType.block)) {
-            blockComponent = new BlockComponent(euModule.getName() + DefaultTopBoxfix, new BlockProperties(blockBean));
+            blockComponent = new BlockComponent(this.getEuModule().getName() + DefaultTopBoxfix, new BlockProperties(blockBean));
         }
 
 
         if (blockComponent == null) {
-            blockComponent = new BlockComponent(euModule.getName() + DefaultTopBoxfix, new BlockProperties(Dock.fill));
+            blockComponent = new BlockComponent(this.getEuModule().getName() + DefaultTopBoxfix, new BlockProperties(Dock.fill));
         }
 
 
@@ -1529,7 +1529,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         CustomDivBean divBean = this.getModuleBean().getDivBean();
         PanelType panelType = this.getModuleBean().getPanelType();
 
-        String panelAlias = euModule.getName() + DefaultTopBoxfix;
+        String panelAlias = this.getEuModule().getName() + DefaultTopBoxfix;
         Component component = this.findComponentByAlias(panelAlias);
 
         if (component != null && component instanceof DivComponent) {
@@ -1537,11 +1537,11 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         }
 
         if (divComponent == null && divBean != null && panelType != null && panelType.equals(PanelType.div)) {
-            divComponent = new DivComponent(euModule.getName() + DefaultTopBoxfix, new DivProperties(divBean));
+            divComponent = new DivComponent(this.getEuModule().getName() + DefaultTopBoxfix, new DivProperties(divBean));
         }
 
         if (divComponent == null) {
-            divComponent = new DivComponent(euModule.getName() + DefaultTopBoxfix, new DivProperties(Dock.fill));
+            divComponent = new DivComponent(this.getEuModule().getName() + DefaultTopBoxfix, new DivProperties(Dock.fill));
         }
 
         return divComponent;
@@ -2067,27 +2067,28 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         Component mainBlock = null;
         String mainAlias = null;
 
-        if (moduleBean != null && moduleBean.getPanelType() != null) {
-            PanelType panelType = moduleBean.getPanelType();
-            switch (panelType) {
-                case block:
-                    mainBlock = this.getBlockPanelComponent();
-                    break;
-                case panel:
-                    mainBlock = this.getModulePanelComponent();
-                    break;
-                case div:
-                    mainBlock = this.getDivComponent();
-                    break;
-                case dialog:
-                    mainBlock = this.getDialogComponent();
-                    break;
+        if (this.getEuModule() != null) {
+            if (moduleBean != null && moduleBean.getPanelType() != null) {
+                PanelType panelType = moduleBean.getPanelType();
+                switch (panelType) {
+                    case block:
+                        mainBlock = this.getBlockPanelComponent();
+                        break;
+                    case panel:
+                        mainBlock = this.getModulePanelComponent();
+                        break;
+                    case div:
+                        mainBlock = this.getDivComponent();
+                        break;
+                    case dialog:
+                        mainBlock = this.getDialogComponent();
+                        break;
+                }
+
             }
 
-        }
 
-        if (mainBlock == null) {
-            if (this.getEuModule() != null) {
+            if (mainBlock == null) {
                 mainAlias = this.getEuModule().getName() + DefaultTopBoxfix;
                 mainBlock = this.components.get(this.getEuModule().getName() + DefaultTopBoxfix);
                 if (mainBlock == null) {
@@ -2113,7 +2114,8 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             }
         }
 
-        if (mainBlock instanceof BlockComponent) {
+
+        if (mainBlock != null && mainBlock instanceof BlockComponent) {
             ((BlockComponent) mainBlock).getProperties().setBorderType(BorderType.none);
         }
 
