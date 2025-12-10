@@ -91,7 +91,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
 
     String cssStyle;
 
-    public PanelType panelType;
+    public PanelType panelType = PanelType.block;
 
     public LinkedHashSet<Action> onRenderAction = new LinkedHashSet();
 
@@ -1465,6 +1465,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
     }
 
     public PanelType getPanelType() {
+
         return panelType;
     }
 
