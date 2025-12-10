@@ -91,16 +91,16 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     @JSONField(serialize = false)
     public DialogComponent<DialogProperties, DialogEventEnum> dialog;
 
-
-    @JSONField(serialize = false)
-    public PanelComponent panelComponent;
-
-    @JSONField(serialize = false)
-    public BlockComponent blockComponent;
-
-
-    @JSONField(serialize = false)
-    public DivComponent divComponent;
+//
+//    @JSONField(serialize = false)
+//    public PanelComponent panelComponent;
+//
+//    @JSONField(serialize = false)
+//    public BlockComponent blockComponent;
+//
+//
+//    @JSONField(serialize = false)
+//    public DivComponent divComponent;
 
     @JSONField(serialize = false)
     public String projectName;
@@ -1468,11 +1468,13 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
     @JSONField(serialize = false)
     public PanelComponent getModulePanelComponent() {
+        PanelComponent panelComponent = null;
         CustomPanelBean panelBean = this.getModuleBean().getPanelBean();
         PanelType panelType = this.getModuleBean().getPanelType();
         String panelAlias = euModule.getName() + DefaultTopBoxfix;
-        if (panelComponent == null) {
-            panelComponent = (PanelComponent) this.findComponentByAlias(panelAlias);
+        Component component = this.findComponentByAlias(panelAlias);
+        if (component != null && component instanceof PanelComponent) {
+            panelComponent = (PanelComponent) component;
         }
         if (panelComponent == null && panelBean != null && panelType != null && panelType.equals(PanelType.panel)) {
             if (panelBean.getDock() == null || panelBean.getDock().equals(Dock.none)) {
@@ -1497,26 +1499,51 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
     @JSONField(serialize = false)
     public BlockComponent getBlockPanelComponent() {
+        BlockComponent blockComponent = null;
         CustomBlockBean blockBean = this.getModuleBean().getBlockBean();
         PanelType panelType = this.getModuleBean().getPanelType();
-        if (blockComponent == null && blockBean != null && panelType != null && panelType.equals(PanelType.block)) {
-            blockComponent = new BlockComponent(euModule.getName() + ComponentType.BLOCK.name() + DefaultTopBoxfix, new BlockProperties(blockBean));
-        } else {
-            blockComponent = new BlockComponent(euModule.getName() + ComponentType.BLOCK.name() + DefaultTopBoxfix, new BlockProperties(Dock.fill));
+        String panelAlias = euModule.getName() + DefaultTopBoxfix;
+        Component component = this.findComponentByAlias(panelAlias);
+
+        if (component != null && component instanceof BlockComponent) {
+            blockComponent = (BlockComponent) component;
         }
+
+        if (blockComponent == null && blockBean != null && panelType != null && panelType.equals(PanelType.block)) {
+            blockComponent = new BlockComponent(euModule.getName() + DefaultTopBoxfix, new BlockProperties(blockBean));
+        }
+
+
+        if (blockComponent == null) {
+            blockComponent = new BlockComponent(euModule.getName() + DefaultTopBoxfix, new BlockProperties(Dock.fill));
+        }
+
+
         return blockComponent;
     }
 
 
     @JSONField(serialize = false)
     public DivComponent getDivComponent() {
+        DivComponent divComponent = null;
         CustomDivBean divBean = this.getModuleBean().getDivBean();
         PanelType panelType = this.getModuleBean().getPanelType();
-        if (divComponent == null && divBean != null && panelType != null && panelType.equals(PanelType.div)) {
-            divComponent = new DivComponent(euModule.getName() + ComponentType.DIV.name() + DefaultTopBoxfix, new DivProperties(divBean));
-        } else {
-            divComponent = new DivComponent(euModule.getName() + ComponentType.BLOCK.name() + DefaultTopBoxfix, new DivProperties(Dock.fill));
+
+        String panelAlias = euModule.getName() + DefaultTopBoxfix;
+        Component component = this.findComponentByAlias(panelAlias);
+
+        if (component != null && component instanceof DivComponent) {
+            divComponent = (DivComponent) component;
         }
+
+        if (divComponent == null && divBean != null && panelType != null && panelType.equals(PanelType.div)) {
+            divComponent = new DivComponent(euModule.getName() + DefaultTopBoxfix, new DivProperties(divBean));
+        }
+
+        if (divComponent == null) {
+            divComponent = new DivComponent(euModule.getName() + DefaultTopBoxfix, new DivProperties(Dock.fill));
+        }
+
         return divComponent;
     }
 
