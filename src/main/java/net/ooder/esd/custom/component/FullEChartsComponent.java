@@ -195,7 +195,7 @@ public class FullEChartsComponent extends CustomModuleComponent<CustomFieldEChar
 
     //数据对象
     @JSONField(serialize = false)
-    APICallerComponent[] genAPIComponent(Component ctxComponent, BlockComponent mainComponent) throws JDSException {
+    APICallerComponent[] genAPIComponent(Component ctxComponent, Component mainComponent) throws JDSException {
         List<APICallerComponent> apiCallerComponents = new ArrayList<APICallerComponent>();
 
         MethodConfig trendlinesMethod = methodAPIBean.getDataBean().getMethodByItem(CustomMenuItem.TRENDLINESURL);

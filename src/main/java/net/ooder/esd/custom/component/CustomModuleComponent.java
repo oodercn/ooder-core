@@ -42,7 +42,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
     @JSONField(serialize = false)
     protected List<ESDFieldConfig> fieldList;
     @JSONField(serialize = false)
-    protected BlockComponent mainComponent;
+    protected Component mainComponent;
 
 
     @JSONField(serialize = false)
@@ -78,28 +78,31 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
         this.parentClass = methodAPIBean.getSourceClass();
         this.mainComponent = this.getMainComponent();
         this.moduleBean = methodAPIBean.getModuleBean();
-        if (moduleBean != null && moduleBean.getViewConfig() != null && moduleBean.getViewConfig().getViewStyles() != null) {
-            ModuleStyleBean moduleStyleBean = moduleBean.getViewConfig().getViewStyles();
-            if (moduleStyleBean.getBackgroundAttachment() != null) {
-                this.mainComponent.getProperties().setPanelBgImgAttachment(moduleStyleBean.getBackgroundAttachment());
-            }
-            if (moduleStyleBean.getBackgroundColor() != null) {
-                this.mainComponent.getProperties().setPanelBgClr(moduleStyleBean.getBackgroundColor());
-            }
+        if (moduleBean != null && moduleBean.getPanelType().equals(PanelType.block)){
+            if ( moduleBean.getViewConfig() != null&& moduleBean.getViewConfig().getViewStyles() != null) {
+                ModuleStyleBean moduleStyleBean = moduleBean.getViewConfig().getViewStyles();
+                if (moduleStyleBean.getBackgroundAttachment() != null) {
+                    ((BlockComponent) mainComponent).getProperties().setPanelBgImgAttachment(moduleStyleBean.getBackgroundAttachment());
+                }
+                if (moduleStyleBean.getBackgroundColor() != null) {
+                    ((BlockComponent) mainComponent).getProperties().setPanelBgClr(moduleStyleBean.getBackgroundColor());
+                }
 
-            if (moduleStyleBean.getBackgroundRepeat() != null) {
-                this.mainComponent.getProperties().setPanelBgImgRepeat(moduleStyleBean.getBackgroundRepeat());
-            }
+                if (moduleStyleBean.getBackgroundRepeat() != null) {
+                    ((BlockComponent) mainComponent).getProperties().setPanelBgImgRepeat(moduleStyleBean.getBackgroundRepeat());
+                }
 
-            if (moduleStyleBean.getBackgroundPosition() != null) {
-                this.mainComponent.getProperties().setPanelBgImgRepeat(moduleStyleBean.getBackgroundPosition());
+                if (moduleStyleBean.getBackgroundPosition() != null) {
+                    ((BlockComponent) mainComponent).getProperties().setPanelBgImgRepeat(moduleStyleBean.getBackgroundPosition());
+                }
+                if (moduleStyleBean.getBackgroundImage() != null) {
+                    ((BlockComponent) mainComponent).getProperties().setPanelBgImg(moduleStyleBean.getBackgroundImage());
+                }
+            } else {
+                ((BlockComponent) mainComponent).getProperties().setPanelBgClr("transparent");
             }
-            if (moduleStyleBean.getBackgroundImage() != null) {
-                this.mainComponent.getProperties().setPanelBgImg(moduleStyleBean.getBackgroundImage());
-            }
-        } else {
-            this.mainComponent.getProperties().setPanelBgClr("transparent");
         }
+
 
         CustomViewBean<FieldFormConfig, UIItem, ? extends Component> viewBean = (CustomViewBean<FieldFormConfig, UIItem, ? extends Component>) methodAPIBean.getView();
         CustomData dataBean = methodAPIBean.getDataBean();
@@ -298,8 +301,8 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
 
     protected void addChildLayoutNav(Component component) {
         PanelType panelType = this.getProperties().getPanelType();
-        if (panelType==null){
-            moduleBean.getPanelType();
+        if (panelType == null) {
+            panelType = moduleBean.getPanelType();
         }
         if (panelType != null) {
             switch (panelType) {
@@ -338,7 +341,8 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                         mainComponent.addChildren(component);
                     }
                     if (moduleBean != null && moduleBean.getBlockBean() != null && moduleBean.getBlockBean().getContainerBean() != null) {
-                        mainComponent.getProperties().init(moduleBean.getBlockBean().getContainerBean());
+
+                        ((BlockComponent) mainComponent).getProperties().init(moduleBean.getBlockBean().getContainerBean());
                     }
 
                     mainComponent.setProperties(blockPanelComponent.getProperties());
@@ -566,14 +570,14 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
     }
 
     @JSONField(serialize = false)
-    public BlockComponent getMainComponent() {
+    public Component getMainComponent() {
         if (mainComponent == null) {
-            mainComponent = (BlockComponent) this.getMainBoxComponent();
+            mainComponent = this.getMainBoxComponent();
         }
         return mainComponent;
     }
 
-    public void setMainComponent(BlockComponent mainComponent) {
+    public void setMainComponent(Component mainComponent) {
         this.mainComponent = mainComponent;
     }
 

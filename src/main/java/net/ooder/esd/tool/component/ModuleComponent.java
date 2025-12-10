@@ -1872,17 +1872,13 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     }
 
     public M getCurrComponent() {
+        String curAlias = this.getCurrComponentAlias();
 
-        if (currComponent == null) {
-            String curAlias = this.getCurrComponentAlias();
+        if (curAlias.endsWith(DefaultTopBoxfix) || curAlias.toUpperCase().equals(PAGECTXNAME)) {
+            currComponent = null;
+        } else if (currComponent == null) {
             currComponent = (M) this.findComponentByAlias(curAlias);
         }
-
-//        if (curAlias.endsWith(DefaultTopBoxfix) || curAlias.toUpperCase().equals(PAGECTXNAME) || curAlias.endsWith("BottomBlock")) {
-//            currComponent = null;
-//        } else if (currComponent == null) {
-//
-//        }
 
         if (currComponent == null) {
             currComponent = deepCheckComponent();

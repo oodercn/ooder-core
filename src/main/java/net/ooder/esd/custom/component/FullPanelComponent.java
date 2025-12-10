@@ -185,7 +185,7 @@ public class FullPanelComponent<M extends CustomFieldPanelComponent> extends Cus
 
     //数据对象
     @JSONField(serialize = false)
-    APICallerComponent[] genAPIComponent(Component ctxComponent, BlockComponent mainComponent) throws JDSException {
+    APICallerComponent[] genAPIComponent(Component ctxComponent, Component mainComponent) throws JDSException {
         List<APICallerComponent> apiCallerComponents = new ArrayList<APICallerComponent>();
         //装载保存事件
         if (saveUrl != null && !saveUrl.equals("")) {

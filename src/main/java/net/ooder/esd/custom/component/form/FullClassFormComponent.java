@@ -25,10 +25,7 @@ import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.ProjectVersion;
 import net.ooder.esd.manager.editor.PluginsFactory;
 import net.ooder.esd.tool.component.*;
-import net.ooder.esd.tool.properties.APICallerProperties;
-import net.ooder.esd.tool.properties.Action;
-import net.ooder.esd.tool.properties.Condition;
-import net.ooder.esd.tool.properties.UrlPathData;
+import net.ooder.esd.tool.properties.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,11 +50,16 @@ public class FullClassFormComponent extends CustomModuleComponent<CustomFormComp
     public FullClassFormComponent(EUModule euModule, MethodConfig methodConfig, Map valueMap) {
         super(euModule, methodConfig, valueMap);
         CustomFormViewBean viewBean = (CustomFormViewBean) methodConfig.getView();
-        mainComponent.getProperties().setBorderType(viewBean.getBorderType());
-        mainComponent.getProperties().setBackground(viewBean.getBackground());
-        mainComponent.getProperties().setOverflow(viewBean.getOverflow());
-        mainComponent.getProperties().setShowEffects(viewBean.getShowEffects());
-        mainComponent.getProperties().setHideEffects(viewBean.getHideEffects());
+
+        if (mainComponent instanceof BlockComponent){
+            BlockProperties properties= (BlockProperties) mainComponent.getProperties();
+            properties.setBorderType(viewBean.getBorderType());
+            properties.setBackground(viewBean.getBackground());
+            properties.setOverflow(viewBean.getOverflow());
+            properties.setShowEffects(viewBean.getShowEffects());
+            properties.setHideEffects(viewBean.getHideEffects());
+        }
+
         try {
             this.init(methodConfig);
         } catch (JDSException e) {
@@ -223,7 +225,7 @@ public class FullClassFormComponent extends CustomModuleComponent<CustomFormComp
 
     //数据对象
     @JSONField(serialize = false)
-    APICallerComponent[] genAPIComponent(Component ctxComponent, BlockComponent mainComponent) throws JDSException {
+    APICallerComponent[] genAPIComponent(Component ctxComponent, Component mainComponent) throws JDSException {
         List<APICallerComponent> apiCallerComponents = new ArrayList<APICallerComponent>();
         //装载保存事件
         if (saveUrl != null && !saveUrl.equals("")) {

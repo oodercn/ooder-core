@@ -52,6 +52,7 @@ public class NavTabListItem extends TabListItem {
         this.popBtn = childTabViewBean.getPopBtn();
         this.bindClass = childTabViewBean.getBindClass();
         this.index = childTabViewBean.getIndex();
+        this.euClassName = childTabViewBean.getClassName();
 
 
         if (childTabViewBean.getIndex() != null && childTabViewBean.getIndex() != -1) {
@@ -69,7 +70,9 @@ public class NavTabListItem extends TabListItem {
         RequestParamBean[] requestParamBeanArr = new RequestParamBean[]{};
         if (childMethod != null) {
             requestParamBeanArr = (RequestParamBean[]) childMethod.getParamSet().toArray(new RequestParamBean[]{});
-            this.euClassName = childMethod.getEUClassName();
+            if (euClassName == null) {
+                this.euClassName = childMethod.getEUClassName();
+            }
             if (!childMethod.getImageClass().equals(MethodConfig.DefaultImageClass)) {
                 this.imageClass = childMethod.getImageClass();
             }

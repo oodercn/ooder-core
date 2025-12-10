@@ -128,7 +128,7 @@ public class FullSVGPaperComponent extends CustomModuleComponent<CustomFieldSVGP
         if (viewBean != null) {
             fillFromAction(viewBean, currComponent);
         }
-        APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(), mainComponent);
+        APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(),  mainComponent);
         this.addChildren(apiCallerComponents);
 
         this.fillToolBar(viewBean, currComponent);
@@ -191,7 +191,7 @@ public class FullSVGPaperComponent extends CustomModuleComponent<CustomFieldSVGP
 
     //数据对象
     @JSONField(serialize = false)
-    APICallerComponent[] genAPIComponent(Component ctxComponent, BlockComponent mainComponent) throws JDSException {
+    APICallerComponent[] genAPIComponent(Component ctxComponent, Component mainComponent) throws JDSException {
         List<APICallerComponent> apiCallerComponents = new ArrayList<APICallerComponent>();
         //装载保存事件
         if (saveUrl != null && !saveUrl.equals("")) {
