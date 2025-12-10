@@ -1483,7 +1483,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             panelComponent = new PanelComponent(panelAlias, new PanelProperties(panelBean));
         }
 
-        if (panelComponent != null && panelBean.getBtnBean() != null) {
+        if (panelComponent != null && panelBean != null && panelBean.getBtnBean() != null) {
             BtnBean btnBean = panelBean.getBtnBean();
             if (btnBean.getRefreshBtn() != null && btnBean.getRefreshBtn()) {
                 Action action = new Action(CustomPageAction.RELOAD, PanelEventEnum.onRefresh);
@@ -2066,30 +2066,53 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     public Component getMainBoxComponent() {
         Component mainBlock = null;
         String mainAlias = null;
-        if (this.getEuModule() != null) {
-            mainAlias = this.getEuModule().getName() + DefaultTopBoxfix;
-            mainBlock = this.components.get(this.getEuModule().getName() + DefaultTopBoxfix);
-            if (mainBlock == null) {
-                Component topComponent = getDefaultTopComponent();
-                if (topComponent == null) {
-                    mainBlock = new BlockComponent(Dock.fill, this.getEuModule().getName() + DefaultTopBoxfix);
+
+        if (moduleBean != null && moduleBean.getPanelType() != null) {
+            PanelType panelType = moduleBean.getPanelType();
+            switch (panelType) {
+                case block:
+                    mainBlock = this.getBlockPanelComponent();
+                    break;
+                case panel:
+                    mainBlock = this.getModulePanelComponent();
+                    break;
+                case div:
+                    mainBlock = this.getDivComponent();
+                    break;
+                case dialog:
+                    mainBlock = this.getDialogComponent();
+                    break;
+            }
+
+        }
+
+        if (mainBlock == null) {
+            if (this.getEuModule() != null) {
+                mainAlias = this.getEuModule().getName() + DefaultTopBoxfix;
+                mainBlock = this.components.get(this.getEuModule().getName() + DefaultTopBoxfix);
+                if (mainBlock == null) {
+                    Component topComponent = getDefaultTopComponent();
+                    if (topComponent == null) {
+                        mainBlock = new BlockComponent(Dock.fill, this.getEuModule().getName() + DefaultTopBoxfix);
+                        this.addChildren(mainBlock);
+                    } else {
+                        mainBlock = topComponent;
+                        String alias = topComponent.getAlias();
+                        mainBlock.setAlias(mainAlias);
+                        mainBlock.getProperties().setName(mainAlias);
+                        components.put(mainAlias, mainBlock);
+                        components.remove(alias);
+                    }
+                }
+            } else {
+                mainBlock = getDefaultTopComponent();
+                if (mainBlock == null) {
+                    mainBlock = new BlockComponent(Dock.fill, this.alias + DefaultTopBoxfix);
                     this.addChildren(mainBlock);
-                } else {
-                    mainBlock = topComponent;
-                    String alias = topComponent.getAlias();
-                    mainBlock.setAlias(mainAlias);
-                    mainBlock.getProperties().setName(mainAlias);
-                    components.put(mainAlias, mainBlock);
-                    components.remove(alias);
                 }
             }
-        } else {
-            mainBlock = getDefaultTopComponent();
-            if (mainBlock == null) {
-                mainBlock = new BlockComponent(Dock.fill, this.alias + DefaultTopBoxfix);
-                this.addChildren(mainBlock);
-            }
         }
+
         if (mainBlock instanceof BlockComponent) {
             ((BlockComponent) mainBlock).getProperties().setBorderType(BorderType.none);
         }

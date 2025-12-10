@@ -297,7 +297,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
     }
 
     protected void addChildLayoutNav(Component component) {
-        CustomViewBean<FieldFormConfig, UIItem, ? extends Component> viewBean = (CustomViewBean<FieldFormConfig, UIItem, ? extends Component>) methodAPIBean.getView();
+
         PanelType panelType = moduleBean.getPanelType();
         if (panelType != null) {
             switch (panelType) {
