@@ -197,23 +197,18 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             this.setCurrComponent(currComponent);
             this.addChildren(currComponent);
             CustomModuleBean moduleBean = this.getModuleBean();
-
             switch (componentType) {
                 case PANEL:
                     panelType = PanelType.panel;
-                    moduleBean.getPanelBean().update(currComponent);
                     break;
                 case DIV:
                     panelType = PanelType.div;
-                    moduleBean.getDivBean().update(currComponent);
                     break;
                 case DIALOG:
                     panelType = PanelType.dialog;
-                    moduleBean.getDialogBean().update((DialogComponent) currComponent);
                     break;
                 default:
                     panelType = PanelType.block;
-                    moduleBean.getBlockBean().update(currComponent);
             }
         } else {
             BlockComponent blockComponent = new BlockComponent(Dock.fill, moduleName + DefaultTopBoxfix);
@@ -224,6 +219,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         }
         this.properties.setPanelType(panelType);
         this.properties.setCurrComponentAlias(currComponent.getAlias());
+        moduleBean.update(this);
     }
 
 
