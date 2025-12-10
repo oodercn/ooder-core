@@ -141,7 +141,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
                 GenFormChildModule genFormChildModule = (GenFormChildModule) childModule;
                 callableList.add(childModule);
                 FieldComponentBean fieldComponentBean = genFormChildModule.getFieldFormConfig().getWidgetConfig();
-                if (fieldComponentBean != null) {
+                if (fieldComponentBean != null && fieldComponentBean instanceof WidgetBean) {
                     CustomViewBean viewBean = ((WidgetBean) fieldComponentBean).getViewBean();
                     if (viewBean != null) {
                         allSourceList.addAll(viewBean.buildAll());

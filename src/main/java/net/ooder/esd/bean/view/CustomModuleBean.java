@@ -21,7 +21,9 @@ import net.ooder.esd.custom.CustomMethodInfo;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.DSMProperties;
-import net.ooder.esd.tool.component.*;
+import net.ooder.esd.tool.component.Component;
+import net.ooder.esd.tool.component.DialogComponent;
+import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.esd.util.OODUtil;
@@ -281,9 +283,9 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
             this.methodName = id;
         }
 
-        DialogComponent dialogComponent = (DialogComponent) moduleComponent.findComponentByAlias(moduleComponent.getAlias() +  ModuleComponent.DefaultTopBoxfix);
-        if (dialogComponent != null || moduleComponent.getLastBoxComponent() instanceof DialogComponent) {
-            panelType = PanelType.dialog;
+        Component mainComponent = moduleComponent.findComponentByAlias(moduleComponent.getAlias() + ModuleComponent.DefaultTopBoxfix);
+        if (mainComponent == null) {
+            mainComponent =currComponent;
         }
 
         PanelType userPanelType = moduleComponent.getProperties().getPanelType();
@@ -293,9 +295,8 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         }
 
         if (panelType == null) {
-            if (moduleComponent.getCurrComponent() != null) {
-                Component component = moduleComponent.getCurrComponent();
-                ComponentType componentType = ComponentType.fromType(component.getKey());
+            if (mainComponent != null) {
+                ComponentType componentType = ComponentType.fromType(mainComponent.getKey());
                 switch (componentType) {
                     case PANEL:
                         panelType = PanelType.panel;
@@ -316,69 +317,36 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
 
         switch (panelType) {
             case dialog:
-                if (dialogComponent == null) {
-                    Component topComponent = moduleComponent.getLastBoxComponent();
-                    if (topComponent instanceof DialogComponent) {
-                        dialogComponent = (DialogComponent) topComponent;
-
-                    } else {
-                        ComponentList components = moduleComponent.getChildren();
-                        for (Component component : components) {
-                            if (component instanceof DialogComponent) {
-                                dialogComponent = (DialogComponent) component;
-                            }
-                        }
-                    }
+                if (dialogBean == null) {
+                    dialogBean = new DialogBean((DialogComponent) mainComponent);
+                } else {
+                    dialogBean.update((DialogComponent) mainComponent);
                 }
-
-                if (dialogComponent != null) {
-                    if (dialogBean == null) {
-                        dialogBean = new DialogBean(dialogComponent);
-                    } else {
-                        dialogBean.update(dialogComponent);
-                    }
-                }
-
                 break;
             case block:
-                if (currComponent == null) {
-                    currComponent = moduleComponent.getMainBoxComponent();
-                }
                 if (blockBean == null) {
-                    blockBean = new CustomBlockBean(currComponent);
+                    blockBean = new CustomBlockBean(mainComponent);
                 } else {
-                    blockBean.update(currComponent);
+                    blockBean.update(mainComponent);
                 }
-
                 break;
             case div:
-                if (currComponent == null) {
-                    currComponent = moduleComponent.getMainBoxComponent();
-                }
+
                 if (divBean == null) {
-                    divBean = new CustomDivBean(currComponent);
+                    divBean = new CustomDivBean(mainComponent);
                 } else {
-                    divBean.update(currComponent);
+                    divBean.update(mainComponent);
                 }
 
                 break;
             case panel:
-                PanelComponent panelComponent = (PanelComponent) moduleComponent.findComponentByAlias(moduleComponent.getAlias() +ModuleComponent.DefaultTopBoxfix);
-                if (panelComponent == null) {
-                    Component topComponent = moduleComponent.getTopComponentBox();
-                    if (topComponent instanceof PanelComponent) {
-                        panelComponent = (PanelComponent) topComponent;
-                    } else {
-                        panelComponent = (PanelComponent) moduleComponent.getFristComponentByType(PanelComponent.class);
-                    }
+
+                if (panelBean == null) {
+                    panelBean = new CustomPanelBean(mainComponent);
+                } else {
+                    panelBean.update(mainComponent);
                 }
-                if (panelComponent != null) {
-                    if (panelBean == null) {
-                        panelBean = new CustomPanelBean(panelComponent);
-                    } else {
-                        panelBean.update(panelComponent);
-                    }
-                }
+
                 break;
         }
 
