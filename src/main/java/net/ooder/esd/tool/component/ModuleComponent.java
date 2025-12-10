@@ -1475,8 +1475,8 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         PanelComponent panelComponent = null;
         CustomPanelBean panelBean = this.getModuleBean().getPanelBean();
         PanelType panelType = this.getProperties().getPanelType();
-        if (panelType==null){
-            moduleBean.getPanelType();
+        if (panelType == null && moduleBean != null) {
+            panelType = moduleBean.getPanelType();
         }
 
         String panelAlias = this.getEuModule().getName() + DefaultTopBoxfix;
@@ -1510,8 +1510,8 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         BlockComponent blockComponent = null;
         CustomBlockBean blockBean = this.getModuleBean().getBlockBean();
         PanelType panelType = this.getProperties().getPanelType();
-        if (panelType==null){
-            moduleBean.getPanelType();
+        if (panelType == null && moduleBean != null) {
+            panelType = moduleBean.getPanelType();
         }
         String panelAlias = this.getEuModule().getName() + DefaultTopBoxfix;
         Component component = this.findComponentByAlias(panelAlias);
@@ -1539,8 +1539,8 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         DivComponent divComponent = null;
         CustomDivBean divBean = this.getModuleBean().getDivBean();
         PanelType panelType = this.getProperties().getPanelType();
-        if (panelType==null){
-            moduleBean.getPanelType();
+        if (panelType == null && moduleBean != null) {
+            panelType = moduleBean.getPanelType();
         }
 
         String panelAlias = this.getEuModule().getName() + DefaultTopBoxfix;
@@ -2077,8 +2077,11 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
         if (this.getEuModule() != null) {
             PanelType panelType = this.getProperties().getPanelType();
-            if (panelType==null){
-                moduleBean.getPanelType();
+            if (panelType == null && moduleBean != null) {
+                panelType = moduleBean.getPanelType();
+            }
+            if (panelType == null) {
+                panelType = PanelType.block;
             }
             switch (panelType) {
                 case block:
