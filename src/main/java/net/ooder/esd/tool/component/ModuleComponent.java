@@ -202,12 +202,10 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                 case PANEL:
                     panelType = PanelType.panel;
                     moduleBean.getPanelBean().update(currComponent);
-
                     break;
                 case DIV:
                     panelType = PanelType.div;
                     moduleBean.getDivBean().update(currComponent);
-
                     break;
                 case DIALOG:
                     panelType = PanelType.dialog;
