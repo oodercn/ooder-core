@@ -1465,7 +1465,9 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
     }
 
     public PanelType getPanelType() {
-
+        if (panelType == null) {
+            panelType = PanelType.block;
+        }
         return panelType;
     }
 
