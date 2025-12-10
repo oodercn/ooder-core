@@ -43,28 +43,36 @@ public class CustomPanelFormViewBean extends BaseFormViewBean {
         AnnotationUtil.fillDefaultValue(PanelFormAnnotation.class, this);
         super.updateBaseModule(moduleComponent);
         initMenuBar();
+        PanelComponent currComponent = null;
+        if (moduleComponent.getCurrComponent() instanceof PanelComponent) {
+            currComponent = (PanelComponent) moduleComponent.getCurrComponent();
+        } else if (moduleComponent.getMainBoxComponent() instanceof PanelComponent) {
+            currComponent = (PanelComponent) moduleComponent.getMainBoxComponent();
+        }
 
-        PanelComponent currComponent = (PanelComponent) moduleComponent.getMainBoxComponent();
-        this.name = OODUtil.formatJavaName(currComponent.getAlias(), false);
-        if (moduleBean != null) {
-            moduleBean.updateComponent(currComponent);
-        }
-        if (containerBean == null) {
-            containerBean = new ContainerBean(currComponent);
-        } else {
-            containerBean.update(currComponent);
-        }
-        List<Component> components = cloneComponentList(currComponent.getChildren());
+        if (currComponent != null) {
+            this.name = OODUtil.formatJavaName(currComponent.getAlias(), false);
+            if (moduleBean != null) {
+                moduleBean.updateComponent(currComponent);
+            }
+            if (containerBean == null) {
+                containerBean = new ContainerBean(currComponent);
+            } else {
+                containerBean.update(currComponent);
+            }
+            List<Component> components = cloneComponentList(currComponent.getChildren());
 
-        for (Component component : components) {
-            FieldFormConfig fieldFormConfig = findFieldByCom(component);
-            this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
-        }
-        this.childModules = genChildComponent(moduleComponent, components);
-        try {
-            DSMFactory.getInstance().saveCustomViewEntity(this);
-        } catch (JDSException e) {
-            e.printStackTrace();
+            for (Component component : components) {
+                FieldFormConfig fieldFormConfig = findFieldByCom(component);
+                this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
+            }
+            this.childModules = genChildComponent(moduleComponent, components);
+            try {
+                DSMFactory.getInstance().saveCustomViewEntity(this);
+            } catch (JDSException e) {
+                e.printStackTrace();
+            }
+
         }
 
         return childModules;

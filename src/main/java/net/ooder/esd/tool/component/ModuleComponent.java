@@ -76,9 +76,9 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
     @JSONField(serialize = false)
     public Map<String, Object> valueMap;
-
-    @JSONField(serialize = false)
-    public static final String DefaultBoxfix = "Box";
+//
+//    @JSONField(serialize = false)
+//    public static final String DefaultBoxfix = "Box";
 
     @JSONField(serialize = false)
     public static final String DefaultTopBoxfix = "Main";
@@ -1457,9 +1457,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                     dialogBean.setName(this.getModuleBean().getName());
                 }
                 if (dialogBean.getMdia()) {
-                    dialog = new MDialogComponent(euModule.getName() + ComponentType.DIALOG.name() + DefaultBoxfix, new DialogProperties(dialogBean));
-                } else {
-                    dialog = new DialogComponent(euModule.getName() + ComponentType.DIALOG.name() + DefaultBoxfix, new DialogProperties(dialogBean));
+                    dialog = new DialogComponent(euModule.getName() + DefaultTopBoxfix, new DialogProperties(dialogBean));
                 }
                 dialog.addAction(new Action(CustomPageAction.CLOSE, DialogEventEnum.afterDestroy), false);
             }
@@ -1473,11 +1471,15 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     public PanelComponent getModulePanelComponent() {
         CustomPanelBean panelBean = this.getModuleBean().getPanelBean();
         PanelType panelType = this.getModuleBean().getPanelType();
+        String panelAlias = euModule.getName() + DefaultTopBoxfix;
+        if (panelComponent == null) {
+            panelComponent = (PanelComponent) this.findComponentByAlias(panelAlias);
+        }
         if (panelComponent == null && panelBean != null && panelType != null && panelType.equals(PanelType.panel)) {
             if (panelBean.getDock() == null || panelBean.getDock().equals(Dock.none)) {
                 panelBean.setDock(Dock.fill);
             }
-            panelComponent = new PanelComponent(euModule.getName() + ComponentType.PANEL.name() + DefaultBoxfix, new PanelProperties(panelBean));
+            panelComponent = new PanelComponent(panelAlias, new PanelProperties(panelBean));
         }
 
         if (panelComponent != null && panelBean.getBtnBean() != null) {
@@ -1499,9 +1501,9 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         CustomBlockBean blockBean = this.getModuleBean().getBlockBean();
         PanelType panelType = this.getModuleBean().getPanelType();
         if (blockComponent == null && blockBean != null && panelType != null && panelType.equals(PanelType.block)) {
-            blockComponent = new BlockComponent(euModule.getName() + ComponentType.BLOCK.name() + DefaultBoxfix, new BlockProperties(blockBean));
+            blockComponent = new BlockComponent(euModule.getName() + ComponentType.BLOCK.name() + DefaultTopBoxfix, new BlockProperties(blockBean));
         } else {
-            blockComponent = new BlockComponent(euModule.getName() + ComponentType.BLOCK.name() + DefaultBoxfix, new BlockProperties(Dock.fill));
+            blockComponent = new BlockComponent(euModule.getName() + ComponentType.BLOCK.name() + DefaultTopBoxfix, new BlockProperties(Dock.fill));
         }
         return blockComponent;
     }
@@ -1512,9 +1514,9 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         CustomDivBean divBean = this.getModuleBean().getDivBean();
         PanelType panelType = this.getModuleBean().getPanelType();
         if (divComponent == null && divBean != null && panelType != null && panelType.equals(PanelType.div)) {
-            divComponent = new DivComponent(euModule.getName() + ComponentType.DIV.name() + DefaultBoxfix, new DivProperties(divBean));
+            divComponent = new DivComponent(euModule.getName() + ComponentType.DIV.name() + DefaultTopBoxfix, new DivProperties(divBean));
         } else {
-            divComponent = new DivComponent(euModule.getName() + ComponentType.BLOCK.name() + DefaultBoxfix, new DivProperties(Dock.fill));
+            divComponent = new DivComponent(euModule.getName() + ComponentType.BLOCK.name() + DefaultTopBoxfix, new DivProperties(Dock.fill));
         }
         return divComponent;
     }

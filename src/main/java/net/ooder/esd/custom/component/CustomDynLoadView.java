@@ -38,7 +38,7 @@ public class CustomDynLoadView<M extends BlockComponent> extends CustomModuleCom
 
     public CustomDynLoadView(EUModule module, MethodConfig methodConfig, Map valueMap) throws ClassNotFoundException {
         super(module, methodConfig, valueMap);
-        M currComponent = (M) new BlockComponent(Dock.fill, module.getName() + DefaultBoxfix);
+        M currComponent = (M) new BlockComponent(Dock.fill, module.getName() + DefaultTopBoxfix);
         currComponent.getProperties().setBorderType(BorderType.none);
         this.addChildLayoutNav(currComponent);
         this.setCurrComponent(currComponent);

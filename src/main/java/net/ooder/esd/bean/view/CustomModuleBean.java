@@ -281,7 +281,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
             this.methodName = id;
         }
 
-        DialogComponent dialogComponent = (DialogComponent) moduleComponent.findComponentByAlias(moduleComponent.getAlias() + ComponentType.DIALOG.name() + ModuleComponent.DefaultBoxfix);
+        DialogComponent dialogComponent = (DialogComponent) moduleComponent.findComponentByAlias(moduleComponent.getAlias() +  ModuleComponent.DefaultTopBoxfix);
         if (dialogComponent != null || moduleComponent.getLastBoxComponent() instanceof DialogComponent) {
             panelType = PanelType.dialog;
         }
@@ -363,7 +363,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
 
                 break;
             case panel:
-                PanelComponent panelComponent = (PanelComponent) moduleComponent.findComponentByAlias(moduleComponent.getAlias() + ComponentType.PANEL.name() + ModuleComponent.DefaultBoxfix);
+                PanelComponent panelComponent = (PanelComponent) moduleComponent.findComponentByAlias(moduleComponent.getAlias() +ModuleComponent.DefaultTopBoxfix);
                 if (panelComponent == null) {
                     Component topComponent = moduleComponent.getTopComponentBox();
                     if (topComponent instanceof PanelComponent) {

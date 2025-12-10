@@ -129,7 +129,7 @@ public class CustomFieldModuleComponent extends BlockComponent {
                             break;
                         case runtime:
                             moduleComponent = new ModuleComponent<>();
-                            BlockComponent currComponent = new BlockComponent(Dock.fill, module.getName() + ModuleComponent.DefaultBoxfix);
+                            BlockComponent currComponent = new BlockComponent(Dock.fill, module.getName() + ModuleComponent.DefaultTopBoxfix);
                             currComponent.getProperties().setBorderType(BorderType.none);
                             currComponent.setTarget(target);
                             this.addChildren(currComponent);
