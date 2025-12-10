@@ -178,7 +178,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     }
 
     void init(M currComponent) {
-
+        PanelType panelType = null;
         if (components == null) {
             components = new HashMap<String, Component>();
         }
@@ -188,15 +188,19 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
         String moduleName = OODUtil.formatJavaName(currComponent.getAlias(), true);
 
-        PanelType panelType = this.getModuleBean().getPanelType();
+        currComponent.setHost(null);
+
+
+        moduleBean = this.getModuleBean();
+        if (moduleBean != null) {
+            panelType = moduleBean.getPanelType();
+        }
 
         if (Arrays.asList(componentTypes).contains(componentType)) {
             if (!moduleName.endsWith(DefaultTopBoxfix)) {
                 currComponent.updateAlias(moduleName + DefaultTopBoxfix);
             }
-            this.setCurrComponent(currComponent);
             this.addChildren(currComponent);
-            CustomModuleBean moduleBean = this.getModuleBean();
             switch (componentType) {
                 case PANEL:
                     panelType = PanelType.panel;
@@ -217,9 +221,14 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             this.addChildren(blockComponent);
             this.setCurrComponent(currComponent);
         }
+        if (panelType == null) {
+            panelType = PanelType.block;
+        }
         this.properties.setPanelType(panelType);
-        this.properties.setCurrComponentAlias(currComponent.getAlias());
-        moduleBean.update(this);
+        if (moduleBean != null) {
+            moduleBean.update(this);
+        }
+
     }
 
 
@@ -1863,15 +1872,17 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     }
 
     public M getCurrComponent() {
-        String curAlias = this.getCurrComponentAlias();
-        if (curAlias.endsWith(DefaultTopBoxfix) || curAlias.toUpperCase().equals(PAGECTXNAME) || curAlias.endsWith("BottomBlock")) {
-            currComponent = null;
-        } else if (currComponent == null) {
-            List<Component> componentList = this.findComponentsByAlias(curAlias);
-            if (componentList != null && componentList.size() > 0) {
-                currComponent = (M) componentList.get(0);
-            }
+
+        if (currComponent == null) {
+            String curAlias = this.getCurrComponentAlias();
+            currComponent = (M) this.findComponentByAlias(curAlias);
         }
+
+//        if (curAlias.endsWith(DefaultTopBoxfix) || curAlias.toUpperCase().equals(PAGECTXNAME) || curAlias.endsWith("BottomBlock")) {
+//            currComponent = null;
+//        } else if (currComponent == null) {
+//
+//        }
 
         if (currComponent == null) {
             currComponent = deepCheckComponent();

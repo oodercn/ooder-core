@@ -380,7 +380,20 @@ public class Component<T extends Properties, K extends EventKey> {
     public void updateAlias(String alias) {
         if (alias != null && !this.alias.equals(alias)) {
             this.alias = alias;
-            for (Component component : children) {
+            children = this.getChildren();
+            if (children == null) {
+                children = new ComponentList();
+                if (this.getModuleComponent() != null) {
+                    ComponentList components = this.getModuleComponent().getChildrenRecursivelyList();
+                    for (Component component : components) {
+                        if (component.getHost() != null && component.getHost().equals(alias)) {
+                            children.add(component);
+                        }
+                    }
+                }
+            }
+
+            for (Component component : this.getChildren()) {
                 component.setHost(alias);
             }
         }

@@ -282,15 +282,15 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
             this.methodName = id;
         }
 
-        Component mainComponent = moduleComponent.findComponentByAlias(id + ModuleComponent.DefaultTopBoxfix);
+        Component mainComponent = moduleComponent.getMainBoxComponent();
         if (mainComponent == null) {
             mainComponent = currComponent;
         }
 
         PanelType userPanelType = moduleComponent.getProperties().getPanelType();
 
-        if (panelType == null && userPanelType != null) {
-            panelType = moduleComponent.getProperties().getPanelType();
+        if (userPanelType != null) {
+            panelType = userPanelType;
         }
 
         if (panelType == null) {
