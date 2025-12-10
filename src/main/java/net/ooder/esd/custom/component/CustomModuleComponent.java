@@ -297,8 +297,10 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
     }
 
     protected void addChildLayoutNav(Component component) {
-
-        PanelType panelType = moduleBean.getPanelType();
+        PanelType panelType = this.getProperties().getPanelType();
+        if (panelType==null){
+            moduleBean.getPanelType();
+        }
         if (panelType != null) {
             switch (panelType) {
                 case dialog:

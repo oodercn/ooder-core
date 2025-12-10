@@ -188,7 +188,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
         String moduleName = OODUtil.formatJavaName(currComponent.getAlias(), true);
 
-        PanelType panelType = PanelType.block;
+        PanelType panelType = this.getModuleBean().getPanelType();
 
         if (Arrays.asList(componentTypes).contains(componentType)) {
             if (!moduleName.endsWith(DefaultTopBoxfix)) {
@@ -1474,7 +1474,11 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     public PanelComponent getModulePanelComponent() {
         PanelComponent panelComponent = null;
         CustomPanelBean panelBean = this.getModuleBean().getPanelBean();
-        PanelType panelType = this.properties.getPanelType();
+        PanelType panelType = this.getProperties().getPanelType();
+        if (panelType==null){
+            moduleBean.getPanelType();
+        }
+
         String panelAlias = this.getEuModule().getName() + DefaultTopBoxfix;
         Component component = this.findComponentByAlias(panelAlias);
         if (component != null && component instanceof PanelComponent) {
@@ -1505,7 +1509,10 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     public BlockComponent getBlockPanelComponent() {
         BlockComponent blockComponent = null;
         CustomBlockBean blockBean = this.getModuleBean().getBlockBean();
-        PanelType panelType = this.properties.getPanelType();
+        PanelType panelType = this.getProperties().getPanelType();
+        if (panelType==null){
+            moduleBean.getPanelType();
+        }
         String panelAlias = this.getEuModule().getName() + DefaultTopBoxfix;
         Component component = this.findComponentByAlias(panelAlias);
 
@@ -1531,7 +1538,10 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     public DivComponent getDivComponent() {
         DivComponent divComponent = null;
         CustomDivBean divBean = this.getModuleBean().getDivBean();
-        PanelType panelType = this.properties.getPanelType();
+        PanelType panelType = this.getProperties().getPanelType();
+        if (panelType==null){
+            moduleBean.getPanelType();
+        }
 
         String panelAlias = this.getEuModule().getName() + DefaultTopBoxfix;
         Component component = this.findComponentByAlias(panelAlias);
@@ -2066,7 +2076,10 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         String mainAlias = null;
 
         if (this.getEuModule() != null) {
-            PanelType panelType = this.properties.getPanelType();
+            PanelType panelType = this.getProperties().getPanelType();
+            if (panelType==null){
+                moduleBean.getPanelType();
+            }
             switch (panelType) {
                 case block:
                     mainBlock = this.getBlockPanelComponent();

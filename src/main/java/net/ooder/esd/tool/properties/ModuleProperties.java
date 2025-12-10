@@ -126,9 +126,7 @@ public class ModuleProperties extends TabListItem {
     }
 
     public PanelType getPanelType() {
-        if (panelType == null) {
-            panelType = PanelType.block;
-        }
+
         return panelType;
     }
 
