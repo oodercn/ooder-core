@@ -47,8 +47,8 @@ public class ModuleProperties extends TabListItem {
 
     public ModuleProperties(CustomModuleBean moduleBean) {
         this.init(moduleBean);
-        MethodConfig methodConfig=moduleBean.getMethodConfig();
-        if (methodConfig!= null) {
+        MethodConfig methodConfig = moduleBean.getMethodConfig();
+        if (methodConfig != null) {
             this.viewClass = methodConfig.getView().getViewClassName();
         }
     }
@@ -126,6 +126,9 @@ public class ModuleProperties extends TabListItem {
     }
 
     public PanelType getPanelType() {
+        if (panelType == null) {
+            panelType = PanelType.block;
+        }
         return panelType;
     }
 
