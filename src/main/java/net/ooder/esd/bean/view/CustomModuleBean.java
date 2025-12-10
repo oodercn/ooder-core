@@ -181,7 +181,6 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         this.initMethod(methodInfo.getInnerMethod());
         this.sourceClassName = methodInfo.getInnerMethod().getDeclaringClass().getName();
         this.domainId = methodInfo.getDomainId();
-
         this.sourceMethodName = methodInfo.getMethodName();
         this.methodName = methodInfo.getMethodName();
         this.alias = OODUtil.formatJavaName(methodName, true);
@@ -460,17 +459,19 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         }
 
         if (dialogBean == null) {
-            if (dialogBean == null && moduleComponent != null && moduleComponent.getModulePanelComponent() != null) {
-                dialogBean = new DialogBean(moduleComponent.getDialogComponent());
-            } else {
+//            if (dialogBean == null && moduleComponent != null && moduleComponent.getModulePanelComponent() != null) {
+//                dialogBean = new DialogBean(moduleComponent.getDialogComponent());
+//            } else {
+//
+//
+//            }
 
-                if (this.getMethod() != null) {
-                    Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(this.getMethod(), true);
-                    dialogBean = new DialogBean(annotations);
-                } else {
-                    dialogBean = new DialogBean();
-                    AnnotationUtil.fillDefaultValue(DialogAnnotation.class, dialogBean);
-                }
+            if (this.getMethod() != null) {
+                Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(this.getMethod(), true);
+                dialogBean = new DialogBean(annotations);
+            } else {
+                dialogBean = new DialogBean();
+                AnnotationUtil.fillDefaultValue(DialogAnnotation.class, dialogBean);
             }
         }
 
@@ -994,19 +995,28 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
 
     public CustomBlockBean getBlockBean() {
         if (blockBean == null) {
-            if (moduleComponent != null && moduleComponent.getCurrComponent() != null) {
-                Component component = moduleComponent.getCurrComponent();
-                blockBean = new CustomBlockBean(component);
+//            if (moduleComponent != null && moduleComponent.getCurrComponent() != null) {
+//                Component component = moduleComponent.getCurrComponent();
+//                blockBean = new CustomBlockBean(component);
+//            } else {
+//                Method method = this.getMethod();
+//                if (method != null) {
+//                    Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(method, true);
+//                    blockBean = new CustomBlockBean(annotations);
+//                } else {
+//                    blockBean = new CustomBlockBean();
+//                    AnnotationUtil.fillDefaultValue(BlockAnnotation.class, blockBean);
+//                }
+//            }
+            Method method = this.getMethod();
+            if (method != null) {
+                Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(method, true);
+                blockBean = new CustomBlockBean(annotations);
             } else {
-                Method method = this.getMethod();
-                if (method != null) {
-                    Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(method, true);
-                    blockBean = new CustomBlockBean(annotations);
-                } else {
-                    blockBean = new CustomBlockBean();
-                    AnnotationUtil.fillDefaultValue(BlockAnnotation.class, blockBean);
-                }
+                blockBean = new CustomBlockBean();
+                AnnotationUtil.fillDefaultValue(BlockAnnotation.class, blockBean);
             }
+
             if (getContainerBean() != null) {
                 blockBean.setContainerBean(getContainerBean());
             }
@@ -1361,9 +1371,20 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         if (panelType != null && !panelType.equals(PanelType.panel)) {
             return null;
         }
-        if (panelBean == null && moduleComponent != null && moduleComponent.getModulePanelComponent() != null) {
-            panelBean = new CustomPanelBean(moduleComponent.getModulePanelComponent());
-        } else {
+//        if (panelBean == null && moduleComponent != null && moduleComponent.getModulePanelComponent() != null) {
+//            panelBean = new CustomPanelBean(moduleComponent.getModulePanelComponent());
+//        } else {
+//            Method method = getMethod();
+//            if (method != null) {
+//                Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(method, true);
+//                panelBean = new CustomPanelBean(annotations);
+//            } else {
+//                panelBean = new CustomPanelBean();
+//                AnnotationUtil.fillDefaultValue(PanelAnnotation.class, panelBean);
+//            }
+//        }
+
+        if (panelBean == null) {
             Method method = getMethod();
             if (method != null) {
                 Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(method, true);
@@ -1373,6 +1394,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
                 AnnotationUtil.fillDefaultValue(PanelAnnotation.class, panelBean);
             }
         }
+
 
         ContainerBean containerBean = getContainerBean();
         if (containerBean != null && panelBean.getDivBean() != null) {
@@ -1563,6 +1585,24 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
     }
 
     public CustomDivBean getDivBean() {
+
+        if (panelType != null && !panelType.equals(PanelType.div)) {
+            return null;
+        }
+
+        if (divBean == null) {
+            if (this.getMethod() != null) {
+                Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(this.getMethod(), true);
+                divBean = new CustomDivBean(annotations);
+            } else {
+                divBean = new CustomDivBean();
+                AnnotationUtil.fillDefaultValue(DivAnnotation.class, dialogBean);
+            }
+        }
+        ContainerBean containerBean = this.getContainerBean();
+        if (containerBean != null) {
+            divBean.setContainerBean(containerBean);
+        }
         return divBean;
     }
 

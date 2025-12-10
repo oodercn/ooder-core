@@ -67,7 +67,7 @@ public class CustomFieldPanelComponent extends PanelComponent<PanelProperties> {
 
     public CustomFieldPanelComponent(EUModule euModule, MethodConfig methodConfig, Map dbMap) {
         CustomPanelFormViewBean customComponentViewBean = (CustomPanelFormViewBean) methodConfig.getView();
-        if (methodConfig.getModuleBean() != null && methodConfig.getModuleBean().getBlockBean() != null) {
+        if (methodConfig.getModuleBean() != null && methodConfig.getModuleBean().getPanelBean() != null) {
             CustomPanelBean panelBean = methodConfig.getModuleBean().getPanelBean();
             if (customComponentViewBean.getContainerBean() != null && panelBean != null) {
                 if (panelBean.getDivBean() == null) {

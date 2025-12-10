@@ -1443,21 +1443,33 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     @JSONField(serialize = false)
     public DialogComponent<DialogProperties, DialogEventEnum> getDialogComponent() {
         if (dialog == null) {
-            DialogBean dialogBean = this.getModuleBean().getDialogBean();
-            if (dialogBean == null && this.getModuleBean().getPanelType() != null && this.getModuleBean().getPanelType().equals(PanelType.dialog)) {
+
+            DialogBean dialogBean = null;
+            PanelType panelType = this.getProperties().getPanelType();
+
+            if (moduleBean != null) {
+                dialogBean = moduleBean.getDialogBean();
+                if (panelType == null) {
+                    panelType = moduleBean.getPanelType();
+                }
+            }
+
+            if (dialogBean == null && panelType != null && panelType.equals(PanelType.dialog)) {
                 dialogBean = new DialogBean();
                 dialogBean.setCaption(this.getTitle());
             }
 
             if (dialogBean != null) {
-                if (dialogBean.getImageClass() == null || dialogBean.getImageClass().equals(AnnotationUtil.getDefaultValue(DialogAnnotation.class, "imageClass"))) {
-                    dialogBean.setImageClass(this.getModuleBean().getImageClass());
-                }
-                if (dialogBean.getCaption() == null || dialogBean.getCaption().equals(AnnotationUtil.getDefaultValue(DialogAnnotation.class, "caption"))) {
-                    dialogBean.setCaption(this.getModuleBean().getCaption());
-                }
-                if (dialogBean.getName() == null || dialogBean.getName().equals(AnnotationUtil.getDefaultValue(DialogAnnotation.class, "name"))) {
-                    dialogBean.setName(this.getModuleBean().getName());
+                if (moduleBean != null) {
+                    if (dialogBean.getImageClass() == null || dialogBean.getImageClass().equals(AnnotationUtil.getDefaultValue(DialogAnnotation.class, "imageClass"))) {
+                        dialogBean.setImageClass(moduleBean.getImageClass());
+                    }
+                    if (dialogBean.getCaption() == null || dialogBean.getCaption().equals(AnnotationUtil.getDefaultValue(DialogAnnotation.class, "caption"))) {
+                        dialogBean.setCaption(moduleBean.getCaption());
+                    }
+                    if (dialogBean.getName() == null || dialogBean.getName().equals(AnnotationUtil.getDefaultValue(DialogAnnotation.class, "name"))) {
+                        dialogBean.setName(moduleBean.getName());
+                    }
                 }
                 if (dialogBean.getMdia()) {
                     dialog = new DialogComponent(euModule.getName() + DefaultTopBoxfix, new DialogProperties(dialogBean));
@@ -1473,11 +1485,15 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     @JSONField(serialize = false)
     public PanelComponent getModulePanelComponent() {
         PanelComponent panelComponent = null;
-        CustomPanelBean panelBean = this.getModuleBean().getPanelBean();
         PanelType panelType = this.getProperties().getPanelType();
-        if (panelType == null && moduleBean != null) {
-            panelType = moduleBean.getPanelType();
+        CustomPanelBean panelBean = null;
+        if (moduleBean != null) {
+            panelBean = moduleBean.getPanelBean();
+            if (panelType == null) {
+                panelType = moduleBean.getPanelType();
+            }
         }
+
 
         String panelAlias = this.getEuModule().getName() + DefaultTopBoxfix;
         Component component = this.findComponentByAlias(panelAlias);
@@ -1507,12 +1523,17 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
     @JSONField(serialize = false)
     public BlockComponent getBlockPanelComponent() {
-        BlockComponent blockComponent = null;
-        CustomBlockBean blockBean = this.getModuleBean().getBlockBean();
         PanelType panelType = this.getProperties().getPanelType();
-        if (panelType == null && moduleBean != null) {
-            panelType = moduleBean.getPanelType();
+        BlockComponent blockComponent = null;
+        CustomBlockBean blockBean = null;
+        if (moduleBean != null) {
+            blockBean = moduleBean.getBlockBean();
+            if (panelType == null) {
+                panelType = moduleBean.getPanelType();
+            }
         }
+
+
         String panelAlias = this.getEuModule().getName() + DefaultTopBoxfix;
         Component component = this.findComponentByAlias(panelAlias);
 
@@ -1537,10 +1558,14 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     @JSONField(serialize = false)
     public DivComponent getDivComponent() {
         DivComponent divComponent = null;
-        CustomDivBean divBean = this.getModuleBean().getDivBean();
+        CustomDivBean divBean = null;
         PanelType panelType = this.getProperties().getPanelType();
-        if (panelType == null && moduleBean != null) {
-            panelType = moduleBean.getPanelType();
+
+        if (moduleBean != null) {
+            divBean = moduleBean.getDivBean();
+            if (panelType == null) {
+                panelType = moduleBean.getPanelType();
+            }
         }
 
         String panelAlias = this.getEuModule().getName() + DefaultTopBoxfix;
