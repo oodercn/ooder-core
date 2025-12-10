@@ -19,7 +19,7 @@ import java.util.List;
 public class LayoutProperties extends AbsListProperties<LayoutListItem> {
 
 
-    public LayoutType type;
+    public LayoutType layoutType;
     public Boolean dragSortable;
 
     public List<String> listKey;
@@ -42,7 +42,7 @@ public class LayoutProperties extends AbsListProperties<LayoutListItem> {
     }
 
     public LayoutProperties(CustomLayoutViewBean layoutViewBean) {
-        this.type = layoutViewBean.getType();
+        this.layoutType = layoutViewBean.getLayoutType();
         this.left = layoutViewBean.getLeft();
         this.borderType = layoutViewBean.getBorderType();
         this.top = layoutViewBean.getTop();
@@ -60,7 +60,7 @@ public class LayoutProperties extends AbsListProperties<LayoutListItem> {
     }
 
     public LayoutProperties(LayoutAnnotation layoutAnnotation) {
-        this.type = layoutAnnotation.type();
+        this.layoutType = layoutAnnotation.layoutType();
         this.left = layoutAnnotation.left();
         this.borderType = layoutAnnotation.borderType();
         this.top = layoutAnnotation.top();
@@ -122,12 +122,12 @@ public class LayoutProperties extends AbsListProperties<LayoutListItem> {
         this.left = left;
     }
 
-    public LayoutType getType() {
-        return type;
+    public LayoutType getLayoutType() {
+        return layoutType;
     }
 
-    public void setType(LayoutType type) {
-        this.type = type;
+    public void setLayoutType(LayoutType layoutType) {
+        this.layoutType = layoutType;
     }
 
     public Boolean getDragSortable() {

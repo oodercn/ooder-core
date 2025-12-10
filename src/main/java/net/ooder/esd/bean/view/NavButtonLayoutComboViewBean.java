@@ -54,7 +54,7 @@ public class NavButtonLayoutComboViewBean extends NavComboBaseViewBean<ButtonLay
         super(methodAPIBean);
         buttonLayoutViewBean = new CustomButtonLayoutViewBean(methodAPIBean);
         tabsViewBean.setCloseBtn(true);
-        layoutViewBean.setType(LayoutType.vertical);
+        layoutViewBean.setLayoutType(LayoutType.vertical);
 
     }
 

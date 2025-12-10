@@ -106,7 +106,7 @@ public class FullNavFoldingTreeComponent extends CustomModuleComponent<NavFoldin
             layoutProperties.addItem(mainItem);
         } else {
             layoutProperties.setBorderType(BorderType.none);
-            layoutProperties.setType(LayoutType.horizontal);
+            layoutProperties.setLayoutType(LayoutType.horizontal);
             layoutProperties.addItem(beforItem);
             layoutProperties.addItem(mainItem);
         }

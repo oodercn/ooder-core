@@ -305,7 +305,7 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
             layoutProperties.addItem(mainItem);
         } else {
             layoutProperties.setBorderType(BorderType.none);
-            layoutProperties.setType(LayoutType.horizontal);
+            layoutProperties.setLayoutType(LayoutType.horizontal);
             layoutProperties.addItem(beforItem);
             layoutProperties.addItem(mainItem);
         }

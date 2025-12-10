@@ -123,7 +123,7 @@ public class FullNavGalleryComponent extends CustomModuleComponent<GalleryCompon
             layoutProperties.addItem(mainItem);
         } else {
             layoutProperties.setBorderType(BorderType.none);
-            layoutProperties.setType(LayoutType.vertical);
+            layoutProperties.setLayoutType(LayoutType.vertical);
             layoutProperties.addItem(topItem);
             layoutProperties.addItem(mainItem);
         }

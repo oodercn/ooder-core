@@ -73,11 +73,11 @@ public class CustomIndexLeftComponent extends BlockComponent {
             layoutProperties.addItem(mainItem);
         } else {
             layoutProperties.setBorderType(BorderType.none);
-            layoutProperties.setType(LayoutType.vertical);
+            layoutProperties.setLayoutType(LayoutType.vertical);
             layoutProperties.addItem(topItem);
             layoutProperties.addItem(mainItem);
         }
-        layoutProperties.setType(LayoutType.vertical);
+        layoutProperties.setLayoutType(LayoutType.vertical);
         layoutComponent.setProperties(layoutProperties);
         return layoutComponent;
 

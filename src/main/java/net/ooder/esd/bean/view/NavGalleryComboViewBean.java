@@ -52,7 +52,7 @@ public class NavGalleryComboViewBean extends NavComboBaseViewBean<GalleryNavItem
         super(methodAPIBean);
         galleryViewBean = (CustomGalleryViewBean) layoutViewBean.findComByPos(PosType.before);
         tabsViewBean.setCloseBtn(true);
-        layoutViewBean.setType(LayoutType.vertical);
+        layoutViewBean.setLayoutType(LayoutType.vertical);
 
     }
 

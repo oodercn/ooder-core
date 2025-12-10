@@ -49,7 +49,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
     String top;
     BorderType borderType;
     String left;
-    LayoutType type;
+    LayoutType layoutType;
     Boolean dragSortable;
     List<String> listKey;
     Boolean flexSize;
@@ -415,7 +415,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
     }
 
     public void init(LayoutAnnotation layoutAnnotation) {
-        this.type = layoutAnnotation.type();
+        this.layoutType = layoutAnnotation.layoutType();
         this.left = layoutAnnotation.left();
         this.borderType = layoutAnnotation.borderType();
         this.top = layoutAnnotation.top();
@@ -576,12 +576,12 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         this.left = left;
     }
 
-    public LayoutType getType() {
-        return type;
+    public LayoutType getLayoutType() {
+        return layoutType;
     }
 
-    public void setType(LayoutType type) {
-        this.type = type;
+    public void setLayoutType(LayoutType layoutType) {
+        this.layoutType = layoutType;
     }
 
     public Boolean getDragSortable() {

@@ -1,6 +1,5 @@
 package net.ooder.esd.custom.component;
 
-import com.alibaba.fastjson.JSON;
 import net.ooder.common.JDSException;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.CustomClass;
@@ -18,9 +17,7 @@ import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.LayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.LayoutProperties;
-import net.ooder.esd.tool.properties.Properties;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
-import net.ooder.jds.core.esb.util.OgnlUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,20 +89,36 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                 if (classes != null) {
                     for (Class clazz : classes) {
                         MethodConfig bindMethod = viewBean.findEditorMethod(clazz);
+
                         if (bindMethod != null && bindMethod.isModule()) {
                             EUModule euModule = bindMethod.getModule(valueMap, projectName);
 
                             if (euModule != null && euModule.getComponent() != null) {
-                                Component component = euModule.getComponent().getCurrComponent();
-                                Properties boxProperties = euModule.getComponent().getMainBoxComponent().getProperties();
-                                if (component != null) {
-                                    Component oc = component.clone();
-                                    OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(boxProperties), Map.class), oc.getProperties(), false, false);
-                                    oc.setTarget(layoutListItem.getId());
-                                    layoutComponent.addChildren(oc);
+                                Component mainComponent = euModule.getComponent().getMainBoxComponent().clone();
+                                String alias = mainComponent.getAlias();
+                                if (alias.endsWith(ModuleComponent.DefaultTopBoxfix)) {
+                                    alias = alias.substring(0, (alias.length() - ModuleComponent.DefaultTopBoxfix.length()));
                                 }
+                                mainComponent.updateAlias(alias);
+                                mainComponent.setTarget(layoutListItem.getId());
+                                layoutComponent.addChildren(mainComponent);
                             }
                         }
+
+//                        if (bindMethod != null && bindMethod.isModule()) {
+//                            EUModule euModule = bindMethod.getModule(valueMap, projectName);
+//
+//                            if (euModule != null && euModule.getComponent() != null) {
+//                                Component component = euModule.getComponent().getCurrComponent();
+//                                Properties boxProperties = euModule.getComponent().getMainBoxComponent().getProperties();
+//                                if (component != null) {
+//                                    Component oc = component.clone();
+//                                    OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(boxProperties), Map.class), oc.getProperties(), false, false);
+//                                    oc.setTarget(layoutListItem.getId());
+//                                    layoutComponent.addChildren(oc);
+//                                }
+//                            }
+//                        }
 
                     }
                 }

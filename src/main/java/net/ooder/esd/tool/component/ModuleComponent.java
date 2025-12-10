@@ -190,7 +190,6 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
 
         if (Arrays.asList(componentTypes).contains(componentType)) {
-
             if (!moduleName.endsWith(DefaultTopBoxfix)) {
                 currComponent.updateAlias(moduleName + DefaultTopBoxfix);
             }
