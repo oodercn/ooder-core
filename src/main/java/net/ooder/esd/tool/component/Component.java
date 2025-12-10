@@ -377,6 +377,15 @@ public class Component<T extends Properties, K extends EventKey> {
         return component;
     }
 
+    public void updateAlias(String alias) {
+        if (alias != null && !this.alias.equals(alias)) {
+            this.alias = alias;
+            for (Component component : children) {
+                component.setHost(alias);
+            }
+        }
+    }
+
     public void setParent(Component parent) {
         this.parent = parent;
     }

@@ -1036,7 +1036,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
                     blockBean = new CustomBlockBean(annotations);
                 } else {
                     blockBean = new CustomBlockBean();
-                    AnnotationUtil.fillDefaultValue(BlockAnnotation.class, panelBean);
+                    AnnotationUtil.fillDefaultValue(BlockAnnotation.class, blockBean);
                 }
             }
             if (getContainerBean() != null) {

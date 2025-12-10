@@ -190,9 +190,9 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
 
         if (Arrays.asList(componentTypes).contains(componentType)) {
-            String alias = currComponent.getAlias();
-            if (!alias.endsWith(DefaultTopBoxfix)) {
-                currComponent.setAlias(currComponent.getAlias() + DefaultTopBoxfix);
+
+            if (!moduleName.endsWith(DefaultTopBoxfix)) {
+                currComponent.updateAlias(moduleName + DefaultTopBoxfix);
             }
 
             this.setCurrComponent(currComponent);
@@ -201,6 +201,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             switch (componentType) {
                 case PANEL:
                     this.getModuleBean().getPanelBean().update(currComponent);
+
                     break;
                 case DIV:
                     this.getModuleBean().getDivBean().update(currComponent);
@@ -2041,7 +2042,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             mainAlias = this.getEuModule().getName() + DefaultTopBoxfix;
             mainBlock = this.components.get(this.getEuModule().getName() + DefaultTopBoxfix);
             if (mainBlock == null) {
-                BlockComponent topComponent = getDefaultTopComponent();
+                Component topComponent = getDefaultTopComponent();
                 if (topComponent == null) {
                     mainBlock = new BlockComponent(Dock.fill, this.getEuModule().getName() + DefaultTopBoxfix);
                     this.addChildren(mainBlock);
@@ -2061,18 +2062,19 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                 this.addChildren(mainBlock);
             }
         }
-
-        ((BlockComponent) mainBlock).getProperties().setBorderType(BorderType.none);
+        if (mainBlock instanceof BlockComponent) {
+            ((BlockComponent) mainBlock).getProperties().setBorderType(BorderType.none);
+        }
 
         return mainBlock;
     }
 
-    private BlockComponent getDefaultTopComponent() {
-        BlockComponent mainBlock = null;
+    private Component<BlockProperties, UIEventEnum> getDefaultTopComponent() {
+        Component mainBlock = null;
         if (this.getChildren() != null) {
             for (Component topComponent : this.getChildren()) {
-                if (topComponent.getAlias().endsWith(DefaultTopBoxfix) && topComponent instanceof BlockComponent) {
-                    mainBlock = (BlockComponent) topComponent;
+                if (topComponent.getAlias().endsWith(DefaultTopBoxfix)) {
+                    mainBlock = topComponent;
                 }
             }
         }
