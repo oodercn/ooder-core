@@ -3,7 +3,6 @@ package net.ooder.esd.custom.component;
 import net.ooder.common.JDSException;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.CustomClass;
-import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.view.LayoutViewAnnotation;
@@ -35,7 +34,7 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
         super(module, methodConfig, valueMap);
         CustomLayoutViewBean viewBean = (CustomLayoutViewBean) methodConfig.getView();
         LayoutProperties layoutProperties = new LayoutProperties(viewBean);
-        LayoutComponent layoutComponent = new LayoutComponent(euModule.getName() + ComponentType.LAYOUT.name(), layoutProperties);
+        LayoutComponent layoutComponent = new LayoutComponent(euModule.getName(), layoutProperties);
         try {
             if (methodConfig.getViewClass() != null) {
                 AggEntityConfig aggEntityConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(methodConfig.getViewClass().getClassName(), false);
@@ -67,6 +66,7 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                             ModuleComponent moduleComponent = new ModuleComponent();
                             moduleComponent.setAlias(itemMethod.getName());
                             moduleComponent.setClassName(itemMethod.getEUClassName());
+
                             moduleComponent.setTarget(layoutItemBean.getPos().name());
                             moduleComponent.getModuleVar().putAll(itemMethod.getTagVar());
                             layoutComponent.addChildren(moduleComponent);

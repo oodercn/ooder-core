@@ -41,8 +41,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
 
     @JSONField(serialize = false)
     protected List<ESDFieldConfig> fieldList;
-    @JSONField(serialize = false)
-    protected Component mainComponent;
+
 
 
     @JSONField(serialize = false)
@@ -78,8 +77,8 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
         this.parentClass = methodAPIBean.getSourceClass();
         this.mainComponent = this.getMainComponent();
         this.moduleBean = methodAPIBean.getModuleBean();
-        if (moduleBean != null && moduleBean.getPanelType().equals(PanelType.block)){
-            if ( moduleBean.getViewConfig() != null&& moduleBean.getViewConfig().getViewStyles() != null) {
+        if (moduleBean != null && moduleBean.getPanelType().equals(PanelType.block)) {
+            if (moduleBean.getViewConfig() != null && moduleBean.getViewConfig().getViewStyles() != null) {
                 ModuleStyleBean moduleStyleBean = moduleBean.getViewConfig().getViewStyles();
                 if (moduleStyleBean.getBackgroundAttachment() != null) {
                     ((BlockComponent) mainComponent).getProperties().setPanelBgImgAttachment(moduleStyleBean.getBackgroundAttachment());
@@ -335,30 +334,27 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                     BlockComponent blockPanelComponent = this.getBlockPanelComponent();
                     if (component instanceof BlockComponent && component.getChildren() != null) {
                         for (Component childComponent : component.getChildren()) {
-                            mainComponent.addChildren(childComponent);
+                            blockPanelComponent.addChildren(childComponent);
                         }
                     } else {
-                        mainComponent.addChildren(component);
+                        blockPanelComponent.addChildren(component);
                     }
                     if (moduleBean != null && moduleBean.getBlockBean() != null && moduleBean.getBlockBean().getContainerBean() != null) {
-
                         ((BlockComponent) mainComponent).getProperties().init(moduleBean.getBlockBean().getContainerBean());
                     }
 
-                    mainComponent.setProperties(blockPanelComponent.getProperties());
-                    this.addChildren(mainComponent);
+                    this.addChildren(blockPanelComponent);
                     break;
                 case div:
                     DivComponent divComponent = this.getDivComponent();
                     if (component instanceof PanelComponent && component.getChildren() != null) {
                         for (Component childComponent : component.getChildren()) {
-                            mainComponent.addChildren(childComponent);
+                            divComponent.addChildren(childComponent);
                         }
                     } else {
-                        mainComponent.addChildren(component);
+                        divComponent.addChildren(component);
                     }
                     this.addChildren(divComponent);
-                    divComponent.addChildren(mainComponent);
 
 
             }

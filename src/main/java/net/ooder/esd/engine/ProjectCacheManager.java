@@ -35,6 +35,7 @@ import net.ooder.esd.engine.task.SyncLoadProject;
 import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.TempConfigFactory;
 import net.ooder.esd.tool.component.APICallerComponent;
+import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ComponentList;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ModuleFunction;
@@ -576,7 +577,7 @@ public class ProjectCacheManager {
         }
 
         String json = JSONObject.toJSONString(moduleComponent, true);
-        json = (String) TemplateRuntime.eval(json,MvelDSMRoot.getInstance(), JDSActionContext.getActionContext().getContext());
+        json = (String) TemplateRuntime.eval(json, MvelDSMRoot.getInstance(), JDSActionContext.getActionContext().getContext());
         try {
             moduleCache.put(path, euModule);
             this.getVfsClient().saveFileAsContent(path, json, VFSConstants.Default_Encoding);
@@ -748,6 +749,8 @@ public class ProjectCacheManager {
         }
 
         ComponentList componentList = component.getChildren();
+        ComponentList childrenJson = new ComponentList();
+
         if (componentList == null) {
             componentList = new ComponentList();
         }
@@ -775,10 +778,16 @@ public class ProjectCacheManager {
             component.fillFormValues(valueMap, true);
         }
 
+        for (Component childCom : componentList) {
+            if (childCom != null) {
+                childrenJson.add(childCom);
+            }
+        }
+
 
         stack.getContext().put("className", component.getClassName());
         stack.getContext().put("properties", JSONObject.toJSONString(component.getProperties(), prettyFormat));
-        stack.getContext().put("childrenJson", componentList.toJson(prettyFormat));
+        stack.getContext().put("childrenJson", childrenJson.toJson(prettyFormat));
         stack.getContext().put("functions", JSONObject.toJSONString(functions, prettyFormat));
         stack.getContext().put("formulas", JSONObject.toJSONString(rightFormulas, prettyFormat));
 
@@ -861,7 +870,6 @@ public class ProjectCacheManager {
     public StringBuffer genJSON(EUModule module, String tempName, boolean prettyFormat) {
         JDSActionContext.getActionContext().getContext().put("TopModule", module);
         JDSActionContext.getActionContext().getContext().put("CurrModule", module);
-
         return genJSON(module.getComponent(), tempName, prettyFormat);
     }
 

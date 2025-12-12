@@ -54,16 +54,16 @@ public class CustomButtonViewsComponent extends ButtonViewsComponent {
         }
         this.setAlias(tabsViewBean.getMethodName());
         List<TabItemBean> childTabViewBeans = tabsViewBean.getItemBeans();
-
         this.fillComponent(childTabViewBeans, valueMap);
 
         if (tabsViewBean.getLazyAppend() == null || tabsViewBean.getLazyAppend()) {
-            Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onItemSelected);
-            showAction.updateArgs(this.getAlias(), 4);
-            this.addAction(showAction);
             if (tabsViewBean != null && tabsViewBean.getAutoReload() != null && tabsViewBean.getAutoReload()) {
+                Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onItemSelected);
+                showAction.updateArgs(this.getAlias(), 4);
                 this.addAction(showAction);
             } else {
+                Action showAction = new Action(CustomLoadClassAction.tabShow, TabsEventEnum.onIniPanelView);
+                showAction.updateArgs(this.getAlias(), 4);
                 showAction.setEventKey(TabsEventEnum.onIniPanelView);
                 this.addAction(showAction);
             }
