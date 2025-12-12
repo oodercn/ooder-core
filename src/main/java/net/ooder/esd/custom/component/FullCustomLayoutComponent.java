@@ -81,7 +81,10 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                 layoutListItems = new ArrayList<>();
                 List<LayoutListItem> listItems = viewBean.getTabItems();
                 for (LayoutListItem listItem : listItems) {
-                    layoutListItems.add(new CustomLayoutItemBean(listItem));
+                    if (listItem != null) {
+                        layoutListItems.add(new CustomLayoutItemBean(listItem));
+                    }
+
                 }
             }
             for (CustomLayoutItemBean layoutListItem : layoutListItems) {
