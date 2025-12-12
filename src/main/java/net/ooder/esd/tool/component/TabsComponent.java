@@ -24,10 +24,7 @@ import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.RequestParamBean;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TabsComponent<T extends NavTabsProperties> extends Component<T, TabsEventEnum> implements DataComponent<List<NavTabListItem>> {
 
@@ -84,8 +81,19 @@ public class TabsComponent<T extends NavTabsProperties> extends Component<T, Tab
 
     protected void fillComponent(List<TabItemBean> childTabViewBeans, Map<String, ?> valueMap) throws JDSException {
         if (this.getChildren() != null) {
+            Set<String> moduleNameSet = new HashSet<>();
+            for (Component component : this.getChildren()) {
+                moduleNameSet.add(component.getAlias());
+            }
             this.getChildren().clear();
+            if (this.getModuleComponent() != null) {
+                for (String name : moduleNameSet) {
+                    this.getModuleComponent().getComponents().remove(name);
+                }
+            }
         }
+
+
         for (TabItemBean childTabViewBean : childTabViewBeans) {
             MethodConfig childMethodConfig = childTabViewBean.getMethodConfig();
             if (childMethodConfig != null) {

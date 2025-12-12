@@ -361,6 +361,15 @@ public class Component<T extends Properties, K extends EventKey> {
             while (parent != null && !parent.getKey().equals(ComponentType.MODULE.getClassName())) {
                 parent = parent.getParent();
             }
+
+//            //当模块发生分裂时获取原始模块
+//            if (parent != null) {
+//                ModuleComponent moduleComponent = (ModuleComponent) parent;
+//                if (moduleComponent.getEuModule() != null && !moduleComponent.getEuModule().getComponent().equals(parent)) {
+//                    parent = moduleComponent.getEuModule().getComponent();
+//                }
+//            }
+
             return (ModuleComponent) parent;
         }
     }

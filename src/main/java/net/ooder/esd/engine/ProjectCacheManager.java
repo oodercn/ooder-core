@@ -783,6 +783,13 @@ public class ProjectCacheManager {
                 childrenJson.add(childCom);
             }
         }
+        List<String> dependencies = new ArrayList<>();
+        List<Component> childModules = component.findComponents(ComponentType.MODULE, null);
+        for (Component child : childModules) {
+            if (!dependencies.contains(child.getModuleComponent().getClassName())) {
+                dependencies.add(child.getModuleComponent().getClassName());
+            }
+        }
 
 
         stack.getContext().put("className", component.getClassName());
@@ -827,7 +834,6 @@ public class ProjectCacheManager {
 
         } else {
             stack.getContext().put("Static", "{}");
-
         }
 
         String customAppendStr = "function(parent, subId, left, top){ return false}";
@@ -850,7 +856,7 @@ public class ProjectCacheManager {
 
         stack.getContext().put("events", JSONObject.toJSONString(component.getEvents(), prettyFormat));
         stack.getContext().put("required", JSONArray.toJSONString(component.getRequired(), prettyFormat));
-        stack.getContext().put("dependencies", JSONArray.toJSONString(component.getDependencies(), prettyFormat));
+        stack.getContext().put("dependencies", JSONArray.toJSONString(dependencies, prettyFormat));
         JDSScopesHashModel model = new JDSScopesHashModel(cfg.getObjectWrapper(), stack);
         try {
             Template temp = cfg.getTemplate(tempName, VFSConstants.Default_Encoding);

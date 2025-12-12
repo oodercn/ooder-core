@@ -42,7 +42,6 @@ public class FullFoldingTabsComponent extends CustomModuleComponent {
 
     public FullFoldingTabsComponent(EUModule module, MethodConfig methodConfig, Map<String, Object> valueMap) throws ClassNotFoundException {
         super(module, methodConfig, valueMap);
-
         CustomFoldingTabsComponent tabcomponent = new CustomFoldingTabsComponent(euModule, methodConfig, valueMap);
         this.addChildLayoutNav(tabcomponent);
         this.setCurrComponent(tabcomponent);

@@ -1476,7 +1476,10 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                         dialogBean.setName(moduleBean.getName());
                     }
                 }
+
                 if (dialogBean.getMdia()) {
+                    dialog = new MDialogComponent(euModule.getName() + DefaultTopBoxfix, new DialogProperties(dialogBean));
+                } else {
                     dialog = new DialogComponent(euModule.getName() + DefaultTopBoxfix, new DialogProperties(dialogBean));
                 }
                 dialog.addAction(new Action(CustomPageAction.CLOSE, DialogEventEnum.afterDestroy), false);
@@ -1840,7 +1843,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         for (Component component : allComponents) {
             String alias = component.getAlias();
             ComponentType componentType = ComponentType.fromType(component.getKey());
-            if (!alias.toUpperCase().equals(PAGECTXNAME) && !componentType.isBar() && !alias.endsWith(DefaultTopBoxfix)) {
+            if (!alias.toUpperCase().equals(PAGECTXNAME) && !componentType.isBar() && !alias.endsWith(DefaultTopBoxfix) && !componentType.equals(ComponentType.MODULE)) {
                 if (!Arrays.asList(skipComponents).contains(componentType)) {
                     childComponents.add(component);
                 } else if (component.getChildren() != null && component.getProperties() instanceof ContainerProperties) {
@@ -1855,7 +1858,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             }
         }
 
-        if (childComponents.size() == 1) {
+        if (childComponents.size() > 1) {
             deepComponent = (M) childComponents.get(0);
         }
 
