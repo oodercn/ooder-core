@@ -544,7 +544,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
 
         if (tabItems != null) {
             for (LayoutListItem layoutListItem : tabItems) {
-                if (layoutListItem.getBindClass() != null && layoutListItem.getBindClass().length > 0) {
+                if (layoutListItem != null && layoutListItem.getBindClass() != null && layoutListItem.getBindClass().length > 0) {
                     classSet.addAll(Arrays.asList(layoutListItem.getBindClass()));
                 }
             }
