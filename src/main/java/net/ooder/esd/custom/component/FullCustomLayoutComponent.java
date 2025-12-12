@@ -84,8 +84,8 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                     if (listItem != null) {
                         layoutListItems.add(new CustomLayoutItemBean(listItem));
                     }
-
                 }
+
             }
             for (CustomLayoutItemBean layoutListItem : layoutListItems) {
                 Class[] classes = layoutListItem.getBindClass();
@@ -107,22 +107,6 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                 layoutComponent.addChildren(mainComponent);
                             }
                         }
-
-//                        if (bindMethod != null && bindMethod.isModule()) {
-//                            EUModule euModule = bindMethod.getModule(valueMap, projectName);
-//
-//                            if (euModule != null && euModule.getComponent() != null) {
-//                                Component component = euModule.getComponent().getCurrComponent();
-//                                Properties boxProperties = euModule.getComponent().getMainBoxComponent().getProperties();
-//                                if (component != null) {
-//                                    Component oc = component.clone();
-//                                    OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(boxProperties), Map.class), oc.getProperties(), false, false);
-//                                    oc.setTarget(layoutListItem.getId());
-//                                    layoutComponent.addChildren(oc);
-//                                }
-//                            }
-//                        }
-
                     }
                 }
             }
