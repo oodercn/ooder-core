@@ -326,25 +326,31 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         }
 
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(layoutProperties), Map.class), this, false, false);
-        for (LayoutListItem layoutItem : tabItems) {
-            CustomLayoutItemBean customLayoutItemBean = new CustomLayoutItemBean(layoutItem);
-            FieldModuleConfig config = itemConfigMap.get(customLayoutItemBean.getId());
-            if (config != null) {
-                if (config.getMethodConfig() != null) {
-                    customLayoutItemBean.setEuClassName(config.getMethodConfig().getEUClassName());
-                    customLayoutItemBean.setBindClass(new Class[]{config.getMethodConfig().getSourceClass().getCtClass()});
-                } else {
-                    customLayoutItemBean.setEuClassName(config.getViewClassName());
-                    try {
-                        customLayoutItemBean.setBindClass(new Class[]{ClassUtility.loadClass(config.getSourceClassName())});
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+        if (tabItems != null) {
+            for (LayoutListItem layoutItem : tabItems) {
+                if (layoutItem != null) {
+                    CustomLayoutItemBean customLayoutItemBean = new CustomLayoutItemBean(layoutItem);
+                    FieldModuleConfig config = itemConfigMap.get(customLayoutItemBean.getId());
+                    if (config != null) {
+                        if (config.getMethodConfig() != null) {
+                            customLayoutItemBean.setEuClassName(config.getMethodConfig().getEUClassName());
+                            customLayoutItemBean.setBindClass(new Class[]{config.getMethodConfig().getSourceClass().getCtClass()});
+                        } else {
+                            customLayoutItemBean.setEuClassName(config.getViewClassName());
+                            try {
+                                customLayoutItemBean.setBindClass(new Class[]{ClassUtility.loadClass(config.getSourceClassName())});
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        layoutItems.add(customLayoutItemBean);
                     }
-                }
-                layoutItems.add(customLayoutItemBean);
-            }
 
+                }
+
+            }
         }
+
 
     }
 
