@@ -2258,7 +2258,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         Component currComponent = this.getCurrComponent();
         if (currComponent != null) {
             ComponentType type = ComponentType.fromType(currComponent.getKey());
-            if (type.equals(ComponentType.LAYOUT)) {
+            if (type.equals(ComponentType.LAYOUT) && currComponent.getChildren() != null) {
                 ComponentList components = currComponent.getChildren();
                 for (Component childComponent : components) {
                     if (childComponent.getTarget() != null && childComponent.getTarget().endsWith(PosType.before.name())) {

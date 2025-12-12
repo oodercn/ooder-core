@@ -87,10 +87,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         component = moduleComponent.getCurrComponent();
         List<Component> components = this.cloneComponentList(component.getChildren());
         LayoutProperties layoutProperties = (LayoutProperties) component.getProperties();
-        if (tabItems == null || tabItems.isEmpty()) {
-            tabItems = layoutProperties.getItems();
-        }
-        this.setTabItems(tabItems);
+
         List<CustomModuleBean> navModuleBeans = new ArrayList<>();
         if (components != null && components.size() > 0) {
             for (Component childComponent : components) {
@@ -281,7 +278,12 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         this.name = layoutProperties.getName();
         itemConfigMap = new CaselessStringKeyHashMap<>();
         itemNames = new LinkedHashSet<String>();
-        tabItems = layoutProperties.getItems();
+
+        if (tabItems == null || tabItems.isEmpty()) {
+            tabItems = layoutProperties.getItems();
+            this.setTabItems(tabItems);
+        }
+
         moduleBeans = this.getModuleBeans();
         for (LayoutListItem layoutItem : layoutProperties.getItems()) {
             String euClassName = layoutItem.getEuClassName();
@@ -324,7 +326,6 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         }
 
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(layoutProperties), Map.class), this, false, false);
-        tabItems = layoutProperties.getItems();
         for (LayoutListItem layoutItem : tabItems) {
             CustomLayoutItemBean customLayoutItemBean = new CustomLayoutItemBean(layoutItem);
             FieldModuleConfig config = itemConfigMap.get(customLayoutItemBean.getId());
