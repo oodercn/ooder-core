@@ -1,6 +1,7 @@
 package net.ooder.esd.tool.properties;
 
 
+import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.esd.annotation.LayoutAnnotation;
 import net.ooder.esd.annotation.LayoutItemAnnotation;
 import net.ooder.esd.annotation.ui.BorderType;
@@ -11,7 +12,6 @@ import net.ooder.esd.bean.CustomLayoutItemBean;
 import net.ooder.esd.bean.view.CustomLayoutViewBean;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
 import net.ooder.esd.tool.properties.list.AbsListProperties;
-import net.ooder.esd.tool.properties.list.AbsUIListProperties;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +19,6 @@ import java.util.List;
 public class LayoutProperties extends AbsListProperties<LayoutListItem> {
 
 
-    public LayoutType layoutType;
     public Boolean dragSortable;
 
     public List<String> listKey;
@@ -31,6 +30,9 @@ public class LayoutProperties extends AbsListProperties<LayoutListItem> {
     public String top;
     public BorderType borderType;
     public String left;
+
+    @JSONField(name = "type")
+    public LayoutType layoutType;
 
 
     public LayoutProperties() {
@@ -77,6 +79,7 @@ public class LayoutProperties extends AbsListProperties<LayoutListItem> {
             this.getItems().add(new LayoutListItem(itemAnnotation));
         }
     }
+
 
     public NavComboType getNavComboType() {
         return navComboType;

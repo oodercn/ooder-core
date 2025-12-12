@@ -49,6 +49,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
     String top;
     BorderType borderType;
     String left;
+    @JSONField(name = "type")
     LayoutType layoutType;
     Boolean dragSortable;
     List<String> listKey;
