@@ -1858,8 +1858,8 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             }
         }
 
-        if (childComponents.size() > 1) {
-            deepComponent = (M) childComponents.get(0);
+        if (childComponents.size() > 0) {
+            deepComponent = childComponents.get(0);
         }
 
         return (M) deepComponent;
