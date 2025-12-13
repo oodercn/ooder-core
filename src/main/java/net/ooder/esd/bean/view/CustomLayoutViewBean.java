@@ -12,15 +12,11 @@ import net.ooder.esd.annotation.LayoutItemAnnotation;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.bar.ToolsBar;
-import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.ESDClass;
-import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.gen.view.GenLayoutChildModule;
-import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaGenSource;
-import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
@@ -62,7 +58,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
 
     @JSONField(name = "items")
     List<CustomLayoutItemBean> layoutItems = new ArrayList<>();
-
+    //
     @JSONField(serialize = false)
     List<CustomModuleBean> moduleBeans = new ArrayList<>();
 
@@ -278,52 +274,53 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         this.name = layoutProperties.getName();
         itemConfigMap = new CaselessStringKeyHashMap<>();
         itemNames = new LinkedHashSet<String>();
+        layoutType = layoutProperties.getLayoutType();
 
         if (tabItems == null || tabItems.isEmpty()) {
             tabItems = layoutProperties.getItems();
             this.setTabItems(tabItems);
         }
 
-        moduleBeans = this.getModuleBeans();
-        for (LayoutListItem layoutItem : layoutProperties.getItems()) {
-            String euClassName = layoutItem.getEuClassName();
-            if (euClassName != null) {
-                try {
-                    EUModule euModule = ESDFacrory.getAdminESDClient().getModule(euClassName, projectName);
-                    if (euModule == null) {
-                        euModule = CustomViewFactory.getInstance().getView(euClassName, projectName);
-                    }
-                    MethodConfig methodConfig = euModule.getComponent().getMethodAPIBean();
-                    CustomModuleBean customModuleBean = new CustomModuleBean(euModule.getComponent());
-                    customModuleBean.reBindMethod(methodConfig);
-                    try {
-                        Class clazz = ClassUtility.loadClass(euClassName);
-                    } catch (ClassNotFoundException e) {
-                        CustomViewBean customViewBean = DSMFactory.getInstance().getViewManager().getDefaultViewBean(euModule.getComponent(), domainId);
-                        customViewBean.setDomainId(methodConfig.getDomainId());
-                        AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, euClassName, projectName);
-                        List<JavaGenSource> serviceList = aggRootBuild.getAggServiceRootBean();
-                        if (serviceList == null || serviceList.isEmpty()) {
-                            serviceList = aggRootBuild.build();
-                        }
-                        for (JavaGenSource genSource : serviceList) {
-                            JavaSrcBean javaSrcBean = genSource.getSrcBean();
-                            if (javaSrcBean != null && javaSrcBean.getTarget() != null && javaSrcBean.getTarget().equals(layoutItem.getId())) {
-                                try {
-                                    Class bindService = ClassUtility.loadClass(javaSrcBean.getClassName());
-                                    customViewBean.reBindService(bindService);
-                                } catch (ClassNotFoundException e1) {
-                                    e1.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-                    moduleBeans.add(customModuleBean);
-                } catch (JDSException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+//        moduleBeans = this.getModuleBeans();
+//        for (LayoutListItem layoutItem : layoutProperties.getItems()) {
+//            String euClassName = layoutItem.getEuClassName();
+//            if (euClassName != null) {
+//                try {
+//                    EUModule euModule = ESDFacrory.getAdminESDClient().getModule(euClassName, projectName);
+//                    if (euModule == null) {
+//                        euModule = CustomViewFactory.getInstance().getView(euClassName, projectName);
+//                    }
+//                    MethodConfig methodConfig = euModule.getComponent().getMethodAPIBean();
+//                    CustomModuleBean customModuleBean = new CustomModuleBean(euModule.getComponent());
+//                    customModuleBean.reBindMethod(methodConfig);
+//                    try {
+//                        Class clazz = ClassUtility.loadClass(euClassName);
+//                    } catch (ClassNotFoundException e) {
+//                        CustomViewBean customViewBean = DSMFactory.getInstance().getViewManager().getDefaultViewBean(euModule.getComponent(), domainId);
+//                        customViewBean.setDomainId(methodConfig.getDomainId());
+//                        AggRootBuild aggRootBuild = BuildFactory.getInstance().getAggRootBuild(customViewBean, euClassName, projectName);
+//                        List<JavaGenSource> serviceList = aggRootBuild.getAggServiceRootBean();
+//                        if (serviceList == null || serviceList.isEmpty()) {
+//                            serviceList = aggRootBuild.build();
+//                        }
+//                        for (JavaGenSource genSource : serviceList) {
+//                            JavaSrcBean javaSrcBean = genSource.getSrcBean();
+//                            if (javaSrcBean != null && javaSrcBean.getTarget() != null && javaSrcBean.getTarget().equals(layoutItem.getId())) {
+//                                try {
+//                                    Class bindService = ClassUtility.loadClass(javaSrcBean.getClassName());
+//                                    customViewBean.reBindService(bindService);
+//                                } catch (ClassNotFoundException e1) {
+//                                    e1.printStackTrace();
+//                                }
+//                            }
+//                        }
+//                    }
+//                    moduleBeans.add(customModuleBean);
+//                } catch (JDSException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
 
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(layoutProperties), Map.class), this, false, false);
         if (tabItems != null) {
@@ -350,8 +347,6 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
 
             }
         }
-
-
     }
 
     public CustomViewBean getItemViewBean(LayoutListItem currListItem, String projectName) throws JDSException {
