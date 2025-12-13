@@ -162,9 +162,6 @@ public class AggRootBuild {
         this.genAggCustomJava = new GenAggCustomJava(viewRoot, customViewBean, chrome);
 
 
-
-
-
     }
 
 
@@ -276,7 +273,7 @@ public class AggRootBuild {
         if (viewTask == null) {
             viewTask = new GenCustomViewJava(viewRoot, customViewBean, euClassName, chrome);
         }
-        List<JavaGenSource> viewFileList = BuildFactory.getInstance().syncTasks(viewRoot.getDsmBean().getDsmId(), Arrays.asList(viewTask));
+        List<JavaGenSource> viewFileList = BuildFactory.getInstance().syncTasks(viewRoot.getClassName(), Arrays.asList(viewTask));
         step = Step.endCreatView;
         return viewFileList;
     }

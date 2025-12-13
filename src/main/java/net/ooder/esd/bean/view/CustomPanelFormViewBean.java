@@ -72,12 +72,8 @@ public class CustomPanelFormViewBean extends BaseFormViewBean {
             } catch (JDSException e) {
                 e.printStackTrace();
             }
-
         }
-
         return childModules;
-
-
     }
 
     public CustomPanelFormViewBean(MethodConfig methodAPIBean) {

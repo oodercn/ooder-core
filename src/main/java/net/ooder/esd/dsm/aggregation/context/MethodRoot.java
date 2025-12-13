@@ -10,6 +10,7 @@ import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.EmbedType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.CustomAPICallBean;
+import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.data.CustomDataBean;
 import net.ooder.esd.bean.field.CustomFieldBean;
 import net.ooder.esd.bean.field.combo.CustomModuleRefFieldBean;
@@ -150,8 +151,10 @@ public class MethodRoot {
     @JSONField(serialize = false)
     public List<CustomBean> getAnnotationBeans() {
         List<CustomBean> annotationBeans = new ArrayList<>();
-
-        if (moduleBean.getMethodConfig() != null) {
+        ModuleViewType moduleViewType = moduleBean.getModuleViewType();
+        MethodConfig methodConfig = moduleBean.getMethodConfig();
+        if (methodConfig != null) {
+            moduleViewType = methodConfig.getModuleViewType();
             CustomFieldBean fieldBean = moduleBean.getMethodConfig().getFieldBean();
             if (fieldBean == null) {
                 if (moduleBean.getIndex() > 0) {
@@ -162,9 +165,8 @@ public class MethodRoot {
             } else {
                 annotationBeans.add(fieldBean);
             }
-
         }
-        ModuleViewType moduleViewType = moduleBean.getModuleViewType();
+
         if (moduleViewType != null) {
             if (moduleViewType.getAppendType().equals(AppendType.append)) {
                 annotationBeans.addAll(moduleBean.getUIAnnotationBeans());

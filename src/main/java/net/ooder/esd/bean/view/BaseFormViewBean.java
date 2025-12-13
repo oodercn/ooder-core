@@ -119,19 +119,6 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         }
     }
 
-//    public List<Callable<List<JavaGenSource>>> createBuild(ModuleComponent moduleComponent, Component component) {
-//        List<Callable<List<JavaGenSource>>> callableList = new ArrayList<>();
-//        List<Callable<List<JavaGenSource>>> childModules = genChildComponent(moduleComponent, Arrays.asList(component));
-//        for (Callable childModule : childModules) {
-//            GenFormChildModule genFormChildModule = (GenFormChildModule) childModule;
-//            callableList.add(childModule);
-//            FieldComponentBean fieldComponentBean = genFormChildModule.getFieldFormConfig().getWidgetConfig();
-//            CustomViewBean viewBean = ((WidgetBean) fieldComponentBean).getViewBean();
-//            callableList.addAll(viewBean.getChildModules());
-//        }
-//        return callableList;
-//    }
-
 
     public List<JavaGenSource> buildAll() {
         List<JavaGenSource> allSourceList = new ArrayList<>();
