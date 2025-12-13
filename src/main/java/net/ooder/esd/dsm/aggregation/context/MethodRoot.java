@@ -158,15 +158,15 @@ public class MethodRoot {
             MethodConfig methodConfig = module.getComponent().getMethodAPIBean();
             if (methodConfig != null) {
                 moduleViewType = methodConfig.getModuleViewType();
-                CustomFieldBean fieldBean = moduleBean.getMethodConfig().getFieldBean();
-                if (fieldBean == null) {
-                    if (moduleBean.getIndex() > 0) {
+                if (moduleBean.getMethodConfig() != null) {
+                    CustomFieldBean fieldBean = moduleBean.getMethodConfig().getFieldBean();
+                    if (fieldBean == null && moduleBean.getIndex() > 0) {
                         fieldBean = new CustomFieldBean();
                         fieldBean.setIndex(moduleBean.getIndex());
                         annotationBeans.add(fieldBean);
+                    } else {
+                        annotationBeans.add(fieldBean);
                     }
-                } else {
-                    annotationBeans.add(fieldBean);
                 }
                 moduleBean.reBindMethod(methodConfig);
             }
