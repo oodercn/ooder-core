@@ -16,6 +16,7 @@ import net.ooder.esd.bean.field.CustomFieldBean;
 import net.ooder.esd.bean.field.combo.CustomModuleRefFieldBean;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.dsm.DSMFactory;
+import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.util.OODUtil;
@@ -152,20 +153,25 @@ public class MethodRoot {
     public List<CustomBean> getAnnotationBeans() {
         List<CustomBean> annotationBeans = new ArrayList<>();
         ModuleViewType moduleViewType = moduleBean.getModuleViewType();
-        MethodConfig methodConfig = moduleBean.getMethodConfig();
-        if (methodConfig != null) {
-            moduleViewType = methodConfig.getModuleViewType();
-            CustomFieldBean fieldBean = moduleBean.getMethodConfig().getFieldBean();
-            if (fieldBean == null) {
-                if (moduleBean.getIndex() > 0) {
-                    fieldBean = new CustomFieldBean();
-                    fieldBean.setIndex(moduleBean.getIndex());
+        if (moduleBean.getModuleComponent() != null) {
+            EUModule module = moduleBean.getModuleComponent().getEuModule();
+            MethodConfig methodConfig = module.getComponent().getMethodAPIBean();
+            if (methodConfig != null) {
+                moduleViewType = methodConfig.getModuleViewType();
+                CustomFieldBean fieldBean = moduleBean.getMethodConfig().getFieldBean();
+                if (fieldBean == null) {
+                    if (moduleBean.getIndex() > 0) {
+                        fieldBean = new CustomFieldBean();
+                        fieldBean.setIndex(moduleBean.getIndex());
+                        annotationBeans.add(fieldBean);
+                    }
+                } else {
                     annotationBeans.add(fieldBean);
                 }
-            } else {
-                annotationBeans.add(fieldBean);
+                moduleBean.reBindMethod(methodConfig);
             }
         }
+
 
         if (moduleViewType != null) {
             if (moduleViewType.getAppendType().equals(AppendType.append)) {
