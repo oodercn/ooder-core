@@ -3,6 +3,7 @@ package net.ooder.esd.custom.component;
 import net.ooder.common.JDSException;
 import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.CustomClass;
+import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.view.LayoutViewAnnotation;
@@ -19,6 +20,7 @@ import net.ooder.esd.tool.properties.LayoutProperties;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -89,6 +91,7 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
             }
             for (CustomLayoutItemBean layoutListItem : layoutListItems) {
                 Class[] classes = layoutListItem.getBindClass();
+                ComponentType[] conComponentType = new ComponentType[]{ComponentType.DIV, ComponentType.PANEL, ComponentType.BLOCK};
                 if (classes != null) {
                     for (Class clazz : classes) {
                         MethodConfig bindMethod = viewBean.findEditorMethod(clazz);
@@ -97,14 +100,23 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                             EUModule euModule = bindMethod.getModule(valueMap, projectName);
 
                             if (euModule != null && euModule.getComponent() != null) {
-                                Component mainComponent = euModule.getComponent().getMainBoxComponent().clone();
-                                String alias = mainComponent.getAlias();
-                                if (alias.endsWith(ModuleComponent.DefaultTopBoxfix)) {
-                                    alias = alias.substring(0, (alias.length() - ModuleComponent.DefaultTopBoxfix.length()));
+                                Component currComponent = euModule.getComponent().getCurrComponent();
+                                ComponentType componentType = ComponentType.fromType(currComponent.getKey());
+                                if (Arrays.asList(conComponentType).contains(componentType)) {
+                                    currComponent.setTarget(layoutListItem.getId());
+                                    layoutComponent.addChildren(currComponent);
+                                } else {
+                                    Component mainComponent = euModule.getComponent().getMainBoxComponent().clone();
+                                    String alias = mainComponent.getAlias();
+                                    if (alias.endsWith(ModuleComponent.DefaultTopBoxfix)) {
+                                        alias = alias.substring(0, (alias.length() - ModuleComponent.DefaultTopBoxfix.length()));
+                                    }
+                                    mainComponent.updateAlias(alias);
+                                    mainComponent.setTarget(layoutListItem.getId());
+                                    layoutComponent.addChildren(currComponent);
                                 }
-                                mainComponent.updateAlias(alias);
-                                mainComponent.setTarget(layoutListItem.getId());
-                                layoutComponent.addChildren(mainComponent);
+
+
                             }
                         }
                     }

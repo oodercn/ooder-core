@@ -67,6 +67,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
 
     }
 
+
     public CustomModuleComponent(EUModule module, MethodConfig methodAPIBean, Map<String, Object> valueMap) {
         this.methodAPIBean = methodAPIBean;
         this.euModule = module;
@@ -75,6 +76,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
         this.dataUrl = methodAPIBean.getUrl();
         this.esdClass = methodAPIBean.getViewClass();
         this.parentClass = methodAPIBean.getSourceClass();
+
         this.mainComponent = this.getMainComponent();
         this.moduleBean = methodAPIBean.getModuleBean();
         if (moduleBean != null && moduleBean.getPanelType().equals(PanelType.block)) {
@@ -105,7 +107,6 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
 
         CustomViewBean<FieldFormConfig, UIItem, ? extends Component> viewBean = (CustomViewBean<FieldFormConfig, UIItem, ? extends Component>) methodAPIBean.getView();
         CustomData dataBean = methodAPIBean.getDataBean();
-
         String caption = methodAPIBean.getCaption();
         if (this.getProperties().getCaption() == null || this.getProperties().getCaption().equals("")) {
             getProperties().setCaption(caption);

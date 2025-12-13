@@ -56,16 +56,21 @@ public class LayoutProperties extends AbsListProperties<LayoutListItem> {
             listKey = layoutViewBean.getListKey();
         }
         List<LayoutListItem> listItems = layoutViewBean.getTabItems();
-        if (listItems != null && !listItems.isEmpty()) {
-            this.setItems(listItems);
+        if (listItems != null) {
+            for (LayoutListItem layoutListItem : listItems) {
+                if (layoutListItem != null) {
+                    this.addItem(layoutListItem);
+                }
+            }
+
         }
         List<CustomLayoutItemBean> layoutListItems = layoutViewBean.getLayoutItems();
         if (layoutListItems != null && !layoutListItems.isEmpty()) {
-            List<LayoutListItem> items=this.getItems();
+            List<LayoutListItem> items = this.getItems();
             for (CustomLayoutItemBean layoutItemBean : layoutListItems) {
-                LayoutListItem layoutListItem=   new LayoutListItem(layoutItemBean);
-                if (items.contains(layoutListItem)){
-                    this.getItems().add(layoutListItem);
+                LayoutListItem layoutListItem = new LayoutListItem(layoutItemBean);
+                if (!items.contains(layoutListItem)) {
+                    this.addItem(layoutListItem);
                 }
             }
         }

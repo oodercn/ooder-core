@@ -1435,7 +1435,6 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
                 view.setModuleBean(moduleBean);
             }
         }
-
         return moduleBean;
     }
 
