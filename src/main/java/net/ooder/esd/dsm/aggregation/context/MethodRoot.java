@@ -163,10 +163,12 @@ public class MethodRoot {
                     if (fieldBean == null && moduleBean.getIndex() > 0) {
                         fieldBean = new CustomFieldBean();
                         fieldBean.setIndex(moduleBean.getIndex());
-                        annotationBeans.add(fieldBean);
-                    } else {
+                    }
+
+                    if (fieldBean != null){
                         annotationBeans.add(fieldBean);
                     }
+
                 }
                 moduleBean.reBindMethod(methodConfig);
             }
