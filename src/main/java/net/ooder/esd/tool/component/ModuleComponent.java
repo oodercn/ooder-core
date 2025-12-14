@@ -997,8 +997,14 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         properties.setPanelType(PanelType.block);
         if (this instanceof FullPanelComponent) {
             properties.setPanelType(PanelType.panel);
+            if (this.moduleBean != null) {
+                moduleBean.setPanelType(PanelType.panel);
+            }
         } else if (this instanceof FullDivComponent) {
             properties.setPanelType(PanelType.div);
+            if (this.moduleBean != null) {
+                moduleBean.setPanelType(PanelType.div);
+            }
         }
         ComponentList componentList = this.getChildrenRecursivelyList();
         for (Component component : componentList) {
@@ -1019,34 +1025,6 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
 
     }
-
-
-//    @JSONField(serialize = false)
-//    public Component<PanelProperties, PanelEventEnum> getFristBoxComponent() {
-//        if (components == null || components.isEmpty()) {
-//            List<Component> componentList = this.getChildrenRecursivelyList();
-//            for (Component childComponent : componentList) {
-//                if (childComponent.getProperties() instanceof PanelProperties) {
-//                    PanelProperties panelProperties = (PanelProperties) childComponent.getProperties();
-//                    if (panelProperties.getVisibility() == null || (!panelProperties.getVisibility().equals(VisibilityType.hidden))) {
-//                        return childComponent;
-//                    }
-//                }
-//            }
-//        } else {
-//            Set<String> comKey = components.keySet();
-//            for (String key : comKey) {
-//                Component component = this.getMainBoxComponent();
-//                if (component.getProperties() instanceof PanelProperties) {
-//                    PanelProperties panelProperties = (PanelProperties) component.getProperties();
-//                    if (panelProperties.getVisibility() == null || (!panelProperties.getVisibility().equals(VisibilityType.hidden))) {
-//                        return component;
-//                    }
-//                }
-//            }
-//        }
-//        return null;
-//    }
 
 
     @JSONField(serialize = false)
@@ -1502,6 +1480,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         PanelComponent panelComponent = null;
         PanelType panelType = this.getProperties().getPanelType();
         CustomPanelBean panelBean = null;
+
         if (moduleBean != null) {
             panelBean = moduleBean.getPanelBean();
             if (panelType == null) {
@@ -1516,7 +1495,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         if (component != null && component instanceof PanelComponent) {
             panelComponent = (PanelComponent) component;
         }
-        if (panelComponent == null && panelBean != null && panelType != null && panelType.equals(PanelType.panel)) {
+        if (panelComponent == null && panelType != null && panelType.equals(PanelType.panel)) {
             if (panelBean.getDock() == null || panelBean.getDock().equals(Dock.none)) {
                 panelBean.setDock(Dock.fill);
             }

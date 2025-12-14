@@ -1371,18 +1371,6 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         if (panelType != null && !panelType.equals(PanelType.panel)) {
             return null;
         }
-//        if (panelBean == null && moduleComponent != null && moduleComponent.getModulePanelComponent() != null) {
-//            panelBean = new CustomPanelBean(moduleComponent.getModulePanelComponent());
-//        } else {
-//            Method method = getMethod();
-//            if (method != null) {
-//                Set<Annotation> annotations = AnnotationUtil.getAllAnnotations(method, true);
-//                panelBean = new CustomPanelBean(annotations);
-//            } else {
-//                panelBean = new CustomPanelBean();
-//                AnnotationUtil.fillDefaultValue(PanelAnnotation.class, panelBean);
-//            }
-//        }
 
         if (panelBean == null) {
             Method method = getMethod();

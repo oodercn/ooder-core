@@ -43,7 +43,6 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
     protected List<ESDFieldConfig> fieldList;
 
 
-
     @JSONField(serialize = false)
     private CustomMenusBar menuBar;
     @JSONField(serialize = false)
@@ -71,14 +70,14 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
     public CustomModuleComponent(EUModule module, MethodConfig methodAPIBean, Map<String, Object> valueMap) {
         this.methodAPIBean = methodAPIBean;
         this.euModule = module;
-        this.euModule.setComponent(this);
         this.valueMap = valueMap;
         this.dataUrl = methodAPIBean.getUrl();
         this.esdClass = methodAPIBean.getViewClass();
         this.parentClass = methodAPIBean.getSourceClass();
-
-        this.mainComponent = this.getMainComponent();
         this.moduleBean = methodAPIBean.getModuleBean();
+        this.euModule.setComponent(this);
+        this.mainComponent = this.getMainComponent();
+
         if (moduleBean != null && moduleBean.getPanelType().equals(PanelType.block)) {
             if (moduleBean.getViewConfig() != null && moduleBean.getViewConfig().getViewStyles() != null) {
                 ModuleStyleBean moduleStyleBean = moduleBean.getViewConfig().getViewStyles();
