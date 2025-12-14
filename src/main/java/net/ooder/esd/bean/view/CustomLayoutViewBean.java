@@ -355,7 +355,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
                 layoutListItem = currList.get(0);
             }
             for (LayoutListItem itemBean : currList) {
-                if (itemBean != null && target.equals(itemBean.getId())) {
+                if (itemBean != null) {
                     layoutListItem = itemBean;
                 }
             }
