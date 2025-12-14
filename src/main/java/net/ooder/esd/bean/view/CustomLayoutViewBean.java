@@ -330,17 +330,37 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
     }
 
     public LayoutListItem findTabItem(String target) {
+        LayoutListItem layoutListItem = null;
+        List<LayoutListItem> currList = new ArrayList<>();
+        if (tabItems != null && tabItems.size() > 0) {
             for (LayoutListItem itemBean : tabItems) {
-                if (itemBean != null && target.equals(itemBean.getId())) {
-                    return itemBean;
+                if (itemBean != null) {
+                    currList.add(itemBean);
                 }
             }
-            for (CustomLayoutItemBean itemBean : layoutItems) {
-                if (itemBean != null && target.equals(itemBean.getId())) {
-                    return new LayoutListItem(itemBean);
+        }
+
+        for (CustomLayoutItemBean itemBean : layoutItems) {
+            if (itemBean != null ) {
+                LayoutListItem layoutItemBean = new LayoutListItem(itemBean);
+                if (!currList.contains(layoutItemBean)) {
+                    currList.add(layoutItemBean);
                 }
             }
-            return null;
+        }
+
+
+        if (currList.size() > 0) {
+            if (target == null) {
+                layoutListItem = currList.get(0);
+            }
+            for (LayoutListItem itemBean : currList) {
+                if (itemBean != null && target.equals(itemBean.getId())) {
+                    layoutListItem = itemBean;
+                }
+            }
+        }
+        return layoutListItem;
     }
 
 
@@ -403,6 +423,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
     }
 
     public CustomLayoutItemBean getLayoutItem(PosType posType) {
+
         for (CustomLayoutItemBean itemBean : layoutItems) {
             if (itemBean.getPos().equals(posType)) {
                 return itemBean;
