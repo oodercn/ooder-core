@@ -5,8 +5,10 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.svg.SVGAnnotation;
+import net.ooder.esd.annotation.ui.UIPositionType;
 import net.ooder.esd.annotation.ui.VisibilityType;
 import net.ooder.esd.tool.properties.svg.SVGProperties;
+import net.ooder.esd.util.json.CaseEnumsSerializer;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -21,7 +23,8 @@ public class SVGBean implements CustomBean {
     Boolean defaultFocus;
     VisibilityType visibility;
     String renderer;
-    String position;
+    @JSONField(serializeUsing = CaseEnumsSerializer.class, deserializeUsing = CaseEnumsSerializer.class)
+    UIPositionType position;
     String path;
     // tabindex/zIndex is for compitable only
     Boolean tabindex;
@@ -111,11 +114,11 @@ public class SVGBean implements CustomBean {
         this.renderer = renderer;
     }
 
-    public String getPosition() {
+    public UIPositionType getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(UIPositionType position) {
         this.position = position;
     }
 

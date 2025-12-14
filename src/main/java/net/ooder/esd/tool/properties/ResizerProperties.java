@@ -1,5 +1,9 @@
 package net.ooder.esd.tool.properties;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.esd.annotation.ui.UIPositionType;
+import net.ooder.esd.util.json.CaseEnumsSerializer;
+
 public class ResizerProperties extends Properties {
 
     //<< can be used in addResizer({*})
@@ -34,7 +38,8 @@ public class ResizerProperties extends Properties {
     Integer top;
     Integer height;
     Integer width;
-    String position;
+    @JSONField(serializeUsing = CaseEnumsSerializer.class, deserializeUsing = CaseEnumsSerializer.class)
+    UIPositionType position;
     String display;
 //>>
 
@@ -198,11 +203,11 @@ public class ResizerProperties extends Properties {
         this.width = width;
     }
 
-    public String getPosition() {
+    public UIPositionType getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(UIPositionType position) {
         this.position = position;
     }
 
@@ -213,9 +218,6 @@ public class ResizerProperties extends Properties {
     public void setDisplay(String display) {
         this.display = display;
     }
-
-
-
 
 
 }
