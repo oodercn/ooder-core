@@ -105,7 +105,7 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                 if (Arrays.asList(conComponentType).contains(componentType)) {
                                     currComponent.setTarget(layoutListItem.getId());
                                     layoutComponent.addChildren(currComponent);
-                                    if (classes.length > 0) {
+                                    if (classes.length > 1) {
                                         AbsUIProperties properties = (AbsUIProperties) currComponent.getProperties();
                                         properties.setPosition(UIPositionType.RELATIVE);
                                     }
