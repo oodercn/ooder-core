@@ -17,6 +17,7 @@ import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.LayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.properties.AbsUIProperties;
 import net.ooder.esd.tool.properties.LayoutProperties;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
 
@@ -104,9 +105,9 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                 if (Arrays.asList(conComponentType).contains(componentType)) {
                                     currComponent.setTarget(layoutListItem.getId());
                                     layoutComponent.addChildren(currComponent);
-                                    if (classes.length>0){
-                                       layoutComponent.getProperties().setPosition(UIPositionType.RELATIVE);
-
+                                    if (classes.length > 0) {
+                                        AbsUIProperties properties = (AbsUIProperties) currComponent.getProperties();
+                                        properties.setPosition(UIPositionType.RELATIVE);
                                     }
                                 } else {
                                     Component mainComponent = euModule.getComponent().getMainBoxComponent().clone();
