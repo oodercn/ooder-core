@@ -37,7 +37,7 @@ public class AbsUIProperties extends Properties {
     public String width;
     @JSONField(serializeUsing = EMSerializer.class)
     public String height;
-    @JSONField(deserializeUsing = CaseEnumsSerializer.class)
+    @JSONField(serializeUsing = CaseEnumsSerializer.class, deserializeUsing = CaseEnumsSerializer.class)
     public UIPositionType position;
 
 

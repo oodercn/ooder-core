@@ -31,22 +31,23 @@ public class EnumsSerializer<T extends Enumstype> implements ObjectSerializer, O
     @Override
     public <T> T deserialze(DefaultJSONParser parser, Type type, Object object) {
         String json = parser.parse().toString();
-        Class<? extends Type> enumClass = type.getClass();
-        T[] enums = null;
-        if (enumClass.isEnum()) {
-            try {
-                enums = (T[]) enumClass.getMethod("values", null).invoke(enumClass.getEnumConstants(), null);
-                for (T enumstype : enums) {
-                    if (enumClass.getName().toUpperCase().equals(json.toUpperCase())) {
-                        return enumstype;
+        if (type instanceof Class) {
+            Class enumClass = (Class) type;
+            if (enumClass.isEnum()) {
+                try {
+                    T[] enums = (T[]) enumClass.getMethod("values", null).invoke(enumClass.getEnumConstants(), null);
+                    for (T enumstype : enums) {
+                        if (enumClass.getName().toUpperCase().equals(json.toUpperCase())) {
+                            return enumstype;
+                        }
                     }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
                 }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
             }
         }
         return null;

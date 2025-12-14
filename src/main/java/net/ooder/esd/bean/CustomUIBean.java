@@ -10,6 +10,7 @@ import net.ooder.esd.annotation.ui.VisibilityType;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.properties.Properties;
 import net.ooder.esd.util.json.CaseEnumsSerializer;
+import net.ooder.esd.util.json.EnumsSerializer;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
@@ -53,7 +54,7 @@ public class CustomUIBean implements CustomBean {
     public String width;
 
     public String height;
-    @JSONField(deserializeUsing = CaseEnumsSerializer.class)
+    @JSONField(serializeUsing = CaseEnumsSerializer.class, deserializeUsing = CaseEnumsSerializer.class)
     public UIPositionType position;
 
     public CustomUIBean() {
