@@ -27,7 +27,7 @@ public class LabelProperties extends FieldProperties {
     String fontSize;
     String fontWeight;
     String fontFamily;
-    String position;
+
     String excelCellFormula;
 
 
@@ -94,14 +94,6 @@ public class LabelProperties extends FieldProperties {
 
     public void setClock(String clock) {
         this.clock = clock;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
     }
 
     public String getImage() {

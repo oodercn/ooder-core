@@ -17,7 +17,7 @@ public class ButtonLayoutProperties extends TabsProperties<ButtonLayoutItem> {
     public List<CmdItem> tagCmds;
     public String caption;
     public String imageClass;
-    public String position;
+
     public String bgimg;
     public String iotStatus;
     public Boolean autoImgSize;
@@ -121,13 +121,6 @@ public class ButtonLayoutProperties extends TabsProperties<ButtonLayoutItem> {
         this.imageClass = imageClass;
     }
 
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
 
     public String getIconFontSize() {
         return iconFontSize;

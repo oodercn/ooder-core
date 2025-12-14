@@ -61,7 +61,7 @@ public class CustomBottomBar extends StatusButtonsComponent implements DynBar<Dy
     public CustomBottomBar(BottomBarMenuBean menuBarBean) {
         super(menuBarBean.getAlias(), new StatusButtonsProperties(menuBarBean));
         this.id = menuBarBean.getId();
-        getProperties().setPosition("static");
+        getProperties().setPosition(UIPositionType.STATIC);
         this.menuType = menuBarBean.getMenuType();
 
     }
@@ -79,7 +79,7 @@ public class CustomBottomBar extends StatusButtonsComponent implements DynBar<Dy
     public CustomBottomBar(String alias) {
         super(alias, new StatusButtonsProperties());
         getProperties().setDock(Dock.center);
-        getProperties().setPosition("static");
+        getProperties().setPosition(UIPositionType.STATIC);
         getProperties().setWidth("auto");
         getProperties().setBorderType(BorderType.none);
         getProperties().setFormField(false);

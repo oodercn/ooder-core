@@ -2,10 +2,7 @@ package net.ooder.esd.tool.properties;
 
 
 import com.alibaba.fastjson.annotation.JSONField;
-import net.ooder.esd.annotation.ui.BorderType;
-import net.ooder.esd.annotation.ui.Dock;
-import net.ooder.esd.annotation.ui.HAlignType;
-import net.ooder.esd.annotation.ui.VAlignType;
+import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.bean.view.NavComboBaseViewBean;
 import net.ooder.esd.bean.view.TabsViewBean;
@@ -67,7 +64,7 @@ public class MenuBarProperties extends ListFieldProperties {
         super();
         init(indexViewBean.getMenuBar());
         this.setHandler(false);
-        this.setPosition("relative");
+        this.setPosition(UIPositionType.RELATIVE);
         this.setBorderType(BorderType.none);
         this.setDockOrder(1);
         this.setAutoShowTime(0);

@@ -6,6 +6,7 @@ import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
+import net.ooder.esd.annotation.ui.UIPositionType;
 import net.ooder.esd.annotation.view.LayoutViewAnnotation;
 import net.ooder.esd.bean.CustomLayoutItemBean;
 import net.ooder.esd.bean.MethodConfig;
@@ -104,10 +105,8 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                     currComponent.setTarget(layoutListItem.getId());
                                     layoutComponent.addChildren(currComponent);
                                     if (classes.length>0){
-                                      String position=  layoutComponent.getProperties().getPosition();
-                                      if (position==null || position.equals("")){
-                                          position= "relative";
-                                      }
+                                       layoutComponent.getProperties().setPosition(UIPositionType.RELATIVE);
+
                                     }
                                 } else {
                                     Component mainComponent = euModule.getComponent().getMainBoxComponent().clone();

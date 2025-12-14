@@ -1,6 +1,7 @@
 package net.ooder.esd.custom.component.index;
 
 import net.ooder.esd.annotation.ui.Dock;
+import net.ooder.esd.annotation.ui.UIPositionType;
 import net.ooder.esd.tool.component.DivComponent;
 import net.ooder.esd.tool.component.LabelComponent;
 import net.ooder.esd.tool.properties.DivProperties;
@@ -34,7 +35,7 @@ public class UserConfig extends DivComponent {
         logoLabelCom.setAlias("userName");
         LabelProperties logoProperties = logoLabelCom.getProperties();
         logoProperties.setTabindex(3);
-        logoProperties.setPosition("static");
+        logoProperties.setPosition(UIPositionType.STATIC);
         logoProperties.setCaption(getCurrPerson().getName());
         logoProperties.setFontColor("#FFFFFF");
         return logoLabelCom;
@@ -61,7 +62,7 @@ public class UserConfig extends DivComponent {
         logoLabelCom.setAlias("toggle");
         LabelProperties logoProperties = logoLabelCom.getProperties();
         logoProperties.setTabindex(4);
-        logoProperties.setPosition("static");
+        logoProperties.setPosition(UIPositionType.STATIC);
         logoProperties.setCaption("");
         logoProperties.setImageClass("fa-solid fa-sort-amount-down");
         logoProperties.setFontColor("#FFFFFF");

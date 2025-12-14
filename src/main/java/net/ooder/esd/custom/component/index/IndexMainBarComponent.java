@@ -1,9 +1,6 @@
 package net.ooder.esd.custom.component.index;
 
-import net.ooder.esd.annotation.ui.BorderType;
-import net.ooder.esd.annotation.ui.Dock;
-import net.ooder.esd.annotation.ui.HAlignType;
-import net.ooder.esd.annotation.ui.SelModeType;
+import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.tool.component.DivComponent;
 import net.ooder.esd.tool.component.GalleryComponent;
 import net.ooder.esd.tool.component.IconComponent;
@@ -145,7 +142,7 @@ public class IndexMainBarComponent extends DivComponent {
             logoLabelCom.setAlias("userName");
             LabelProperties logoProperties = logoLabelCom.getProperties();
             logoProperties.setTabindex(3);
-            logoProperties.setPosition("static");
+            logoProperties.setPosition(UIPositionType.STATIC);
             logoProperties.setCaption("管理员");
             logoProperties.setFontColor("#FFFFFF");
             return logoLabelCom;
@@ -157,7 +154,7 @@ public class IndexMainBarComponent extends DivComponent {
             logoLabelCom.setAlias("toggle");
             LabelProperties logoProperties = logoLabelCom.getProperties();
             logoProperties.setTabindex(4);
-            logoProperties.setPosition("static");
+            logoProperties.setPosition(UIPositionType.STATIC);
             logoProperties.setCaption("");
             logoProperties.setImageClass("fa-solid fa-sort-amount-down");
             logoProperties.setFontColor("#FFFFFF");

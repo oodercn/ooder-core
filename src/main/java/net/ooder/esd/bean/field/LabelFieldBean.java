@@ -11,6 +11,7 @@ import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.LabelComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.form.LabelProperties;
+import net.ooder.esd.util.json.CaseEnumsSerializer;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -51,7 +52,8 @@ public class LabelFieldBean extends FieldBaseBean<LabelComponent> {
 
     String fontFamily;
 
-    String position;
+    @JSONField(deserializeUsing = CaseEnumsSerializer.class)
+    UIPositionType position;
 
     String excelCellFormula;
 
@@ -100,11 +102,11 @@ public class LabelFieldBean extends FieldBaseBean<LabelComponent> {
         this.excelCellFormula = excelCellFormula;
     }
 
-    public String getPosition() {
+    public     UIPositionType getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(UIPositionType position) {
         this.position = position;
     }
 

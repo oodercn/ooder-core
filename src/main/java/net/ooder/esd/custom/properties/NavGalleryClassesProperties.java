@@ -5,6 +5,7 @@ package net.ooder.esd.custom.properties;
 import net.ooder.esd.annotation.ui.BorderType;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.SelModeType;
+import net.ooder.esd.annotation.ui.UIPositionType;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.tool.properties.GalleryProperties;
@@ -37,7 +38,7 @@ public class NavGalleryClassesProperties extends GalleryProperties {
         this.iconOnly = false;
         this.autoImgSize = false;
         this.iconOnly = false;
-        this.position = "static";
+        this.position = UIPositionType.STATIC;
         this.selMode = SelModeType.single;
         this.borderType = BorderType.none;
         this.iconFontSize = "4em";

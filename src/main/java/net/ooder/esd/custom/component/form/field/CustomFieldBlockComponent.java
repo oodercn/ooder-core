@@ -107,7 +107,7 @@ public class CustomFieldBlockComponent extends BlockComponent {
             int width = customComponentViewBean.getDefaultColWidth();
             Integer con = customComponentViewBean.getCol();
             if (con != null && con > 0) {
-                fieldInfo.getContainerBean().getUiBean().setPosition("relative");
+                fieldInfo.getContainerBean().getUiBean().setPosition(UIPositionType.RELATIVE);
                 if (fieldInfo.getFieldBean().getManualHeight() == null) {
                     String caption = fieldInfo.getCustomBean().getCaption();
                     if (fieldInfo.getFieldBean().getCaption() != null) {
