@@ -1,7 +1,9 @@
 package net.ooder.esd.bean;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.UIAnnotation;
 import net.ooder.esd.annotation.ui.Dock;
@@ -10,9 +12,7 @@ import net.ooder.esd.annotation.ui.VisibilityType;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.properties.Properties;
 import net.ooder.esd.util.json.CaseEnumsSerializer;
-import net.ooder.esd.util.json.EnumsSerializer;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -74,7 +74,8 @@ public class CustomUIBean implements CustomBean {
     }
 
     private void init(Properties properties) {
-        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
+        CustomUIBean obj = JSONObject.parseObject(JSON.toJSONString(properties), CustomUIBean.class);
+        Map valueMap = JSON.parseObject(JSON.toJSONString(obj), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
     }
 
