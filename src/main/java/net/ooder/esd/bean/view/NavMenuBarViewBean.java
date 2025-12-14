@@ -29,6 +29,7 @@ import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.MenuBarComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.MenuBarProperties;
+import net.ooder.esd.tool.properties.item.GalleryNavItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -44,6 +45,8 @@ public class NavMenuBarViewBean extends NavComboBaseViewBean<TreeListItem> {
     ModuleViewType moduleViewType = ModuleViewType.NAVMENUBARCONFIG;
 
     MenuBarBean menuBarBean;
+
+    public List<TreeListItem> tabItems = new ArrayList<>();
 
     @JSONField(serialize = false)
     public List<CustomModuleBean> moduleBeans = new ArrayList<>();
@@ -222,6 +225,15 @@ public class NavMenuBarViewBean extends NavComboBaseViewBean<TreeListItem> {
     public Set<Class> getOtherClass() {
         Set<Class> classSet = super.getOtherClass();
         return classSet;
+    }
+
+    @Override
+    public List<TreeListItem> getTabItems() {
+        return tabItems;
+    }
+
+    public void setTabItems(List<TreeListItem> tabItems) {
+        this.tabItems = tabItems;
     }
 
     @Override

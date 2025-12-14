@@ -1,31 +1,27 @@
 package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import net.ooder.common.JDSException;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.JDSException;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.BottomBarMenu;
+import net.ooder.esd.annotation.ButtonLayoutAnnotation;
 import net.ooder.esd.annotation.MenuBarMenu;
 import net.ooder.esd.annotation.RightContextMenu;
+import net.ooder.esd.annotation.event.CustomButtonLayoutEvent;
+import net.ooder.esd.annotation.event.GalleryEventEnum;
 import net.ooder.esd.annotation.field.ToolBarMenu;
-import net.ooder.esd.annotation.ui.ModuleViewType;
+import net.ooder.esd.annotation.menu.ButtonLayoutMenu;
+import net.ooder.esd.annotation.menu.OpinionMenu;
+import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.bean.bar.ContextMenuBar;
 import net.ooder.esd.bean.bar.ToolsBar;
-import net.ooder.esd.annotation.event.GalleryEventEnum;
-import net.ooder.esd.annotation.menu.OpinionMenu;
-import net.ooder.esd.annotation.ButtonLayoutAnnotation;
-import net.ooder.esd.annotation.menu.ButtonLayoutMenu;
-import net.ooder.esd.annotation.event.CustomButtonLayoutEvent;
-import net.ooder.esd.annotation.ui.BorderType;
-import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.annotation.ui.Dock;
-import net.ooder.esd.annotation.ui.SelModeType;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.java.JavaGenSource;
-import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldGalleryConfig;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
@@ -35,7 +31,6 @@ import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.ButtonLayoutProperties;
 import net.ooder.esd.tool.properties.Event;
 import net.ooder.esd.tool.properties.item.ButtonLayoutItem;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
@@ -76,6 +71,7 @@ public class CustomButtonLayoutViewBean extends CustomViewBean<FieldGalleryConfi
 
     List<ButtonLayoutItem> buttonLayoutItemBeans;
 
+    public List<ButtonLayoutItem> tabItems = new ArrayList<>();
 
     public CustomButtonLayoutViewBean() {
 
@@ -93,7 +89,7 @@ public class CustomButtonLayoutViewBean extends CustomViewBean<FieldGalleryConfi
 
         RightContextMenu contextMenu = AnnotationUtil.getClassAnnotation(clazz, RightContextMenu.class);
         if (contextMenu != null) {
-            contextMenuBean = new RightContextMenuBean(this.getId(),contextMenu);
+            contextMenuBean = new RightContextMenuBean(this.getId(), contextMenu);
         }
 
 
@@ -131,7 +127,6 @@ public class CustomButtonLayoutViewBean extends CustomViewBean<FieldGalleryConfi
 
         return build(childModules);
     }
-
 
 
     public CustomButtonLayoutViewBean(ModuleComponent<ButtonLayoutComponent> moduleComponent) {
@@ -551,6 +546,9 @@ public class CustomButtonLayoutViewBean extends CustomViewBean<FieldGalleryConfi
         return AnnotationUtil.fillBean(annotation, this);
     }
 
+    public void setTabItems(List<ButtonLayoutItem> tabItems) {
+        this.tabItems = tabItems;
+    }
 
     public List<ButtonLayoutMenu> getToolBarMenu() {
         return toolBarMenu;

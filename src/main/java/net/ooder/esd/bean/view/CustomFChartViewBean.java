@@ -20,6 +20,7 @@ import net.ooder.esd.bean.fchart.items.CategorieListItemBean;
 import net.ooder.esd.bean.fchart.items.LineListItemBean;
 import net.ooder.esd.bean.fchart.items.RawDataItemBean;
 import net.ooder.esd.custom.component.FullFChartComponent;
+import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
@@ -92,7 +93,7 @@ public class CustomFChartViewBean extends CustomViewBean<FieldFormConfig, UIItem
 
     Set<CustomFieldEvent> event = new LinkedHashSet<>();
 
-
+    public List<UIItem> tabItems = new ArrayList<>();
     public List<JavaGenSource> buildAll() {
 
         return build(childModules);
@@ -534,6 +535,14 @@ public class CustomFChartViewBean extends CustomViewBean<FieldFormConfig, UIItem
         this.chartType = chartType;
     }
 
+    @Override
+    public List<UIItem> getTabItems() {
+        return tabItems;
+    }
+
+    public void setTabItems(List<UIItem> tabItems) {
+        this.tabItems = tabItems;
+    }
 
     public Map<String, Object> getXMLData() {
         return XMLData;

@@ -34,6 +34,7 @@ public abstract class NavBaseViewBean<K extends LayoutListItem, U extends TabLis
     public List<CustomFormMenu> toolBarMenu = new ArrayList<>();
 
 
+
     public NavBaseViewBean() {
 
     }

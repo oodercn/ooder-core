@@ -14,6 +14,7 @@ import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.TabsComponent;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
+import net.ooder.esd.tool.properties.item.UIItem;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.util.ArrayList;

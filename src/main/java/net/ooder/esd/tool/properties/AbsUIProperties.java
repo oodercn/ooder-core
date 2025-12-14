@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.ui.Dock;
+import net.ooder.esd.annotation.ui.UIPositionType;
 import net.ooder.esd.annotation.ui.VisibilityType;
 import net.ooder.esd.bean.ContainerBean;
 import net.ooder.esd.bean.CustomUIBean;
+import net.ooder.esd.util.json.CaseEnumsSerializer;
 import net.ooder.esd.util.json.EMSerializer;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 
@@ -35,7 +37,8 @@ public class AbsUIProperties extends Properties {
     public String width;
     @JSONField(serializeUsing = EMSerializer.class)
     public String height;
-    public String position;
+    @JSONField(deserializeUsing = CaseEnumsSerializer.class)
+    public UIPositionType position;
 
 
     public AbsUIProperties() {
@@ -174,11 +177,11 @@ public class AbsUIProperties extends Properties {
         this.height = height;
     }
 
-    public String getPosition() {
+    public UIPositionType getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(UIPositionType position) {
         this.position = position;
     }
 }

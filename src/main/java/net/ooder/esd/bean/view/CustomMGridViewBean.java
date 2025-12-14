@@ -47,7 +47,7 @@ public class CustomMGridViewBean extends CustomViewBean<FieldGridConfig, UIItem,
     ModuleViewType moduleViewType = ModuleViewType.MGRIDCONFIG;
 
     Set<CustomMGridEvent> mevent = new LinkedHashSet<>();
-
+    public List<UIItem> tabItems = new ArrayList<>();
 
     String rowHeight;
 
@@ -632,6 +632,23 @@ public class CustomMGridViewBean extends CustomViewBean<FieldGridConfig, UIItem,
 
     public void setContextMenuBean(RightContextMenuBean contextMenuBean) {
         this.contextMenuBean = contextMenuBean;
+    }
+
+    @Override
+    public List<UIItem> getTabItems() {
+        return tabItems;
+    }
+
+    public void setTabItems(List<UIItem> tabItems) {
+        this.tabItems = tabItems;
+    }
+
+    public Set<ChildGridViewBean> getChildBeans() {
+        return childBeans;
+    }
+
+    public void setChildBeans(Set<ChildGridViewBean> childBeans) {
+        this.childBeans = childBeans;
     }
 
     @Override

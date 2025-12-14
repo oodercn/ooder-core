@@ -110,11 +110,5 @@ public class StacksListItem extends NavTabListItem {
 
     }
 
-    public Boolean getIniFold() {
-        return iniFold;
-    }
 
-    public void setIniFold(Boolean iniFold) {
-        this.iniFold = iniFold;
-    }
 }

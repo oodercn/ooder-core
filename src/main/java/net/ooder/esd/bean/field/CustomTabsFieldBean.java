@@ -10,11 +10,13 @@ import net.ooder.esd.bean.BaseWidgetBean;
 import net.ooder.esd.bean.nav.TabItemBean;
 import net.ooder.esd.bean.view.TabsViewBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldTabsComponent;
+import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ButtonViewsComponent;
 import net.ooder.esd.tool.component.TabsComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.TabsProperties;
+import net.ooder.esd.tool.properties.item.GalleryNavItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.esd.tool.properties.list.AbsListProperties;
@@ -75,7 +77,7 @@ public class CustomTabsFieldBean extends BaseWidgetBean<TabsViewBean, TabsCompon
     @Override
     public TabsViewBean createViewBean(ModuleComponent currModuleComponent, TabsComponent tabsComponent) {
         TabsProperties tabsProperties = (TabsProperties) tabsComponent.getProperties();
-        List<TabListItem> tabsListItems = tabsProperties.getItems();
+        List<NavTabListItem> tabsListItems = tabsProperties.getItems();
         List<TabItemBean> itemBeans = new ArrayList<>();
         for (TabListItem tabListItem : tabsListItems) {
             TabItemBean itemBean = new TabItemBean(tabListItem);

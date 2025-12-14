@@ -131,7 +131,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
 
     public CaselessStringKeyHashMap<String, FieldModuleConfig> itemConfigMap;
 
-    public List<U> tabItems = new ArrayList<>();
 
     @JSONField(deserializeUsing = EsdFieldMapDeserializer.class)
     public CaselessStringKeyHashMap<String, T> fieldConfigMap = new CaselessStringKeyHashMap<>();
@@ -855,13 +854,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
     }
 
 
-    public List<U> getTabItems() {
-        return tabItems;
-    }
-
-    public void setTabItems(List<U> tabItems) {
-        this.tabItems = tabItems;
-    }
 
     public Set<Class> getCustomService() {
         customService = new HashSet<>();

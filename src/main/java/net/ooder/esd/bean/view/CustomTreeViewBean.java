@@ -25,6 +25,7 @@ import net.ooder.esd.bean.bar.ToolsBar;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.custom.ESDField;
+import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
@@ -61,6 +62,9 @@ import java.util.concurrent.TimeUnit;
 @AnnotationType(clazz = TreeAnnotation.class)
 public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeListItem, TreeViewComponent> implements ContextMenuBar, ToolsBar {
     ModuleViewType moduleViewType = ModuleViewType.TREECONFIG;
+
+    public List<TreeListItem> tabItems = new ArrayList<>();
+
 
     Boolean formField;
 
@@ -1244,6 +1248,19 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
             }
         }
         return paramList;
+    }
+
+    @Override
+    public List<TreeListItem> getTabItems() {
+        return tabItems;
+    }
+
+    public void setTabItems(List<TreeListItem> tabItems) {
+        this.tabItems = tabItems;
+    }
+
+    public void setChildBeans(List<CustomTreeViewBean> childBeans) {
+        this.childBeans = childBeans;
     }
 
     public LinkedHashSet<TreeEventBean> getExtAPIEvent() {

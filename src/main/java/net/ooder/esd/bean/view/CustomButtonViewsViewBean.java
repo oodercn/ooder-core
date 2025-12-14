@@ -27,6 +27,7 @@ import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.ModulePlaceHolder;
 import net.ooder.esd.tool.properties.ButtonViewsProperties;
+import net.ooder.esd.tool.properties.item.ButtonLayoutItem;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.RemoteConnectionManager;
 import net.ooder.web.util.AnnotationUtil;
@@ -46,6 +47,9 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
     Boolean noFoldBar;
 
     Set<CustomTabsEvent> event = new HashSet<>();
+
+
+    public List<ButtonViewsListItem> tabItems = new ArrayList<>();
 
 
     public CustomButtonViewsViewBean() {

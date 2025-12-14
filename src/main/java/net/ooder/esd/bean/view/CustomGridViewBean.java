@@ -33,6 +33,8 @@ import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.OODTypeMapping;
 import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.*;
+import net.ooder.esd.tool.properties.item.LayoutListItem;
+import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.tool.properties.item.UIItem;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
@@ -45,6 +47,8 @@ import java.util.concurrent.Callable;
 public class CustomGridViewBean extends CustomViewBean<FieldGridConfig, UIItem, TreeGridComponent> implements ContextMenuBar, ToolsBar {
 
     ModuleViewType moduleViewType = ModuleViewType.GRIDCONFIG;
+
+    public List<UIItem> tabItems = new ArrayList<>();
 
     String rowHeight;
 
@@ -666,6 +670,23 @@ public class CustomGridViewBean extends CustomViewBean<FieldGridConfig, UIItem, 
             }
         }
         return toolBar;
+    }
+
+    @Override
+    public List<UIItem> getTabItems() {
+        return tabItems;
+    }
+
+    public void setTabItems(List<UIItem> tabItems) {
+        this.tabItems = tabItems;
+    }
+
+    public Set<ChildGridViewBean> getChildBeans() {
+        return childBeans;
+    }
+
+    public void setChildBeans(Set<ChildGridViewBean> childBeans) {
+        this.childBeans = childBeans;
     }
 
     @Override

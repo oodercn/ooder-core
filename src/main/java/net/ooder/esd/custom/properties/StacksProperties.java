@@ -8,7 +8,7 @@ import net.ooder.esd.bean.view.StacksViewBean;
 import java.util.Map;
 
 
-public class StacksProperties extends NavTabsProperties<StacksListItem> {
+public class StacksProperties extends NavTabsProperties<NavTabListItem> {
 
     public StacksProperties() {
 

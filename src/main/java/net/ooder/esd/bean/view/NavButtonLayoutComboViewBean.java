@@ -2,13 +2,14 @@ package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.CaselessStringKeyHashMap;
 import net.ooder.common.util.ClassUtility;
-import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.NavButtonLayoutAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.LayoutType;
+import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.dsm.BuildFactory;
@@ -24,7 +25,6 @@ import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ButtonLayoutProperties;
 import net.ooder.esd.tool.properties.item.ButtonLayoutItem;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.util.*;
@@ -39,6 +39,9 @@ public class NavButtonLayoutComboViewBean extends NavComboBaseViewBean<ButtonLay
 
     @JSONField(serialize = false)
     List<CustomModuleBean> moduleBeans = new ArrayList<>();
+
+
+    public List<ButtonLayoutItem> tabItems = new ArrayList<>();
 
 
     public NavButtonLayoutComboViewBean() {
@@ -141,6 +144,23 @@ public class NavButtonLayoutComboViewBean extends NavComboBaseViewBean<ButtonLay
 
     public void setButtonLayoutViewBean(CustomButtonLayoutViewBean buttonLayoutViewBean) {
         this.buttonLayoutViewBean = buttonLayoutViewBean;
+    }
+
+    public List<CustomModuleBean> getModuleBeans() {
+        return moduleBeans;
+    }
+
+    public void setModuleBeans(List<CustomModuleBean> moduleBeans) {
+        this.moduleBeans = moduleBeans;
+    }
+
+    @Override
+    public List<ButtonLayoutItem> getTabItems() {
+        return tabItems;
+    }
+
+    public void setTabItems(List<ButtonLayoutItem> tabItems) {
+        this.tabItems = tabItems;
     }
 
     @Override

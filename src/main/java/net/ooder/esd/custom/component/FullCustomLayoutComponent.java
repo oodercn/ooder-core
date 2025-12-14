@@ -95,16 +95,20 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                 if (classes != null) {
                     for (Class clazz : classes) {
                         MethodConfig bindMethod = viewBean.findEditorMethod(clazz);
-
                         if (bindMethod != null && bindMethod.isModule()) {
                             EUModule euModule = bindMethod.getModule(valueMap, projectName);
-
                             if (euModule != null && euModule.getComponent() != null) {
                                 Component currComponent = euModule.getComponent().getCurrComponent();
                                 ComponentType componentType = ComponentType.fromType(currComponent.getKey());
                                 if (Arrays.asList(conComponentType).contains(componentType)) {
                                     currComponent.setTarget(layoutListItem.getId());
                                     layoutComponent.addChildren(currComponent);
+                                    if (classes.length>0){
+                                      String position=  layoutComponent.getProperties().getPosition();
+                                      if (position==null || position.equals("")){
+                                          position= "relative";
+                                      }
+                                    }
                                 } else {
                                     Component mainComponent = euModule.getComponent().getMainBoxComponent().clone();
                                     String alias = mainComponent.getAlias();

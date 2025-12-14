@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class NavTabListItem extends TabListItem {
+    Boolean iniFold = true;
 
     public NavTabListItem() {
         super();
@@ -128,5 +129,11 @@ public class NavTabListItem extends TabListItem {
         }
     }
 
+    public Boolean getIniFold() {
+        return iniFold;
+    }
 
+    public void setIniFold(Boolean iniFold) {
+        this.iniFold = iniFold;
+    }
 }

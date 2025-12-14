@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = NavFoldingTabsAnnotation.class)
-public class NavFoldingTabsViewBean extends TabsViewBean<NavFoldingTabsListItem> {
+public class NavFoldingTabsViewBean extends TabsViewBean {
 
     CustomFoldingTabsFieldBean foldingTabsFieldBean;
     ModuleViewType moduleViewType = ModuleViewType.NAVFOLDINGTABSCONFIG;

@@ -15,6 +15,7 @@ import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.tool.component.LayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.item.GalleryNavItem;
+import net.ooder.esd.tool.properties.item.UIItem;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public class NavGalleryComboViewBean extends NavComboBaseViewBean<GalleryNavItem
     ModuleViewType moduleViewType = ModuleViewType.NAVGALLERYCONFIG;
 
     CustomGalleryViewBean galleryViewBean;
+
+    public List<GalleryNavItem> tabItems = new ArrayList<>();
 
     public NavGalleryComboViewBean(ModuleComponent<LayoutComponent> moduleComponent) {
         AnnotationUtil.fillDefaultValue(NavGalleryAnnotation.class, this);
@@ -105,6 +108,9 @@ public class NavGalleryComboViewBean extends NavComboBaseViewBean<GalleryNavItem
         return tabItems;
     }
 
+    public void setTabItems(List<GalleryNavItem> tabItems) {
+        this.tabItems = tabItems;
+    }
 
     @Override
     public CustomViewBean getCurrViewBean() {

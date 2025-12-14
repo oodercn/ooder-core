@@ -20,6 +20,7 @@ import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
 import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.tool.component.*;
 import net.ooder.esd.tool.properties.item.TabListItem;
+import net.ooder.esd.tool.properties.item.UIItem;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
@@ -29,12 +30,13 @@ import java.util.*;
 import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = TabsAnnotation.class)
-public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<CustomTabsEvent, U> {
+public class TabsViewBean extends BaseTabsViewBean<CustomTabsEvent, NavTabListItem> {
 
     ModuleViewType moduleViewType = ModuleViewType.NAVTABSCONFIG;
 
     Set<CustomTabsEvent> event = new HashSet<>();
 
+    public List<NavTabListItem> tabItems = new ArrayList<>();
 
     public TabsViewBean() {
         super();
@@ -75,6 +77,31 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
         this.initBaseTabViews(clazz);
 
     }
+
+
+    public List<MethodConfig> findMethodByTabId(String tabId) {
+        List<MethodConfig> methodConfigList = new ArrayList<>();
+        TabItemBean itemBean = this.getChildTabBean(tabId);
+        methodConfigList.addAll(itemBean.getMethodConfigList());
+        if (methodConfigList.isEmpty()) {
+            NavTabListItem uitemBean = this.findTabItem(tabId);
+            Class[] bindClass = uitemBean.getBindClass();
+            if (bindClass != null) {
+                for (Class clazz : bindClass) {
+                    MethodConfig methodConfig = this.findEditorMethod(clazz);
+                    if (methodConfig != null) {
+                        methodConfigList.add(methodConfig);
+                    }
+                }
+            }
+        }
+        return methodConfigList;
+    }
+
+    protected NavTabListItem findTabItem(String target) {
+        return this.findTabItem(target, tabItems);
+    }
+
 
     public TabsViewBean(ModuleComponent moduleComponent) {
         super();
@@ -118,7 +145,7 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
         this.initProperties(tabsProperties);
         List<Component> components = cloneComponentList(tabsComponent.getChildren());
         if (tabItems == null || tabItems.isEmpty()) {
-            tabItems = (List<U>) tabsProperties.getItems();
+            tabItems = (List<NavTabListItem>) tabsProperties.getItems();
         }
         this.setTabItems(tabItems);
         tabsProperties.setItems(tabItems);
@@ -143,7 +170,7 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
         this.name = tabsProperties.getName();
         itemConfigMap = new CaselessStringKeyHashMap<>();
         itemNames = new LinkedHashSet<String>();
-        tabItems = (List<U>) tabsProperties.getItems();
+        tabItems = (List<NavTabListItem>) tabsProperties.getItems();
         moduleBeans = this.getModuleBeans();
         try {
             String projectName = DSMFactory.getInstance().getDefaultProjectName();
@@ -155,7 +182,7 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
             e.printStackTrace();
         }
         itemBeans = this.getItemBeans();
-        tabItems = (List<U>) tabsProperties.getItems();
+        tabItems = (List<NavTabListItem>) tabsProperties.getItems();
         for (TabListItem tabListItem : tabItems) {
             TabItemBean itemBean = this.getTabItemBeanById(tabListItem.getId());
             if (itemBean == null) {
@@ -168,7 +195,7 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
     }
 
     @Override
-    public List<U> getTabItems() {
+    public List<NavTabListItem> getTabItems() {
         if (tabItems == null || tabItems.isEmpty()) {
             Class<? extends Enum> enumClass = getEnumClass();
             Class<? extends Enum> viewClass = null;
@@ -186,9 +213,9 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
             }
 
             if (viewClass != null) {
-                tabItems = (List<U>) ESDEnumsUtil.getEnumItems(viewClass, NavTabListItem.class);
+                tabItems = (List<NavTabListItem>) ESDEnumsUtil.getEnumItems(viewClass, NavTabListItem.class);
             } else if (enumClass != null) {
-                tabItems = (List<U>) ESDEnumsUtil.getEnumItems(enumClass, NavTabListItem.class);
+                tabItems = (List<NavTabListItem>) ESDEnumsUtil.getEnumItems(enumClass, NavTabListItem.class);
             }
             for (TabListItem tabListItem : tabItems) {
                 MethodConfig editorMethod = findEditorMethod(tabListItem.getBindClass());
@@ -200,6 +227,9 @@ public class TabsViewBean<U extends NavTabListItem> extends BaseTabsViewBean<Cus
         return tabItems;
     }
 
+    public void setTabItems(List<NavTabListItem> tabItems) {
+        this.tabItems = tabItems;
+    }
 
     @Override
     public Set<CustomTabsEvent> getEvent() {

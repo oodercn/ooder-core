@@ -28,6 +28,8 @@ import net.ooder.esd.custom.CustomMethodInfo;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.component.CustomDynLoadView;
 import net.ooder.esd.custom.component.CustomModuleComponent;
+import net.ooder.esd.custom.component.FullDivComponent;
+import net.ooder.esd.custom.component.FullPanelComponent;
 import net.ooder.esd.custom.properties.BarProperties;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.DomainInst;
@@ -992,7 +994,12 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         if (properties == null) {
             properties = new ModuleProperties();
         }
-
+        properties.setPanelType(PanelType.block);
+        if (this instanceof FullPanelComponent) {
+            properties.setPanelType(PanelType.panel);
+        } else if (this instanceof FullDivComponent) {
+            properties.setPanelType(PanelType.div);
+        }
         ComponentList componentList = this.getChildrenRecursivelyList();
         for (Component component : componentList) {
             components.put(component.getAlias(), component);

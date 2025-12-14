@@ -9,8 +9,11 @@ import net.ooder.esd.annotation.NavFoldingTreeAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.tool.properties.item.ButtonLayoutItem;
+import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
@@ -24,6 +27,8 @@ public class NavFoldingComboViewBean extends NavComboBaseViewBean {
     ModuleViewType moduleViewType = ModuleViewType.NAVFOLDINGTREECONFIG;
 
     List<CustomTreeViewBean> treeViewBeans;
+
+    public List<NavTabListItem> tabItems = new ArrayList<>();
 
 
     public NavFoldingComboViewBean() {
@@ -89,6 +94,14 @@ public class NavFoldingComboViewBean extends NavComboBaseViewBean {
         return annotationBeans;
     }
 
+    @Override
+    public List<NavTabListItem> getTabItems() {
+        return tabItems;
+    }
+
+    public void setTabItems(List<NavTabListItem> tabItems) {
+        this.tabItems = tabItems;
+    }
 
     @Override
     @JSONField(serialize = false)

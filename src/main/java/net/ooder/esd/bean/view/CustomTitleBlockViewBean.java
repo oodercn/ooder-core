@@ -85,6 +85,8 @@ public class CustomTitleBlockViewBean extends BaseGalleryViewBean<TitleBlockMenu
         super.updateBaseModule(moduleComponent);
         TitleBlockComponent titleBlockComponent = (TitleBlockComponent) moduleComponent.getCurrComponent();
         TitleBlockProperties titleBlockProperties = titleBlockComponent.getProperties();
+
+
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(titleBlockProperties), Map.class), this, false, false);
         this.name = OODUtil.formatJavaName(titleBlockComponent.getAlias(), false);
         this.titleBlockItems = titleBlockProperties.getItems();

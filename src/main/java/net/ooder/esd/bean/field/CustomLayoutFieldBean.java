@@ -97,13 +97,13 @@ public class CustomLayoutFieldBean extends BaseWidgetBean<CustomViewBean, Layout
                 viewBean = new CustomLayoutViewBean(currModuleComponent);
             }
 
-            viewBean.setTabItems(layoutItemBeans);
+            //viewBean.setTabItems(layoutItemBeans);
         } else {
             if (viewBean instanceof CustomLayoutViewBean) {
                 ((CustomLayoutViewBean) viewBean).setLayoutItems(itemBeans);
             }
 
-            viewBean.setTabItems(layoutItemBeans);
+           // viewBean.setTabItems(layoutItemBeans);
             viewBean.updateModule(currModuleComponent);
         }
         viewBean.updateContainerBean(component);

@@ -31,6 +31,7 @@ import net.ooder.esd.tool.component.BlockComponent;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
+import net.ooder.esd.tool.properties.item.LayoutListItem;
 import net.ooder.esd.tool.properties.item.UIItem;
 import net.ooder.esd.tool.properties.list.AbsListProperties;
 import net.ooder.esd.util.OODUtil;
@@ -53,6 +54,9 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
     List<CustomFormMenu> bottombarMenu = new ArrayList<>();
 
     Set<CustomFormEvent> event = new LinkedHashSet<>();
+
+
+    public List<UIItem> tabItems = new ArrayList<>();
 
 
     public BaseFormViewBean() {
@@ -487,6 +491,14 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         this.customMenu = customMenu;
     }
 
+    @Override
+    public List<UIItem> getTabItems() {
+        return tabItems;
+    }
+
+    public void setTabItems(List<UIItem> tabItems) {
+        this.tabItems = tabItems;
+    }
 
     public Set<CustomFormEvent> getEvent() {
         return event;

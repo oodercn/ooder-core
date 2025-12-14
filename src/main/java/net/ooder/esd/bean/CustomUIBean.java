@@ -5,9 +5,11 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.UIAnnotation;
 import net.ooder.esd.annotation.ui.Dock;
+import net.ooder.esd.annotation.ui.UIPositionType;
 import net.ooder.esd.annotation.ui.VisibilityType;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.properties.Properties;
+import net.ooder.esd.util.json.CaseEnumsSerializer;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
@@ -51,8 +53,8 @@ public class CustomUIBean implements CustomBean {
     public String width;
 
     public String height;
-
-    public String position;
+    @JSONField(deserializeUsing = CaseEnumsSerializer.class)
+    public UIPositionType position;
 
     public CustomUIBean() {
 
@@ -220,15 +222,13 @@ public class CustomUIBean implements CustomBean {
         this.bottom = bottom;
     }
 
-
-    public String getPosition() {
+    public UIPositionType getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(UIPositionType position) {
         this.position = position;
     }
-
 
     public String toAnnotationStr() {
         return AnnotationUtil.toAnnotationStr(this);

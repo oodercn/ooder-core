@@ -19,6 +19,7 @@ import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.GalleryComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.Action;
+import net.ooder.esd.tool.properties.item.GalleryItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.web.util.AnnotationUtil;
@@ -35,7 +36,7 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
     RightContextMenuBean contextMenuBean;
     PageBarBean pageBar;
     EnumsClassBean enumsClassBean;
-
+    public List<TabListItem> tabItems = new ArrayList<>();
     List<GalleryItemBean> galleryItemBeans = new ArrayList<>();
 
     public LinkedHashSet<GalleryEventBean> extAPIEvent = new LinkedHashSet<>();
@@ -129,6 +130,15 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
 //
 //    }
 
+
+    @Override
+    public List<TabListItem> getTabItems() {
+        return tabItems;
+    }
+
+    public void setTabItems(List<TabListItem> tabItems) {
+        this.tabItems = tabItems;
+    }
 
     @Override
     @JSONField(serialize = false)
@@ -264,6 +274,8 @@ public abstract class BaseGalleryViewBean<M extends CustomMenu, E extends Custom
     public void setAutoIconColor(Boolean autoIconColor) {
         this.autoIconColor = autoIconColor;
     }
+
+
 
     public Boolean getAutoItemColor() {
         return autoItemColor;

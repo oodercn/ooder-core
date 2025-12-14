@@ -9,6 +9,7 @@ import net.ooder.esd.bean.view.TabsViewBean;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.component.CustomTabsComponent;
+import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.custom.properties.NavTabsProperties;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
@@ -62,14 +63,14 @@ public class CustomFieldTabsComponent extends CustomTabsComponent {
     void init(TabsViewBean tabsViewBean, Map contextMap) {
         NavTabsProperties blockProperties = new NavTabsProperties(tabsViewBean, contextMap);
         String projectName = this.euModule.getProjectVersion().getProjectName();
-        List<TabListItem> tabListItems = tabsViewBean.getTabItems();
+        List<NavTabListItem> tabListItems = tabsViewBean.getTabItems();
         List<CustomModuleBean> moduleBeans = tabsViewBean.getModuleBeans();
         if (moduleBeans.size() > 0) {
             for (CustomModuleBean moduleBean : moduleBeans) {
                 this.addChildren(moduleBean.getModuleComponent());
             }
         } else if (tabListItems.size() > 0) {
-            for (TabListItem tabListItem : tabListItems) {
+            for (NavTabListItem tabListItem : tabListItems) {
                 try {
                     EUModule newmodule = null;
                     if (tabListItem.getEuClassName() != null) {

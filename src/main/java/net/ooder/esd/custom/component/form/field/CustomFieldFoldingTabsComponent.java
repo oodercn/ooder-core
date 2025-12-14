@@ -10,6 +10,7 @@ import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.component.CustomFoldingTabsComponent;
 import net.ooder.esd.custom.properties.NavFoldingTabsListItem;
 import net.ooder.esd.custom.properties.NavFoldingTabsProperties;
+import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.ESDFacrory;
@@ -64,7 +65,7 @@ public class CustomFieldFoldingTabsComponent extends CustomFoldingTabsComponent 
     void init(NavFoldingTabsViewBean tabsViewBean, Map contextMap) {
         NavFoldingTabsProperties blockProperties = new NavFoldingTabsProperties(tabsViewBean, contextMap);
         String projectName = this.euModule.getProjectVersion().getProjectName();
-        List<NavFoldingTabsListItem> tabListItems = tabsViewBean.getTabItems();
+        List<NavTabListItem> tabListItems = tabsViewBean.getTabItems();
         List<CustomModuleBean> moduleBeans = tabsViewBean.getModuleBeans();
         if (moduleBeans.size() > 0) {
             for (CustomModuleBean moduleBean : moduleBeans) {

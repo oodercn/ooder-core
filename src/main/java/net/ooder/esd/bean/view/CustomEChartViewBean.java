@@ -13,6 +13,7 @@ import net.ooder.esd.annotation.event.CustomFieldEvent;
 import net.ooder.esd.annotation.menu.CustomFormMenu;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.bean.*;
+import net.ooder.esd.custom.properties.ButtonViewsListItem;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
@@ -36,6 +37,8 @@ import java.util.concurrent.Callable;
 public class CustomEChartViewBean extends CustomViewBean<FieldFormConfig, UIItem, EChartComponent> implements CustomBean {
 
     ModuleViewType moduleViewType = ModuleViewType.ECHARTCONFIG;
+
+    public List<UIItem> tabItems = new ArrayList<>();
 
     public String chartTheme;
 
@@ -551,6 +554,15 @@ public class CustomEChartViewBean extends CustomViewBean<FieldFormConfig, UIItem
 
     public String toAnnotationStr() {
         return AnnotationUtil.toAnnotationStr(this);
+    }
+
+    @Override
+    public List<UIItem> getTabItems() {
+        return tabItems;
+    }
+
+    public void setTabItems(List<UIItem> tabItems) {
+        this.tabItems = tabItems;
     }
 
     @Override

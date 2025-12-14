@@ -12,11 +12,13 @@ import net.ooder.esd.annotation.ui.PosType;
 import net.ooder.esd.bean.*;
 import net.ooder.esd.tool.component.LayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.properties.item.ButtonLayoutItem;
 import net.ooder.esd.tool.properties.item.LayoutListItem;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -24,6 +26,9 @@ import java.util.Set;
 public class NavTreeComboViewBean extends NavComboBaseViewBean<TreeListItem> {
 
     ModuleViewType moduleViewType = ModuleViewType.NAVTREECONFIG;
+
+
+    public List<TreeListItem> tabItems = new ArrayList<>();
 
     public CustomTreeViewBean treeViewBean;
 
@@ -189,6 +194,14 @@ public class NavTreeComboViewBean extends NavComboBaseViewBean<TreeListItem> {
         return AnnotationUtil.toAnnotationStr(this);
     }
 
+    @Override
+    public List<TreeListItem> getTabItems() {
+        return tabItems;
+    }
+
+    public void setTabItems(List<TreeListItem> tabItems) {
+        this.tabItems = tabItems;
+    }
 
     @Override
     public ModuleViewType getModuleViewType() {

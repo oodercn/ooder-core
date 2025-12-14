@@ -183,6 +183,11 @@ public class CustomDynViewBean extends CustomViewBean<FieldFormConfig, UIItem, C
         return moduleViewType;
     }
 
+    @Override
+    public List<UIItem> getTabItems() {
+        return null;
+    }
+
     public void setModuleViewType(ModuleViewType moduleViewType) {
         this.moduleViewType = moduleViewType;
     }

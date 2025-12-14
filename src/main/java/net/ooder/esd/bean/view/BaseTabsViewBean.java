@@ -254,23 +254,17 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
         return null;
     }
 
-    public List<MethodConfig> findMethodByTabId(String tabId) {
-        List<MethodConfig> methodConfigList = new ArrayList<>();
-        TabItemBean itemBean = this.getChildTabBean(tabId);
-        methodConfigList.addAll(itemBean.getMethodConfigList());
-        if (methodConfigList.isEmpty()) {
-            U uitemBean = this.findTabItem(tabId);
-            Class[] bindClass = uitemBean.getBindClass();
-            if (bindClass != null) {
-                for (Class clazz : bindClass) {
-                    MethodConfig methodConfig = this.findEditorMethod(clazz);
-                    if (methodConfig != null) {
-                        methodConfigList.add(methodConfig);
-                    }
+    public NavTabListItem findTabItem(String target, List<NavTabListItem> navTabItems) {
+        if (target == null) {
+            return navTabItems.get(0);
+        } else {
+            for (NavTabListItem tabItem : navTabItems) {
+                if (target.equals(tabItem.getId())) {
+                    return tabItem;
                 }
             }
         }
-        return methodConfigList;
+        return null;
     }
 
 
@@ -581,22 +575,7 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
         return methdItemBeans;
     }
 
-    protected U findTabItem(String target) {
-        return this.findTabItem(target, tabItems);
-    }
 
-    public U findTabItem(String target, List<U> navTabItems) {
-        if (target == null) {
-            return navTabItems.get(0);
-        } else {
-            for (U tabItem : navTabItems) {
-                if (target.equals(tabItem.getId())) {
-                    return tabItem;
-                }
-            }
-        }
-        return null;
-    }
 
     @Override
     @JSONField(serialize = false)

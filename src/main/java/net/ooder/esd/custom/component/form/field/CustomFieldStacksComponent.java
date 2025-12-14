@@ -5,6 +5,7 @@ import net.ooder.common.JDSException;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.field.CustomStacksFieldBean;
 import net.ooder.esd.bean.view.StacksViewBean;
+import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.custom.properties.StacksListItem;
 import net.ooder.esd.custom.properties.StacksProperties;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
@@ -62,8 +63,8 @@ public class CustomFieldStacksComponent extends StacksComponent {
         StacksProperties blockProperties = new StacksProperties(navStacksViewBean, dbMap);
         String projectName = this.euModule.getProjectVersion().getProjectName();
         List<EUModule> childModules = new ArrayList<>();
-        List<StacksListItem> stacksListItems = navStacksViewBean.getTabItems();
-        for (StacksListItem stacksListItem : stacksListItems) {
+        List<NavTabListItem> stacksListItems = navStacksViewBean.getTabItems();
+        for (NavTabListItem stacksListItem : stacksListItems) {
             if (stacksListItem.getEuClassName() != null) {
                 try {
                     EUModule newmodule = ESDFacrory.getAdminESDClient().getModule(stacksListItem.getEuClassName(), projectName);

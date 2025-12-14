@@ -60,6 +60,9 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
     @JSONField(serialize = false)
     List<CustomModuleBean> moduleBeans = new ArrayList<>();
 
+
+    public List<LayoutListItem> tabItems = new ArrayList<>();
+
     EnumsClassBean enumsClassBean;
 
     @JSONField(serialize = false)
@@ -248,11 +251,17 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
                     }
                 }
 
-
             } catch (JDSException e) {
                 e.printStackTrace();
             }
+        }
 
+        for (CustomLayoutItemBean layoutItemBean : layoutItems) {
+            List<LayoutListItem> tabListItems = this.getTabItems();
+            LayoutListItem listItem = new LayoutListItem(layoutItemBean);
+            if (layoutItemBean != null && !tabListItems.contains(listItem)) {
+                tabListItems.add(listItem);
+            }
         }
 
         this.sourceClassName = methodAPIBean.getSourceClassName();
@@ -321,21 +330,19 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
     }
 
     public LayoutListItem findTabItem(String target) {
-        return this.findTabItem(target, tabItems);
-    }
-
-    public LayoutListItem findTabItem(String target, List<LayoutListItem> navTabItems) {
-        if (target == null) {
-            return navTabItems.get(0);
-        } else {
-            for (LayoutListItem tabItem : navTabItems) {
-                if (target.equals(tabItem.getId())) {
-                    return tabItem;
+            for (LayoutListItem itemBean : tabItems) {
+                if (itemBean != null && target.equals(itemBean.getId())) {
+                    return itemBean;
                 }
             }
-        }
-        return null;
+            for (CustomLayoutItemBean itemBean : layoutItems) {
+                if (itemBean != null && target.equals(itemBean.getId())) {
+                    return new LayoutListItem(itemBean);
+                }
+            }
+            return null;
     }
+
 
     public Set<MethodConfig> bindItem(List<JavaGenSource> javaSrcBeanList, TabListItem currListItem) {
         List<Class> classList = new ArrayList<>();
@@ -622,4 +629,12 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         return ComponentType.LAYOUT;
     }
 
+
+    public List<LayoutListItem> getTabItems() {
+        return tabItems;
+    }
+
+    public void setTabItems(List<LayoutListItem> tabItems) {
+        this.tabItems = tabItems;
+    }
 }

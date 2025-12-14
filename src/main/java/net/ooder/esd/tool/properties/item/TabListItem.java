@@ -35,6 +35,8 @@ public class TabListItem<T extends Enum> extends UIItem<T> {
     public BorderType borderType;
     public Boolean activeLast;
     public ComboInputType type;
+
+
     @JSONField(deserializeUsing = BindClassArrDeserializer.class)
     public Class[] bindClass;
 

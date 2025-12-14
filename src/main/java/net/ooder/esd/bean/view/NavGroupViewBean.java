@@ -35,6 +35,7 @@ import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.Properties;
 import net.ooder.esd.tool.properties.item.GalleryItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
+import net.ooder.esd.tool.properties.item.UIItem;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.util.EnumsUtil;
@@ -49,7 +50,7 @@ import java.util.concurrent.Callable;
 public class NavGroupViewBean extends NavBaseViewBean<GroupItemBean, GalleryItem, BlockComponent> {
 
     ModuleViewType moduleViewType = ModuleViewType.NAVGROUPCONFIG;
-
+    public List<GalleryItem> tabItems = new ArrayList<>();
     CustomBlockBean blockBean;
 
     Dock dock;
@@ -449,6 +450,14 @@ public class NavGroupViewBean extends NavBaseViewBean<GroupItemBean, GalleryItem
         return annotationBeans;
     }
 
+    @Override
+    public List<GalleryItem> getTabItems() {
+        return tabItems;
+    }
+
+    public void setTabItems(List<GalleryItem> tabItems) {
+        this.tabItems = tabItems;
+    }
 
     @Override
     @JSONField(serialize = false)
