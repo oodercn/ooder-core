@@ -46,7 +46,7 @@ public class CustomFieldPanelComponent extends PanelComponent<PanelProperties> {
             }
             this.events = component.getEvents();
         }
-        if (field.getMethodConfig() != null && field.getMethodConfig().getView() != null && field.getMethodConfig().getView() instanceof CustomBlockFormViewBean) {
+        if (field.getMethodConfig() != null && field.getMethodConfig().getView() != null && field.getMethodConfig().getView() instanceof CustomPanelFormViewBean) {
             CustomModuleBean customModuleBean = customComponentViewBean.getModuleBean();
             if (customModuleBean == null && customComponentViewBean.getMethodConfig() != null) {
                 customModuleBean = customComponentViewBean.getMethodConfig().getModuleBean();
