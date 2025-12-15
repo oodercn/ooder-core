@@ -2,15 +2,13 @@ package net.ooder.esd.tool.properties;
 
 import com.alibaba.fastjson.JSON;
 import net.ooder.common.util.ClassUtility;
-import net.ooder.esd.annotation.TitleBlockAnnotation;
 import net.ooder.esd.bean.field.CustomGalleryFieldBean;
+import net.ooder.esd.bean.gallery.TitleBlockItemBean;
 import net.ooder.esd.bean.view.CustomTitleBlockViewBean;
 import net.ooder.esd.tool.properties.item.TitleBlockItem;
 import net.ooder.esd.tool.properties.list.AbsListProperties;
-import net.ooder.esd.tool.properties.list.AbsUIListProperties;
 import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.web.util.AnnotationUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -54,8 +52,6 @@ public class TitleBlockProperties extends AbsListProperties<TitleBlockItem> {
     }
 
 
-
-
     public TitleBlockProperties(CustomGalleryFieldBean titleBlockViewBean) {
         this.init(titleBlockViewBean.getContainerBean());
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(titleBlockViewBean), Map.class), this, false, false);
@@ -64,30 +60,45 @@ public class TitleBlockProperties extends AbsListProperties<TitleBlockItem> {
 
     public void init(CustomTitleBlockViewBean titleBlockViewBean) {
 
+
+        OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(titleBlockViewBean), Map.class), this, false, false);
         this.init(titleBlockViewBean.getContainerBean());
-        Class<? extends Enum> enumClass = titleBlockViewBean.getEnumClass();
-        if (enumClass == null || enumClass.equals(AnnotationUtil.getDefaultValue(TitleBlockAnnotation.class, "enumClass"))) {
+        List<TitleBlockItemBean> titleBlockItems = titleBlockViewBean.getTitleBlockItemBeans();
+        if (titleBlockItems != null) {
+            int index = 0;
+            for (TitleBlockItemBean titleBlockItem : titleBlockItems) {
+                TitleBlockItem blockItem = new TitleBlockItem(titleBlockItem);
+                blockItem.setIndex(index);
+                blockItem.setTabindex(index);
+                this.addItem(blockItem);
+                index++;
+            }
+        }
+
+        if (this.getItems() == null || this.getItems().isEmpty()) {
+            Class<? extends Enum> enumClass = titleBlockViewBean.getEnumClass();
+            Class<? extends Enum> viewClass = null;
             String viewClassName = titleBlockViewBean.getViewClassName();
             if (viewClassName != null) {
                 Class clazz = null;
                 try {
                     clazz = ClassUtility.loadClass(viewClassName);
                     if (clazz.isEnum()) {
-                        enumClass = clazz;
+                        viewClass = clazz;
                     }
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }
-        }
-        if (enumClass != null) {
-            List<TitleBlockItem> listItems = ESDEnumsUtil.getEnumItems(enumClass, TitleBlockItem.class);
-            for (TitleBlockItem listItem : listItems) {
-                this.addItem(listItem);
+
+            if (viewClass != null) {
+                this.items = ESDEnumsUtil.getEnumItems(viewClass, TitleBlockItem.class);
+            } else if (enumClass != null) {
+                this.items = ESDEnumsUtil.getEnumItems(enumClass, TitleBlockItem.class);
             }
         }
 
-        OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(titleBlockViewBean), Map.class), this, false, false);
+
     }
 
     public String getFlagText() {

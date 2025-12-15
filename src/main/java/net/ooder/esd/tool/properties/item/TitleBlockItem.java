@@ -3,6 +3,8 @@ package net.ooder.esd.tool.properties.item;
 import com.alibaba.fastjson.JSON;
 import net.ooder.common.JDSException;
 import net.ooder.esd.bean.TreeListItem;
+import net.ooder.esd.bean.gallery.GalleryItemBean;
+import net.ooder.esd.bean.gallery.TitleBlockItemBean;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.sf.cglib.beans.BeanMap;
@@ -17,6 +19,14 @@ public class TitleBlockItem extends GalleryItem {
 
     public TitleBlockItem() {
     }
+
+
+    public TitleBlockItem(TitleBlockItemBean titleBlockItemBean) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(titleBlockItemBean), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+
+    }
+
 
 
     public TitleBlockItem(TreeListItem listItem) {
