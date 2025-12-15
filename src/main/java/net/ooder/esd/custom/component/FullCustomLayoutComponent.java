@@ -118,7 +118,7 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                     }
                                     mainComponent.updateAlias(alias);
                                     mainComponent.setTarget(layoutListItem.getId());
-                                    layoutComponent.addChildren(currComponent);
+                                    layoutComponent.addChildren(mainComponent);
                                 }
 
 
