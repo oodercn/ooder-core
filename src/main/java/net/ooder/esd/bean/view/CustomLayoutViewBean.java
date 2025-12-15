@@ -341,7 +341,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         }
 
         for (CustomLayoutItemBean itemBean : layoutItems) {
-            if (itemBean != null ) {
+            if (itemBean != null) {
                 LayoutListItem layoutItemBean = new LayoutListItem(itemBean);
                 if (!currList.contains(layoutItemBean)) {
                     currList.add(layoutItemBean);
@@ -353,10 +353,11 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         if (currList.size() > 0) {
             if (target == null) {
                 layoutListItem = currList.get(0);
-            }
-            for (LayoutListItem itemBean : currList) {
-                if (itemBean != null) {
-                    layoutListItem = itemBean;
+            } else {
+                for (LayoutListItem itemBean : currList) {
+                    if (itemBean != null && target.equals(itemBean.getId())) {
+                        layoutListItem = itemBean;
+                    }
                 }
             }
         }
