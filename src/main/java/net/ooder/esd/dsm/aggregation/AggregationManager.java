@@ -20,6 +20,7 @@ import net.ooder.context.JDSActionContext;
 import net.ooder.context.JDSContext;
 import net.ooder.esd.bean.CustomRefBean;
 import net.ooder.esd.bean.CustomViewBean;
+import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.CustomViewFactory;
@@ -38,6 +39,8 @@ import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
+import net.ooder.esd.engine.ESDFacrory;
+import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.MySpace;
 import net.ooder.esd.engine.ProjectCacheManager;
 import net.ooder.esd.engine.config.dsm.DSMProjectConfig;
@@ -168,6 +171,34 @@ public class AggregationManager {
             JDSActionContext.getActionContext().getContext().put("contextEntityConfigMap", contextEntityConfigMap);
         }
         return contextEntityConfigMap;
+    }
+
+
+    public void clearModuleConfig(String currentClassName, String projectName) throws JDSException {
+        EUModule module = ESDFacrory.getAdminESDClient().getModule(currentClassName, projectName);
+        if (module != null && module.getComponent() != null && module.getComponent().getMethodAPIBean() != null) {
+            MethodConfig methodConfig = module.getComponent().getMethodAPIBean();
+            Set<String> esdClassNames = new HashSet<>();
+            if (methodConfig != null) {
+                esdClassNames.add(methodConfig.getSourceClassName());
+                Set<Class> classes = methodConfig.getOtherClass();
+                for (Class clazz : classes) {
+                    if (clazz != null) {
+                        esdClassNames.add(clazz.getName());
+                    }
+                    if (clazz.getSuperclass() != null && !clazz.getSuperclass().equals(Object.class)) {
+                        esdClassNames.add(clazz.getSuperclass().getName());
+                    }
+                }
+            } else if (module.getComponent().getProperties().getDsmProperties() != null) {
+                String sourceClassName = module.getComponent().getProperties().getDsmProperties().getSourceClassName();
+                if (sourceClassName != null) {
+                    esdClassNames.add(sourceClassName);
+                }
+            }
+            DSMFactory.getInstance().getAggregationManager().delAggEntity(methodConfig.getDomainId(), esdClassNames, projectName, false);
+        }
+
     }
 
     public AggEntityConfig getAggEntityConfig(String className, boolean reload) throws JDSException {

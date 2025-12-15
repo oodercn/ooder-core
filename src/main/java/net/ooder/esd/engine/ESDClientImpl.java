@@ -309,8 +309,12 @@ public class ESDClientImpl implements ESDClient {
 
     @Override
     public Boolean delModule(EUModule moduleComponent) {
-        boolean delModule = this.cacheManager.delModule(moduleComponent);
+        boolean delModule = true;
         try {
+//            if (moduleComponent.getComponent() != null && moduleComponent.getComponent().getMethodAPIBean() != null) {
+//                DSMFactory.getInstance().getAggregationManager().clearModuleConfig(moduleComponent.getClassName(), moduleComponent.getProjectVersion().getProjectName());
+//            }
+            delModule = this.cacheManager.delModule(moduleComponent);
             this.removeLocalModule(moduleComponent.getProjectVersion().getProjectName(), moduleComponent.getClassName(), null);
         } catch (JDSException e) {
 
