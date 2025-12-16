@@ -765,11 +765,9 @@ public class ViewManager {
             e.printStackTrace();
         }
         CustomViewBean viewBean = null;
-        if (moduleComponent.getMethodAPIBean() != null
-                && moduleComponent.getMethodAPIBean().getView() != null
-                && !moduleComponent.getMethodAPIBean().getModuleViewType().equals(moduleViewType)
-                ) {
-            viewBean = moduleComponent.getMethodAPIBean().getView();
+        MethodConfig methodConfig = moduleComponent.getMethodAPIBean();
+        if (methodConfig != null && methodConfig.getView() != null && methodConfig.getModuleViewType().equals(moduleViewType)) {
+            viewBean = methodConfig.getView();
             viewBean.updateModule(moduleComponent);
         } else {
             try {

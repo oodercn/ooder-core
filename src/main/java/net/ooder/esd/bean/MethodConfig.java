@@ -198,7 +198,6 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
     }
 
 
-
     public MethodConfig(Method method, ApiClassConfig sourceClassConfig) {
         this.domainId = sourceClassConfig.getDomainId();
         this.sourceClassConfig = sourceClassConfig;
@@ -296,6 +295,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
         }
 
     }
+
     public MethodConfig(CustomMethodInfo customMethodInfo, CustomMenuItem menuItem, AggEntityConfig aggregationConfig) {
 
 
@@ -321,8 +321,9 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
         this.requestMethodBean = new RequestMethodBean(method, requestMappingBean, domainId);
         init(requestMethodBean);
 
-        if (menuItem==null){
-            menuItem=this.getDefaultMenuItem();;
+        if (menuItem == null) {
+            menuItem = this.getDefaultMenuItem();
+            ;
         }
         if (menuItem != null) {
             urlName = menuItem.getDefaultMethodName();
@@ -1242,7 +1243,8 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
     }
 
     public T getView() {
-        if (view == null) {
+
+        if (view == null || view.getModuleViewType() == null || !view.getModuleViewType().equals(this.getModuleViewType())) {
             view = getCustomViewBean();
         }
         return view;
@@ -1766,7 +1768,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
     public Set<Class> getOtherClass() {
         Set<Class> classSet = new HashSet<>();
         if (this.getView() != null) {
-            classSet.addAll( this.getView().getOtherClass());
+            classSet.addAll(this.getView().getOtherClass());
         } else {
             if (this.getViewClassName() != null) {
                 try {
@@ -1779,7 +1781,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
                 }
             }
         }
-        return   ClassUtility.checkBase(classSet);
+        return ClassUtility.checkBase(classSet);
     }
 
 

@@ -548,7 +548,6 @@ public class ProjectCacheManager {
                 moduleComponent.getProperties().setDsmProperties(dsmProperties);
             }
             String domainId = dsmProperties.getDomainId();
-
             CustomViewBean customViewBean = methodConfig.getView();
             boolean canSave = false;
             if (!moduleComponent.getFormulas().isEmpty()) {
