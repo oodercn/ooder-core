@@ -9,6 +9,7 @@ import net.ooder.context.JDSActionContext;
 import net.ooder.esd.annotation.ViewGroupType;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
+import net.ooder.esd.annotation.ui.UrlPath;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.properties.AbsUIProperties;
@@ -386,9 +387,39 @@ public class Component<T extends Properties, K extends EventKey> {
         return component;
     }
 
-    public void updateAlias(String alias) {
-        if (alias != null && !this.alias.equals(alias)) {
-            this.alias = alias;
+    public void updateAlias(String newalias) {
+        if (newalias != null && !this.alias.equals(newalias)) {
+            if (this.getModuleComponent() != null) {
+                List<Action> actionList = this.getModuleComponent().getAllAction();
+                for (Action action : actionList) {
+                    if (action.getTarget() != null && !action.getTarget().equals(alias)) {
+                        action.setTarget(newalias);
+                    }
+                }
+                ComponentList components = this.getModuleComponent().getChildrenRecursivelyList();
+                for (Component component : components) {
+                    if (component instanceof APICallerComponent) {
+                        APICallerComponent apiCallerComponent = (APICallerComponent) component;
+                        List<UrlPath> requestDataSource = apiCallerComponent.getProperties().getRequestDataSource();
+                        for (UrlPath path : requestDataSource) {
+                            if (path.getPath().equals(alias)) {
+                                path.setPath(newalias);
+                            }
+                        }
+
+                        List<UrlPath> responseDataTarget = apiCallerComponent.getProperties().getResponseDataTarget();
+                        for (UrlPath path : responseDataTarget) {
+                            if (path.getPath().equals(alias)) {
+                                path.setPath(newalias);
+                            }
+                        }
+
+                    }
+                }
+
+            }
+
+
             children = this.getChildren();
             if (children == null) {
                 children = new ComponentList();
@@ -398,14 +429,18 @@ public class Component<T extends Properties, K extends EventKey> {
                         if (component.getHost() != null && component.getHost().equals(alias)) {
                             children.add(component);
                         }
+
                     }
                 }
             }
 
-            for (Component component : this.getChildren()) {
+            for (Component component : children) {
                 component.setHost(alias);
             }
+
+
         }
+        this.alias = newalias;
     }
 
     public void setParent(Component parent) {

@@ -108,7 +108,7 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                     layoutComponent.addChildren(currComponent);
 
                                 } else {
-                                    //  Component mainComponent = euModule.getComponent().getMainBoxComponent().clone();
+
                                     String alias = mainComponent.getAlias();
                                     if (alias.endsWith(ModuleComponent.DefaultTopBoxfix)) {
                                         alias = alias.substring(0, (alias.length() - ModuleComponent.DefaultTopBoxfix.length()));
@@ -122,6 +122,12 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                     AbsUIProperties properties = (AbsUIProperties) currComponent.getProperties();
                                     properties.setPosition(UIPositionType.RELATIVE);
                                 }
+
+                                List<Component> apiComponents = euModule.getComponent().findComponents(ComponentType.APICALLER, null);
+                                for (Component apiCom : apiComponents) {
+                                    this.addChildren(apiCom);
+                                }
+
                             }
                         }
                     }

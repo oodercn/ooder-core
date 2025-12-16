@@ -1630,16 +1630,6 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     }
 
     public List<String> getDependencies() {
-//        if (dependencies == null || dependencies.isEmpty()) {
-//            List<Component> childModules = this.findComponents(ComponentType.Module, null);
-//            for (Component child : childModules) {
-//                if (!dependencies.contains(child.getModuleComponent().getClassName())) {
-//                    dependencies.add(child.getModuleComponent().getClassName());
-//                }
-//            }
-//        }
-
-
         return dependencies;
     }
 
