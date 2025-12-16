@@ -84,7 +84,7 @@ public class CustomFieldGroupComponent extends GroupComponent {
                 properties.setEuClassName(newmodule.getClassName());
                 switch (appendType) {
                     case ref:
-                        ModuleComponent moduleComponent = new ModuleComponent();
+                        ModuleComponent moduleComponent = new ModuleComponent(newmodule.getClassName());
                         ModuleProperties moduleProperties = moduleComponent.getProperties();
                         properties.setComboType(ComponentType.MODULE);
                         String moduleAlias = field.getFieldname() + "Module";

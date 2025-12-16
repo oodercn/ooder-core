@@ -67,7 +67,7 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                 e.printStackTrace();
                             }
                         } else {
-                            ModuleComponent moduleComponent = new ModuleComponent();
+                            ModuleComponent moduleComponent = new ModuleComponent(itemMethod.getEUClassName());
                             moduleComponent.setAlias(itemMethod.getName());
                             moduleComponent.setClassName(itemMethod.getEUClassName());
 
@@ -106,10 +106,7 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                 if (Arrays.asList(conComponentType).contains(componentType) && mainComponent.getChildren().size() == 1) {
                                     currComponent.setTarget(layoutListItem.getId());
                                     layoutComponent.addChildren(currComponent);
-                                    if (classes.length > 1) {
-                                        AbsUIProperties properties = (AbsUIProperties) currComponent.getProperties();
-                                        properties.setPosition(UIPositionType.RELATIVE);
-                                    }
+
                                 } else {
                                     //  Component mainComponent = euModule.getComponent().getMainBoxComponent().clone();
                                     String alias = mainComponent.getAlias();
@@ -121,7 +118,10 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                     layoutComponent.addChildren(mainComponent);
                                 }
 
-
+                                if (classes.length > 1) {
+                                    AbsUIProperties properties = (AbsUIProperties) currComponent.getProperties();
+                                    properties.setPosition(UIPositionType.RELATIVE);
+                                }
                             }
                         }
                     }

@@ -12,7 +12,7 @@ import java.util.Map;
 public class FullMainComponent extends ModuleComponent {
 
 
-    public FullMainComponent(EUModule module, RequestMethodBean methodBean, Map<String, Object> valueMap) throws JDSException, ClassNotFoundException {
+    public FullMainComponent(EUModule module, RequestMethodBean methodBean, Map<String, Object> valueMap) {
         this.euModule = module;
         euModule.setComponent(this);
         BlockComponent mainComponent = new BlockComponent(Dock.fill, euModule.getName() + DefaultTopBoxfix);

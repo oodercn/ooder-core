@@ -90,16 +90,6 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     @JSONField(serialize = false)
     public DialogComponent<DialogProperties, DialogEventEnum> dialog;
 
-//
-//    @JSONField(serialize = false)
-//    public PanelComponent panelComponent;
-//
-//    @JSONField(serialize = false)
-//    public BlockComponent blockComponent;
-//
-//
-//    @JSONField(serialize = false)
-//    public DivComponent divComponent;
 
     @JSONField(serialize = false)
     public String projectName;
@@ -156,25 +146,35 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
     private String currComponentAlias;
 
-
-    public ModuleComponent() {
+    protected ModuleComponent() {
         super(ComponentType.MODULE);
         this.properties = new ModuleProperties();
+        if (components == null) {
+            components = new HashMap<String, Component>();
+        }
+    }
+
+    public ModuleComponent(String className) {
+        super(ComponentType.MODULE);
+        this.properties = new ModuleProperties();
+        this.className = className;
         if (components == null) {
             components = new HashMap<String, Component>();
         }
 
     }
 
-    public ModuleComponent(M currComponent, ModuleProperties properties) {
+    public ModuleComponent(M currComponent, ModuleProperties properties, String className) {
         super(ComponentType.MODULE);
+        this.className = className;
         this.properties = properties;
         init(currComponent);
     }
 
-    public ModuleComponent(M currComponent) {
+    public ModuleComponent(M currComponent, String className) {
         super(ComponentType.MODULE);
         this.properties = new ModuleProperties();
+        this.className = className;
         init(currComponent);
 
     }
@@ -190,7 +190,15 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
         String moduleName = OODUtil.formatJavaName(currComponent.getAlias(), true);
 
-        currComponent.setHost(null);
+        // currComponent.setHost(null);
+
+
+        if (className == null && currComponent.getModuleComponent() != null) {
+            String parentClassName = currComponent.getModuleComponent().getClassName();
+            String cSimClass = OODUtil.formatJavaName(currComponent.getAlias(), true);
+            String cPackageName = parentClassName.toLowerCase();
+            className = cPackageName + "." + cSimClass;
+        }
 
 
         moduleBean = this.getModuleBean();
@@ -1495,6 +1503,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         if (component != null && component instanceof PanelComponent) {
             panelComponent = (PanelComponent) component;
         }
+
         if (panelComponent == null && panelType != null && panelType.equals(PanelType.panel)) {
             if (panelBean.getDock() == null || panelBean.getDock().equals(Dock.none)) {
                 panelBean.setDock(Dock.fill);
@@ -2091,50 +2100,29 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
     @JSONField(serialize = false)
     public Component getMainBoxComponent() {
+        PanelType panelType = this.getProperties().getPanelType();
         if (mainComponent == null) {
-            String mainAlias = null;
             if (this.getEuModule() != null) {
-                PanelType panelType = this.getProperties().getPanelType();
-                if (panelType == null && moduleBean != null) {
-                    panelType = moduleBean.getPanelType();
-                }
-                if (panelType == null) {
-                    panelType = PanelType.block;
-                }
-                switch (panelType) {
-                    case block:
-                        mainComponent = this.getBlockPanelComponent();
-                        break;
-                    case panel:
-                        mainComponent = this.getModulePanelComponent();
-                        break;
-                    case div:
-                        mainComponent = this.getDivComponent();
-                        break;
-                    case dialog:
-                        mainComponent = this.getDialogComponent();
-                        break;
-                }
-
-                if (mainComponent == null) {
-                    mainAlias = this.getEuModule().getName() + DefaultTopBoxfix;
+                if (this.components.get(this.getEuModule().getName() + DefaultTopBoxfix) != null) {
                     mainComponent = this.components.get(this.getEuModule().getName() + DefaultTopBoxfix);
-                    if (mainComponent == null) {
-                        Component topComponent = getDefaultTopComponent();
-                        if (topComponent == null) {
-                            mainComponent = new BlockComponent(Dock.fill, this.getEuModule().getName() + DefaultTopBoxfix);
-                            this.addChildren(mainComponent);
-                        } else {
-                            mainComponent = topComponent;
-                            String alias = topComponent.getAlias();
-                            mainComponent.setAlias(mainAlias);
-                            mainComponent.getProperties().setName(mainAlias);
-                            components.put(mainAlias, mainComponent);
-                            components.remove(alias);
-                        }
+                } else if (panelType != null) {
+                    switch (panelType) {
+                        case block:
+                            mainComponent = this.getBlockPanelComponent();
+                            break;
+                        case panel:
+                            mainComponent = this.getModulePanelComponent();
+                            break;
+                        case div:
+                            mainComponent = this.getDivComponent();
+                            break;
+                        case dialog:
+                            mainComponent = this.getDialogComponent();
+                            break;
                     }
                 }
             } else {
+                String mainAlias = null;
                 mainComponent = getDefaultTopComponent();
                 if (mainComponent == null) {
                     if (alias != null) {
@@ -2145,17 +2133,18 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                     mainComponent = new BlockComponent(Dock.fill, OODUtil.formatJavaName(mainAlias, true));
                     this.addChildren(mainComponent);
                 }
-            }
 
 
-            if (mainComponent != null && mainComponent instanceof BlockComponent) {
-                ((BlockComponent) mainComponent).getProperties().setBorderType(BorderType.none);
-            }
-            if (mainComponent != null && !children.contains(mainComponent)) {
-                this.addChildren(mainComponent);
-            }
+                if (mainComponent != null && mainComponent instanceof BlockComponent) {
+                    ((BlockComponent) mainComponent).getProperties().setBorderType(BorderType.none);
+                }
+                if (mainComponent != null && !children.contains(mainComponent)) {
+                    this.addChildren(mainComponent);
+                }
 
+            }
         }
+
 
         return mainComponent;
     }

@@ -83,7 +83,7 @@ public class FullNavGalleryComponent extends CustomModuleComponent<GalleryCompon
         if (fieldModuleConfigList.size() > 0) {
             FieldModuleConfig moduleInfo = fieldModuleConfigList.get(0);
             MethodConfig methodConfig = moduleInfo.getMethodConfig();
-            ModuleComponent moduleComponent = new ModuleComponent();
+            ModuleComponent moduleComponent = new ModuleComponent(methodConfig.getEUClassName());
             moduleComponent.setClassName(methodConfig.getEUClassName());
             moduleComponent.setAlias(methodConfig.getName());
             moduleComponent.getModuleVar().putAll(methodConfig.getTagVar());

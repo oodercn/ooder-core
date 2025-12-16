@@ -72,7 +72,7 @@ public class CustomFieldModuleComponent extends BlockComponent {
                 if (newmodule != null) {
                     switch (fieldBean.getAppend()) {
                         case ref:
-                            ModuleComponent moduleComponent = new ModuleComponent<>();
+                            ModuleComponent moduleComponent = new ModuleComponent<>(newmodule.getClassName());
                             moduleComponent.setClassName(newmodule.getClassName());
                             moduleComponent.setAlias(newmodule.getComponent().getAlias());
                             this.addChildren(moduleComponent);
@@ -128,7 +128,7 @@ public class CustomFieldModuleComponent extends BlockComponent {
                             }
                             break;
                         case runtime:
-                            moduleComponent = new ModuleComponent<>();
+                            moduleComponent = new ModuleComponent<>(fieldMethodConfig.getEUClassName());
                             BlockComponent currComponent = new BlockComponent(Dock.fill, module.getName() + ModuleComponent.DefaultTopBoxfix);
                             currComponent.getProperties().setBorderType(BorderType.none);
                             currComponent.setTarget(target);

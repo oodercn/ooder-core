@@ -1469,7 +1469,7 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
         moduleProperties.setMethodName(OODUtil.getGetMethodName(component.getAlias()));
         moduleProperties.setDsmProperties(dsmProperties);
 
-        ModuleComponent childComponent = new ModuleComponent();
+        ModuleComponent childComponent = new ModuleComponent(cEuClassName);
         childComponent.setProperties(moduleProperties);
         childComponent.setCurrComponent(component);
         childComponent.addChildren(component);

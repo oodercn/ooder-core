@@ -335,7 +335,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                     }
                 }
             }
-            moduleComponent = new ModuleComponent(treeViewComponent);
+            moduleComponent = new ModuleComponent(treeViewComponent,null);
         } else if (currComponent instanceof TreeViewComponent) {
             treeViewComponent = (TreeViewComponent) currComponent;
         } else {
@@ -344,7 +344,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                     treeViewComponent = (TreeViewComponent) component;
                 }
             }
-            moduleComponent = new ModuleComponent(treeViewComponent);
+            moduleComponent = new ModuleComponent(treeViewComponent,null);
         }
 
         this.nodeClassName = parentModuleComponent.getClassName();

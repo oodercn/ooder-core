@@ -125,7 +125,7 @@ public class AggViewRoot implements JavaRoot {
         MethodConfig methodConfig = customViewBean.getMethodConfig();
         if (moduleBean != null) {
             if (moduleBean.getModuleComponent() == null) {
-                ModuleComponent moduleComponent = new ModuleComponent();
+                ModuleComponent moduleComponent = new ModuleComponent(className);
                 ModuleProperties moduleProperties = new ModuleProperties();
                 moduleComponent.setProperties(moduleProperties);
                 moduleComponent.setClassName(className);

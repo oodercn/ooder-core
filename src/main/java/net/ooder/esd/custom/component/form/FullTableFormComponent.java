@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 public class FullTableFormComponent extends ModuleComponent {
 
-    public FullTableFormComponent(EUModule module, DSMTableProxy DSMTableProxy) throws SQLException, DAOException {
+    public FullTableFormComponent(EUModule module, DSMTableProxy DSMTableProxy)  {
 
         BlockComponent blockPanelComponent = new BlockComponent(Dock.fill, DSMTableProxy.getFieldName() + "Block");
         MenuBarComponent barComonent = new DefaultMenubarComponent(DSMTableProxy.getFieldName() + "ToolBar");

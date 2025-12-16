@@ -98,7 +98,7 @@ public class ClassNavGroupComponent extends GroupComponent {
                     }
                 }
             } else {
-                ModuleComponent moduleComponent = new ModuleComponent();
+                ModuleComponent moduleComponent = new ModuleComponent(childModule.getClassName());
                 moduleComponent.setClassName(childModule.getClassName());
                 moduleComponent.setAlias(childModule.getComponent().getAlias() + "Module");
                 Map<String, Object> tagMap = new HashMap<>();

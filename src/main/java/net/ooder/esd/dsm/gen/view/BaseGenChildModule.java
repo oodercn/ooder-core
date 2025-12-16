@@ -70,7 +70,7 @@ public abstract class BaseGenChildModule<T extends CustomViewBean> implements Ca
             DomainInst domainInst = DSMFactory.getInstance().getDefaultDomain(moduleComponent.getProjectName(), UserSpace.VIEW);
             String domainId = domainInst.getDomainId();
             ModuleViewType comModuleViewType = ModuleViewType.getModuleViewByCom(ComponentType.fromType(childComponent.getKey()));
-            ModuleComponent cmoduleComponent = new ModuleComponent(childComponent);
+            ModuleComponent cmoduleComponent = new ModuleComponent(childComponent, cEuClassName);
             if (customViewBean == null) {
                 customViewBean = genChildViewBean(moduleComponent, childComponent, cEuClassName);
             } else if (!customViewBean.getModuleViewType().equals(comModuleViewType)) {
@@ -107,7 +107,7 @@ public abstract class BaseGenChildModule<T extends CustomViewBean> implements Ca
 
         DomainInst domainInst = DSMFactory.getInstance().getDefaultDomain(moduleComponent.getProjectName(), UserSpace.VIEW);
         String domainId = domainInst.getDomainId();
-        ModuleComponent cmoduleComponent = new ModuleComponent(childComponent);
+        ModuleComponent cmoduleComponent = new ModuleComponent(childComponent, cEuClassName);
         DSMProperties cdsmProperties = new DSMProperties();
         ModuleProperties cmoduleProperties = new ModuleProperties();
         DSMProperties dsmProperties = moduleComponent.getProperties().getDsmProperties();

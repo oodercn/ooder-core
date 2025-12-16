@@ -65,7 +65,7 @@ public class CustomModuleInnerComponent extends BlockComponent {
                     newmodule = ESDFacrory.getAdminESDClient().getModule(fieldMethodConfig.getEUClassName(), projectName);
                 }
             } else {
-                ModuleComponent moduleComponent = new ModuleComponent();
+                ModuleComponent moduleComponent = new ModuleComponent(moduleRefFieldBean.getSrc());
                 ModuleProperties moduleProperties = moduleComponent.getProperties();
                 properties.setComboType(ComponentType.MODULE);
                 moduleProperties.setName(field.getFieldname());
@@ -77,7 +77,7 @@ public class CustomModuleInnerComponent extends BlockComponent {
             if (newmodule != null) {
                 switch (appendType) {
                     case ref:
-                        ModuleComponent moduleComponent = new ModuleComponent();
+                        ModuleComponent moduleComponent = new ModuleComponent(newmodule.getClassName());
                         ModuleProperties moduleProperties = moduleComponent.getProperties();
                         properties.setComboType(ComponentType.MODULE);
                         moduleProperties.setName(field.getFieldname());

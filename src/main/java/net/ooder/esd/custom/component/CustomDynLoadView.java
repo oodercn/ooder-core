@@ -73,7 +73,7 @@ public class CustomDynLoadView<M extends BlockComponent> extends CustomModuleCom
                         ModuleComponent moduleComponent = realModule.getComponent();
                         switch (dataBean.getAppend()) {
                             case ref:
-                                moduleComponent = new ModuleComponent();
+                                moduleComponent = new ModuleComponent(realModule.getClassName());
                                 moduleComponent.setClassName(realModule.getClassName());
                                 moduleComponent.setAlias(realModule.getComponent().getAlias());
                                 currComponent.addChildren(moduleComponent);

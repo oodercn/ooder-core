@@ -185,7 +185,7 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
 
     public T genViewBean() {
         if (viewBean == null && component != null) {
-            ModuleComponent currModuleComponent = new ModuleComponent(component);
+            ModuleComponent currModuleComponent = new ModuleComponent(component,euClassName);
             CustomModuleBean customModuleBean = new CustomModuleBean(currModuleComponent);
             currModuleComponent.setProperties(moduleProperties);
             currModuleComponent.setClassName(euClassName);

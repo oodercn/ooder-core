@@ -61,7 +61,7 @@ public class CustomMButtonViewsComponent extends MButtonViewsComponent {
                     }
 
                 } else if (methodConfig != null && methodConfig.isModule()) {
-                    ModuleComponent moduleComponent = new ModuleComponent();
+                    ModuleComponent moduleComponent = new ModuleComponent(methodConfig.getEUClassName());
                     moduleComponent.setClassName(methodConfig.getEUClassName());
                     moduleComponent.setAlias(methodConfig.getName());
                     moduleComponent.setTarget(childTabViewBean.getId());
