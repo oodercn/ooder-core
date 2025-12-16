@@ -388,14 +388,17 @@ public class Component<T extends Properties, K extends EventKey> {
     }
 
     public void updateAlias(String newalias) {
+
         if (newalias != null && !this.alias.equals(newalias)) {
             if (this.getModuleComponent() != null) {
                 List<Action> actionList = this.getModuleComponent().getAllAction();
                 for (Action action : actionList) {
-                    if (action.getTarget() != null && !action.getTarget().equals(alias)) {
+                    if (action.getTarget() != null && action.getTarget().equals(alias)) {
                         action.setTarget(newalias);
                     }
                 }
+
+
                 ComponentList components = this.getModuleComponent().getChildrenRecursivelyList();
                 for (Component component : components) {
                     if (component instanceof APICallerComponent) {
@@ -429,7 +432,6 @@ public class Component<T extends Properties, K extends EventKey> {
                         if (component.getHost() != null && component.getHost().equals(alias)) {
                             children.add(component);
                         }
-
                     }
                 }
             }
@@ -437,8 +439,6 @@ public class Component<T extends Properties, K extends EventKey> {
             for (Component component : children) {
                 component.setHost(alias);
             }
-
-
         }
         this.alias = newalias;
     }

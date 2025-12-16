@@ -100,15 +100,15 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                         if (bindMethod != null && bindMethod.isModule()) {
                             EUModule euModule = bindMethod.getModule(valueMap, projectName);
                             if (euModule != null && euModule.getComponent() != null) {
-                                Component mainComponent = euModule.getComponent().getMainBoxComponent();
-                                Component currComponent = euModule.getComponent().getCurrComponent();
+                                ModuleComponent moduleComponent = euModule.getComponent();
+                                Component mainComponent = moduleComponent.getMainBoxComponent();
+                                Component currComponent = moduleComponent.getCurrComponent();
                                 ComponentType componentType = ComponentType.fromType(currComponent.getKey());
                                 if (Arrays.asList(conComponentType).contains(componentType) && mainComponent.getChildren().size() == 1) {
                                     currComponent.setTarget(layoutListItem.getId());
                                     layoutComponent.addChildren(currComponent);
 
                                 } else {
-
                                     String alias = mainComponent.getAlias();
                                     if (alias.endsWith(ModuleComponent.DefaultTopBoxfix)) {
                                         alias = alias.substring(0, (alias.length() - ModuleComponent.DefaultTopBoxfix.length()));
@@ -123,8 +123,14 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                     properties.setPosition(UIPositionType.RELATIVE);
                                 }
 
-                                List<Component> apiComponents = euModule.getComponent().findComponents(ComponentType.APICALLER, null);
+
+                                List<Component> apiComponents = moduleComponent.findComponents(ComponentType.APICALLER, null);
                                 for (Component apiCom : apiComponents) {
+                                    String spliceName = moduleComponent.getAlias() + "_";
+                                    if (!apiCom.getAlias().startsWith(spliceName)) {
+                                        apiCom.updateAlias(spliceName + apiCom.getAlias());
+                                    }
+
                                     this.addChildren(apiCom);
                                 }
 
