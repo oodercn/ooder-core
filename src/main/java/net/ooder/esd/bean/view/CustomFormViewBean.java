@@ -144,6 +144,7 @@ public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
             this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
         }
         tasks = genChildComponent(moduleComponent, components);
+        childModules = tasks;
         initFormLayout(moduleComponent);
         try {
             DSMFactory.getInstance().saveCustomViewEntity(this);

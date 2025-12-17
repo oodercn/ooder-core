@@ -126,6 +126,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
     public List<JavaGenSource> buildAll() {
         List<JavaGenSource> allSourceList = new ArrayList<>();
         List<Callable<List<JavaGenSource>>> callableList = new ArrayList<>();
+
         if (childModules != null) {
             for (Callable childModule : childModules) {
                 GenFormChildModule genFormChildModule = (GenFormChildModule) childModule;

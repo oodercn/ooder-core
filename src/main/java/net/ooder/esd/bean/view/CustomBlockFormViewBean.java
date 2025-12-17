@@ -98,7 +98,7 @@ public class CustomBlockFormViewBean extends BaseFormViewBean {
         }
 
         tasks = genChildComponent(moduleComponent, components);
-
+        childModules = tasks;
         try {
             DSMFactory.getInstance().saveCustomViewEntity(this);
         } catch (JDSException e) {

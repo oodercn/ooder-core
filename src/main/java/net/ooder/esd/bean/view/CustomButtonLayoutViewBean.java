@@ -152,7 +152,7 @@ public class CustomButtonLayoutViewBean extends CustomViewBean<FieldGalleryConfi
                 }
             }
         }
-
+        childModules = tasks;
         return tasks;
     }
 

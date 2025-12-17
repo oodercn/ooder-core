@@ -2,24 +2,20 @@ package net.ooder.esd.bean.view;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.StringUtility;
+import net.ooder.esd.annotation.ContentBlockAnnotation;
+import net.ooder.esd.annotation.event.ContentBlockEventEnum;
+import net.ooder.esd.annotation.event.CustomContentBlockEvent;
 import net.ooder.esd.annotation.field.TabItem;
-import net.ooder.esd.annotation.ui.ModuleViewType;
+import net.ooder.esd.annotation.menu.ContentBlockMenu;
+import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.ContentBlockItemBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.bar.ContextMenuBar;
 import net.ooder.esd.bean.bar.ToolsBar;
-import net.ooder.esd.annotation.event.ContentBlockEventEnum;
-import net.ooder.esd.annotation.ContentBlockAnnotation;
-import net.ooder.esd.annotation.menu.ContentBlockMenu;
-import net.ooder.esd.annotation.event.CustomContentBlockEvent;
-import net.ooder.esd.annotation.ui.BorderType;
-import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.annotation.ui.Dock;
-import net.ooder.esd.annotation.ui.SelModeType;
 import net.ooder.esd.dsm.java.JavaGenSource;
-import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ContentBlockComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.Action;
@@ -28,7 +24,6 @@ import net.ooder.esd.tool.properties.Event;
 import net.ooder.esd.tool.properties.item.ContentBlockItem;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
@@ -93,13 +88,15 @@ public class CustomContentBlockViewBean extends BaseGalleryViewBean<ContentBlock
     }
 
 
-    public  List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
+    @Override
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
         List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         ContentBlockComponent contentBlockComponent = (ContentBlockComponent) moduleComponent.getCurrComponent();
         ContentBlockProperties contentBlockProperties = contentBlockComponent.getProperties();
         OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(contentBlockProperties), Map.class), this, false, false);
         this.name = OODUtil.formatJavaName(contentBlockComponent.getAlias(), false);
+
         this.contentBlockItems = contentBlockProperties.getItems();
 
         if (contentBlockItems != null && contentBlockItems.size() > 0) {
@@ -123,7 +120,7 @@ public class CustomContentBlockViewBean extends BaseGalleryViewBean<ContentBlock
             }
         }
         this.name = OODUtil.formatJavaName(contentBlockComponent.getAlias(), false);
-
+        childModules = tasks;
         return tasks;
     }
 

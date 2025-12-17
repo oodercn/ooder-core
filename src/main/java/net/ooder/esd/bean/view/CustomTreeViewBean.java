@@ -25,7 +25,6 @@ import net.ooder.esd.bean.bar.ToolsBar;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.custom.ESDField;
-import net.ooder.esd.custom.properties.NavTabListItem;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
@@ -335,7 +334,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                     }
                 }
             }
-            moduleComponent = new ModuleComponent(treeViewComponent,null);
+            moduleComponent = new ModuleComponent(treeViewComponent, null);
         } else if (currComponent instanceof TreeViewComponent) {
             treeViewComponent = (TreeViewComponent) currComponent;
         } else {
@@ -344,7 +343,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
                     treeViewComponent = (TreeViewComponent) component;
                 }
             }
-            moduleComponent = new ModuleComponent(treeViewComponent,null);
+            moduleComponent = new ModuleComponent(treeViewComponent, null);
         }
 
         this.nodeClassName = parentModuleComponent.getClassName();
@@ -493,7 +492,7 @@ public class CustomTreeViewBean extends CustomViewBean<FieldTreeConfig, TreeList
             }
             items = treeListItems;
 
-
+            childModules = tasks;
         } catch (JDSException e) {
             e.printStackTrace();
         }

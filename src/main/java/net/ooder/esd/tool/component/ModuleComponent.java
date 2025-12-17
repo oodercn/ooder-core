@@ -1819,7 +1819,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
     }
 
-    private M deepCheckComponent() {
+    private List<Component> deepCheckComponent() {
         Component deepComponent = this.getMainBoxComponent();
         ViewGroupType[] viewGroupTypes = new ViewGroupType[]{ViewGroupType.LAYOUT, ViewGroupType.NAV, ViewGroupType.MODULE, ViewGroupType.VIEW, ViewGroupType.CHARTS, ViewGroupType.MOBILE};
         List<Component> allComponents = this.getListGroupChild(deepComponent.getChildren(), viewGroupTypes);
@@ -1843,11 +1843,8 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             }
         }
 
-        if (childComponents.size() > 0) {
-            deepComponent = childComponents.get(0);
-        }
 
-        return (M) deepComponent;
+        return childComponents;
     }
 
     public List<Component> moveComponent(Component source, Component... components) {
@@ -1870,15 +1867,10 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             currComponent = (M) this.findComponentByAlias(curAlias);
         }
 
-        if (currComponent == null) {
-            currComponent = deepCheckComponent();
-        } else {
-            ComponentType componentType = ComponentType.fromType(currComponent.getKey());
-            if (componentType.isBar() || Arrays.asList(skipComponents).contains(componentType)) {
-                currComponent = deepCheckComponent();
-            }
+        List<Component> childView = deepCheckComponent();
+        if (childView.size() > 1) {
+            currComponent = (M) this.getMainBoxComponent();
         }
-
 
         if (currComponent == null) {
             BlockComponent blockComponent = guessCurrComponent();

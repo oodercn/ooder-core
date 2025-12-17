@@ -72,6 +72,7 @@ public class CustomSVGPaperViewBean extends BaseFormViewBean {
             this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
         }
         tasks = genChildComponent(moduleComponent, components);
+        childModules = tasks;
         try {
             DSMFactory.getInstance().saveCustomViewEntity(this);
         } catch (JDSException e) {

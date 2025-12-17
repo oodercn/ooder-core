@@ -104,6 +104,7 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
             this.setTabItems(tabItems);
             buttonViewsProperties.setItems(tabItems);
         }
+        childModules = tasks;
         this.setModuleBeans(navModuleBeans);
         return tasks;
     }

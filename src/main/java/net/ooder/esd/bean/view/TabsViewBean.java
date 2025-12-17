@@ -159,6 +159,7 @@ public class TabsViewBean extends BaseTabsViewBean<CustomTabsEvent, NavTabListIt
                 }
             }
         }
+        childModules = tasks;
         return tasks;
     }
 
