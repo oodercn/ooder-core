@@ -1868,7 +1868,9 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         }
 
         List<Component> childView = deepCheckComponent();
-        if (childView.size() > 1) {
+        if (childView.size() == 1) {
+            currComponent = (M) childView.get(0);
+        } else if (childView.size() > 1) {
             currComponent = (M) this.getMainBoxComponent();
         }
 

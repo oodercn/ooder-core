@@ -104,7 +104,7 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                 Component mainComponent = moduleComponent.getMainBoxComponent();
                                 Component currComponent = moduleComponent.getCurrComponent();
                                 ComponentType componentType = ComponentType.fromType(currComponent.getKey());
-                                if (Arrays.asList(conComponentType).contains(componentType) && mainComponent.getChildren().size() == 1) {
+                                if (Arrays.asList(conComponentType).contains(componentType) &&(mainComponent.getChildren()==null || mainComponent.getChildren().size() <2)) {
                                     currComponent.setTarget(layoutListItem.getId());
                                     layoutComponent.addChildren(currComponent);
 
