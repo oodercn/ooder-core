@@ -67,7 +67,10 @@ public class TitleBlockProperties extends AbsListProperties<TitleBlockItem> {
         if (titleBlockItems != null) {
             int index = 0;
             for (TitleBlockItemBean titleBlockItem : titleBlockItems) {
-                TitleBlockItem blockItem = new TitleBlockItem(titleBlockItem);
+                TitleBlockItem blockItem = titleBlockItem.getTitleBlockItem();
+                if (blockItem == null) {
+                    blockItem = new TitleBlockItem(titleBlockItem);
+                }
                 blockItem.setIndex(index);
                 blockItem.setTabindex(index);
                 this.addItem(blockItem);
