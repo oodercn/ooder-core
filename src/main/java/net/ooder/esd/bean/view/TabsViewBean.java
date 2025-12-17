@@ -106,7 +106,7 @@ public class TabsViewBean extends BaseTabsViewBean<CustomTabsEvent, NavTabListIt
     public TabsViewBean(ModuleComponent moduleComponent) {
         super();
         AnnotationUtil.fillDefaultValue(TabsAnnotation.class, this);
-        this.updateModule(moduleComponent);
+       childModules=   this.updateModule(moduleComponent);
     }
 
 

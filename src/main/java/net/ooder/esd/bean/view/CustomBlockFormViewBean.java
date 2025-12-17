@@ -10,7 +10,7 @@ import net.ooder.esd.annotation.ui.StretchType;
 import net.ooder.esd.bean.ContainerBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.dsm.DSMFactory;
-import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.tool.component.BlockComponent;
 import net.ooder.esd.tool.component.Component;
@@ -21,6 +21,7 @@ import net.ooder.web.util.JSONGenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = BlockFormAnnotation.class)
 public class CustomBlockFormViewBean extends BaseFormViewBean {
@@ -65,12 +66,12 @@ public class CustomBlockFormViewBean extends BaseFormViewBean {
 
 
     @Override
-    public List<JavaSrcBean> updateModule(ModuleComponent moduleComponent) {
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(BlockFormAnnotation.class, this);
-        List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         BlockComponent currComponent = (BlockComponent) component;
 
-        if (currComponent==null){
+        if (currComponent == null) {
             if (moduleComponent.getCurrComponent() instanceof BlockComponent) {
                 currComponent = (BlockComponent) moduleComponent.getCurrComponent();
             } else {
@@ -95,13 +96,15 @@ public class CustomBlockFormViewBean extends BaseFormViewBean {
             FieldFormConfig fieldFormConfig = findFieldByCom(component);
             this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
         }
-        this.childModules = genChildComponent(moduleComponent, components);
+
+        tasks = genChildComponent(moduleComponent, components);
+
         try {
             DSMFactory.getInstance().saveCustomViewEntity(this);
         } catch (JDSException e) {
             e.printStackTrace();
         }
-        return javaSrcBeans;
+        return tasks;
     }
 
 

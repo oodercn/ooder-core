@@ -31,7 +31,6 @@ import net.ooder.esd.tool.component.BlockComponent;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
-import net.ooder.esd.tool.properties.item.LayoutListItem;
 import net.ooder.esd.tool.properties.item.UIItem;
 import net.ooder.esd.tool.properties.list.AbsListProperties;
 import net.ooder.esd.util.OODUtil;
@@ -194,14 +193,12 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
         ComponentType componentType = ComponentType.fromType(childComponent.getKey());
         if (alias.indexOf("StatusBottom") > -1) {
             return true;
-        } else if (alias.endsWith(ModuleComponent.DefaultTopBoxfix)) {
-            return true;
         } else if (componentType.equals(ComponentType.BLOCK)) {
             BlockComponent blockComponent = (BlockComponent) childComponent;
             if (alias.indexOf(CustomBlockFieldBean.skipStr) > -1) {
                 return true;
-            } else if (alias.endsWith(ModuleComponent.DefaultTopBoxfix)) {
-                return true;
+//            } else if (alias.endsWith(ModuleComponent.DefaultTopBoxfix)) {
+//                return true;
             } else if (blockComponent.getProperties().getComboType() != null) {
                 return true;
             } else if ((blockComponent.getChildren() == null || blockComponent.getChildren().isEmpty()) && Arrays.asList(ComponentType.getContainerComponents()).contains(componentType)) {

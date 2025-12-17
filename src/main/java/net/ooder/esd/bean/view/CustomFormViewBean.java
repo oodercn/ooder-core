@@ -20,7 +20,6 @@ import net.ooder.esd.bean.field.combo.ComboBoxBean;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.AggEntityConfig;
 import net.ooder.esd.dsm.aggregation.FieldAggConfig;
-import net.ooder.esd.dsm.gen.view.GenFormChildModule;
 import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
@@ -128,6 +127,7 @@ public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
     @Override
     public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(FormAnnotation.class, this);
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         updateBar();
         FormLayoutComponent currComponent = (FormLayoutComponent) moduleComponent.getCurrComponent();
@@ -143,14 +143,14 @@ public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
             FieldFormConfig fieldFormConfig = findFieldByCom(component);
             this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
         }
-        this.childModules = genChildComponent(moduleComponent, components);
+        tasks = genChildComponent(moduleComponent, components);
         initFormLayout(moduleComponent);
         try {
             DSMFactory.getInstance().saveCustomViewEntity(this);
         } catch (JDSException e) {
             e.printStackTrace();
         }
-        return childModules;
+        return tasks;
     }
 
 
@@ -316,7 +316,7 @@ public class CustomFormViewBean extends BaseFormViewBean<FormLayoutComponent> {
 
     @Override
     public FieldFormConfig getFieldByName(String name) {
-        FieldFormConfig fieldFormConfig =  super.getFieldByName(name);
+        FieldFormConfig fieldFormConfig = super.getFieldByName(name);
         return fieldFormConfig;
     }
 

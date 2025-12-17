@@ -2169,19 +2169,20 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         }
 
         if (moduleViewType != null) {
+            List<Component> conComList = new ArrayList<>();
             if (currComponentAlias.equals(blackBoxName) || findComponentByAlias(currComponentAlias) == null) {
                 List<Component> components = this.getChildren();
                 if (currComponentAlias.equals(blackBoxName) && getModuleBean() != null && mainBlock != null) {
                     components = mainBlock.getChildren();
                 }
+
                 if (components != null) {
                     for (Component component : components) {
                         ComponentType type = ComponentType.fromType(component.getKey());
                         if (Arrays.asList(moduleViewType.getComponentTypes()).contains(type)
                                 && !component.getAlias().equals(blackBoxName)
                                 && !component.getAlias().toUpperCase().equals(PAGECTXNAME)) {
-                            currComponentAlias = component.getAlias();
-                            this.setCurrComponent((M) component);
+                            conComList.add(component);
                         }
                     }
                 }
@@ -2194,10 +2195,14 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                 for (Component component : components) {
                     ComponentType type = ComponentType.fromType(component.getKey());
                     if (Arrays.asList(moduleViewType.getComponentTypes()).contains(type)) {
-                        currComponentAlias = component.getAlias();
-                        this.setCurrComponent((M) component);
+                        if (!conComList.contains(conComList)) {
+                            conComList.add(component);
+                        }
                     }
                 }
+            }
+            if (conComList.size() == 1) {
+                currComponentAlias = conComList.get(0).getAlias();
             }
 
 

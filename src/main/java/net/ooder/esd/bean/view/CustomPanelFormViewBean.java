@@ -8,7 +8,7 @@ import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.ContainerBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.dsm.DSMFactory;
-import net.ooder.esd.dsm.gen.view.GenFormChildModule;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ModuleComponent;
@@ -18,8 +18,10 @@ import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = PanelFormAnnotation.class)
 public class CustomPanelFormViewBean extends BaseFormViewBean {
@@ -39,8 +41,10 @@ public class CustomPanelFormViewBean extends BaseFormViewBean {
     }
 
 
-    public List<GenFormChildModule> updateModule(ModuleComponent moduleComponent) {
+    @Override
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(PanelFormAnnotation.class, this);
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         initMenuBar();
         PanelComponent currComponent = null;
@@ -66,14 +70,14 @@ public class CustomPanelFormViewBean extends BaseFormViewBean {
                 FieldFormConfig fieldFormConfig = findFieldByCom(component);
                 this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
             }
-            this.childModules = genChildComponent(moduleComponent, components);
+            tasks = genChildComponent(moduleComponent, components);
             try {
                 DSMFactory.getInstance().saveCustomViewEntity(this);
             } catch (JDSException e) {
                 e.printStackTrace();
             }
         }
-        return childModules;
+        return tasks;
     }
 
     public CustomPanelFormViewBean(MethodConfig methodAPIBean) {

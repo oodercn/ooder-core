@@ -1,25 +1,25 @@
 package net.ooder.esd.bean.view;
 
+import net.ooder.annotation.AnnotationType;
 import net.ooder.common.JDSException;
 import net.ooder.esd.annotation.DivFormAnnotation;
-import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.ComponentType;
+import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.ContainerBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.dsm.DSMFactory;
-import net.ooder.esd.dsm.gen.view.GenFormChildModule;
-import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.DivComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.util.OODUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 @AnnotationType(clazz = DivFormAnnotation.class)
 public class CustomDivFormViewBean extends BaseFormViewBean {
@@ -35,8 +35,9 @@ public class CustomDivFormViewBean extends BaseFormViewBean {
 
 
     @Override
-    public List<GenFormChildModule> updateModule(ModuleComponent moduleComponent) {
+    public List<Callable<List<JavaGenSource>>> updateModule(ModuleComponent moduleComponent) {
         AnnotationUtil.fillDefaultValue(DivFormAnnotation.class, this);
+        List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
         super.updateBaseModule(moduleComponent);
         initMenuBar();
         DivComponent currComponent = (DivComponent) moduleComponent.getCurrComponent();
@@ -54,14 +55,14 @@ public class CustomDivFormViewBean extends BaseFormViewBean {
             FieldFormConfig fieldFormConfig = findFieldByCom(component);
             this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
         }
-        this.childModules = genChildComponent(moduleComponent, components);
+        tasks = genChildComponent(moduleComponent, components);
 
         try {
             DSMFactory.getInstance().saveCustomViewEntity(this);
         } catch (JDSException e) {
             e.printStackTrace();
         }
-        return childModules;
+        return tasks;
     }
 
 
