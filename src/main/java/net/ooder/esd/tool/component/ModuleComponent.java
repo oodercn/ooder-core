@@ -190,8 +190,8 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
         String moduleName = OODUtil.formatJavaName(currComponent.getAlias(), true);
 
-        // currComponent.setHost(null);
-
+     ;
+        this.setCurrComponent(currComponent);
 
         if (className == null && currComponent.getModuleComponent() != null) {
             String parentClassName = currComponent.getModuleComponent().getClassName();
@@ -200,11 +200,6 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             className = cPackageName + "." + cSimClass;
         }
 
-
-        moduleBean = this.getModuleBean();
-        if (moduleBean != null) {
-            panelType = moduleBean.getPanelType();
-        }
 
         if (Arrays.asList(componentTypes).contains(componentType)) {
             if (!moduleName.endsWith(DefaultTopBoxfix)) {
@@ -229,7 +224,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             blockComponent.getProperties().setBorderType(BorderType.none);
             blockComponent.addChildren(currComponent);
             this.addChildren(blockComponent);
-            this.setCurrComponent(currComponent);
+
         }
         if (panelType == null) {
             panelType = PanelType.block;

@@ -101,28 +101,31 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                             EUModule euModule = bindMethod.getModule(valueMap, projectName);
                             if (euModule != null && euModule.getComponent() != null) {
                                 ModuleComponent moduleComponent = euModule.getComponent();
+                                Component realComponent = null;
                                 Component mainComponent = moduleComponent.getMainBoxComponent();
                                 Component currComponent = moduleComponent.getCurrComponent();
-                                ComponentType componentType = ComponentType.fromType(currComponent.getKey());
-                                if (Arrays.asList(conComponentType).contains(componentType) &&(mainComponent.getChildren()==null || mainComponent.getChildren().size() <2)) {
-                                    currComponent.setTarget(layoutListItem.getId());
-                                    layoutComponent.addChildren(currComponent);
 
+                                ComponentType componentType = ComponentType.fromType(currComponent.getKey());
+                                if (Arrays.asList(conComponentType).contains(componentType) && (mainComponent.getChildren() == null || mainComponent.getChildren().size() < 2)) {
+                                    currComponent.setTarget(layoutListItem.getId());
+                                    realComponent = currComponent;
                                 } else {
                                     String alias = mainComponent.getAlias();
                                     if (alias.endsWith(ModuleComponent.DefaultTopBoxfix)) {
                                         alias = alias.substring(0, (alias.length() - ModuleComponent.DefaultTopBoxfix.length()));
+                                        mainComponent.updateAlias(alias);
                                     }
-                                    mainComponent.updateAlias(alias);
-                                    mainComponent.setTarget(layoutListItem.getId());
-                                    layoutComponent.addChildren(mainComponent);
+                                    realComponent = mainComponent;
                                 }
 
-                                if (classes.length > 1) {
-                                    AbsUIProperties properties = (AbsUIProperties) currComponent.getProperties();
-                                    properties.setPosition(UIPositionType.RELATIVE);
+                                if (realComponent != null) {
+                                    realComponent.setTarget(layoutListItem.getId());
+                                    if (classes.length > 1) {
+                                        AbsUIProperties properties = (AbsUIProperties) realComponent.getProperties();
+                                        properties.setPosition(UIPositionType.RELATIVE);
+                                    }
+                                    layoutComponent.addChildren(realComponent);
                                 }
-
 
                                 List<Component> apiComponents = moduleComponent.findComponents(ComponentType.APICALLER, null);
                                 for (Component apiCom : apiComponents) {
