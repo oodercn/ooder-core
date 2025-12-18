@@ -2,9 +2,6 @@ package net.ooder.esd.custom.component;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
-import net.ooder.esd.bean.view.CustomPanelFormViewBean;
-import net.ooder.esd.engine.ESDFacrory;
-import net.ooder.esd.engine.ProjectVersion;
 import net.ooder.esd.annotation.CustomAction;
 import net.ooder.esd.annotation.CustomMenu;
 import net.ooder.esd.annotation.action.CustomFormAction;
@@ -12,17 +9,23 @@ import net.ooder.esd.annotation.event.CustomFormEvent;
 import net.ooder.esd.annotation.event.ModuleEventEnum;
 import net.ooder.esd.annotation.menu.CustomFormMenu;
 import net.ooder.esd.annotation.ui.*;
-import net.ooder.esd.bean.data.CustomFormDataBean;
-import net.ooder.esd.bean.data.CustomPanelDataBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.ToolBarMenuBean;
 import net.ooder.esd.bean.bar.DynBar;
+import net.ooder.esd.bean.data.CustomFormDataBean;
+import net.ooder.esd.bean.data.CustomPanelDataBean;
+import net.ooder.esd.bean.view.CustomPanelFormViewBean;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.action.CustomAPICallAction;
 import net.ooder.esd.custom.component.form.field.CustomFieldPanelComponent;
+import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
+import net.ooder.esd.engine.ProjectVersion;
 import net.ooder.esd.manager.editor.PluginsFactory;
-import net.ooder.esd.tool.component.*;
+import net.ooder.esd.tool.component.APICallerComponent;
+import net.ooder.esd.tool.component.Component;
+import net.ooder.esd.tool.component.PageBarComponent;
+import net.ooder.esd.tool.component.TreeGridComponent;
 import net.ooder.esd.tool.properties.APICallerProperties;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Condition;
@@ -63,6 +66,12 @@ public class FullPanelComponent<M extends CustomFieldPanelComponent> extends Cus
 
 
     void init(MethodConfig methodConfig) throws JDSException {
+
+
+        if (!methodConfig.getModuleViewType().equals(ModuleViewType.PANELCONFIG)) {
+            methodConfig.setView(null);
+        }
+
         CustomPanelFormViewBean viewBean = (CustomPanelFormViewBean) methodConfig.getView();
         CustomPanelDataBean dataBean = (CustomPanelDataBean) methodConfig.getDataBean();
 
@@ -126,14 +135,14 @@ public class FullPanelComponent<M extends CustomFieldPanelComponent> extends Cus
         }
         APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(), mainComponent);
         this.addChildren(apiCallerComponents);
-        this.fillToolBar(viewBean,   this.getMainComponent());
+        this.fillToolBar(viewBean, this.getMainComponent());
     }
 
     protected void fillFromAction(CustomPanelFormViewBean view, Component currComponent) {
         Set<CustomFormEvent> customFormEvents = view.getEvent();
         for (CustomFormEvent eventType : customFormEvents) {
             for (CustomAction actionType : eventType.getActions(false)) {
-                currComponent.addAction( new Action(actionType,eventType.getEventEnum()));
+                currComponent.addAction(new Action(actionType, eventType.getEventEnum()));
             }
         }
         List<CustomFormMenu> customFormMenus = view.getCustomMenu();
@@ -201,7 +210,7 @@ public class FullPanelComponent<M extends CustomFieldPanelComponent> extends Cus
 
                 CustomFormDataBean dataBean = (CustomFormDataBean) methodAPIBean.getDataBean();
                 if (dataBean.getAutoSave()) {
-                    CustomAPICallAction customAPICallAction = new CustomAPICallAction(saveAPI,ModuleEventEnum.onDestroy);
+                    CustomAPICallAction customAPICallAction = new CustomAPICallAction(saveAPI, ModuleEventEnum.onDestroy);
                     Condition condition = new Condition("{page." + this.getCurrComponent().getAlias() + ".isDirtied()}", SymbolType.equal, "{true}");
                     customAPICallAction.addCondition(condition);
                     this.addAction(customAPICallAction);

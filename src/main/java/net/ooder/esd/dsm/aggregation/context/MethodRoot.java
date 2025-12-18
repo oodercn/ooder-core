@@ -155,7 +155,7 @@ public class MethodRoot {
         ModuleViewType moduleViewType = moduleBean.getModuleViewType();
         if (moduleBean.getModuleComponent() != null) {
             EUModule module = moduleBean.getModuleComponent().getEuModule();
-            MethodConfig methodConfig = module.getComponent().getMethodAPIBean();
+            MethodConfig methodConfig = moduleBean.getModuleComponent().getMethodAPIBean();
             if (module != null && module.getComponent() != null && module.getComponent().getMethodAPIBean() != null) {
                 methodConfig = module.getComponent().getMethodAPIBean();
             }

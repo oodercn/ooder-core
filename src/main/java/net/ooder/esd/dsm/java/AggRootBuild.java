@@ -477,6 +477,7 @@ public class AggRootBuild {
     public void reSetViewBean(CustomViewBean customViewBean) {
         this.customViewBean = customViewBean;
         this.customViewBean.setDomainId(domainId);
+
         this.viewRoot = new AggViewRoot(domainInst, euClassName, customViewBean);
         ViewJavaSrcBean viewJavaSrcBean = customViewBean.getViewJavaSrcBean();
         if (viewJavaSrcBean == null) {
