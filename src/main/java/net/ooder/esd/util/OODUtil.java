@@ -2,6 +2,7 @@ package net.ooder.esd.util;
 
 import net.ooder.common.util.StringUtility;
 import net.ooder.esd.bean.field.CustomBlockFieldBean;
+import net.ooder.esd.tool.component.ModuleComponent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +28,11 @@ public class OODUtil {
                         neName = neName.substring(skipChar.length());
                     }
                 }
+
             }
+        }
+        if (!neName.equals(ModuleComponent.DefaultTopBoxfix) && neName.endsWith(ModuleComponent.DefaultTopBoxfix)) {
+            neName = neName.substring(0, neName.length() - ModuleComponent.DefaultTopBoxfix.length());
         }
         aliasMap.put(name + firstCharUpperCase, neName);
         return neName;

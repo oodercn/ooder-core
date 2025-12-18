@@ -15,7 +15,6 @@ import net.ooder.esd.annotation.ui.CustomMenuItem;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.tool.component.APICallerComponent;
-import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.APICallerProperties;
 import net.ooder.esd.tool.properties.Event;
 import net.ooder.web.APIConfig;
@@ -306,9 +305,7 @@ public class ApiClassConfig {
                 }
             }
         }
-        if (methodAPICallBean == null && methodName.endsWith(ModuleComponent.DefaultTopBoxfix)) {
-            methodAPICallBean = getMethodByName(methodName.substring(0, methodName.length() - ModuleComponent.DefaultTopBoxfix.length()));
-        }
+
         return methodAPICallBean;
     }
 

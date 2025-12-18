@@ -1,25 +1,18 @@
 package net.ooder.esd.dsm.aggregation;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.CustomBean;
+import net.ooder.annotation.SimpleCustomBean;
 import net.ooder.common.JDSException;
 import net.ooder.common.database.bpm.DefaultColEnum;
 import net.ooder.common.util.CaselessStringKeyHashMap;
 import net.ooder.common.util.StringUtility;
-import net.ooder.annotation.CustomBean;
-import net.ooder.annotation.SimpleCustomBean;
-import net.ooder.esd.annotation.ui.CustomMenuItem;
-import net.ooder.esd.annotation.event.CustomEvent;
-import net.ooder.esd.annotation.event.CustomFieldEvent;
-import net.ooder.esd.annotation.event.CustomFormEvent;
-import net.ooder.esd.annotation.event.CustomHotKeyEvent;
-import net.ooder.esd.annotation.event.CustomContentBlockEvent;
-import net.ooder.esd.annotation.event.CustomGalleryEvent;
-import net.ooder.esd.annotation.event.CustomTitleBlockEvent;
-import net.ooder.esd.annotation.event.CustomGridEvent;
-import net.ooder.esd.annotation.event.CustomTabsEvent;
-import net.ooder.esd.annotation.event.CustomTreeEvent;
+import net.ooder.esd.annotation.event.*;
 import net.ooder.esd.annotation.ui.ComponentType;
-import net.ooder.esd.bean.*;
+import net.ooder.esd.annotation.ui.CustomMenuItem;
+import net.ooder.esd.bean.MethodChinaBean;
+import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.RepositoryBean;
 import net.ooder.esd.custom.CustomMethodInfo;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.custom.ESDField;
@@ -28,7 +21,6 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.ref.AggEntityRef;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
-import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.web.AggregationBean;
 import net.ooder.web.EntityBean;
 import net.ooder.web.RequestMappingBean;
@@ -289,7 +281,7 @@ public class AggEntityConfig {
         return rootClass;
     }
 
-    void  initClass(ESDClass esdClass) {
+    void initClass(ESDClass esdClass) {
         List<CustomMethodInfo> esdMethods = new ArrayList<>();
         esdMethods.addAll(esdClass.getMethodsList());
         // esdMethods.addAll(esdClass.getOtherMethodsList());
@@ -824,9 +816,7 @@ public class AggEntityConfig {
                 }
             }
         }
-        if (methodAPICallBean == null && methodName.endsWith(ModuleComponent.DefaultTopBoxfix)) {
-            methodAPICallBean = getMethodByName(methodName.substring(0, methodName.length() - ModuleComponent.DefaultTopBoxfix.length()));
-        }
+
         return methodAPICallBean;
     }
 
