@@ -11,7 +11,7 @@ import net.ooder.esd.custom.component.FullDivComponent;
 import net.ooder.web.util.AnnotationUtil;
 @CustomClass(
         clazz = FullDivComponent.class,
-        viewType = CustomViewType.MODULE,
+        viewType = CustomViewType.NAV,
         moduleType = ModuleViewType.DIVCONFIG
 )
 @AnnotationType(clazz = DivViewAnnotation.class)

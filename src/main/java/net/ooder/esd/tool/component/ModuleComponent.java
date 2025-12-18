@@ -1828,7 +1828,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         for (Component component : allComponents) {
             String alias = component.getAlias();
             ComponentType componentType = ComponentType.fromType(component.getKey());
-            if (!alias.toUpperCase().equals(PAGECTXNAME) && !componentType.isBar() && !alias.endsWith(DefaultTopBoxfix) && !componentType.equals(ComponentType.MODULE)) {
+            if (!alias.toUpperCase().equals(PAGECTXNAME) && !componentType.isBar() && !componentType.equals(ComponentType.MODULE)) {
                 if (!Arrays.asList(skipComponents).contains(componentType)) {
                     childComponents.add(component);
                 } else if (component.getChildren() != null && component.getProperties() instanceof ContainerProperties) {
@@ -1842,8 +1842,6 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                 }
             }
         }
-
-
         return childComponents;
     }
 
@@ -2198,8 +2196,6 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
             if (conComList.size() == 1) {
                 currComponentAlias = conComList.get(0).getAlias();
             }
-
-
         }
 
         return currComponentAlias;

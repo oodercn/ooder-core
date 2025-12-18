@@ -12,6 +12,7 @@ import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.ui.OverflowType;
 import net.ooder.esd.bean.BaseWidgetBean;
 import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.view.CustomBlockFormViewBean;
 import net.ooder.esd.bean.view.CustomDivFormViewBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldDivComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
@@ -61,6 +62,11 @@ public class CustomDivFieldBean extends BaseWidgetBean<CustomDivFormViewBean, Di
         initAnnotations(AnnotationUtil.getAllAnnotations(methodConfig.getMethod(), true).toArray(new Annotation[]{}));
     }
 
+
+
+    public CustomDivFormViewBean getViewBean() {
+        return viewBean;
+    }
 
     @Override
     public void update(ModuleComponent parentModuleComponent, DivComponent component) {

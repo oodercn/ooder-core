@@ -1247,5 +1247,11 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
         return AnnotationUtil.toAnnotationStr(this);
     }
 
-
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && obj instanceof FieldFormConfig) {
+            return ((FieldFormConfig) obj).getId().equals(getId());
+        }
+        return super.equals(obj);
+    }
 }

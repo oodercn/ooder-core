@@ -28,6 +28,7 @@ import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.aggregation.ref.AggEntityRef;
 import net.ooder.esd.dsm.view.field.FieldModuleConfig;
 import net.ooder.esd.engine.enums.MenuBarBean;
+import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.web.AggregationBean;
 import net.ooder.web.EntityBean;
 import net.ooder.web.RequestMappingBean;
@@ -822,6 +823,9 @@ public class AggEntityConfig {
                     }
                 }
             }
+        }
+        if (methodAPICallBean == null && methodName.endsWith(ModuleComponent.DefaultTopBoxfix)) {
+            methodAPICallBean = getMethodByName(methodName.substring(0, methodName.length() - ModuleComponent.DefaultTopBoxfix.length()));
         }
         return methodAPICallBean;
     }

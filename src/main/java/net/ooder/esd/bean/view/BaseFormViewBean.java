@@ -421,7 +421,7 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
             fieldFormConfig.setViewClassName(this.getViewClassName());
             fieldFormConfig.setSourceMethodName(this.getSourceMethodName());
             ComponentType componentType = fieldFormConfig.getComponentType();
-            if (!Arrays.asList(ComponentType.getCustomAPIComponents()).contains(componentType)) {
+            if (!Arrays.asList(ComponentType.getCustomAPIComponents()).contains(componentType) && !fieldFormConfigList.contains(fieldFormConfig)) {
                 fieldFormConfigList.add(fieldFormConfig);
             }
         }
