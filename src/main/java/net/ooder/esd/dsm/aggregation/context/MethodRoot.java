@@ -155,8 +155,11 @@ public class MethodRoot {
         ModuleViewType moduleViewType = moduleBean.getModuleViewType();
         if (moduleBean.getModuleComponent() != null) {
             EUModule module = moduleBean.getModuleComponent().getEuModule();
+            MethodConfig methodConfig = module.getComponent().getMethodAPIBean();
             if (module != null && module.getComponent() != null && module.getComponent().getMethodAPIBean() != null) {
-                MethodConfig methodConfig = module.getComponent().getMethodAPIBean();
+                methodConfig = module.getComponent().getMethodAPIBean();
+            }
+            if (methodConfig != null) {
                 moduleViewType = methodConfig.getModuleViewType();
                 if (moduleBean.getMethodConfig() != null) {
                     CustomFieldBean fieldBean = moduleBean.getMethodConfig().getFieldBean();
@@ -170,11 +173,12 @@ public class MethodRoot {
                 }
                 moduleBean.reBindMethod(methodConfig);
             }
-
         }
 
 
-        if (moduleViewType != null) {
+        if (moduleViewType != null)
+
+        {
             if (moduleViewType.getAppendType().equals(AppendType.append)) {
                 annotationBeans.addAll(moduleBean.getUIAnnotationBeans());
             } else if (moduleBean.getBindService() != null && !moduleBean.getBindService().equals(Void.class)) {
@@ -189,11 +193,17 @@ public class MethodRoot {
                 annotationBeans.add(apiCallBean);
                 annotationBeans.add(requestMapping);
             }
-        } else {
+        } else
+
+        {
             annotationBeans.addAll(moduleBean.getUIAnnotationBeans());
         }
 
-        if (!annotationBeans.contains(new SimpleCustomBean(ResponseBody.class))) {
+        if (!annotationBeans.contains(new
+
+                SimpleCustomBean(ResponseBody.class)))
+
+        {
             annotationBeans.add(new SimpleCustomBean(ResponseBody.class));
         }
         return annotationBeans;

@@ -47,7 +47,7 @@ public class CustomBlockBean implements ComponentBean {
 
 
     public CustomBlockBean(Component component) {
-        AnnotationUtil.fillDefaultValue(BlockAnnotation.class, this);
+        //AnnotationUtil.fillDefaultValue(BlockAnnotation.class, this);
         this.update(component);
 
     }
