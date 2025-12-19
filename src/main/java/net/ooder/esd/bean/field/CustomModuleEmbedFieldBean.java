@@ -2,33 +2,32 @@ package net.ooder.esd.bean.field;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
-import net.ooder.common.util.ClassUtility;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.CustomClass;
-import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.annotation.field.ModuleEmbedFieldAnnotation;
-import net.ooder.esd.bean.ComponentBean;
-import net.ooder.esd.bean.view.CustomModuleBean;
+import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.MethodConfig;
-import net.ooder.esd.dsm.java.JavaSrcBean;
-import net.ooder.esd.tool.component.ModulePlaceHolder;
+import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldModuleComponent;
+import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.esd.tool.component.TimerComponent;
+import net.ooder.esd.tool.component.ModulePlaceHolder;
 import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+
 @CustomClass(clazz = CustomFieldModuleComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.MODLUEPLACEHOLDER
 )
 @AnnotationType(clazz = ModuleEmbedFieldAnnotation.class)
-public class CustomModuleEmbedFieldBean  implements FieldComponentBean<ModuleComponent> {
+public class CustomModuleEmbedFieldBean implements FieldComponentBean<ModuleComponent> {
     String src;
 
     String xpath;
@@ -40,6 +39,10 @@ public class CustomModuleEmbedFieldBean  implements FieldComponentBean<ModuleCom
     EmbedType embed;
 
     Class bindClass;
+
+    String moduleClass;
+
+    String moduleXid;
 
     CustomModuleBean moduleBean;
 
@@ -60,12 +63,6 @@ public class CustomModuleEmbedFieldBean  implements FieldComponentBean<ModuleCom
 
     public CustomModuleEmbedFieldBean(ModuleComponent parentModuleComponent, ModuleComponent moduleComponent) {
         update(moduleComponent);
-
-    }
-
-    public CustomModuleEmbedFieldBean(ModuleComponent parentModuleComponent, ModulePlaceHolder moduleComponent) {
-        //  update(moduleComponent);
-        this.
     }
 
     void update(ModuleComponent moduleComponent) {
@@ -103,6 +100,7 @@ public class CustomModuleEmbedFieldBean  implements FieldComponentBean<ModuleCom
         this.bindClass = embedFieldBean.getBindClass();
         this.moduleBean = embedFieldBean.getModuleBean();
 
+
     }
 
 
@@ -117,10 +115,13 @@ public class CustomModuleEmbedFieldBean  implements FieldComponentBean<ModuleCom
     }
 
     public CustomModuleEmbedFieldBean(ModulePlaceHolder modulePlaceHolder) {
+        init(modulePlaceHolder);
+    }
+
+    void init(ModulePlaceHolder modulePlaceHolder) {
         ModuleProperties moduleProperties = modulePlaceHolder.getProperties();
         Map valueMap = JSON.parseObject(JSON.toJSONString(moduleProperties), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
-
         this.moduleBean = new CustomModuleBean(moduleProperties);
     }
 
@@ -164,6 +165,22 @@ public class CustomModuleEmbedFieldBean  implements FieldComponentBean<ModuleCom
 
         }
         return ClassUtility.checkBase(classSet);
+    }
+
+    public String getModuleClass() {
+        return moduleClass;
+    }
+
+    public void setModuleClass(String moduleClass) {
+        this.moduleClass = moduleClass;
+    }
+
+    public String getModuleXid() {
+        return moduleXid;
+    }
+
+    public void setModuleXid(String moduleXid) {
+        this.moduleXid = moduleXid;
     }
 
     @Override
