@@ -10,8 +10,8 @@ import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.JavaRoot;
 import net.ooder.esd.dsm.aggregation.DomainInst;
 import net.ooder.esd.dsm.aggregation.context.AggViewRoot;
-import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.gen.GenJava;
+import net.ooder.esd.dsm.gen.GenJavaTask;
 import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.dsm.temp.JavaTemp;
@@ -42,6 +42,14 @@ public class GenCustomViewJava extends GenJavaTask {
         } catch (JDSException e) {
             e.printStackTrace();
         }
+    }
+
+    public void reSetCustomView(CustomViewBean customViewBean) {
+        this.viewBean = customViewBean;
+        if (viewRoot != null) {
+            viewRoot.reSetCustomView(customViewBean);
+        }
+
     }
 
 
@@ -81,7 +89,7 @@ public class GenCustomViewJava extends GenJavaTask {
                 JavaSrcBean srcBean = BuildFactory.getInstance().getTempManager().genJavaSrc(file, defaultView, javatemp.getJavaTempId());
 
                 defaultView.addJavaBean(srcBean);
-               JavaGenSource javaGenSource= BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
+                JavaGenSource javaGenSource = BuildFactory.getInstance().createSource(srcBean.getClassName(), javaRoot, javatemp, srcBean);
                 srcFiles.add(javaGenSource);
                 classList.add(srcBean.getClassName());
 

@@ -8,6 +8,7 @@ import net.ooder.common.logging.LogFactory;
 import net.ooder.common.logging.LogSetpLog;
 import net.ooder.context.JDSActionContext;
 import net.ooder.context.JDSContext;
+import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.JavaRoot;
 import net.ooder.esd.dsm.java.JavaGenSource;
@@ -39,6 +40,8 @@ public abstract class GenJavaTask implements Callable<List<JavaGenSource>> {
         }
         autoruncontext.setSessionMap(context.getSession());
     }
+
+
 
     public List<JavaGenSource> getSourceList() {
         List<JavaGenSource> sources = new ArrayList<>();

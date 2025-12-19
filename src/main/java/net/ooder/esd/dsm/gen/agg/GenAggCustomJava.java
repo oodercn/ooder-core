@@ -66,6 +66,15 @@ public class GenAggCustomJava extends GenJavaTask {
         }
     }
 
+
+    public void reSetCustomView(CustomViewBean customViewBean) {
+        this.viewBean = customViewBean;
+        if (viewRoot != null) {
+            viewRoot.reSetCustomView(customViewBean);
+        }
+
+    }
+
     @Override
     public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);

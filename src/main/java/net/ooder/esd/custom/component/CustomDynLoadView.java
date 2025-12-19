@@ -93,7 +93,8 @@ public class CustomDynLoadView<M extends BlockComponent> extends CustomModuleCom
                                 Component fristComponent = realModule.getComponent().getLastBoxComponent();
                                 if (fristComponent instanceof DialogComponent) {
                                     DialogComponent dialogComponent = (DialogComponent) fristComponent;
-                                    if (dialog != null) {
+                                    DialogComponent dialog=getDialogComponent();
+                                    if (getDialogComponent() != null) {
                                         dialog.getEvents().putAll(dialogComponent.getEvents());
                                         dialog.setAlias(dialogComponent.getAlias());
                                     }
@@ -116,6 +117,7 @@ public class CustomDynLoadView<M extends BlockComponent> extends CustomModuleCom
                                 fristComponent = realModule.getComponent().getLastBoxComponent();
                                 if (fristComponent instanceof DialogComponent) {
                                     DialogComponent dialogComponent = (DialogComponent) fristComponent;
+                                    DialogComponent dialog=getDialogComponent();
                                     if (dialog != null) {
                                         dialog.getEvents().putAll(dialogComponent.getEvents());
                                         dialog.setAlias(dialogComponent.getAlias());

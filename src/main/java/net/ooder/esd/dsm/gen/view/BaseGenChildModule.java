@@ -14,6 +14,7 @@ import net.ooder.esd.dsm.java.AggRootBuild;
 import net.ooder.esd.dsm.java.JavaGenSource;
 import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.Component;
+import net.ooder.esd.tool.component.LayoutComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.ModuleProperties;
 import net.ooder.esd.util.OODUtil;
@@ -44,9 +45,9 @@ public abstract class BaseGenChildModule<T extends CustomViewBean> implements Ca
         this.childComponent = childComponent;
         this.parentClassName = moduleComponent.getClassName();
         String simClass = OODUtil.formatJavaName(moduleComponent.getCurrComponent().getAlias(), true);
-        if (!parentClassName.endsWith("." + simClass)) {
-            this.parentClassName = parentClassName.toLowerCase() + "." + simClass;
-        }
+//        if (!parentClassName.endsWith("." + simClass)  && moduleComponent.getCurrComponent() instanceof LayoutComponent) {
+//            this.parentClassName = parentClassName.toLowerCase() + "." + simClass;
+//        }
         String childSimClass = OODUtil.formatJavaName(childComponent.getAlias(), true);
         childRealPath = parentViewBean.getXpath();
         if (!childRealPath.toLowerCase().endsWith("." + childSimClass.toLowerCase())) {

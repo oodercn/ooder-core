@@ -13,7 +13,6 @@ import net.ooder.esd.bean.CustomViewBean;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.custom.ApiClassConfig;
-import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.ESDClass;
 import net.ooder.esd.dsm.BuildFactory;
 import net.ooder.esd.dsm.DSMFactory;
@@ -168,6 +167,7 @@ public class AggRootBuild {
     public void reBuildModule() throws JDSException {
         //1.1创建视图层
         buildView();
+
         this.javaViewSource = viewTask.getSourceList();
         //2.1创建资源层接口V
         this.repositorySource = buildRepositoryView(true);
@@ -191,11 +191,9 @@ public class AggRootBuild {
     }
 
     public List<JavaGenSource> build() throws JDSException {
-
         //需要先创建子节点
-        if (childBeans == null || childBeans.isEmpty()) {
-            this.genChildJava();
-        }
+        customViewBean = this.genChildJava();
+        this.reSetViewBean(customViewBean);
 
         //1.1创建视图层
         this.javaViewSource = buildView();
@@ -212,23 +210,20 @@ public class AggRootBuild {
             updateBindItem();
         }
         //3.5重新编译视图
-        this.javaGen.dynCompile(getAllSrcBean());
+        this.javaGen.dynCompile(customViewBean.getAllJavaSrc());
         updateViewBean(customViewBean);
-
-
         DSMFactory.getInstance().saveCustomViewBean(customViewBean);
-        CustomViewFactory.getInstance().reLoad();
         return aggServiceRootBean;
     }
 
 
-    public List<JavaGenSource> genChildJava() throws JDSException {
+    public CustomViewBean genChildJava() throws JDSException {
         chrome.printLog("创建关联子对象...", true);
         EUModule euModule = ESDFacrory.getAdminESDClient().getModule(euClassName, domainInst.getProjectVersionName());
         if (euModule != null && euModule.getComponent() != null) {
             childBeans = customViewBean.buildAll();
         }
-        return childBeans;
+        return customViewBean;
     }
 
     public void update() throws JDSException {
@@ -255,7 +250,6 @@ public class AggRootBuild {
 
     public List<JavaGenSource> getAggSrcList() {
         List<JavaGenSource> classList = new ArrayList<>();
-
         classList.addAll(serviceBeans);
         classList.addAll(aggServiceRootBean);
         return classList;
@@ -264,15 +258,19 @@ public class AggRootBuild {
     /**
      * 根据视图创建单一视图
      *
-     * @return
-     * @throws JDSException
+             * @return
+             * @throws JDSException
      */
     public List<JavaGenSource> buildView() throws JDSException {
         chrome.printLog("创建关联视图模型...", true);
         step = Step.startCreatView;
         if (viewTask == null) {
             viewTask = new GenCustomViewJava(viewRoot, customViewBean, euClassName, chrome);
+        } else {
+            viewTask.reSetCustomView(customViewBean);
         }
+
+
         List<JavaGenSource> viewFileList = BuildFactory.getInstance().syncTasks(viewRoot.getClassName(), Arrays.asList(viewTask));
         step = Step.endCreatView;
         return viewFileList;
@@ -419,7 +417,6 @@ public class AggRootBuild {
 
     public List<JavaGenSource> genRootBean() throws JDSException {
         step = Step.startGenRootBean;
-
         String className = viewRoot.getClassName();
         String taskId = className;
         List<JavaGenSource> aggServiceRoots = BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(rootTask));
@@ -428,8 +425,6 @@ public class AggRootBuild {
         List<JavaGenSource> aggGens = BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(genAggCustomJava));
         step = Step.endGenAggMap;
         aggBeans.addAll(aggGens);
-
-
         return aggServiceRoots;
 
 
@@ -474,11 +469,14 @@ public class AggRootBuild {
         return reBindBean;
     }
 
+    private void reSetBuild(CustomViewBean customViewBean) {
+        this.viewRoot = new AggViewRoot(domainInst, euClassName, customViewBean);
+    }
+
     public void reSetViewBean(CustomViewBean customViewBean) {
         this.customViewBean = customViewBean;
         this.customViewBean.setDomainId(domainId);
-
-        this.viewRoot = new AggViewRoot(domainInst, euClassName, customViewBean);
+        this.reSetBuild(customViewBean);
         ViewJavaSrcBean viewJavaSrcBean = customViewBean.getViewJavaSrcBean();
         if (viewJavaSrcBean == null) {
             viewJavaSrcBean = new ViewJavaSrcBean(packageName, euClassName);

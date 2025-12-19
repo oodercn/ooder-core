@@ -122,6 +122,16 @@ public class AggViewRoot implements JavaRoot {
         this.baseUrl = StringUtility.replace(packageName, ".", "/");
         this.space = dsmBean.getSpace();
         this.basepath = dsmBean.getPackageName();
+        init(customViewBean);
+
+    }
+
+    public void reSetCustomView(CustomViewBean customViewBean) {
+        this.init(customViewBean);
+    }
+
+
+    void init(CustomViewBean customViewBean) {
         MethodConfig methodConfig = customViewBean.getMethodConfig();
         if (moduleBean != null) {
             if (moduleBean.getModuleComponent() == null) {
@@ -175,7 +185,6 @@ public class AggViewRoot implements JavaRoot {
 
 
         String basePackage = packageName.substring(0, className.lastIndexOf("."));
-
         List<JavaPackage> javaPackages = dsmBean.getRootPackage().listAllChildren();
         this.imports.add(basePackage + ".*");
         for (JavaPackage javaPackage : javaPackages) {

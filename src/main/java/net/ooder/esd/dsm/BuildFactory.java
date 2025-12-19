@@ -298,7 +298,7 @@ public class BuildFactory {
             srcBean.setJavaTempId(javatemp.getJavaTempId());
         }
         JavaGenSource source = javaGenSourceMap.get(className);
-        if (source == null) {
+        if (source == null || !source.getJavaTempId().equals(javatemp.getJavaTempId())) {
             source = new JavaGenSource(className, javaRoot, srcBean);
             javaGenSourceMap.put(className, source);
         }

@@ -12,7 +12,10 @@ import net.ooder.esd.annotation.NavMenuBarAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.annotation.view.NavMenuBarViewAnnotation;
-import net.ooder.esd.bean.*;
+import net.ooder.esd.bean.ComponentBean;
+import net.ooder.esd.bean.CustomViewBean;
+import net.ooder.esd.bean.MethodConfig;
+import net.ooder.esd.bean.TreeListItem;
 import net.ooder.esd.custom.CustomViewFactory;
 import net.ooder.esd.custom.ESDField;
 import net.ooder.esd.dsm.BuildFactory;
@@ -29,7 +32,6 @@ import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.MenuBarComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.MenuBarProperties;
-import net.ooder.esd.tool.properties.item.GalleryNavItem;
 import net.ooder.esd.tool.properties.item.TabListItem;
 import net.ooder.esd.util.OODUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -58,7 +60,6 @@ public class NavMenuBarViewBean extends NavComboBaseViewBean<TreeListItem> {
 
 
     public NavMenuBarViewBean(ModuleComponent<MenuBarComponent> moduleComponent) {
-
         AnnotationUtil.fillDefaultValue(NavMenuBarViewAnnotation.class, this);
         this.updateModule(moduleComponent);
     }

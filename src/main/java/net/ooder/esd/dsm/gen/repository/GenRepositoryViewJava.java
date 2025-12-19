@@ -79,6 +79,14 @@ public class GenRepositoryViewJava extends GenJavaTask {
         this.chrome = chrome;
     }
 
+    public void reSetCustomView(CustomViewBean customViewBean) {
+        this.viewBean = customViewBean;
+        if (viewRoot != null) {
+            viewRoot.reSetCustomView(customViewBean);
+        }
+
+    }
+
     @Override
     public List<JavaGenSource> call() throws Exception {
         JDSActionContext.setContext(autoruncontext);
