@@ -1,13 +1,8 @@
 package net.ooder.esd.custom.component.form.field;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.common.JDSException;
-import net.ooder.esd.annotation.action.CustomFormAction;
-import net.ooder.esd.annotation.ui.*;
-import net.ooder.esd.bean.CustomBlockBean;
+import net.ooder.esd.annotation.ui.ModuleViewType;
 import net.ooder.esd.bean.MethodConfig;
-import net.ooder.esd.bean.field.CustomFieldBean;
 import net.ooder.esd.bean.field.combo.CustomModuleRefFieldBean;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.dsm.DSMFactory;
@@ -15,16 +10,8 @@ import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.ProjectVersion;
-import net.ooder.esd.tool.component.*;
-import net.ooder.esd.tool.properties.APICallerProperties;
-import net.ooder.esd.tool.properties.Action;
-import net.ooder.esd.tool.properties.BlockProperties;
-import net.ooder.esd.tool.properties.UrlPathData;
-import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.web.util.AnnotationUtil;
+import net.ooder.esd.tool.component.ModuleComponent;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class CustomModuleRefComponent extends ModuleComponent {
@@ -42,6 +29,7 @@ public class CustomModuleRefComponent extends ModuleComponent {
             if (moduleRefFieldBean.getBindClass() != null && !moduleRefFieldBean.getBindClass().equals(Void.class) && !moduleRefFieldBean.getBindClass().equals(Enum.class)) {
                 ApiClassConfig bindConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(moduleRefFieldBean.getBindClass().getName());
                 fieldMethodConfig = bindConfig.findEditorMethod();
+
             } else if (moduleRefFieldBean.getSrc() != null && !moduleRefFieldBean.getSrc().equals("")) {
                 fieldMethodConfig = classConfig.getMethodByName(moduleRefFieldBean.getSrc());
                 if (fieldMethodConfig == null) {
@@ -51,138 +39,24 @@ public class CustomModuleRefComponent extends ModuleComponent {
                 ApiClassConfig bindConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(field.getViewClassName());
                 fieldMethodConfig = bindConfig.getMethodByName(field.getFieldname());
             }
-
-            if (fieldMethodConfig != null) {
-                CustomBlockBean blockBean = fieldMethodConfig.getModuleBean().getBlockBean();
-                blockBean.setContainerBean(field.getContainerBean());
-                CustomBlockBean methodBlock = new CustomBlockBean(AnnotationUtil.getAllAnnotations(fieldMethodConfig.getMethod(), true));
-                //合并方法注解
-                OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(methodBlock), Map.class), blockBean, false, false);
-                BlockProperties blockProperties = new BlockProperties(blockBean);
-                if (blockProperties.getDock() == null) {
-                    blockProperties.setDock(Dock.fill);
-                }
-                blockProperties.setId(field.getId());
-                blockProperties.setName(field.getFieldname());
-                EUModule newmodule = ESDFacrory.getAdminESDClient().getCustomModule(fieldMethodConfig, version.getVersionName(), valueMap);
-                if (newmodule != null) {
-                    switch (moduleRefFieldBean.getAppend()) {
-                        case ref:
-                            ModuleComponent moduleComponent = new ModuleComponent<>(newmodule.getClassName());
-                            moduleComponent.setClassName(newmodule.getClassName());
-                            moduleComponent.setAlias(newmodule.getComponent().getAlias());
-                            this.addChildren(moduleComponent);
-                            break;
-                        case append:
-                            CustomFieldBean customFieldBean = field.getCustomBean();
-                            if (customFieldBean != null) {
-                                blockProperties.setDesc(field.getCustomBean().getCaption());
-                            } else {
-                                blockProperties.setCaption(field.getAggConfig().getCaption());
-                            }
-                            if (newmodule != null) {
-                                ComponentList childlist = newmodule.getComponent().getChildren();
-                                if (childlist != null) {
-                                    List<Component> uiComponents = new ArrayList<Component>();
-                                    for (Component childcomponent : childlist) {
-                                        ComponentType componentType = ComponentType.fromType(childcomponent.getKey());
-                                        if (childcomponent instanceof SVGPaperComponent || componentType.isModuleObj()) {
-                                            this.addChildren(childcomponent);
-                                        } else {
-                                            uiComponents.add(childcomponent);
-                                        }
-
-                                        if (childcomponent instanceof APICallerComponent) {
-                                            APICallerComponent apiCallerComponent = (APICallerComponent) childcomponent;
-                                            String apiCallName = newmodule.getComponent().getAlias() + "_" + apiCallerComponent.getAlias();
-                                            List<Action> actions = newmodule.getComponent().getAllAction();
-                                            for (Action action : actions) {
-                                                if (action.getTarget().equals(apiCallerComponent.getAlias())) {
-                                                    action.setTarget(apiCallName);
-                                                }
-                                            }
-                                            apiCallerComponent.setAlias(apiCallName);
-                                            if (getTopComponentBox() != null) {
-                                                UrlPath urlPath = new UrlPathData(getTopComponentBox().getAlias(), RequestPathTypeEnum.FORM, "");
-                                                apiCallerComponent.getProperties().addRequestData(urlPath);
-                                            }
-                                        }
-                                    }
-
-                                    if (moduleRefFieldBean.getEmbed() == null || moduleRefFieldBean.getEmbed().equals(EmbedType.module)) {
-                                        while (uiComponents.size() == 1 && uiComponents.get(0).getChildren().size() > 1) {
-                                            uiComponents = uiComponents.get(0).getChildren();
-                                        }
-                                    } else {
-                                        uiComponents = new ArrayList<>();
-                                        uiComponents.add(newmodule.getComponent().getCurrComponent());
-                                    }
-                                    for (Component childcomponent : uiComponents) {
-                                        this.addChildren(childcomponent);
-                                    }
-                                }
-                            }
-                            break;
-                        case runtime:
-                            moduleComponent = new ModuleComponent<>(fieldMethodConfig.getEUClassName());
-                            BlockComponent currComponent = new BlockComponent(Dock.fill, module.getName() + ModuleComponent.DefaultTopBoxfix);
-                            currComponent.getProperties().setBorderType(BorderType.none);
-                            currComponent.setTarget(target);
-                            this.addChildren(currComponent);
-                            addChildren(genAPIComponent(currComponent, moduleComponent, fieldMethodConfig));
-                            break;
+            if (fieldMethodConfig != null && fieldMethodConfig.getUrl() != null) {
+                if (fieldMethodConfig.getView() != null && !fieldMethodConfig.getView().getModuleViewType().equals(ModuleViewType.DYNCONFIG)) {
+                    EUModule newmodule = ESDFacrory.getAdminESDClient().getCustomModule(fieldMethodConfig, version.getVersionName(), valueMap);
+                    if (newmodule != null) {
+                        this.setClassName(newmodule.getClassName());
                     }
+                } else if (fieldMethodConfig.getEUClassName() != null) {
+                    this.setClassName(fieldMethodConfig.getEUClassName());
                 }
-
-
-                this.getMainBoxComponent().setProperties(blockProperties);
             } else {
-                BlockProperties blockProperties = (BlockProperties) this.getMainBoxComponent().getProperties();
-                blockProperties.setHtml("module " + moduleRefFieldBean.getSrc() + " not fround!");
+                this.setClassName(moduleRefFieldBean.getSrc());
             }
-
 
         } catch (JDSException e) {
             e.printStackTrace();
         }
 
         this.setTarget(target);
-    }
-
-
-    //数据对象
-    @JSONField(serialize = false)
-    APICallerComponent[] genAPIComponent(Component boxComponent, ModuleComponent moduleComponent, MethodConfig methodBean) throws JDSException {
-        List<APICallerComponent> apiCallerComponents = new ArrayList<APICallerComponent>();
-        APICallerComponent reloadAPI = new APICallerComponent(methodBean);
-        reloadAPI.setAlias(CustomFormAction.DYNRELOAD.getTarget());
-        //刷新调用
-        APICallerProperties reloadProperties = reloadAPI.getProperties();
-        UrlPathData treepathData = new UrlPathData(moduleComponent.getCtxBaseComponent().getAlias(), RequestPathTypeEnum.FORM, "");
-        reloadProperties.addRequestData(treepathData);
-
-        UrlPathData formData = new UrlPathData(boxComponent.getAlias(), ResponsePathTypeEnum.COMPONENT, "data");
-        reloadProperties.addResponseData(formData);
-        reloadProperties.setAutoRun(true);
-        String url = reloadProperties.getQueryURL();
-
-        if (url.indexOf("?") > -1) {
-            String httpUrl = url.split("\\?")[0];
-            String queryStr = url.split("\\?")[1];
-            if (httpUrl.endsWith(".dyn")) {
-                httpUrl = httpUrl + ".dyn";
-            }
-            url = httpUrl + "?" + queryStr;
-        } else {
-            if (!url.endsWith(".dyn")) {
-                url = url + ".dyn";
-            }
-        }
-        reloadProperties.setQueryURL(url);
-        apiCallerComponents.add(reloadAPI);
-
-
-        return apiCallerComponents.toArray(new APICallerComponent[]{});
     }
 
 }
