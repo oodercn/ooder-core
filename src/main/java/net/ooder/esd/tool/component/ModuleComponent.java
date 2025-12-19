@@ -186,7 +186,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         }
         ComponentType componentType = ComponentType.fromType(currComponent.getKey());
 
-        ComponentType[] componentTypes = new ComponentType[]{ComponentType.BLOCK, ComponentType.PANEL, ComponentType.SVGPAPER, ComponentType.DIV};
+        ComponentType[] componentTypes = new ComponentType[]{ComponentType.BLOCK, ComponentType.PANEL,ComponentType.DIV};
 
         String moduleName = OODUtil.formatJavaName(currComponent.getAlias(), true);
 

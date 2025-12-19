@@ -38,7 +38,7 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
         super(module, methodConfig, valueMap);
         CustomLayoutViewBean viewBean = (CustomLayoutViewBean) methodConfig.getView();
         LayoutProperties layoutProperties = new LayoutProperties(viewBean);
-        LayoutComponent layoutComponent = new LayoutComponent(euModule.getName(), layoutProperties);
+        LayoutComponent layoutComponent = new LayoutComponent(methodConfig.getFieldName(), layoutProperties);
         try {
             if (methodConfig.getViewClass() != null) {
                 AggEntityConfig aggEntityConfig = DSMFactory.getInstance().getAggregationManager().getAggEntityConfig(methodConfig.getViewClass().getClassName(), false);
