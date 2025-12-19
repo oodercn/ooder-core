@@ -206,11 +206,20 @@ public class AggRootBuild {
             this.javaGen.dynCompile(getModuleJavaSrc());
             step = Step.endCompileView;
             this.aggServiceRootBean = genRootBean();
+
+            List<JavaSrcBean> aggRoots = new ArrayList<>();
+            for (JavaGenSource genSource : aggServiceRootBean) {
+                if (!aggRoots.contains(genSource.getSrcBean())) {
+                    aggRoots.add(genSource.getSrcBean());
+                }
+            }
+            this.javaGen.dynCompile(aggRoots);
+
             reBindAPI();
             updateBindItem();
         }
         //3.5重新编译视图
-        this.javaGen.dynCompile(customViewBean.getAllJavaSrc());
+        this.javaGen.dynCompile(getAllSrcBean());
         updateViewBean(customViewBean);
         DSMFactory.getInstance().saveCustomViewBean(customViewBean);
         return aggServiceRootBean;
@@ -258,8 +267,8 @@ public class AggRootBuild {
     /**
      * 根据视图创建单一视图
      *
-             * @return
-             * @throws JDSException
+     * @return
+     * @throws JDSException
      */
     public List<JavaGenSource> buildView() throws JDSException {
         chrome.printLog("创建关联视图模型...", true);
@@ -425,6 +434,7 @@ public class AggRootBuild {
         List<JavaGenSource> aggGens = BuildFactory.getInstance().syncTasks(taskId, Arrays.asList(genAggCustomJava));
         step = Step.endGenAggMap;
         aggBeans.addAll(aggGens);
+
         return aggServiceRoots;
 
 

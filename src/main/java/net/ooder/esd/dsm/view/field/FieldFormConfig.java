@@ -301,7 +301,7 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
                         apiClassConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(fieldBean.getBindClass().getName());
                         MethodConfig methodConfig = apiClassConfig.getMethodByEvent(CustomFieldEvent.POPEDITOR);
                         if (methodConfig == null) {
-                            methodConfig = apiClassConfig.getMethodByItem(CustomMenuItem.INDEX);
+                            methodConfig = apiClassConfig.findEditorMethod();
                         }
                         if (methodConfig != null) {
                             classSet.add(methodConfig.getViewClass().getCtClass());

@@ -23,7 +23,6 @@ public class CustomModuleRefComponent extends ModuleComponent {
         this.getProperties().setName(field.getFieldname());
         this.getProperties().setDesc(field.getAggConfig().getCaption());
         this.setAlias(field.getFieldname());
-
         FieldBean fieldBean = field.getFieldBean();
 
         MethodConfig sourceMethodConfig = module.getComponent().getMethodAPIBean();
@@ -33,7 +32,8 @@ public class CustomModuleRefComponent extends ModuleComponent {
             MethodConfig fieldMethodConfig = null;
             if (moduleRefFieldBean.getBindClass() != null && !moduleRefFieldBean.getBindClass().equals(Void.class) && !moduleRefFieldBean.getBindClass().equals(Enum.class)) {
                 ApiClassConfig bindConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(moduleRefFieldBean.getBindClass().getName());
-                fieldMethodConfig = bindConfig.getMethodByItem(CustomMenuItem.INDEX);
+                fieldMethodConfig = bindConfig.findEditorMethod();
+
 
             } else if (moduleRefFieldBean.getSrc() != null && !moduleRefFieldBean.getSrc().equals("")) {
                 fieldMethodConfig = classConfig.getMethodByName(moduleRefFieldBean.getSrc());

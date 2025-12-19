@@ -47,7 +47,7 @@ public class CustomFieldModuleComponent extends BlockComponent {
                 fieldMethodConfig = classConfig.getMethodByName(fieldBean.getSrc());
             } else if (fieldBean.getBindClass() != null && !fieldBean.getBindClass().equals(Void.class)) {
                 ApiClassConfig bindConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(fieldBean.getBindClass().getName());
-                fieldMethodConfig = bindConfig.getMethodByItem(CustomMenuItem.INDEX);
+                fieldMethodConfig = bindConfig.findEditorMethod();
             } else {
                 ApiClassConfig bindConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(field.getViewClassName());
                 if (bindConfig != null) {

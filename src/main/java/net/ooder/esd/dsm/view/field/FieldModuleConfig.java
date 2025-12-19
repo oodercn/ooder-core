@@ -128,7 +128,7 @@ public class FieldModuleConfig implements ESDFieldConfig, Comparable<FieldModule
                     fieldMethodConfig = apiClassConfig.getMethodByName(fieldBean.getSrc());
                 } else if (fieldBean.getBindClass() != null && !fieldBean.getBindClass().equals(Void.class) && !fieldBean.getBindClass().equals(Enum.class)) {
                     ApiClassConfig bindConfig = aggregationManager.getApiClassConfig(fieldBean.getBindClass().getName());
-                    fieldMethodConfig = bindConfig.getMethodByItem(CustomMenuItem.INDEX);
+                    fieldMethodConfig = bindConfig.findEditorMethod();
                 } else {
                     ApiClassConfig bindConfig = aggregationManager.getApiClassConfig(esdField.getViewClassName());
                     fieldMethodConfig = bindConfig.getMethodByName(esdField.getFieldname());
