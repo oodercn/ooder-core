@@ -10,6 +10,10 @@ import net.ooder.esd.tool.properties.Action;
 
 public class ModulePlaceHolder extends Component<ModuleProperties, UIEventEnum> {
 
+
+    String moduleClass;
+    String moduleXid;
+
     public ModulePlaceHolder addAction(Action<UIEventEnum> action) {
         super.addAction(action);
         return this;
@@ -21,4 +25,19 @@ public class ModulePlaceHolder extends Component<ModuleProperties, UIEventEnum> 
         this.getProperties().setBorderType(BorderType.none);
     }
 
+    public String getModuleClass() {
+        return moduleClass;
+    }
+
+    public void setModuleClass(String moduleClass) {
+        this.moduleClass = moduleClass;
+    }
+
+    public String getModuleXid() {
+        return moduleXid;
+    }
+
+    public void setModuleXid(String moduleXid) {
+        this.moduleXid = moduleXid;
+    }
 }

@@ -65,7 +65,7 @@ public class CustomModuleEmbedFieldBean  implements FieldComponentBean<ModuleCom
 
     public CustomModuleEmbedFieldBean(ModuleComponent parentModuleComponent, ModulePlaceHolder moduleComponent) {
         //  update(moduleComponent);
-
+        this.
     }
 
     void update(ModuleComponent moduleComponent) {
@@ -85,7 +85,6 @@ public class CustomModuleEmbedFieldBean  implements FieldComponentBean<ModuleCom
             this.moduleBean = new CustomModuleBean(moduleComponent);
             moduleBean.reBindMethod(moduleComponent.getMethodAPIBean());
         }
-
     }
 
     public CustomModuleEmbedFieldBean(CustomModuleBean moduleBean) {
