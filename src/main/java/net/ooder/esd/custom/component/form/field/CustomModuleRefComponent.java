@@ -87,7 +87,7 @@ public class CustomModuleRefComponent extends ModuleComponent {
                                     for (Component childcomponent : childlist) {
                                         ComponentType componentType = ComponentType.fromType(childcomponent.getKey());
                                         if (childcomponent instanceof SVGPaperComponent || componentType.isModuleObj()) {
-                                            euModule.getComponent().addChildren(childcomponent);
+                                            this.addChildren(childcomponent);
                                         } else {
                                             uiComponents.add(childcomponent);
                                         }
@@ -102,8 +102,8 @@ public class CustomModuleRefComponent extends ModuleComponent {
                                                 }
                                             }
                                             apiCallerComponent.setAlias(apiCallName);
-                                            if (euModule.getComponent().getTopComponentBox() != null) {
-                                                UrlPath urlPath = new UrlPathData(euModule.getComponent().getTopComponentBox().getAlias(), RequestPathTypeEnum.FORM, "");
+                                            if (getTopComponentBox() != null) {
+                                                UrlPath urlPath = new UrlPathData(getTopComponentBox().getAlias(), RequestPathTypeEnum.FORM, "");
                                                 apiCallerComponent.getProperties().addRequestData(urlPath);
                                             }
                                         }
@@ -129,7 +129,7 @@ public class CustomModuleRefComponent extends ModuleComponent {
                             currComponent.getProperties().setBorderType(BorderType.none);
                             currComponent.setTarget(target);
                             this.addChildren(currComponent);
-                            module.getComponent().addChildren(genAPIComponent(currComponent, moduleComponent, fieldMethodConfig));
+                            addChildren(genAPIComponent(currComponent, moduleComponent, fieldMethodConfig));
                             break;
                     }
                 }
