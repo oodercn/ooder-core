@@ -14,7 +14,7 @@ public enum PackageType implements IconEnumstype {
     tool("应用工具", "esdadmin", UserSpace.SYS, "ri-tools-line", IconColorEnum.PINK),
     esd("工具插件", "esdadmin", UserSpace.SYS, "ri-puzzle-line", IconColorEnum.BABYBLUE),
     cluster("集群服务", "cluster", UserSpace.SYS, "ri-network-line", IconColorEnum.GREEN),
-    userdef("自定义服�?", null, UserSpace.VIEW, "ri-settings-3-line", IconColorEnum.YELLOW),
+    userdef("自定义服务", null, UserSpace.VIEW, "ri-settings-3-line", IconColorEnum.YELLOW),
     view("视图", null, UserSpace.VIEW, "ri-eye-line", IconColorEnum.CYAN);
     
     private String name;
