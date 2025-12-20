@@ -622,7 +622,7 @@ public class CustomNavTreeComponent<M extends LayoutComponent> extends CustomMod
             comboInputProperties.setLeft("3.5em");
             comboInputProperties.setTop("2em");
             comboInputProperties.setLabelSize("4em");
-            comboInputProperties.setImageClass("fa-solid fa-code");
+            comboInputProperties.setImageClass("ri-code-box-line");
             helpBar.addAction(new Action(CustomFormAction.RELOAD, FieldEventEnum.onChange));
             currComponent.getParent().addChildren(helpBar);
         }

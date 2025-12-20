@@ -64,7 +64,7 @@ public class UserConfig extends DivComponent {
         logoProperties.setTabindex(4);
         logoProperties.setPosition(UIPositionType.STATIC);
         logoProperties.setCaption("");
-        logoProperties.setImageClass("fa-solid fa-sort-amount-down");
+        logoProperties.setImageClass("ri-sort-desc-line");
         logoProperties.setFontColor("#FFFFFF");
         return logoLabelCom;
     }

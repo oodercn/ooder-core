@@ -4,9 +4,9 @@ package net.ooder.esd.dsm.domain.enums;
 import net.ooder.annotation.IconEnumstype;
 
 public enum MsgDomainType implements IconEnumstype {
-    MQTT("Mqtt消息", "fa-solid fa-broadcast-tower"),
-    APICALL("接口", "fa-solid fa-plug"),
-    COMMAND("命令", "fa-solid fa-terminal");
+    MQTT("Mqtt消息", "ri-radio-tower-line"),
+    APICALL("接口", "ri-plug-line"),
+    COMMAND("命令", "ri-terminal-box-line");
 
 
     private final String name;

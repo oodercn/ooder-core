@@ -28,7 +28,7 @@ public class OODModuleFile implements Comparable<OODModuleFile> {
         }
         this.className = module.getClassName();
         this.id = this.getClassName();
-        this.imageClass = "fa-solid fa-file-code";
+        this.imageClass = "ri-file-code-line";
         this.caption = name;
         this.projectName = module.getProjectVersion().getProjectName();
     }

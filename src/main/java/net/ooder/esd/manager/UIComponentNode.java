@@ -36,7 +36,7 @@ public class UIComponentNode {
 
     public String cls = "ood.UI.ComboInput";
 
-    public String imageClass = "fa-solid fa-code";
+    public String imageClass = "ri-code-box-line";
 
     public String caption;
 

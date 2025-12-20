@@ -68,7 +68,7 @@ public class MethodConfig<T extends CustomViewBean, K extends CustomDataBean> im
 
     private static final ModuleViewType[] skipViewType = new ModuleViewType[]{ModuleViewType.NONE, ModuleViewType.DYNCONFIG, ModuleViewType.LAYOUTCONFIG};
 
-    public static String DefaultImageClass = "fa-solid fa-code";
+    public static String DefaultImageClass = "ri-code-box-line";
 
     String imageClass = DefaultImageClass;
 

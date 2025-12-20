@@ -23,7 +23,7 @@ public class ToolBoxFolderNode {
 
     public String cls = "ood.Module";
 
-    public String imageClass = "fa-solid fa-th";
+    public String imageClass = "ri-grid-line";
 
     public String caption;
 

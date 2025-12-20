@@ -4,11 +4,11 @@ package net.ooder.esd.dsm.domain.enums;
 import net.ooder.annotation.IconEnumstype;
 
 public enum CustomDomainType implements IconEnumstype {
-    BPM("流程", "fa-solid fa-sitemap"),
-    MSG("消息", "fa-solid fa-table"),
-    NAV("应用菜单", "fa-solid fa-table"),
-    VFS("文件应用", "fa-solid fa-table"),
-    ORG("组织权限", "fa-solid fa-cog");
+    BPM("流程", "ri-node-tree"),
+    MSG("消息", "ri-table-line"),
+    NAV("应用菜单", "ri-table-line"),
+    VFS("文件应用", "ri-table-line"),
+    ORG("组织权限", "ri-settings-3-line");
 
 
     private final String name;

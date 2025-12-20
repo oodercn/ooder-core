@@ -25,7 +25,7 @@ public class UIModuleNode {
 
     public String cls;
 
-    public String imageClass = "fa-solid fa-code";
+    public String imageClass = "ri-code-box-line";
 
     public String caption;
 

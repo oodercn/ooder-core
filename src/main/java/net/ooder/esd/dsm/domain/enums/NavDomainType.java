@@ -4,9 +4,9 @@ package net.ooder.esd.dsm.domain.enums;
 import net.ooder.annotation.IconEnumstype;
 
 public enum NavDomainType implements IconEnumstype {
-    MODULE("模块", "fa-solid fa-puzzle-piece"),
-    MENU("菜单", "fa-solid fa-bars"),
-    NAV("导航布局", "fa-solid fa-sitemap");
+    MODULE("模块", "ri-puzzle-line"),
+    MENU("菜单", "ri-menu-line"),
+    NAV("导航布局", "ri-node-tree");
 
 
     private final String name;

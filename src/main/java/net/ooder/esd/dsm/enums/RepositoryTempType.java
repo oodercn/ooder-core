@@ -4,9 +4,9 @@ package net.ooder.esd.dsm.enums;
 import net.ooder.annotation.IconEnumstype;
 
 public enum RepositoryTempType implements IconEnumstype {
-    statistics("默认模板", "fa-solid fa-template"),
-    mybatis("Mybatis模板", "fa-solid fa-database"),
-    Hibernate("Hibernate模板", "fa-solid fa-cogs");
+    statistics("默认模板", "ri-file-copy-line"),
+    mybatis("Mybatis模板", "ri-database-line"),
+    Hibernate("Hibernate模板", "ri-settings-3-line");
 
     private final String name;
     private final String imageClass;

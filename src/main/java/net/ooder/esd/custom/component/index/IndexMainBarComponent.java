@@ -41,7 +41,7 @@ public class IndexMainBarComponent extends DivComponent {
         logoProperties.setLeft("10em");
         logoProperties.setHeight("2.2em");
         logoProperties.setIconFontSize("2em");
-        logoProperties.setImageClass("fa-solid fa-sign-in-alt");
+        logoProperties.setImageClass("ri-login-box-line");
         return logoLabelCom;
     }
 
@@ -62,19 +62,19 @@ public class IndexMainBarComponent extends DivComponent {
         GalleryItem searchItem = new GalleryItem();
         searchItem.setCaption("查询");
         searchItem.setId("search");
-        searchItem.setImageClass("fa-solid fa-search");
+        searchItem.setImageClass("ri-search-line");
 
         GalleryItem taskItem = new GalleryItem();
         taskItem.setCaption("任务");
         taskItem.setId("task");
-        taskItem.setImageClass("fa-solid fa-file-alt");
+        taskItem.setImageClass("ri-file-line");
         taskItem.setFlagText("1");
 
 
         GalleryItem msgItem = new GalleryItem();
         msgItem.setCaption("消息");
         msgItem.setId("msg");
-        msgItem.setImageClass("fa-solid fa-bell");
+        msgItem.setImageClass("ri-notification-line");
         msgItem.setFlagText("8");
         itemList.add(searchItem);
         itemList.add(taskItem);
@@ -143,7 +143,7 @@ public class IndexMainBarComponent extends DivComponent {
             LabelProperties logoProperties = logoLabelCom.getProperties();
             logoProperties.setTabindex(3);
             logoProperties.setPosition(UIPositionType.STATIC);
-            logoProperties.setCaption("管理员");
+            logoProperties.setCaption("管理�?");
             logoProperties.setFontColor("#FFFFFF");
             return logoLabelCom;
         }
@@ -156,7 +156,7 @@ public class IndexMainBarComponent extends DivComponent {
             logoProperties.setTabindex(4);
             logoProperties.setPosition(UIPositionType.STATIC);
             logoProperties.setCaption("");
-            logoProperties.setImageClass("fa-solid fa-sort-amount-down");
+            logoProperties.setImageClass("ri-sort-desc-line");
             logoProperties.setFontColor("#FFFFFF");
             return logoLabelCom;
         }

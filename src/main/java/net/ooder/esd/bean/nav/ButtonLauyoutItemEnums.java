@@ -2,11 +2,11 @@ package net.ooder.esd.bean.nav;
 
 public enum ButtonLauyoutItemEnums implements IButtonLayoutItem {
 
-    startWork("起草", "fa-solid fa-edit"),
-    waitedwork("待办", "fa-solid fa-tasks"),
-    index("首页", "fa-solid fa-home"),
-    mywork("我的", "fa-solid fa-user"),
-    msg("消息", "fa-solid fa-bell");
+    startWork("起草", "ri-edit-line"),
+    waitedwork("待办", "ri-list-check-line"),
+    index("首页", "ri-home-line"),
+    mywork("我的", "ri-user-line"),
+    msg("消息", "ri-notification-line");
 
     private String type;
     private String name;

@@ -6,55 +6,55 @@ import net.ooder.esd.dsm.domain.enums.DomainType;
 
 public enum TempType implements Enumstype {
 
-    FRAME("框架", "fa-solid fa-layer-group", DomainType.VIEW),
-    NAVVIEW("导航", "fa-solid fa-bars", DomainType.VIEW),
-    LAYOUT("布局", "fa-solid fa-th", DomainType.VIEW),
-    GRID("列表", "fa-solid fa-table", DomainType.VIEW),
-    GALLERY("画廊", "fa-solid fa-images", DomainType.VIEW),
-    FORM("表单", "fa-solid fa-file-alt", DomainType.VIEW),
-    TREE("树形", "fa-solid fa-sitemap", DomainType.VIEW),
-    CHARTS("统计图表", "fa-solid fa-chart-bar", DomainType.VIEW),
-    SVG("SVG绘图", "fa-solid fa-drafting-compass", DomainType.VIEW),
-    MODULE("内嵌模块", "fa-solid fa-cubes", DomainType.VIEW),
-    DIC("字典辅助", "fa-solid fa-book", DomainType.VIEW),
+    FRAME("框架", "ri-stack-line", DomainType.VIEW),
+    NAVVIEW("导航", "ri-menu-line", DomainType.VIEW),
+    LAYOUT("布局", "ri-grid-line", DomainType.VIEW),
+    GRID("列表", "ri-table-line", DomainType.VIEW),
+    GALLERY("画廊", "ri-image-line", DomainType.VIEW),
+    FORM("表单", "ri-file-line", DomainType.VIEW),
+    TREE("树形", "ri-node-tree", DomainType.VIEW),
+    CHARTS("统计图表", "ri-bar-chart-line", DomainType.VIEW),
+    SVG("SVG绘图", "ri-compass-line", DomainType.VIEW),
+    MODULE("内嵌模块", "ri-cube-line", DomainType.VIEW),
+    DIC("字典辅助", "ri-book-line", DomainType.VIEW),
 
-    ROUTE("流转域", "fa-solid fa-exchange-alt", DomainType.BPM),
-    WORKLIST("查询域", "fa-solid fa-search", DomainType.BPM),
-    BPMFORM("表单域", "fa-solid fa-file-alt", DomainType.BPM),
-    ADMIN("管理域", "fa-solid fa-tools", DomainType.BPM),
-    STATISTICS("统计域", "fa-solid fa-chart-line", DomainType.BPM),
-    BPMRIGHT("权限域", "fa-solid fa-key", DomainType.BPM),
-    CUSTOM("通用输入域", "fa-solid fa-cogs", DomainType.BPM),
-    EVENT("事件", "fa-solid fa-bell", DomainType.BPM),
-    OTHER("其他", "fa-solid fa-question-circle", DomainType.BPM),
+    ROUTE("流转域", "ri-exchange-line", DomainType.BPM),
+    WORKLIST("查询域", "ri-search-line", DomainType.BPM),
+    BPMFORM("表单域", "ri-file-line", DomainType.BPM),
+    ADMIN("管理域", "ri-tools-line", DomainType.BPM),
+    STATISTICS("统计域", "ri-line-chart-line", DomainType.BPM),
+    BPMRIGHT("权限域", "ri-key-line", DomainType.BPM),
+    CUSTOM("通用输入域", "ri-settings-3-line", DomainType.BPM),
+    EVENT("事件", "ri-notification-line", DomainType.BPM),
+    OTHER("其他", "ri-question-mark-circle-line", DomainType.BPM),
 
-    MQTT("Mqtt消息", "fa-solid fa-comment-alt", DomainType.MSG),
-    APICALL("接口", "fa-solid fa-plug", DomainType.MSG),
-    COMMAND("命令", "fa-solid fa-terminal", DomainType.MSG),
-
-
-    NAVMODULE("模块", "fa-solid fa-cubes", DomainType.NAV),
-    MENU("菜单", "fa-solid fa-bars", DomainType.NAV),
-    NAV("导航布局", "fa-solid fa-th-large", DomainType.BPM),
+    MQTT("Mqtt消息", "ri-chat-1-line", DomainType.MSG),
+    APICALL("接口", "ri-plug-line", DomainType.MSG),
+    COMMAND("命令", "ri-terminal-box-line", DomainType.MSG),
 
 
-    ORG("组织机构", "fa-solid fa-users", DomainType.NAV),
-    ROLE("角色", "fa-solid fa-user-tag", DomainType.NAV),
-    PERSON("成员", "fa-solid fa-user", DomainType.NAV),
-    RIGHT("权限", "fa-solid fa-key", DomainType.NAV),
-
-    FILE("文件", "fa-solid fa-file", DomainType.NAV),
-    FOLDER("文件夹", "fa-solid fa-folder", DomainType.NAV),
-    COMPONENT("组件", "fa-solid fa-puzzle-piece", DomainType.NAV),
+    NAVMODULE("模块", "ri-cube-line", DomainType.NAV),
+    MENU("菜单", "ri-menu-line", DomainType.NAV),
+    NAV("导航布局", "ri-grid-large-line", DomainType.BPM),
 
 
-    VO("实体对象", "fa-solid fa-object-group", DomainType.VO),
-    DO("库表映射", "fa-solid fa-database", DomainType.DO),
-    REPOSITORY("仓储接口", "fa-solid fa-warehouse", DomainType.REPOSITORY),
-    REPOSITORYIMPL("仓储实现", "fa-solid fa-tools", DomainType.REPOSITORYIMPL),
+    ORG("组织机构", "ri-user-group-line", DomainType.NAV),
+    ROLE("角色", "ri-user-tag-line", DomainType.NAV),
+    PERSON("成员", "ri-user-line", DomainType.NAV),
+    RIGHT("权限", "ri-key-line", DomainType.NAV),
+
+    FILE("文件", "ri-file-line", DomainType.NAV),
+    FOLDER("文件夹", "ri-folder-line", DomainType.NAV),
+    COMPONENT("组件", "ri-puzzle-line", DomainType.NAV),
 
 
-    ALL("所有", "fa-solid fa-check-circle", DomainType.ALL);
+    VO("实体对象", "ri-object-group-line", DomainType.VO),
+    DO("库表映射", "ri-database-line", DomainType.DO),
+    REPOSITORY("仓储接口", "ri-warehouse-line", DomainType.REPOSITORY),
+    REPOSITORYIMPL("仓储实现", "ri-tools-line", DomainType.REPOSITORYIMPL),
+
+
+    ALL("所有", "ri-checkbox-circle-line", DomainType.ALL);
 
 
     private final String name;

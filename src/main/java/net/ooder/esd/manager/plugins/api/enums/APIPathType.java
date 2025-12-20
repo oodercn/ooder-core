@@ -7,29 +7,29 @@ import java.util.List;
 
 public enum APIPathType {
 
-    RAD("RAD", "/RAD/", "编辑器", APIType.system, "fa-solid fa-cubes"),
+    RAD("RAD", "/RAD/", "编辑�?", APIType.system, "ri-cube-line"),
 
-    admin("admin", "/admin/", "管理控制台", APIType.system, "fa-solid fa-tools"),
+    admin("admin", "/admin/", "管理控制�?", APIType.system, "ri-tools-line"),
 
-    log("log", "/log/", "日志处理", APIType.system, "fa-solid fa-file-alt"),
+    log("log", "/log/", "日志处理", APIType.system, "ri-file-line"),
 
-    vfs("vfs", "/api/vfs/", "分布式存储", APIType.system, "fa-solid fa-database"),
+    vfs("vfs", "/api/vfs/", "分布式存�?", APIType.system, "ri-database-line"),
 
-    org("org", "/api/org/", "组织机构", APIType.system, "fa-solid fa-cubes"),
+    org("org", "/api/org/", "组织机构", APIType.system, "ri-cube-line"),
 
-    app("app", "/jds/iot/", "IOT应用", APIType.system, "fa-solid fa-cubes"),
+    app("app", "/jds/iot/", "IOT应用", APIType.system, "ri-cube-line"),
 
-    bpm("bpm", "/jds/bpm/", "流程应用", APIType.system, "fa-solid fa-cubes"),
+    bpm("bpm", "/jds/bpm/", "流程应用", APIType.system, "ri-cube-line"),
 
-    db("db", "/fdt/", "数据库接口", APIType.userdef, "fa-solid fa-database"),
+    db("db", "/fdt/", "数据库接�?", APIType.userdef, "ri-database-line"),
 
-    dsm("dsm", "/dsm/", "DSM建模", APIType.userdef, "fa-solid fa-cogs"),
+    dsm("dsm", "/dsm/", "DSM建模", APIType.userdef, "ri-settings-3-line"),
 
-    bpmclient("bpmclient", "/bpm/", "工作流接口", APIType.userdef, "fa-solid fa-cubes"),
+    bpmclient("bpmclient", "/bpm/", "工作流接�?", APIType.userdef, "ri-cube-line"),
 
-    orgclient("orgclient", "/system/org/", "组织机构接口", APIType.userdef, "fa-solid fa-cubes"),
+    orgclient("orgclient", "/system/org/", "组织机构接口", APIType.userdef, "ri-cube-line"),
 
-    fdt("fdt", "/jds/fdt/", "电子表单", APIType.system, "fa-solid fa-database");
+    fdt("fdt", "/jds/fdt/", "电子表单", APIType.system, "ri-database-line");
 
 
     private final String pattern;

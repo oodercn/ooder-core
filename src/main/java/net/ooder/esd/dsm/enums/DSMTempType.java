@@ -4,12 +4,12 @@ package net.ooder.esd.dsm.enums;
 import net.ooder.annotation.IconEnumstype;
 
 public enum DSMTempType implements IconEnumstype {
-    dao("通用数据库模板", "fa-solid fa-database"),
-    custom("通用视图模板", "fa-solid fa-layer-group"),
-    process("业务流程模板", "fa-solid fa-sitemap"),
-    statistics("统计分析模板", "fa-solid fa-chart-line"),
-    cms("门户网站模板", "fa-solid fa-globe"),
-    mobile("移动应用模板", "fa-solid fa-mobile-alt");
+    dao("通用数据库模板", "ri-database-line"),
+    custom("通用视图模板", "ri-stack-line"),
+    process("业务流程模板", "ri-node-tree"),
+    statistics("统计分析模板", "ri-line-chart-line"),
+    cms("门户网站模板", "ri-earth-line"),
+    mobile("移动应用模板", "ri-smartphone-line");
 
 
     private final String name;

@@ -5,10 +5,10 @@ import net.ooder.annotation.IconEnumstype;
 
 public enum ContentBlockItemEnum implements IContentBlockItem, IconEnumstype {
 
-    item1("item1", "fa-solid fa-align-left", "&gt;&gt; 更多", "1", "信息报送"),
-    item2("item2", "fa-solid fa-tasks", "&gt;&gt; 更多", "21", "日常审批"),
-    item3("item3", "fa-solid fa-calendar-alt", "&gt;&gt; 更多", "7", "会议通知"),
-    item4("item4", "fa-solid fa-clock", "&gt;&gt; 更多", "0", "请销假");
+    item1("item1", "ri-align-left-line", ">&gt;&gt; 更多", "1", "信息报送"),
+    item2("item2", "ri-list-check-line", ">&gt;&gt; 更多", "21", "日常审批"),
+    item3("item3", "ri-calendar-line", ">&gt;&gt; 更多", "7", "会议通知"),
+    item4("item4", "ri-time-line", ">&gt;&gt; 更多", "0", "请销假");
 
 
     private String type;

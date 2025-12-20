@@ -5,15 +5,15 @@ import net.ooder.annotation.Enumstype;
 
 public enum RangeType implements Enumstype {
 
-    TABLE("表单内", "fa-solid fa-file-alt"),
-    ENTITY("独立实体", "fa-solid fa-database"),
-    ENTITYREF("关联实体", "fa-solid fa-link"),
-    REF("关联表内", "fa-solid fa-link"),
-    MODULE("模块内", "fa-solid fa-cubes"),
-    PROJECT("工程内", "fa-solid fa-project-diagram"),
-    USERSPACE("全局空间", "fa-solid fa-globe"),
-    MODULEVIEW("逆向视图", "fa-solid fa-sitemap"),
-    NONE("无", "fa-solid fa-ban");
+    TABLE("表单内", "ri-file-line"),
+    ENTITY("独立实体", "ri-database-line"),
+    ENTITYREF("关联实体", "ri-link-line"),
+    REF("关联表内", "ri-link-line"),
+    MODULE("模块内", "ri-cube-line"),
+    PROJECT("工程内", "ri-node-tree"),
+    USERSPACE("全局空间", "ri-earth-line"),
+    MODULEVIEW("逆向视图", "ri-node-tree"),
+    NONE("无", "ri-close-circle-line");
 
 
     private final String name;
