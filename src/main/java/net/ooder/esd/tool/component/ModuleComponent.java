@@ -995,7 +995,6 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         if (properties == null) {
             properties = new ModuleProperties();
         }
-        properties.setPanelType(PanelType.block);
         if (this instanceof FullPanelComponent) {
             properties.setPanelType(PanelType.panel);
             if (this.moduleBean != null) {
@@ -1472,6 +1471,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                 }
                 dialog.addAction(new Action(CustomPageAction.CLOSE, DialogEventEnum.afterDestroy), false);
             }
+
         }
 
 
@@ -1518,7 +1518,6 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
             }
         }
-        this.addChildren(panelComponent);
         return panelComponent;
     }
 

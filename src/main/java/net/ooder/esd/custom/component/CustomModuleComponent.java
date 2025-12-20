@@ -306,17 +306,18 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
         if (panelType != null) {
             switch (panelType) {
                 case dialog:
+                    DialogComponent<DialogProperties, DialogEventEnum> dialogComponent = this.getDialogComponent();
+
                     if (component instanceof DialogComponent && component.getChildren() != null) {
                         for (Component childComponent : component.getChildren()) {
-                            mainComponent.addChildren(childComponent);
+                            dialogComponent.addChildren(childComponent);
                         }
                     } else {
-                        mainComponent.addChildren(component);
+                        dialogComponent.addChildren(component);
                     }
 
-                    DialogComponent<DialogProperties, DialogEventEnum> dialogComponent = this.getDialogComponent();
                     this.addChildren(dialogComponent);
-                    dialogComponent.addChildren(mainComponent);
+
                     break;
 
                 case panel:
@@ -329,6 +330,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                     } else {
                         modulePanelComponent.addChildren(component);
                     }
+                    this.addChildren(modulePanelComponent);
                     break;
                 case block:
                     BlockComponent blockPanelComponent = this.getBlockPanelComponent();
