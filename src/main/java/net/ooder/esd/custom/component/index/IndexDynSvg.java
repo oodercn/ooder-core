@@ -53,13 +53,13 @@ public class IndexDynSvg extends SVGPaperComponent {
         TreeListItem accountItem = new TreeListItem();
         accountItem.setCaption("账户");
         accountItem.setId("account");
-        accountItem.setImageClass("ri-user-line-cog");
+        accountItem.setImageClass("ri-user-settings-line");
         uiItems.add(accountItem);
 
         TreeListItem logoutItem = new TreeListItem();
-        logoutItem.setCaption("�?�?");
+        logoutItem.setCaption("退出");
         logoutItem.setId("logout");
-        logoutItem.setImageClass("ood-uicmd-popbox");
+        logoutItem.setImageClass("ri-logout-box-line");
         uiItems.add(logoutItem);
         listProperty.setLeft("0em");
         listProperty.setTop("1.5em");

@@ -5,7 +5,7 @@ import net.ooder.annotation.Enumstype;
 import net.ooder.esd.dsm.enums.DSMType;
 
 public enum DomainType implements Enumstype {
-    AGGREGATIONROOT("聚合�?", "ri-node-tree", DSMType.AGGREGATION),
+    AGGREGATIONROOT("聚合根", "ri-node-tree", DSMType.AGGREGATION),
     AGGREGATIONSET("聚合集合", "ri-stack-line", DSMType.AGGREGATION),
     VIEW("视图", "ri-eye-line", DSMType.AGGREGATION),
     AGGREGATIONENTITY("聚合实体", "ri-object-group-line", DSMType.AGGREGATION),

@@ -143,7 +143,7 @@ public class IndexMainBarComponent extends DivComponent {
             LabelProperties logoProperties = logoLabelCom.getProperties();
             logoProperties.setTabindex(3);
             logoProperties.setPosition(UIPositionType.STATIC);
-            logoProperties.setCaption("管理�?");
+            logoProperties.setCaption("管理员");
             logoProperties.setFontColor("#FFFFFF");
             return logoLabelCom;
         }

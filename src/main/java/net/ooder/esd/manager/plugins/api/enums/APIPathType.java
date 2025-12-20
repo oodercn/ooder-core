@@ -7,13 +7,13 @@ import java.util.List;
 
 public enum APIPathType {
 
-    RAD("RAD", "/RAD/", "编辑�?", APIType.system, "ri-cube-line"),
+    RAD("RAD", "/RAD/", "编辑器", APIType.system, "ri-cube-line"),
 
-    admin("admin", "/admin/", "管理控制�?", APIType.system, "ri-tools-line"),
+    admin("admin", "/admin/", "管理控制台", APIType.system, "ri-tools-line"),
 
     log("log", "/log/", "日志处理", APIType.system, "ri-file-line"),
 
-    vfs("vfs", "/api/vfs/", "分布式存�?", APIType.system, "ri-database-line"),
+    vfs("vfs", "/api/vfs/", "分布式存储", APIType.system, "ri-database-line"),
 
     org("org", "/api/org/", "组织机构", APIType.system, "ri-cube-line"),
 
@@ -21,11 +21,11 @@ public enum APIPathType {
 
     bpm("bpm", "/jds/bpm/", "流程应用", APIType.system, "ri-cube-line"),
 
-    db("db", "/fdt/", "数据库接�?", APIType.userdef, "ri-database-line"),
+    db("db", "/fdt/", "数据库接口", APIType.userdef, "ri-database-line"),
 
     dsm("dsm", "/dsm/", "DSM建模", APIType.userdef, "ri-settings-3-line"),
 
-    bpmclient("bpmclient", "/bpm/", "工作流接�?", APIType.userdef, "ri-cube-line"),
+    bpmclient("bpmclient", "/bpm/", "工作流接口", APIType.userdef, "ri-cube-line"),
 
     orgclient("orgclient", "/system/org/", "组织机构接口", APIType.userdef, "ri-cube-line"),
 
