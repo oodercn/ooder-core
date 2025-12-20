@@ -1859,14 +1859,14 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         } else if (currComponent == null) {
             currComponent = (M) this.findComponentByAlias(curAlias);
         }
-
-        List<Component> childView = deepCheckComponent();
-        if (childView.size() == 1) {
-            currComponent = (M) childView.get(0);
-        } else if (childView.size() > 1) {
-            currComponent = (M) this.getMainBoxComponent();
+        if (currComponent == null) {
+            List<Component> childView = deepCheckComponent();
+            if (childView.size() == 1) {
+                currComponent = (M) childView.get(0);
+            } else if (childView.size() > 1) {
+                currComponent = (M) this.getMainBoxComponent();
+            }
         }
-
         if (currComponent == null) {
             BlockComponent blockComponent = guessCurrComponent();
             currComponent = (M) blockComponent;
@@ -1880,6 +1880,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         if (currComponent != null) {
             this.setCurrComponent(currComponent);
         }
+
         return currComponent;
     }
 
