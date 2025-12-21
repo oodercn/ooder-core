@@ -330,7 +330,6 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                     } else {
                         modulePanelComponent.addChildren(component);
                     }
-                    this.addChildren(modulePanelComponent);
                     break;
                 case block:
                     BlockComponent blockPanelComponent = this.getBlockPanelComponent();

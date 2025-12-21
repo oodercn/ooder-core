@@ -2079,9 +2079,12 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     private String getMainAlias() {
         String mainAlias = null;
         if (this.getEuModule() != null) {
-            mainAlias = this.getEuModule().getName() + DefaultTopBoxfix;
+            mainAlias = this.getEuModule().getName();
         } else {
-            mainAlias = this.getClassName().substring(this.getClassName().lastIndexOf(".") + 1) + DefaultTopBoxfix;
+            mainAlias = this.getClassName().substring(this.getClassName().lastIndexOf(".") + 1);
+        }
+        if (!mainAlias.endsWith(DefaultTopBoxfix)) {
+            mainAlias = mainAlias + DefaultTopBoxfix;
         }
 
         return mainAlias;
@@ -2091,11 +2094,9 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     @JSONField(serialize = false)
     public Component getMainBoxComponent() {
         String mainAlias = getMainAlias();
-
         if (mainComponent == null) {
             mainComponent = components.get(mainAlias);
         }
-
 
         if (mainComponent == null) {
             PanelType panelType = this.getProperties().getPanelType();
@@ -2138,7 +2139,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         if (mainComponent == null) {
             mainComponent = getDefaultTopComponent();
             if (mainComponent == null) {
-                mainComponent = new BlockComponent(Dock.fill, OODUtil.formatJavaName(mainAlias, true));
+                mainComponent = new BlockComponent(Dock.fill, mainAlias);
             }
         }
 
