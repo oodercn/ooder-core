@@ -128,7 +128,7 @@ public class FullSVGPaperComponent extends CustomModuleComponent<CustomFieldSVGP
         if (viewBean != null) {
             fillFromAction(viewBean, currComponent);
         }
-        APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(),  mainComponent);
+        APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(),  getMainComponent());
         this.addChildren(apiCallerComponents);
 
         this.fillToolBar(viewBean, currComponent);

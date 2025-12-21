@@ -94,7 +94,7 @@ public class CustomOpinionComponent extends CustomModuleComponent<OpinionCompone
             } else {
                 divComponent.getProperties().setHeight("2.5em");
             }
-            mainComponent.addChildren(divComponent);
+            getMainComponent().addChildren(divComponent);
         }
 
         Set<CustomOpinionEvent> customFormEvents = viewBean.getEvent();

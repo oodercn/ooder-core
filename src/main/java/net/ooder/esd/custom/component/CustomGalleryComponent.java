@@ -94,7 +94,7 @@ public class CustomGalleryComponent extends CustomModuleComponent<GalleryCompone
             } else {
                 divComponent.getProperties().setHeight("2.5em");
             }
-            mainComponent.addChildren(divComponent);
+            getMainComponent().addChildren(divComponent);
         }
 
         Set<CustomGalleryEvent> customFormEvents = viewBean.getEvent();

@@ -203,7 +203,7 @@ public class BaseNavTabsComponent extends CustomModuleComponent<CustomTabsCompon
                 APICallerComponent saveAPI = new APICallerComponent(methodBean);
                 saveAPI.setAlias(CustomFormAction.RESET.getTarget());
                 APICallerProperties saveProperties = saveAPI.getProperties();
-                UrlPathData treepathData = new UrlPathData(mainComponent.getAlias(), RequestPathTypeEnum.FORM, "");
+                UrlPathData treepathData = new UrlPathData(getMainComponent().getAlias(), RequestPathTypeEnum.FORM, "");
                 saveProperties.addRequestData(treepathData);
                 UrlPathData ctxData = new UrlPathData(getCtxBaseComponent().getAlias(), RequestPathTypeEnum.FORM, "");
                 saveProperties.addRequestData(ctxData);

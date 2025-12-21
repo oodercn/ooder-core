@@ -94,7 +94,7 @@ public class CustomContentBlockComponent extends CustomModuleComponent<ContentBl
             } else {
                 divComponent.getProperties().setHeight("2.5em");
             }
-            mainComponent.addChildren(divComponent);
+            getMainComponent().addChildren(divComponent);
         }
 
         Set<CustomContentBlockEvent> customFormEvents = viewBean.getEvent();

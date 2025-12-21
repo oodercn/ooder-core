@@ -95,7 +95,7 @@ public class CustomTitleBlockComponent extends CustomModuleComponent<TitleBlockC
             } else {
                 divComponent.getProperties().setHeight("2.5em");
             }
-            mainComponent.addChildren(divComponent);
+            getMainComponent().addChildren(divComponent);
         }
 
         Set<CustomTitleBlockEvent> customFormEvents = viewBean.getEvent();

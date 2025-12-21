@@ -113,7 +113,7 @@ public class CustomGridComponent<M extends TreeGridComponent> extends CustomModu
             } else {
                 divComponent.getProperties().setHeight("2.5em");
             }
-            mainComponent.addChildren(divComponent);
+            getMainComponent().addChildren(divComponent);
         }
 
         Set<CustomGridEvent> customFormEvents = viewBean.getEvent();

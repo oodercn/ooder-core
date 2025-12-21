@@ -76,7 +76,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
         this.parentClass = methodAPIBean.getSourceClass();
         this.moduleBean = methodAPIBean.getModuleBean();
         this.euModule.setComponent(this);
-        this.mainComponent = this.getMainComponent();
+        Component mainComponent = this.getMainComponent();
 
         if (moduleBean != null && moduleBean.getPanelType().equals(PanelType.block)) {
             if (moduleBean.getViewConfig() != null && moduleBean.getViewConfig().getViewStyles() != null) {
@@ -250,13 +250,13 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                         }
                         break;
                     case module:
-                        mainComponent.addChildren(customToolsBar);
+                        getMainComponent().addChildren(customToolsBar);
                         break;
                     case top:
                         if (this.getTopModule() != null) {
                             this.getTopModule().getComponent().getMainBoxComponent().addChildren(customToolsBar);
                         } else {
-                            mainComponent.addChildren(customToolsBar);
+                            getMainComponent().addChildren(customToolsBar);
                         }
                         break;
                     default:
@@ -341,7 +341,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                         blockPanelComponent.addChildren(component);
                     }
                     if (moduleBean != null && moduleBean.getBlockBean() != null && moduleBean.getBlockBean().getContainerBean() != null) {
-                        ((BlockComponent) mainComponent).getProperties().init(moduleBean.getBlockBean().getContainerBean());
+                        ((BlockComponent) this.getMainComponent()).getProperties().init(moduleBean.getBlockBean().getContainerBean());
                     }
 
                     this.addChildren(blockPanelComponent);
@@ -510,17 +510,17 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                     this.getCurrComponent().addChildren(blockComponent);
                     break;
                 case module:
-                    mainComponent.addChildren(blockComponent);
+                    getMainComponent().addChildren(blockComponent);
                     break;
                 case top:
                     if (this.getTopModule() != null) {
                         this.getTopModule().getComponent().getMainBoxComponent().addChildren(blockComponent);
                     } else {
-                        mainComponent.addChildren(blockComponent);
+                        getMainComponent().addChildren(blockComponent);
                     }
                     break;
                 default:
-                    mainComponent.addChildren(blockComponent);
+                    getMainComponent().addChildren(blockComponent);
             }
 
 
@@ -561,21 +561,19 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                 menuBarComponent.addChildren(menuBar);
                 blockComponent.addChildren(menuBarComponent);
             } else {
-                mainComponent.addChildren(menuBar);
+                getMainComponent().addChildren(menuBar);
             }
         }
     }
 
     @JSONField(serialize = false)
     public Component getMainComponent() {
-        if (mainComponent == null) {
-            mainComponent = this.getMainBoxComponent();
-        }
-        return mainComponent;
+        return getMainBoxComponent();
     }
 
     public void setMainComponent(Component mainComponent) {
-        this.mainComponent = mainComponent;
+        this.replaceChild(mainComponent);
+        //  this.mainComponent = mainComponent;
     }
 
     @JSONField(serialize = false)
@@ -624,7 +622,7 @@ public class CustomModuleComponent<M extends Component> extends ModuleComponent<
                 if (barMenuBean == null) {
                     barMenuBean = AnnotationUtil.fillDefaultValue(BottomBarMenu.class, new BottomBarMenuBean());
                 }
-                this.bottomBar = new CustomBottomBar(mainComponent.getAlias() + ComponentType.BUTTON.name(), barMenuBean);
+                this.bottomBar = new CustomBottomBar(getMainComponent().getAlias() + ComponentType.BUTTON.name(), barMenuBean);
             }
         }
         return bottomBar;

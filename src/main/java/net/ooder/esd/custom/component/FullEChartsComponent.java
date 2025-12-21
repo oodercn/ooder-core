@@ -118,7 +118,7 @@ public class FullEChartsComponent extends CustomModuleComponent<CustomFieldEChar
         }
 
         this.fillToolBar(viewBean, currComponent);
-        APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(), mainComponent);
+        APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(), getMainComponent());
         this.addChildren(apiCallerComponents);
     }
 

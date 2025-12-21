@@ -128,7 +128,7 @@ public class FullBlockComponent<M extends CustomFieldBlockComponent> extends Cus
             if (viewBean != null) {
                 fillFromAction(viewBean, currComponent);
             }
-            APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(), mainComponent);
+            APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(), getMainComponent());
             this.addChildren(apiCallerComponents);
             this.fillToolBar(viewBean, currComponent);
             ComponentList customComponentBeans = viewBean.getCustomComponentBeans();

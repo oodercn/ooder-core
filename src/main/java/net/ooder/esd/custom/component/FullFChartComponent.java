@@ -114,7 +114,7 @@ public class FullFChartComponent extends CustomModuleComponent<CustomFieldFChart
         }
 
         this.fillToolBar(viewBean, currComponent);
-        APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(), mainComponent);
+        APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(), getMainComponent());
         this.addChildren(apiCallerComponents);
     }
 
