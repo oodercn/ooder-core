@@ -51,8 +51,8 @@ public class FullClassFormComponent extends CustomModuleComponent<CustomFormComp
         super(euModule, methodConfig, valueMap);
         CustomFormViewBean viewBean = (CustomFormViewBean) methodConfig.getView();
 
-        if (mainComponent instanceof BlockComponent){
-            BlockProperties properties= (BlockProperties) mainComponent.getProperties();
+        if (getMainComponent() instanceof BlockComponent){
+            BlockProperties properties= (BlockProperties) getMainComponent().getProperties();
             properties.setBorderType(viewBean.getBorderType());
             properties.setBackground(viewBean.getBackground());
             properties.setOverflow(viewBean.getOverflow());
@@ -138,7 +138,7 @@ public class FullClassFormComponent extends CustomModuleComponent<CustomFormComp
         this.addChildLayoutNav(currComponent);
         this.setCurrComponent(currComponent);
 
-        APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(), mainComponent);
+        APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(), getMainComponent());
         this.addChildren(apiCallerComponents);
         this.fillToolBar(viewBean, currComponent);
 

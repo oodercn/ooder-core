@@ -115,9 +115,9 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 
     @JSONField(serialize = false)
     Component navComponent;
-
-    @JSONField(serialize = false)
-    protected Component mainComponent;
+//
+//    @JSONField(serialize = false)
+//    protected Component mainComponent;
 
 
     @JSONField(name = "Static")
@@ -2094,10 +2094,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     @JSONField(serialize = false)
     public Component getMainBoxComponent() {
         String mainAlias = getMainAlias();
-        if (mainComponent == null) {
-            mainComponent = components.get(mainAlias);
-        }
-
+        Component    mainComponent = components.get(mainAlias);
         if (mainComponent == null) {
             PanelType panelType = this.getProperties().getPanelType();
             if (panelType == null && this.currComponent != null) {
