@@ -50,20 +50,19 @@ public class FullClassFormComponent extends CustomModuleComponent<CustomFormComp
     public FullClassFormComponent(EUModule euModule, MethodConfig methodConfig, Map valueMap) {
         super(euModule, methodConfig, valueMap);
         CustomFormViewBean viewBean = (CustomFormViewBean) methodConfig.getView();
+        try {
+            this.init(methodConfig);
+        } catch (JDSException e) {
+            e.printStackTrace();
+        }
 
-        if (getMainComponent() instanceof BlockComponent){
-            BlockProperties properties= (BlockProperties) getMainComponent().getProperties();
+        if (getMainComponent() instanceof BlockComponent) {
+            BlockProperties properties = (BlockProperties) getMainComponent().getProperties();
             properties.setBorderType(viewBean.getBorderType());
             properties.setBackground(viewBean.getBackground());
             properties.setOverflow(viewBean.getOverflow());
             properties.setShowEffects(viewBean.getShowEffects());
             properties.setHideEffects(viewBean.getHideEffects());
-        }
-
-        try {
-            this.init(methodConfig);
-        } catch (JDSException e) {
-            e.printStackTrace();
         }
     }
 
@@ -128,16 +127,12 @@ public class FullClassFormComponent extends CustomModuleComponent<CustomFormComp
             }
 
         }
-
-
         CustomFormComponent currComponent = new CustomFormComponent(euModule, viewBean.getAllFields(), valueMap, viewBean);
-
+        this.addChildLayoutNav(currComponent);
+        this.setCurrComponent(currComponent);
         if (viewBean != null) {
             fillFromAction(viewBean, currComponent);
         }
-        this.addChildLayoutNav(currComponent);
-        this.setCurrComponent(currComponent);
-
         APICallerComponent[] apiCallerComponents = this.genAPIComponent(getCtxBaseComponent(), getMainComponent());
         this.addChildren(apiCallerComponents);
         this.fillToolBar(viewBean, currComponent);
