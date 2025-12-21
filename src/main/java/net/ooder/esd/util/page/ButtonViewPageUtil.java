@@ -97,7 +97,7 @@ public class ButtonViewPageUtil {
                 Class[] classes = tabItemBean.getBindClass();
                 MethodConfig editorMethod = tabsViewBean.findMethodByEvent(CustomTabsEvent.TABEDITOR, classes);
                 if (editorMethod != null) {
-                    if (!editorMethod.getImageClass().equals(MethodConfig.DefaultImageClass)) {
+                    if (tabItemBean.getImageClass() == null && !editorMethod.getImageClass().equals(MethodConfig.DefaultImageClass)) {
                         t.setImageClass(editorMethod.getImageClass());
                     }
                     String euClassName = editorMethod.getEUClassName();
