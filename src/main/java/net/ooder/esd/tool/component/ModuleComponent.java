@@ -1433,10 +1433,11 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     @JSONField(serialize = false)
     public DialogComponent<DialogProperties, DialogEventEnum> getDialogComponent() {
 
-        DialogComponent<DialogProperties, DialogEventEnum> dialog;
+        //DialogComponent<DialogProperties, DialogEventEnum> dialog;
         String mainAlias = getMainAlias();
-        dialog = (DialogComponent<DialogProperties, DialogEventEnum>) this.findComponentByAlias(mainAlias);
-        if (dialog == null) {
+        Component dialog = this.findComponentByAlias(mainAlias);
+
+        if (dialog == null || !(dialog instanceof DialogComponent)) {
             DialogBean dialogBean = null;
             PanelType panelType = this.getProperties().getPanelType();
             if (moduleBean != null) {
@@ -1475,7 +1476,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         }
 
 
-        return dialog;
+        return (DialogComponent<DialogProperties, DialogEventEnum>) dialog;
     }
 
 
@@ -2094,7 +2095,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
     @JSONField(serialize = false)
     public Component getMainBoxComponent() {
         String mainAlias = getMainAlias();
-        Component    mainComponent = components.get(mainAlias);
+        Component mainComponent = components.get(mainAlias);
         if (mainComponent == null) {
             PanelType panelType = this.getProperties().getPanelType();
             if (panelType == null && this.currComponent != null) {
