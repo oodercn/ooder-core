@@ -74,7 +74,7 @@ public class NavTabListItem extends TabListItem {
             if (euClassName == null) {
                 this.euClassName = childMethod.getEUClassName();
             }
-            if (!childMethod.getImageClass().equals(MethodConfig.DefaultImageClass)) {
+            if (this.imageClass == null && !childMethod.getImageClass().equals(MethodConfig.DefaultImageClass)) {
                 this.imageClass = childMethod.getImageClass();
             }
         } else if (childTabViewBean.getConstructorBean() != null) {

@@ -120,7 +120,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
 //    protected Component mainComponent;
 
 
-    @JSONField(name = "Static")
+    @JSONField(name = "Static", serialize = false)
     ModuleViewConfig viewConfig;
 
     @JSONField(serialize = false)
@@ -1664,12 +1664,12 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
                 }
             }
             //预装载应用
-            List<Component> childModules = this.findComponents(ComponentType.MODULE, null);
-            for (Component child : childModules) {
-                if (!required.contains(child.getModuleComponent().getClassName())) {
-                    required.add(child.getModuleComponent().getClassName());
-                }
-            }
+//            List<Component> childModules = this.findComponents(ComponentType.MODULE, null);
+//            for (Component child : childModules) {
+//                if (!required.contains(child.getModuleComponent().getClassName())) {
+//                    required.add(child.getModuleComponent().getClassName());
+//                }
+//            }
         }
         return required;
     }
