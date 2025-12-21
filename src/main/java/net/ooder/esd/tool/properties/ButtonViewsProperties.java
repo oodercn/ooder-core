@@ -16,7 +16,10 @@ import net.ooder.esd.util.ESDEnumsUtil;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.RequestParamBean;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ButtonViewsProperties extends NavTabsProperties<ButtonViewsListItem> {
 
@@ -30,12 +33,7 @@ public class ButtonViewsProperties extends NavTabsProperties<ButtonViewsListItem
 
 
     public ButtonViewsProperties(CustomButtonViewsViewBean tabsViewBean, Map valueMap) {
-        List<TabItemBean> childTabViewBeans = tabsViewBean.getItemBeans();
-        for (TabItemBean childTabViewBean : childTabViewBeans) {
-            ButtonViewsListItem navItemProperties = new ButtonViewsListItem(childTabViewBean, valueMap);
-            this.addItem(navItemProperties);
-        }
-        this.init(tabsViewBean);
+        this.init(tabsViewBean, valueMap);
     }
 
     public ButtonViewsProperties(MethodConfig methodConfig, Map valueMap) {
@@ -43,70 +41,72 @@ public class ButtonViewsProperties extends NavTabsProperties<ButtonViewsListItem
         this.setBorderType(BorderType.none);
         this.name = methodConfig.getName();
         this.caption = methodConfig.getCaption();
-        this.imageClass = methodConfig.getImageClass();
-        Map<String, Object> tagMap = new HashMap<>();
+        //  Map<String, Object> tagMap = new HashMap<>();
         Set<RequestParamBean> paramBeans = methodConfig.getParamSet();
         for (RequestParamBean paramBean : paramBeans) {
             if (!Arrays.asList(DSMFactory.SkipParams).contains(paramBean.getParamName())) {
                 Object obj = valueMap.get(paramBean.getParamName());
                 if (obj != null && !obj.equals("")) {
-                    tagMap.put(paramBean.getParamName(), obj);
+                    this.addTagVar(paramBean.getParamName(), obj);
                 }
             }
         }
 
+
         if (tabsViewBean != null) {
-            this.init(tabsViewBean);
+            this.init(tabsViewBean, valueMap);
         }
     }
 
-    void init(CustomButtonViewsViewBean tabsViewBean) {
+    void init(CustomButtonViewsViewBean tabsViewBean, Map valueMap) {
+
+        List<TabItemBean> childTabViewBeans = tabsViewBean.getItemBeans();
 
         List<FieldModuleConfig> moduleList = tabsViewBean.getNavItems();
 
-        if (moduleList != null && moduleList.size() > 0) {
+
+        if (childTabViewBeans != null && !childTabViewBeans.isEmpty()) {
+            for (TabItemBean childTabViewBean : childTabViewBeans) {
+                ButtonViewsListItem navItemProperties = new ButtonViewsListItem(childTabViewBean, valueMap);
+                this.addItem(navItemProperties);
+            }
+
+        } else if (moduleList != null && moduleList.size() > 0) {
             for (FieldModuleConfig itemInfo : moduleList) {
                 ButtonViewsListItem navItemProperties = new ButtonViewsListItem(itemInfo);
                 navItemProperties.getTagVar().putAll(itemInfo.getTagVar());
                 this.addItem(navItemProperties);
             }
-        } else {
-            if (tabsViewBean.getItemBeans() != null && !tabsViewBean.getItemBeans().isEmpty()) {
-                List<ButtonViewsListItem> tabItemBeans = new ArrayList<>();
-                for (TabItemBean item : tabsViewBean.getItemBeans()) {
-                    tabItemBeans.add(new ButtonViewsListItem(item));
-                }
-                this.setItems(tabItemBeans);
-            }
+        }
 
+        if (this.getItems() == null && tabsViewBean.getItemBeans() != null && !tabsViewBean.getTabItems().isEmpty()) {
             for (ButtonViewsListItem item : tabsViewBean.getTabItems()) {
                 this.addItem(item);
             }
+        }
 
-            if (this.getItems() == null || this.getItems().isEmpty()) {
-                Class<? extends Enum> enumClass = tabsViewBean.getEnumClass();
-                Class<? extends Enum> viewClass = null;
-                String viewClassName = tabsViewBean.getViewClassName();
-                if (viewClassName != null) {
-                    Class clazz = null;
-                    try {
-                        clazz = ClassUtility.loadClass(viewClassName);
-                        if (clazz.isEnum()) {
-                            viewClass = clazz;
-                        }
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+        if (this.getItems() == null || this.getItems().isEmpty()) {
+            Class<? extends Enum> enumClass = tabsViewBean.getEnumClass();
+            Class<? extends Enum> viewClass = null;
+            String viewClassName = tabsViewBean.getViewClassName();
+            if (viewClassName != null) {
+                Class clazz = null;
+                try {
+                    clazz = ClassUtility.loadClass(viewClassName);
+                    if (clazz.isEnum()) {
+                        viewClass = clazz;
                     }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
-                List<ButtonViewsListItem> items = this.getItems();
-                if (viewClass != null) {
-                    items = ESDEnumsUtil.getEnumItems(viewClass, ButtonViewsListItem.class);
-                } else if (enumClass != null) {
-                    items = ESDEnumsUtil.getEnumItems(enumClass, ButtonViewsListItem.class);
-                }
-                this.setItems(items);
             }
-
+            List<ButtonViewsListItem> items = this.getItems();
+            if (viewClass != null) {
+                items = ESDEnumsUtil.getEnumItems(viewClass, ButtonViewsListItem.class);
+            } else if (enumClass != null) {
+                items = ESDEnumsUtil.getEnumItems(enumClass, ButtonViewsListItem.class);
+            }
+            this.setItems(items);
         }
 
 
