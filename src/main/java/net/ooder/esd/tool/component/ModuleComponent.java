@@ -1010,7 +1010,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         for (Component component : componentList) {
             components.put(component.getAlias(), component);
         }
-        this.addChildren(this.getCtxBaseComponent());
+        this.addChildren(ctxBaseComponent);
 
         this.setProperties(properties);
 
@@ -1032,19 +1032,27 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         Component component = null;
         if (components != null && !components.isEmpty()) {
             String moduleName = this.getAlias();
-            if (this.getEuModule() != null && this.getEuModule().getName() != null) {
-                moduleName = this.getEuModule().getName();
+            for (Map.Entry<String, Component> entry : components.entrySet()) {
+                if (entry.getValue().getHost().equals("canvas")) {
+                    component = entry.getValue();
+                }
             }
-            if (moduleName == null && this.getCurrComponent() != null) {
-                moduleName = this.getCurrComponent().getAlias();
-                moduleName = OODUtil.formatJavaName(moduleName, true);
+            if (component == null) {
+                if (this.getEuModule() != null && this.getEuModule().getName() != null) {
+                    moduleName = this.getEuModule().getName();
+                }
+                if (moduleName == null && this.getCurrComponent() != null) {
+                    moduleName = this.getCurrComponent().getAlias();
+                    moduleName = OODUtil.formatJavaName(moduleName, true);
+                }
+                if (moduleName.endsWith(CustomViewFactory.dynBuild)) {
+                    moduleName = moduleName.substring(0, moduleName.length() - CustomViewFactory.dynBuild.length());
+                } else if (!moduleName.endsWith(DefaultTopBoxfix)) {
+                    moduleName = moduleName + DefaultTopBoxfix;
+                }
+                component = this.components.get(moduleName);
             }
-            if (moduleName.endsWith(CustomViewFactory.dynBuild)) {
-                moduleName = moduleName.substring(0, moduleName.length() - CustomViewFactory.dynBuild.length());
-            } else if (!moduleName.endsWith(DefaultTopBoxfix)) {
-                moduleName = moduleName + DefaultTopBoxfix;
-            }
-            component = this.components.get(moduleName);
+
         }
         if (component == null) {
             component = this.getMainBoxComponent();

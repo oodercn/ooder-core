@@ -236,7 +236,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         if (caption == null) {
             this.caption = component.getProperties().getDesc() == null ? component.getAlias() : component.getProperties().getDesc();
         }
-        ModuleComponent simModuleComponent = new ModuleComponent(component,euClassName);
+        ModuleComponent simModuleComponent = new ModuleComponent(component.clone(), euClassName);
         ModuleProperties moduleProperties = new ModuleProperties();
         DSMProperties dsmProperties = new DSMProperties();
         dsmProperties.setSourceClassName(parentModuleComponent.getClassName());
