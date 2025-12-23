@@ -41,7 +41,7 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
 
     String methodName;
 
-    String packageName;
+    //  String packageName;
 
     String sourceMethodName;
 
@@ -228,22 +228,32 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
         this.target = component.getTarget();
         this.alias = component.getAlias();
         this.index = component.getProperties().getTabindex() == null ? 1 : component.getProperties().getTabindex();
+
+        ModuleProperties moduleProperties = new ModuleProperties();
+        DSMProperties dsmProperties = new DSMProperties();
         ModuleComponent parentModuleComponent = component.getModuleComponent();
-        this.packageName = parentModuleComponent.getClassName().substring(0, parentModuleComponent.getClassName().lastIndexOf("."));
+        if (parentModuleComponent != null) {
+            dsmProperties.setSourceClassName(parentModuleComponent.getClassName());
+            ModuleProperties parentModuleProperties = parentModuleComponent.getProperties();
+            if (parentModuleProperties.getDsmProperties() != null) {
+                dsmProperties.setDomainId(parentModuleProperties.getDsmProperties().getDomainId());
+            }
+        }
+
+
         if (euClassName == null) {
-            this.euClassName = packageName + "." + OODUtil.formatJavaName(component.getAlias(), true);
+            if (parentModuleComponent != null) {
+                String packageName = parentModuleComponent.getClassName().substring(0, parentModuleComponent.getClassName().lastIndexOf("."));
+                this.euClassName = packageName + "." + OODUtil.formatJavaName(component.getAlias(), true);
+            } else {
+                this.euClassName = OODUtil.formatJavaName(component.getAlias(), true);
+            }
+
         }
         if (caption == null) {
             this.caption = component.getProperties().getDesc() == null ? component.getAlias() : component.getProperties().getDesc();
         }
         ModuleComponent simModuleComponent = new ModuleComponent(component.clone(), euClassName);
-        ModuleProperties moduleProperties = new ModuleProperties();
-        DSMProperties dsmProperties = new DSMProperties();
-        dsmProperties.setSourceClassName(parentModuleComponent.getClassName());
-        ModuleProperties parentModuleProperties = parentModuleComponent.getProperties();
-        if (parentModuleProperties.getDsmProperties() != null) {
-            dsmProperties.setDomainId(parentModuleProperties.getDsmProperties().getDomainId());
-        }
         dsmProperties.setRealPath(component.getPath());
         moduleProperties.setMethodName(this.methodName);
         moduleProperties.setDsmProperties(dsmProperties);
@@ -1389,14 +1399,6 @@ public class CustomModuleBean implements CustomBean, Comparable<CustomModuleBean
             panelBean.getDivBean().setContainerBean(containerBean);
         }
         return panelBean;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
     }
 
     public Boolean getInitMethod() {

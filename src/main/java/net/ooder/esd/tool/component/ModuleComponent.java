@@ -1869,7 +1869,7 @@ public class ModuleComponent<M extends Component> extends Component<ModuleProper
         } else if (currComponent == null) {
             currComponent = (M) this.findComponentByAlias(curAlias);
         }
-        if (currComponent == null) {
+        if (currComponent == null || (currComponent.getHost() != null && currComponent.getHost().equals("canvas"))) {
             List<Component> childView = deepCheckComponent();
             if (childView.size() == 1) {
                 currComponent = (M) childView.get(0);
