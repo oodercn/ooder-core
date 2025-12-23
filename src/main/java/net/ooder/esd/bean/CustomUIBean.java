@@ -75,6 +75,7 @@ public class CustomUIBean implements CustomBean {
 
     private void init(Properties properties) {
         CustomUIBean obj = JSONObject.parseObject(JSON.toJSONString(properties), CustomUIBean.class);
+
         Map valueMap = JSON.parseObject(JSON.toJSONString(obj), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
     }

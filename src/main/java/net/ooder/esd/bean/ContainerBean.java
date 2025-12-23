@@ -1,19 +1,20 @@
 package net.ooder.esd.bean;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
+import net.ooder.annotation.Disabled;
 import net.ooder.esb.config.manager.EsbBeanFactory;
-import net.ooder.esd.annotation.field.AnimBinder;
 import net.ooder.esd.annotation.ContainerAnnotation;
 import net.ooder.esd.annotation.DockAnnotation;
 import net.ooder.esd.annotation.UIAnnotation;
+import net.ooder.esd.annotation.field.AnimBinder;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.properties.Properties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
-import net.ooder.annotation.Disabled;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
@@ -73,23 +74,11 @@ public class ContainerBean implements CustomBean {
 
     public void update(Component component) {
         this.init(component.getProperties());
-        if (dockBean == null) {
-            dockBean = new DockBean(component);
-        } else {
-            dockBean.update(component);
-        }
+        String json = JSON.toJSONString(component.getProperties());
 
-        if (disabledBean == null) {
-            disabledBean = new DisabledBean(component);
-        } else {
-            disabledBean.update(component);
-        }
-
-        if (uiBean == null) {
-            uiBean = new CustomUIBean(component);
-        } else {
-            uiBean.update(component);
-        }
+        dockBean = JSONObject.parseObject(json, DockBean.class);
+        disabledBean = JSONObject.parseObject(json, DisabledBean.class);
+        uiBean = JSONObject.parseObject(json, CustomUIBean.class);
 
         if (className != null && component.getModuleComponent() != null && className.equals(component.getModuleComponent().getClassName())) {
             className = null;

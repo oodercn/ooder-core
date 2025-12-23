@@ -135,11 +135,8 @@ public class CustomFieldModuleComponent extends BlockComponent {
                             this.addChildren(currComponent);
                             module.getComponent().addChildren(genAPIComponent(currComponent, moduleComponent, fieldMethodConfig));
                             break;
-
                     }
                 }
-
-
                 this.setProperties(blockProperties);
             } else {
                 this.getProperties().setHtml("module " + fieldBean.getSrc() + " not fround!");

@@ -15,7 +15,6 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.view.CustomSVGPaperViewBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldSVGPaperComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
-import net.ooder.esd.tool.component.DivComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.SVGPaperComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
@@ -43,7 +42,6 @@ public class CustomSVGPaperFieldBean extends BaseWidgetBean<CustomSVGPaperViewBe
 
     String html;
 
-
     String width;
 
     String height;
@@ -62,22 +60,21 @@ public class CustomSVGPaperFieldBean extends BaseWidgetBean<CustomSVGPaperViewBe
         if (component != null) {
             this.updateFieldBean(component);
         }
-
-            this.update(parentModuleComponent, component);
+        this.update(parentModuleComponent, component);
 
     }
-
 
 
     @Override
     public void update(ModuleComponent parentModuleComponent, SVGPaperComponent component) {
-        this.initWidget(parentModuleComponent,component);
+        this.initWidget(parentModuleComponent, component);
         updateFieldBean(component);
         List<JavaSrcBean> javaSrcBeans = new ArrayList<>();
         if (component.getChildren() != null && component.getChildren().size() > 0) {
-           super.update(parentModuleComponent, component);
+            super.update(parentModuleComponent, component);
         }
     }
+
     @Override
     public CustomSVGPaperViewBean createViewBean(ModuleComponent currModuleComponent, SVGPaperComponent component) {
         if (viewBean == null) {
