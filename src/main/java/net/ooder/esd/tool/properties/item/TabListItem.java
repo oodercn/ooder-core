@@ -337,8 +337,6 @@ public class TabListItem<T extends Enum> extends UIItem<T> {
                     enumBuffer.append(clazz.getName() + ".class,");
                 }
             }
-        } else {
-            enumBuffer.append("null");
         }
         String enumStr = enumBuffer.toString();
         if (enumStr.endsWith(",")) {
