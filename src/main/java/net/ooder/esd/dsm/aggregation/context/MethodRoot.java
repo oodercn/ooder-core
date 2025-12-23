@@ -14,7 +14,6 @@ import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.data.CustomDataBean;
 import net.ooder.esd.bean.field.CustomFieldBean;
 import net.ooder.esd.bean.field.CustomModuleEmbedFieldBean;
-import net.ooder.esd.bean.field.combo.CustomModuleRefFieldBean;
 import net.ooder.esd.bean.view.CustomModuleBean;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.engine.EUModule;
@@ -177,9 +176,7 @@ public class MethodRoot {
         }
 
 
-        if (moduleViewType != null)
-
-        {
+        if (moduleViewType != null) {
             if (moduleViewType.getAppendType().equals(AppendType.append)) {
                 annotationBeans.addAll(moduleBean.getUIAnnotationBeans());
             } else if (moduleBean.getBindService() != null && !moduleBean.getBindService().equals(Void.class)) {
@@ -194,17 +191,10 @@ public class MethodRoot {
                 annotationBeans.add(apiCallBean);
                 annotationBeans.add(requestMapping);
             }
-        } else
-
-        {
+        } else {
             annotationBeans.addAll(moduleBean.getUIAnnotationBeans());
         }
-
-        if (!annotationBeans.contains(new
-
-                SimpleCustomBean(ResponseBody.class)))
-
-        {
+        if (!annotationBeans.contains(new SimpleCustomBean(ResponseBody.class))) {
             annotationBeans.add(new SimpleCustomBean(ResponseBody.class));
         }
         return annotationBeans;

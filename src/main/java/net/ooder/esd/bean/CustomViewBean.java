@@ -277,7 +277,6 @@ public abstract class CustomViewBean<T extends ESDFieldConfig, U extends UIItem,
                                 javaSrcBeans.add(javaGenSource);
                             }
                         }
-
                     } catch (ExecutionException e) {
                         e.printStackTrace();
                     }

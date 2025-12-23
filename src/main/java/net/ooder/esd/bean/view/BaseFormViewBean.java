@@ -147,8 +147,9 @@ public abstract class BaseFormViewBean<M extends Component> extends CustomViewBe
     }
 
 
-    protected List<Callable<List<JavaGenSource>>> genChildComponent(ModuleComponent moduleComponent, List<Component> components) {
+    protected List<Callable<List<JavaGenSource>>> genChildComponent(ModuleComponent moduleComponent, List<Component> child) {
         List<Callable<List<JavaGenSource>>> tasks = new ArrayList<>();
+        List<Component> components = this.cloneComponentList(child);
         for (Component component : components) {
             FieldFormConfig fieldFormConfig = findFieldByCom(component);
             ComponentType componentType = ComponentType.fromType(component.getKey());

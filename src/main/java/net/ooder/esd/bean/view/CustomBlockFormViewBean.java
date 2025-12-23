@@ -91,13 +91,14 @@ public class CustomBlockFormViewBean extends BaseFormViewBean {
             containerBean.update(currComponent);
         }
 
-        List<Component> components = currComponent.getChildren();//this.cloneComponentList(currComponent.getChildren());
+           List<Component> components = currComponent.getChildren();//this.cloneComponentList(currComponent.getChildren());
+
         for (Component component : components) {
             FieldFormConfig fieldFormConfig = findFieldByCom(component);
             this.fieldConfigMap.put(fieldFormConfig.getFieldname(), fieldFormConfig);
         }
 
-        tasks = genChildComponent(moduleComponent, components);
+        tasks = genChildComponent(moduleComponent,  this.cloneComponentList(currComponent.getChildren()));
         childModules = tasks;
         try {
             DSMFactory.getInstance().saveCustomViewEntity(this);
