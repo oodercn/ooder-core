@@ -298,13 +298,15 @@ public class TabItemBean<T extends FieldItemConfig> implements ContextMenuBar, C
     public List<MethodConfig> getMethodConfigList() {
         if (methodConfigList == null || methodConfigList.isEmpty()) {
             try {
-                if (bindClass != null && bindClass.length > 0) {
+                if (bindClass != null && bindClass.length > 0 && bindClass[0] != null && !bindClass[0].equals(Void.class)) {
                     for (Class clazz : bindClass) {
-                        if (clazz != null) {
+                        if (clazz != null && !clazz.equals(Void.class)) {
                             ApiClassConfig apiClassConfig = DSMFactory.getInstance().getAggregationManager().getApiClassConfig(clazz.getName());
-                            MethodConfig methodConfig = apiClassConfig.findEditorMethod();
-                            if (methodConfig != null && !methodConfigList.contains(methodConfig)) {
-                                methodConfigList.add(methodConfig);
+                            if (apiClassConfig != null) {
+                                MethodConfig methodConfig = apiClassConfig.findEditorMethod();
+                                if (methodConfig != null && !methodConfigList.contains(methodConfig)) {
+                                    methodConfigList.add(methodConfig);
+                                }
                             }
 
                         }

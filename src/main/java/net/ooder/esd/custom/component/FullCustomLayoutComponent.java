@@ -133,7 +133,6 @@ public class FullCustomLayoutComponent extends CustomModuleComponent<LayoutCompo
                                     if (!apiCom.getAlias().startsWith(spliceName)) {
                                         apiCom.updateAlias(spliceName + apiCom.getAlias());
                                     }
-
                                     this.addChildren(apiCom);
                                 }
 
