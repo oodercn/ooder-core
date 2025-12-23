@@ -30,7 +30,6 @@ public class CustomFieldSVGPaperComponent extends SVGPaperComponent {
 
     public CustomFieldSVGPaperComponent(EUModule euModule, FieldFormConfig<CustomSVGPaperFieldBean, ?> field, String target, Object value, Map<String, Object> valueMap) {
         CustomSVGPaperViewBean customComponentViewBean = (CustomSVGPaperViewBean) field.getMethodConfig().getView();
-
         this.setAlias(field.getFieldname());
         init(euModule, customComponentViewBean, valueMap);
         this.setTarget(target);
