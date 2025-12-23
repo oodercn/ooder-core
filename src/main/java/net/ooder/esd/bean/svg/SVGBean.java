@@ -28,7 +28,8 @@ public class SVGBean implements CustomBean {
     String path;
     // tabindex/zIndex is for compitable only
     Boolean tabindex;
-    Boolean zIndex;
+
+    String zIndex;
     Boolean disableClickEffect;
     Boolean disableHoverEffect;
     Boolean disableTips;
@@ -128,7 +129,7 @@ public class SVGBean implements CustomBean {
     }
 
 
-    public void setzIndex(Boolean zIndex) {
+    public void setzIndex(String zIndex) {
         this.zIndex = zIndex;
     }
 
@@ -242,7 +243,7 @@ public class SVGBean implements CustomBean {
         return tabindex;
     }
 
-    public Boolean getzIndex() {
+    public String getzIndex() {
         return zIndex;
     }
 

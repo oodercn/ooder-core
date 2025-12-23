@@ -29,7 +29,7 @@ public class CustomUIBean implements CustomBean {
 
     public VisibilityType visibility;
 
-    public Integer zindex;
+    public Integer zIndex;
 
     public String display;
 
@@ -75,7 +75,6 @@ public class CustomUIBean implements CustomBean {
 
     private void init(Properties properties) {
         CustomUIBean obj = JSONObject.parseObject(JSON.toJSONString(properties), CustomUIBean.class);
-
         Map valueMap = JSON.parseObject(JSON.toJSONString(obj), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
     }
@@ -102,12 +101,12 @@ public class CustomUIBean implements CustomBean {
         this.shadows = shadows;
     }
 
-    public Integer getZindex() {
-        return zindex;
+    public Integer getzIndex() {
+        return zIndex;
     }
 
-    public void setZindex(Integer zindex) {
-        this.zindex = zindex;
+    public void setzIndex(Integer zIndex) {
+        this.zIndex = zIndex;
     }
 
     @JSONField(serialize = false)

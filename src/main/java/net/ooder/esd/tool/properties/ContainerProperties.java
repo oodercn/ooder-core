@@ -1,10 +1,14 @@
 package net.ooder.esd.tool.properties;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.ContainerBean;
+import net.ooder.esd.bean.CustomUIBean;
+import net.ooder.esd.bean.DisabledBean;
+import net.ooder.esd.bean.DockBean;
 import net.ooder.esd.tool.properties.list.DataProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 
@@ -75,10 +79,14 @@ public class ContainerProperties extends DataProperties {
 
     public void init(ContainerBean containerBean) {
         if (containerBean != null) {
-            List<CustomBean> items = containerBean.getAnnotationBeans();
-            for (CustomBean customBean : items) {
-                OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(customBean), Map.class), this, false, false);
+            OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(containerBean), Map.class), this, false, false);
+            if (containerBean.getDisabledBean()!=null){
+                OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(containerBean.getDisabledBean()), Map.class), this, false, false);
             }
+            if (containerBean.getDockBean()!=null){
+                OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(containerBean.getDockBean()), Map.class), this, false, false);
+            }
+
             super.init(containerBean.getUiBean());
         }
 

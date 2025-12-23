@@ -3,7 +3,6 @@ package net.ooder.esd.tool.properties;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
-import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.ui.Dock;
 import net.ooder.esd.annotation.ui.UIPositionType;
 import net.ooder.esd.annotation.ui.VisibilityType;
@@ -13,7 +12,6 @@ import net.ooder.esd.util.json.CaseEnumsSerializer;
 import net.ooder.esd.util.json.EMSerializer;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 
-import java.util.List;
 import java.util.Map;
 
 
@@ -53,14 +51,10 @@ public class AbsUIProperties extends Properties {
     }
 
     public void init(CustomUIBean uiBean) {
-        if (uiBean != null && uiBean.getAnnotationBeans() != null) {
-            List<CustomBean> items = uiBean.getAnnotationBeans();
-            for (CustomBean customBean : items) {
-                AbsUIProperties obj = JSONObject.parseObject(JSON.toJSONString(customBean), AbsUIProperties.class);
-                Map valueMap = JSON.parseObject(JSON.toJSONString(obj), Map.class);
-                OgnlUtil.setProperties(valueMap, this, false, false);
-            }
-
+        if (uiBean != null) {
+            AbsUIProperties obj = JSONObject.parseObject(JSON.toJSONString(uiBean), AbsUIProperties.class);
+            Map valueMap = JSON.parseObject(JSON.toJSONString(obj), Map.class);
+            OgnlUtil.setProperties(valueMap, this, false, false);
         }
     }
 
