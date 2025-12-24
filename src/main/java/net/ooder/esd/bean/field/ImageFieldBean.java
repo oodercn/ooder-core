@@ -57,16 +57,20 @@ public class ImageFieldBean extends FieldBaseBean<ImageComponent> {
         }
     }
 
-    @Override
-    public void update(ModuleComponent moduleComponent, ImageComponent component) {
-        this.updateProperties(component.getProperties());
-        super.update(moduleComponent, component);
 
+    public ImageFieldBean(ModuleComponent moduleComponent, ImageComponent component) {
+        super(moduleComponent, component);
     }
 
-    public void updateProperties(ImageProperties imageProperties) {
-        Map valueMap = JSON.parseObject(JSON.toJSONString(imageProperties), Map.class);
+    public void updateProperties(ImageProperties properties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
+    }
+
+    @Override
+    public void update(ModuleComponent moduleComponent, ImageComponent component) {
+        updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
     }
 
     public ImageFieldBean(ComboInputProperties properties) {
