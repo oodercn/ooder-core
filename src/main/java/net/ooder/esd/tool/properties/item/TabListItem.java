@@ -25,7 +25,7 @@ import net.sf.cglib.beans.BeanMap;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TabListItem<T extends Enum> extends UIItem<T> {
+public class TabListItem<T extends Enum> extends UIItem<T>  {
     protected static final Log logger = LogFactory.getLog(JDSConstants.CONFIG_KEY, TabListItem.class);
     public String image;
     public Boolean closeBtn;

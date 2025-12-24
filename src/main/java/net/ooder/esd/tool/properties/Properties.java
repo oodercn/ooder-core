@@ -30,7 +30,6 @@ public class Properties implements Comparable<Properties> {
     public String expression;
 
 
-
     public Map<?, Event> events;
 
 
