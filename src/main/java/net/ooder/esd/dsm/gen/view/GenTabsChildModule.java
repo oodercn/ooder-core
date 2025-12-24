@@ -24,6 +24,8 @@ public class GenTabsChildModule extends BaseGenChildModule<BaseTabsViewBean> {
     private final String projectName;
 
 
+
+
     public GenTabsChildModule(ModuleComponent moduleComponent, Component childComponent, BaseTabsViewBean tabsViewBean) {
         super(moduleComponent, childComponent, tabsViewBean);
         currListItem = tabsViewBean.findTabItem(target, tabsViewBean.getTabItems());

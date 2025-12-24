@@ -268,6 +268,7 @@ public abstract class BaseTabsViewBean<E extends CustomEvent, U extends TabListI
     }
 
 
+
     protected void initTabItems(TabListItem tabListItem, String projectName) throws JDSException {
         String euClassName = tabListItem.getEuClassName();
         if (euClassName != null) {

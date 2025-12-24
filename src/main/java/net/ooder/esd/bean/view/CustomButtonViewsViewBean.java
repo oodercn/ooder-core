@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.common.JDSException;
 import net.ooder.common.util.CaselessStringKeyHashMap;
+import net.ooder.common.util.ClassUtility;
 import net.ooder.esd.annotation.ButtonViewsAnnotation;
 import net.ooder.esd.annotation.event.CustomTabsEvent;
 import net.ooder.esd.annotation.field.TabItem;
@@ -17,6 +18,8 @@ import net.ooder.esd.custom.properties.ButtonViewsListItem;
 import net.ooder.esd.dsm.DSMFactory;
 import net.ooder.esd.dsm.gen.view.GenTabsChildModule;
 import net.ooder.esd.dsm.java.JavaGenSource;
+import net.ooder.esd.engine.ESDFacrory;
+import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.tool.DSMProperties;
 import net.ooder.esd.tool.component.ButtonViewsComponent;
 import net.ooder.esd.tool.component.Component;
@@ -24,6 +27,7 @@ import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.ModulePlaceHolder;
 import net.ooder.esd.tool.properties.ButtonViewsProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
+import net.ooder.web.RequestParamBean;
 import net.ooder.web.util.AnnotationUtil;
 import net.ooder.web.util.JSONGenUtil;
 
@@ -94,10 +98,27 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
         if (components != null && components.size() > 0) {
             for (Component childComponent : components) {
                 ModuleViewType comModuleViewType = ModuleViewType.getModuleViewByCom(ComponentType.fromType(childComponent.getKey()));
-                if (!(childComponent instanceof ModuleComponent) && !(childComponent instanceof ModulePlaceHolder) && !comModuleViewType.equals(ModuleViewType.NONE)) {
-                    GenTabsChildModule genChildModule = new GenTabsChildModule(moduleComponent, childComponent, this);
-                    tasks.add(genChildModule);
-                    navModuleBeans.add(genChildModule.getCmoduleBean());
+                try {
+                    if (childComponent instanceof ModuleComponent) {
+                        ModuleComponent childModule = (ModuleComponent) childComponent;
+                        try {
+                            bindItem(childModule);
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (childComponent instanceof ModulePlaceHolder) {
+                        String className = ((ModulePlaceHolder) childComponent).getModuleClass();
+                        EUModule module = ESDFacrory.getAdminESDClient().getModule(className, moduleComponent.getProjectName());
+                        if (module != null && module.getComponent() != null) {
+                            bindItem(module.getComponent());
+                        }
+                    } else if (!comModuleViewType.equals(ModuleViewType.NONE)) {
+                        GenTabsChildModule genChildModule = new GenTabsChildModule(moduleComponent, childComponent, this);
+                        tasks.add(genChildModule);
+                        navModuleBeans.add(genChildModule.getCmoduleBean());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -107,6 +128,43 @@ public class CustomButtonViewsViewBean extends BaseTabsViewBean<CustomTabsEvent,
         childModules = tasks;
         this.setModuleBeans(navModuleBeans);
         return tasks;
+    }
+
+    private Set<MethodConfig> bindItem(ModuleComponent childModule) throws ClassNotFoundException {
+        String target = childModule.getTarget();
+        ButtonViewsListItem currListItem = tabItems.get(0);
+        for (ButtonViewsListItem tabItem : tabItems) {
+            if (target.equals(tabItem.getId())) {
+                currListItem = tabItem;
+            }
+        }
+        List<Class> classList = new ArrayList<>();
+        if (currListItem.getBindClass() != null && currListItem.getBindClass().length > 0) {
+            for (Class clazz : currListItem.getBindClass()) {
+                try {
+                    if (clazz != null) {
+                        classList.add(ClassUtility.loadClass(clazz.getName()));
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        Set<MethodConfig> methodConfigs = new HashSet<>();
+        MethodConfig editorMethod = childModule.getMethodAPIBean();
+        if (childModule.getMethodAPIBean() != null) {
+            currListItem.setEuClassName(((ModuleComponent) childModule).getClassName());
+            RequestParamBean[] requestParamBeanArr = (RequestParamBean[]) editorMethod.getParamSet().toArray(new RequestParamBean[]{});
+            currListItem.fillParams(requestParamBeanArr, null);
+            Class clazz = ClassUtility.loadClass(editorMethod.getSourceClassName());
+            if (!classList.contains(clazz)) {
+                classList.add(clazz);
+            }
+            currListItem.setBindClass(classList.toArray(new Class[]{}));
+        }
+
+
+        return methodConfigs;
     }
 
 
