@@ -29,7 +29,10 @@ public class CustomUIBean implements CustomBean {
 
     public VisibilityType visibility;
 
+    //层叠顺序
     public Integer zIndex;
+    //Tab顺序
+    public Integer tabindex;
 
     public String display;
 
@@ -191,6 +194,13 @@ public class CustomUIBean implements CustomBean {
         this.imageClass = imageClass;
     }
 
+    public Integer getTabindex() {
+        return tabindex;
+    }
+
+    public void setTabindex(Integer tabindex) {
+        this.tabindex = tabindex;
+    }
 
     public String getLeft() {
         return left;
