@@ -45,6 +45,12 @@ public class TreeListItem<T extends TreeListItem> extends TabListItem implements
     }
 
 
+    public TreeListItem(String id, String caption) {
+        this.id = id;
+        this.caption = caption;
+
+    }
+
     public TreeListItem(String id, String caption, String imageClass, String tips, Map<String, Object> params) {
         this.id = id;
         this.caption = caption;
@@ -339,11 +345,6 @@ public class TreeListItem<T extends TreeListItem> extends TabListItem implements
         this.type = inputType;
     }
 
-    public TreeListItem(String id, String caption) {
-        this.id = id;
-        this.caption = caption;
-
-    }
 
     public TreeListItem(String id, String caption, String imageClass, String tips, ComboInputType type, IconColorEnum iconColor, ItemColorEnum itemColor, FontColorEnum fontColor) {
         super(id, caption, imageClass, tips, type);
