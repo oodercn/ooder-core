@@ -248,6 +248,7 @@ public abstract class BaseWidgetBean<T extends CustomViewBean, M extends Compone
     @JSONField(serialize = false)
     public List<CustomBean> getFieldAnnotationBeans() {
         List<CustomBean> annotationBeans = new ArrayList<>();
+
         if (viewBean == null) {
             viewBean = genViewBean();
         }

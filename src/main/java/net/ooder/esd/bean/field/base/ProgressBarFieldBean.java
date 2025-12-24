@@ -1,5 +1,6 @@
 package net.ooder.esd.bean.field.base;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomClass;
@@ -10,16 +11,18 @@ import net.ooder.esd.annotation.ui.LayoutType;
 import net.ooder.esd.bean.field.FieldBaseBean;
 import net.ooder.esd.custom.component.form.field.CustomProgressBarComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.HTMLButtonComponent;
 import net.ooder.esd.tool.component.ProgressBarComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.tool.properties.form.HTMLButtonProperties;
+import net.ooder.esd.tool.properties.form.ProgressBarProperties;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 @CustomClass(clazz = CustomProgressBarComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.PROGRESSBAR
@@ -40,13 +43,20 @@ public class ProgressBarFieldBean extends FieldBaseBean<ProgressBarComponent> {
 
     LayoutType layoutType;
 
-    @Override
-    public void  update(ModuleComponent moduleComponent, ProgressBarComponent component) {
 
+    public ProgressBarFieldBean(ModuleComponent moduleComponent, ProgressBarComponent component) {
+        super(moduleComponent, component);
     }
 
-    public ProgressBarFieldBean(ProgressBarComponent component) {
-        super(component);
+    public void updateProperties(ProgressBarProperties properties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+    }
+
+    @Override
+    public void update(ModuleComponent moduleComponent, ProgressBarComponent component) {
+        updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
     }
 
     public ProgressBarFieldBean(Set<Annotation> annotations) {

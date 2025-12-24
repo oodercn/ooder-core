@@ -5,12 +5,11 @@ import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.RightContextMenu;
 import net.ooder.esd.annotation.Widget;
-import net.ooder.esd.annotation.event.FieldEvent;
 import net.ooder.esd.bean.ContainerBean;
-import net.ooder.esd.bean.FieldEventBean;
 import net.ooder.esd.bean.RightContextMenuBean;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.FieldComponent;
+import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.CustomWidgetBean;
 import net.ooder.esd.tool.properties.Event;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -40,15 +39,19 @@ public abstract class FieldBaseBean<M extends FieldComponent> implements FieldCo
     CustomWidgetBean widgetBean;
 
 
-
     public FieldBaseBean() {
 
     }
 
+    @JSONField(serialize = false)
     public List<JavaSrcBean> javaSrcBeans;
 
 
-    public FieldBaseBean(M fieldComponent) {
+    public FieldBaseBean(ModuleComponent moduleComponent, M fieldComponent) {
+        this.update(moduleComponent, fieldComponent);
+    }
+
+    public void update(ModuleComponent moduleComponent, M fieldComponent) {
         Map valueMap = JSON.parseObject(JSON.toJSONString(fieldComponent.getProperties()), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
         this.xpath = fieldComponent.getPath();

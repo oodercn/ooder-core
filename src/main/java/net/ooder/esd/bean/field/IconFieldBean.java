@@ -1,5 +1,6 @@
 package net.ooder.esd.bean.field;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.IconAnnotation;
@@ -11,13 +12,15 @@ import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.IconComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.tool.component.RichEditorComponent;
+import net.ooder.esd.tool.properties.IconProperties;
+import net.ooder.esd.tool.properties.form.RichEditorProperties;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 @CustomClass(clazz = CustomIconComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.ICON
@@ -50,13 +53,21 @@ public class IconFieldBean extends FieldBaseBean<IconComponent> {
 
     String iconColor;
 
-    @Override
-    public void update(ModuleComponent moduleComponent, IconComponent component) {
 
+
+    public IconFieldBean(ModuleComponent moduleComponent, IconComponent component) {
+        super(moduleComponent, component);
     }
 
-    public IconFieldBean(IconComponent component) {
-        super(component);
+    public void updateProperties(IconProperties properties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+    }
+
+    @Override
+    public void update(ModuleComponent moduleComponent, IconComponent component) {
+        updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
     }
 
 

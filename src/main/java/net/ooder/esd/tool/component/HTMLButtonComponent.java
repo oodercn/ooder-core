@@ -5,29 +5,28 @@ import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.form.HTMLButtonProperties;
 
-public class HTMLButtonComponent<T extends HTMLButtonProperties, K extends BottonEventEnum> extends FieldComponent<T, K> {
+public class HTMLButtonComponent extends FieldComponent<HTMLButtonProperties, BottonEventEnum> {
 
     public HTMLButtonComponent(String alias) {
         super(ComponentType.BUTTON, alias);
-        this.setProperties((T) new HTMLButtonProperties());
+        this.setProperties(new HTMLButtonProperties());
     }
 
-    public HTMLButtonComponent(String alias, T properties) {
+    public HTMLButtonComponent(String alias, HTMLButtonProperties properties) {
         super(ComponentType.BUTTON, alias);
         this.setProperties(properties);
     }
 
 
-    public HTMLButtonComponent addAction(Action<K> action) {
-        super.addAction( action);
+    public HTMLButtonComponent addAction(Action<BottonEventEnum> action) {
+        super.addAction(action);
         return this;
     }
 
     public HTMLButtonComponent() {
         super(ComponentType.BUTTON);
-        this.setProperties((T) new HTMLButtonProperties());
+        this.setProperties(new HTMLButtonProperties());
     }
-
 
 
 }

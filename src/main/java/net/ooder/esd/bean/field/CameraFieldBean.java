@@ -12,6 +12,9 @@ import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.CameraComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.tool.component.VideoComponent;
+import net.ooder.esd.tool.properties.CameraProperties;
+import net.ooder.esd.tool.properties.VideoProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -50,16 +53,20 @@ public class CameraFieldBean extends FieldBaseBean<CameraComponent> {
 
     String poster;
 
-    public CameraFieldBean(CameraComponent component) {
-        super(component);
 
+    public CameraFieldBean(ModuleComponent moduleComponent, CameraComponent component) {
+        super(moduleComponent, component);
+    }
+
+    public void updateProperties(CameraProperties properties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
     }
 
     @Override
     public void update(ModuleComponent moduleComponent, CameraComponent component) {
-        Map valueMap = JSON.parseObject(JSON.toJSONString(component.getProperties()), Map.class);
-        OgnlUtil.setProperties(valueMap, this, false, false);
-
+        updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
     }
 
 

@@ -1,21 +1,23 @@
 package net.ooder.esd.bean.field;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.ButtonAnnotation;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.custom.component.form.field.CustomButtonComponent;
-import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ButtonComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.tool.properties.form.ButtonProperties;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
 @CustomClass(clazz = CustomButtonComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.BUTTON
@@ -51,15 +53,26 @@ public class ButtonFieldBean extends FieldBaseBean<ButtonComponent> {
     ButtonType buttonType;
 
 
+
+    public ButtonFieldBean(ModuleComponent moduleComponent, ButtonComponent component) {
+
+        super(moduleComponent, component);
+    }
+
+
+
+
+    public void updateProperties(ButtonProperties buttonProperties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(buttonProperties), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+    }
+
+
     @Override
     public void update(ModuleComponent moduleComponent, ButtonComponent component) {
-
+        updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
     }
-
-    public ButtonFieldBean(ButtonComponent component) {
-        super(component);
-    }
-
 
     public ButtonFieldBean(Set<Annotation> annotations) {
         super(annotations);

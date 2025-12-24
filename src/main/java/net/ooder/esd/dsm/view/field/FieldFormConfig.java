@@ -455,55 +455,76 @@ public class FieldFormConfig<M extends FieldComponentBean, N extends ComboBoxBea
             checkAnns.add(this);
         }
 
-        M widget = getWidgetConfig();
-        if (widget != null) {
-            ComponentBean widgetBean = getWidgetConfig();
-            if (widgetBean instanceof ComboBoxBean) {
-                if (widget != null) {
-                    List<CustomBean> customBeans = widget.getAnnotationBeans();
-                    for (CustomBean customBean : customBeans) {
-                        if (customBean instanceof ComboInputFieldBean) {
-                            ComboInputType comboInputType = ((ComboInputFieldBean) customBean).getInputType();
-                            if (comboInputType != null && comboInputType.equals(ComboInputType.input)) {
+
+        if (this.getMethodRoot() == null) {
+            M widget = getWidgetConfig();
+            if (widget != null) {
+                ComponentBean widgetBean = getWidgetConfig();
+                if (widgetBean instanceof ComboBoxBean) {
+                    if (widget != null) {
+                        List<CustomBean> customBeans = widget.getAnnotationBeans();
+                        for (CustomBean customBean : customBeans) {
+                            if (customBean instanceof ComboInputFieldBean) {
+                                ComboInputType comboInputType = ((ComboInputFieldBean) customBean).getInputType();
+                                if (comboInputType != null && comboInputType.equals(ComboInputType.input)) {
+                                    if (!classEqual(customBean, checkAnns)) {
+                                        checkAnns.add(customBean);
+                                    }
+                                }
+                            } else {
                                 if (!classEqual(customBean, checkAnns)) {
                                     checkAnns.add(customBean);
                                 }
                             }
-                        } else {
+                        }
+                    } else {
+                        List<CustomBean> customBeans = widget.getAnnotationBeans();
+                        for (CustomBean customBean : customBeans) {
                             if (!classEqual(customBean, checkAnns)) {
                                 checkAnns.add(customBean);
                             }
                         }
                     }
                 } else {
-                    List<CustomBean> customBeans = widget.getAnnotationBeans();
+                    List<CustomBean> customBeanList = widgetBean.getAnnotationBeans();
+                    if (widgetBean instanceof WidgetBean) {
+                        customBeanList = ((WidgetBean) widgetBean).getFieldAnnotationBeans();
+                    }
+                    for (CustomBean customBean : customBeanList) {
+                        if (!classEqual(customBean, checkAnns)) {
+                            checkAnns.add(customBean);
+                        }
+                    }
+                }
+
+                if (comboConfig != null && !comboConfig.getInputType().equals(ComboInputType.input)) {
+                    List<CustomBean> customBeans = comboConfig.getAnnotationBeans();
                     for (CustomBean customBean : customBeans) {
                         if (!classEqual(customBean, checkAnns)) {
                             checkAnns.add(customBean);
                         }
                     }
                 }
-            } else {
-                List<CustomBean> customBeanList = widgetBean.getAnnotationBeans();
-                if (widgetBean instanceof WidgetBean) {
-                    customBeanList = ((WidgetBean) widgetBean).getFieldAnnotationBeans();
+            }
+        } else {
+            List<CustomBean> customBeans = this.getMethodRoot().getAnnotationBeans();
+            for (CustomBean customBean : customBeans) {
+                if (!classEqual(customBean, checkAnns)) {
+                    checkAnns.add(customBean);
                 }
+            }
+            ComponentBean widgetBean = getWidgetConfig();
+            if (widgetBean != null && widgetBean instanceof WidgetBean) {
+                List<CustomBean> customBeanList = ((WidgetBean) widgetBean).getFieldAnnotationBeans();
                 for (CustomBean customBean : customBeanList) {
                     if (!classEqual(customBean, checkAnns)) {
                         checkAnns.add(customBean);
                     }
                 }
             }
-
-            if (comboConfig != null && !comboConfig.getInputType().equals(ComboInputType.input)) {
-                List<CustomBean> customBeans = comboConfig.getAnnotationBeans();
-                for (CustomBean customBean : customBeans) {
-                    if (!classEqual(customBean, checkAnns)) {
-                        checkAnns.add(customBean);
-                    }
-                }
-            }
         }
+
+
         return checkAnns;
     }
 

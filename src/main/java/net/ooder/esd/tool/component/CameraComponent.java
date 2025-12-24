@@ -4,16 +4,17 @@ import net.ooder.esd.annotation.event.CameraEventEnum;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.CameraProperties;
+import org.checkerframework.checker.units.qual.K;
 
-public class CameraComponent<T extends CameraProperties, K extends CameraEventEnum> extends FieldComponent<T, K> {
+public class CameraComponent extends FieldComponent<CameraProperties, CameraEventEnum> {
 
 
-    public CameraComponent addAction(Action<K> action) {
+    public CameraComponent addAction(Action<CameraEventEnum> action) {
         super.addAction( action);
         return this;
     }
 
-    public CameraComponent(String alias, T properties) {
+    public CameraComponent(String alias, CameraProperties properties) {
         super(ComponentType.CAMERA, alias);
         this.setProperties(properties);
 
@@ -21,6 +22,6 @@ public class CameraComponent<T extends CameraProperties, K extends CameraEventEn
 
     public CameraComponent() {
         super(ComponentType.CAMERA);
-        this.setProperties((T) new CameraProperties());
+        this.setProperties( new CameraProperties());
     }
 }

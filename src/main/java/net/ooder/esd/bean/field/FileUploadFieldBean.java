@@ -1,5 +1,6 @@
 package net.ooder.esd.bean.field;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.FileUploadAnnotation;
@@ -8,16 +9,18 @@ import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.Dock;
 import net.ooder.esd.custom.component.form.field.CustomFileUploadComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.ButtonComponent;
 import net.ooder.esd.tool.component.FileUploadComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.tool.properties.form.ButtonProperties;
+import net.ooder.esd.tool.properties.form.FileUploadProperties;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 @CustomClass(clazz = CustomFileUploadComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.FILEUPLOAD
@@ -40,16 +43,26 @@ public class FileUploadFieldBean extends FieldBaseBean<FileUploadComponent> {
     Dock dock;
 
 
+
+    public FileUploadFieldBean(ModuleComponent moduleComponent, FileUploadComponent component) {
+
+        super(moduleComponent, component);
+    }
+
+
+
+
+    public void updateProperties(FileUploadProperties fileUploadProperties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(fileUploadProperties), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+    }
+
+
     @Override
     public void update(ModuleComponent moduleComponent, FileUploadComponent component) {
-
+        updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
     }
-
-    public FileUploadFieldBean(FileUploadComponent fileUploadComponent) {
-        super(fileUploadComponent);
-    }
-
-
 
     public FileUploadFieldBean(Set<Annotation> annotations) {
         super(annotations);

@@ -1,5 +1,6 @@
 package net.ooder.esd.bean.field;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.HTMLButtonAnnotation;
@@ -7,16 +8,18 @@ import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.custom.component.form.field.CustomHTMLButtonComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.AudioComponent;
 import net.ooder.esd.tool.component.HTMLButtonComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.tool.properties.AudioProperties;
+import net.ooder.esd.tool.properties.form.HTMLButtonProperties;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 @CustomClass(clazz = CustomHTMLButtonComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.HTMLBUTTON
@@ -51,13 +54,20 @@ public class HTMLButtonFieldBean extends FieldBaseBean<HTMLButtonComponent> {
     String fontFamily;
 
 
-    @Override
-    public void update(ModuleComponent moduleComponent, HTMLButtonComponent component) {
 
+    public HTMLButtonFieldBean(ModuleComponent moduleComponent, HTMLButtonComponent component) {
+        super(moduleComponent, component);
     }
 
-    public HTMLButtonFieldBean(HTMLButtonComponent component) {
-        super(component);
+    public void updateProperties(HTMLButtonProperties properties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+    }
+
+    @Override
+    public void update(ModuleComponent moduleComponent, HTMLButtonComponent component) {
+        updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
     }
 
     public HTMLButtonFieldBean( Set<Annotation> annotations) {

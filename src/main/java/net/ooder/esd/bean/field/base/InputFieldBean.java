@@ -1,6 +1,8 @@
 package net.ooder.esd.bean.field.base;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.Input;
@@ -11,17 +13,18 @@ import net.ooder.esd.annotation.ui.InputType;
 import net.ooder.esd.bean.field.FieldBaseBean;
 import net.ooder.esd.bean.field.InputBean;
 import net.ooder.esd.custom.component.form.field.CustomFieldInputComponent;
-import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.InputComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.tool.properties.form.InputProperties;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
 @CustomClass(clazz = CustomFieldInputComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.INPUT
@@ -42,15 +45,23 @@ public class InputFieldBean extends FieldBaseBean<InputComponent> {
 
     public Integer autoexpand;
 
+    public InputFieldBean(ModuleComponent moduleComponent, InputComponent component) {
+        super(moduleComponent, component);
+    }
+
+
+    public void updateProperties(InputProperties properties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+    }
+
     @Override
     public void update(ModuleComponent moduleComponent, InputComponent component) {
-
-    }
-
-    public InputFieldBean(InputComponent component) {
-        super(component);
+        this.updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
         inputBean = new InputBean(component);
     }
+
 
 
     public InputFieldBean() {

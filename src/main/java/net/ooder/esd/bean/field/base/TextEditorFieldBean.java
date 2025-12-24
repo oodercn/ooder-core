@@ -1,5 +1,6 @@
 package net.ooder.esd.bean.field.base;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomClass;
@@ -11,13 +12,13 @@ import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.RichEditorComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.tool.properties.form.RichEditorProperties;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 @CustomClass(clazz = CustomTextEditorComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.TEXTEDITOR
@@ -66,14 +67,20 @@ public class TextEditorFieldBean extends FieldBaseBean<RichEditorComponent> {
     VAlignType labelVAlign;
 
 
-    @Override
-    public void  update(ModuleComponent moduleComponent, RichEditorComponent component) {
 
+    public TextEditorFieldBean(ModuleComponent moduleComponent, RichEditorComponent component) {
+        super(moduleComponent, component);
     }
 
-    public TextEditorFieldBean(RichEditorComponent component) {
-        super(component);
+    public void updateProperties(RichEditorProperties properties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+    }
 
+    @Override
+    public void update(ModuleComponent moduleComponent, RichEditorComponent component) {
+        updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
     }
 
 

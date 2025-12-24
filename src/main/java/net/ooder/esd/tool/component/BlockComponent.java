@@ -24,6 +24,13 @@ public class BlockComponent extends WidgetComponent<BlockProperties, UIEventEnum
         return this;
     }
 
+    public BlockComponent(String alias) {
+        super(ComponentType.BLOCK);
+        this.setAlias(alias);
+        this.setProperties(new BlockProperties(Dock.none));
+        this.getProperties().setBorderType(BorderType.none);
+    }
+
     public BlockComponent() {
         super(ComponentType.BLOCK);
         this.setProperties(new BlockProperties(Dock.fill));

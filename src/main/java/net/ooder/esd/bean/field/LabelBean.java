@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSON;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.Label;
+import net.ooder.esd.annotation.UIAnnotation;
 import net.ooder.esd.annotation.ui.HAlignType;
 import net.ooder.esd.annotation.ui.LabelPos;
 import net.ooder.esd.annotation.ui.VAlignType;
+import net.ooder.esd.bean.CustomUIBean;
 import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.properties.Properties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
@@ -33,6 +35,8 @@ public class LabelBean implements CustomBean {
 
     VAlignType labelVAlign;
 
+    CustomUIBean uiBean;
+
     public LabelBean() {
 
     }
@@ -53,6 +57,9 @@ public class LabelBean implements CustomBean {
             if (annotation instanceof Label) {
                 fillData((Label) annotation);
             }
+            if (annotation instanceof UIAnnotation) {
+                uiBean = new CustomUIBean(annotations);
+            }
         }
     }
 
@@ -69,6 +76,13 @@ public class LabelBean implements CustomBean {
         OgnlUtil.setProperties(valueMap, this, false, false);
     }
 
+    public CustomUIBean getUiBean() {
+        return uiBean;
+    }
+
+    public void setUiBean(CustomUIBean uiBean) {
+        this.uiBean = uiBean;
+    }
 
     public Integer getManualWidth() {
         return manualWidth;

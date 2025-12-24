@@ -2,16 +2,16 @@ package net.ooder.esd.bean.field.base;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.CheckBoxAnnotation;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.bean.field.FieldBaseBean;
 import net.ooder.esd.custom.component.form.field.CustomCheckBoxComponent;
-import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.CheckBoxComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
-import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.tool.properties.form.CheckBoxProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -46,17 +46,22 @@ public class CheckBoxFieldBean extends FieldBaseBean<CheckBoxComponent> {
 
     String caption;
 
+    public CheckBoxFieldBean(ModuleComponent moduleComponent, CheckBoxComponent component) {
+        super(moduleComponent, component);
+    }
+
+
+    public void updateProperties(CheckBoxProperties checkBoxProperties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(checkBoxProperties), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+    }
+
     @Override
     public void update(ModuleComponent moduleComponent, CheckBoxComponent component) {
-        Map valueMap = JSON.parseObject(JSON.toJSONString(component.getProperties()), Map.class);
-        OgnlUtil.setProperties(valueMap, this, false, false);
+        this.updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
 
     }
-
-    public CheckBoxFieldBean(CheckBoxComponent component) {
-        super(component);
-    }
-
 
     public CheckBoxFieldBean(Set<Annotation> annotations) {
         super(annotations);

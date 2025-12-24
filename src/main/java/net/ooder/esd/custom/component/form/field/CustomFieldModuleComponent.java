@@ -16,9 +16,11 @@ import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.ProjectVersion;
-import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.component.*;
-import net.ooder.esd.tool.properties.*;
+import net.ooder.esd.tool.properties.APICallerProperties;
+import net.ooder.esd.tool.properties.Action;
+import net.ooder.esd.tool.properties.BlockProperties;
+import net.ooder.esd.tool.properties.UrlPathData;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -30,12 +32,11 @@ public class CustomFieldModuleComponent extends BlockComponent {
 
 
     public CustomFieldModuleComponent(EUModule module, FieldFormConfig<?, ?> field, String target, Object value, Map<String, Object> valueMap) {
-        super(Dock.fill, field.getFieldname());
+        super(field.getFieldname());
         CustomModuleRefFieldBean fieldBean = null;
         if (field.getWidgetConfig() instanceof CustomModuleEmbedFieldBean) {
             fieldBean = new CustomModuleRefFieldBean((CustomModuleEmbedFieldBean) field.getWidgetConfig());
         }
-
 
         EUModule euModule = module;
         MethodConfig sourceMethodConfig = module.getComponent().getMethodAPIBean();
@@ -59,7 +60,7 @@ public class CustomFieldModuleComponent extends BlockComponent {
             if (fieldMethodConfig != null) {
                 CustomBlockBean blockBean = fieldMethodConfig.getModuleBean().getBlockBean();
                 blockBean.setContainerBean(field.getContainerBean());
-                CustomBlockBean methodBlock = new CustomBlockBean(AnnotationUtil.getAllAnnotations(fieldMethodConfig.getMethod(),true));
+                CustomBlockBean methodBlock = new CustomBlockBean(AnnotationUtil.getAllAnnotations(fieldMethodConfig.getMethod(), true));
                 //合并方法注解
                 OgnlUtil.setProperties(JSON.parseObject(JSON.toJSONString(methodBlock), Map.class), blockBean, false, false);
                 BlockProperties blockProperties = new BlockProperties(blockBean);

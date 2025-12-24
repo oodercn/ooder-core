@@ -2,22 +2,24 @@ package net.ooder.esd.bean.field;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import net.ooder.annotation.AnnotationType;
 import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.ImageAnnotation;
 import net.ooder.esd.annotation.ui.ComponentType;
 import net.ooder.esd.annotation.ui.CursorType;
 import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.custom.component.form.field.CustomImageComponent;
-import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.ImageComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.form.ComboInputProperties;
+import net.ooder.esd.tool.properties.form.ImageProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
-import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @CustomClass(clazz = CustomImageComponent.class,
         viewType = CustomViewType.COMPONENT,
@@ -40,6 +42,10 @@ public class ImageFieldBean extends FieldBaseBean<ImageComponent> {
 
     String alt;
 
+    public ImageFieldBean() {
+
+    }
+
 
     public ImageFieldBean(Set<Annotation> annotations) {
         super(annotations);
@@ -53,20 +59,19 @@ public class ImageFieldBean extends FieldBaseBean<ImageComponent> {
 
     @Override
     public void update(ModuleComponent moduleComponent, ImageComponent component) {
-        Map valueMap = JSON.parseObject(JSON.toJSONString(component.getProperties()), Map.class);
+        this.updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
+
+    }
+
+    public void updateProperties(ImageProperties imageProperties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(imageProperties), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
     }
 
-    public ImageFieldBean(ImageComponent component) {
-        super(component);
-    }
-
-    public ImageFieldBean(ComboInputProperties properties ) {
+    public ImageFieldBean(ComboInputProperties properties) {
         Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
-    }
-    public ImageFieldBean() {
-
     }
 
 
@@ -146,7 +151,7 @@ public class ImageFieldBean extends FieldBaseBean<ImageComponent> {
     @Override
     @JSONField(serialize = false)
     public Set<Class> getOtherClass() {
-        Set<Class> classSet=new HashSet<>();
+        Set<Class> classSet = new HashSet<>();
 
         return classSet;
     }

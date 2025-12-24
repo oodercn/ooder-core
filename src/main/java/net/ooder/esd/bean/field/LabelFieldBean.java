@@ -7,17 +7,17 @@ import net.ooder.esd.annotation.CustomClass;
 import net.ooder.esd.annotation.field.LabelAnnotation;
 import net.ooder.esd.annotation.ui.*;
 import net.ooder.esd.custom.component.form.field.CustomLabelComponent;
-import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.LabelComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.esd.tool.properties.form.LabelProperties;
 import net.ooder.esd.util.json.CaseEnumsSerializer;
-import net.ooder.esd.util.json.EnumsSerializer;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @CustomClass(clazz = CustomLabelComponent.class,
         viewType = CustomViewType.COMPONENT,
@@ -58,9 +58,16 @@ public class LabelFieldBean extends FieldBaseBean<LabelComponent> {
 
     String excelCellFormula;
 
+
+    public LabelFieldBean(ModuleComponent moduleComponent, LabelComponent component) {
+        super(moduleComponent, component);
+
+    }
+
     @Override
     public void update(ModuleComponent moduleComponent, LabelComponent component) {
-
+        updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
     }
 
     public LabelFieldBean(Set<Annotation> annotations) {
@@ -74,7 +81,7 @@ public class LabelFieldBean extends FieldBaseBean<LabelComponent> {
     }
 
 
-    public LabelFieldBean(LabelProperties labelProperties) {
+    public void updateProperties(LabelProperties labelProperties) {
         Map valueMap = JSON.parseObject(JSON.toJSONString(labelProperties), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
     }
@@ -103,7 +110,7 @@ public class LabelFieldBean extends FieldBaseBean<LabelComponent> {
         this.excelCellFormula = excelCellFormula;
     }
 
-    public     UIPositionType getPosition() {
+    public UIPositionType getPosition() {
         return position;
     }
 

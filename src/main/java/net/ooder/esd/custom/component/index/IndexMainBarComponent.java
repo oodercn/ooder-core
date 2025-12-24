@@ -32,7 +32,7 @@ public class IndexMainBarComponent extends DivComponent {
     }
 
     IconComponent getUserIcon() {
-        IconComponent<IconProperties, ?> logoLabelCom = new IconComponent();
+        IconComponent logoLabelCom = new IconComponent();
         logoLabelCom.setAlias("userIcon");
         IconProperties logoProperties = logoLabelCom.getProperties();
         logoProperties.setLeft("10em");

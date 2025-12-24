@@ -1,5 +1,6 @@
 package net.ooder.esd.bean.field.base;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.annotation.CustomBean;
 import net.ooder.esd.annotation.CustomClass;
@@ -11,16 +12,18 @@ import net.ooder.esd.bean.ToolBarMenuBean;
 import net.ooder.esd.bean.field.FieldBaseBean;
 import net.ooder.esd.custom.component.form.field.CustomRichEditorComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.ProgressBarComponent;
 import net.ooder.esd.tool.component.RichEditorComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.tool.properties.form.ProgressBarProperties;
+import net.ooder.esd.tool.properties.form.RichEditorProperties;
+import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 @CustomClass(clazz = CustomRichEditorComponent.class,
         viewType = CustomViewType.COMPONENT,
         componentType = ComponentType.RICHEDITOR
@@ -59,13 +62,20 @@ public class RichEditorFieldBean extends FieldBaseBean<RichEditorComponent> {
     public ToolBarMenuBean toolBar;
 
 
-    @Override
-    public void  update(ModuleComponent moduleComponent, RichEditorComponent component) {
 
+    public RichEditorFieldBean(ModuleComponent moduleComponent, RichEditorComponent component) {
+        super(moduleComponent, component);
     }
 
-    public RichEditorFieldBean(RichEditorComponent richEditorComponent) {
-        super(richEditorComponent);
+    public void updateProperties(RichEditorProperties properties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+    }
+
+    @Override
+    public void update(ModuleComponent moduleComponent, RichEditorComponent component) {
+        updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
     }
 
     public RichEditorFieldBean() {

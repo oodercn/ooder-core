@@ -9,9 +9,12 @@ import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.PreloadType;
 import net.ooder.esd.custom.component.form.field.CustomVideoComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.TensorComponent;
 import net.ooder.esd.tool.component.VideoComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.tool.properties.VideoProperties;
+import net.ooder.esd.tool.properties.form.TensorProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -50,18 +53,22 @@ public class VideoFieldBean extends FieldBaseBean<VideoComponent> {
 
     String poster;
 
+
+
+    public VideoFieldBean(ModuleComponent moduleComponent, VideoComponent component) {
+        super(moduleComponent, component);
+    }
+
+    public void updateProperties(VideoProperties properties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+    }
+
     @Override
     public void update(ModuleComponent moduleComponent, VideoComponent component) {
-        Map valueMap = JSON.parseObject(JSON.toJSONString(component.getProperties()), Map.class);
-        OgnlUtil.setProperties(valueMap, this, false, false);
-
+        updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
     }
-
-    public VideoFieldBean(VideoComponent component) {
-        super(component);
-
-    }
-
 
 
 

@@ -13,7 +13,7 @@ import org.mvel2.templates.TemplateRuntime;
 
 import java.util.Map;
 
-public class CustomIconComponent<T extends IconProperties, K extends IconEventEnum> extends IconComponent<T, K> {
+public class CustomIconComponent extends IconComponent {
 
 
     public CustomIconComponent(EUModule euModule, FieldFormConfig<IconFieldBean, ?> field, String target, Object value, Map valueMap) {
@@ -34,7 +34,7 @@ public class CustomIconComponent<T extends IconProperties, K extends IconEventEn
         IconProperties properties = new IconProperties(iconFieldBean,field.getContainerBean());
         properties.setId(field.getId());
         properties.setName(field.getFieldname());
-        this.setProperties((T) properties);
+        this.setProperties( properties);
         this.setTarget(target);
 
     }

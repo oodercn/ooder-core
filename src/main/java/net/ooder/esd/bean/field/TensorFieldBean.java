@@ -9,9 +9,12 @@ import net.ooder.esd.annotation.ui.CustomViewType;
 import net.ooder.esd.annotation.ui.Dock;
 import net.ooder.esd.custom.component.form.field.CustomTensorComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
+import net.ooder.esd.tool.component.IconComponent;
 import net.ooder.esd.tool.component.TensorComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
 import net.ooder.annotation.AnnotationType;
+import net.ooder.esd.tool.properties.IconProperties;
+import net.ooder.esd.tool.properties.form.TensorProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.web.util.AnnotationUtil;
 
@@ -40,17 +43,21 @@ public class TensorFieldBean extends FieldBaseBean<TensorComponent> {
     Dock dock;
 
 
+
+    public TensorFieldBean(ModuleComponent moduleComponent, TensorComponent component) {
+        super(moduleComponent, component);
+    }
+
+    public void updateProperties(TensorProperties properties) {
+        Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
+        OgnlUtil.setProperties(valueMap, this, false, false);
+    }
+
     @Override
     public void update(ModuleComponent moduleComponent, TensorComponent component) {
-        Map valueMap = JSON.parseObject(JSON.toJSONString(component.getProperties()), Map.class);
-        OgnlUtil.setProperties(valueMap, this, false, false);
-
+        updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
     }
-
-    public TensorFieldBean(TensorComponent component) {
-        super(component);
-    }
-
 
 
     public TensorFieldBean(Set<Annotation> annotations) {

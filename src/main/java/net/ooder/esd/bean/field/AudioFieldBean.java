@@ -10,7 +10,10 @@ import net.ooder.esd.annotation.ui.PreloadType;
 import net.ooder.esd.custom.component.form.field.CustomAudioComponent;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.tool.component.AudioComponent;
+import net.ooder.esd.tool.component.FileUploadComponent;
 import net.ooder.esd.tool.component.ModuleComponent;
+import net.ooder.esd.tool.properties.AudioProperties;
+import net.ooder.esd.tool.properties.form.FileUploadProperties;
 import net.ooder.jds.core.esb.util.OgnlUtil;
 import net.ooder.annotation.AnnotationType;
 import net.ooder.web.util.AnnotationUtil;
@@ -46,14 +49,27 @@ public class AudioFieldBean extends FieldBaseBean<AudioComponent> {
     Boolean autoplay;
 
 
-    public AudioFieldBean(AudioComponent component) {
-        super(component);
+
+
+    public AudioFieldBean(ModuleComponent moduleComponent, AudioComponent component) {
+        super(moduleComponent, component);
     }
 
-    public AudioFieldBean(Properties properties) {
+
+
+
+    public void updateProperties(AudioProperties properties) {
         Map valueMap = JSON.parseObject(JSON.toJSONString(properties), Map.class);
         OgnlUtil.setProperties(valueMap, this, false, false);
     }
+
+
+    @Override
+    public void update(ModuleComponent moduleComponent, AudioComponent component) {
+        updateProperties(component.getProperties());
+        super.update(moduleComponent, component);
+    }
+
 
 
     public AudioFieldBean(Set<Annotation> annotations) {
@@ -164,11 +180,6 @@ public class AudioFieldBean extends FieldBaseBean<AudioComponent> {
         return AnnotationUtil.toAnnotationStr(this);
     }
 
-
-    @Override
-    public void update(ModuleComponent moduleComponent, AudioComponent component) {
-
-    }
 
     @Override
     public ComponentType getComponentType() {
