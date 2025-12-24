@@ -30,6 +30,7 @@ import net.ooder.esd.engine.ESDFacrory;
 import net.ooder.esd.engine.MySpace;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.APICallerComponent;
+import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.properties.APICallerProperties;
 import net.ooder.esd.tool.properties.UrlPathData;
 import net.ooder.web.APIConfig;
@@ -114,12 +115,12 @@ public class PluginsFactory {
         return topMenuBeans;
     }
 
-    public synchronized List<DynBar> getAllViewBar(CustomMenuType menuType, String domainId) {
-        List<DynBar> viewBars = new ArrayList<>();
+    public synchronized List<Component> getAllViewBar(CustomMenuType menuType, String domainId) {
+        List<Component> viewBars = new ArrayList<>();
         List<MenuBarBean> topMenuBeans = getAllTopMenu(menuType, domainId);
         for (MenuBarBean topMenuBean : topMenuBeans) {
             Class clazz = EsbFactory.guessType("$" + menuType.getSysMenuType().name());
-            DynBar viewBar = getViewBarById(topMenuBean.getId(), clazz, false);
+            Component viewBar =(Component) getViewBarById(topMenuBean.getId(), clazz, false);
             if (viewBar != null) {
                 viewBars.add(viewBar);
             }

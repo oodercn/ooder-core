@@ -23,6 +23,7 @@ import net.ooder.esd.annotation.ui.SymbolType;
 import net.ooder.esd.bean.MethodConfig;
 import net.ooder.esd.bean.RightContextMenuBean;
 import net.ooder.esd.bean.TreeListItem;
+import net.ooder.esd.bean.bar.MenuDynBar;
 import net.ooder.esd.bean.bar.PopDynBar;
 import net.ooder.esd.custom.ApiClassConfig;
 import net.ooder.esd.custom.action.*;
@@ -722,16 +723,17 @@ public class CustomContextBar<T extends PopMenuProperties, K extends PopMenuEven
 
 
     @Override
-    public int compareTo(PopDynBar o) {
-        if (index == null) {
-            return -1;
+    public int compareTo(Component o) {
+        if (o instanceof PopDynBar) {
+            if (index == null) {
+                return -1;
+            }
+            if (index != null &&  ((PopDynBar)o).getIndex()!= null) {
+                return this.index -  ((PopDynBar)o).getIndex();
+            }
         }
 
-        if (index != null && o.getIndex() != null) {
-            return this.index - o.getIndex();
-        }
-
-        return 1;
+        return super.compareTo(o);
     }
 
 }

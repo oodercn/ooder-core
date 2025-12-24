@@ -25,7 +25,7 @@ import org.mvel2.templates.TemplateRuntime;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class Component<T extends Properties, K extends EventKey> {
+public class Component<T extends Properties, K extends EventKey> implements Comparable<Component> {
 
     public static Log logger = LogFactory.getLog(Component.class);
 
@@ -506,7 +506,6 @@ public class Component<T extends Properties, K extends EventKey> {
     private Component getComponentByAlias(String alias) {
         List<Component> components = new ArrayList<>();
         components.addAll(children);
-
         for (Component sub : components) {
             if (sub.getAlias() != null && sub.getAlias().equals(alias)) {
                 return sub;
@@ -516,6 +515,20 @@ public class Component<T extends Properties, K extends EventKey> {
     }
 
     public ComponentList getChildren() {
+
+        if (children != null) {
+            Arrays.sort(children.toArray());
+            int k = 0;
+            for (Component item : children) {
+                Properties properties = item.getProperties();
+                if (properties != null && properties.getTabindex() == null) {
+                    properties.setTabindex(k);
+                }
+                k = k + 1;
+            }
+        }
+
+
         return children;
     }
 
@@ -573,6 +586,15 @@ public class Component<T extends Properties, K extends EventKey> {
             }
         }
         return getAlias() + desc;
+    }
+
+
+    @Override
+    public int compareTo(Component o) {
+        if (this.properties != null && o.getProperties() != null) {
+            return properties.compareTo(o.getProperties());
+        }
+        return 0;
     }
 
     public Boolean getBuildLock() {

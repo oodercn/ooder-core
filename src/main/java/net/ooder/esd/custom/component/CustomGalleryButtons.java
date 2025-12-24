@@ -39,6 +39,8 @@ public class CustomGalleryButtons extends GalleryComponent implements DynBar<Dyn
 
     @JSONField(serialize = false)
     String id;
+
+
     @JSONField(serialize = false)
     CustomGalleryFieldBean menu;
 
@@ -288,10 +290,6 @@ public class CustomGalleryButtons extends GalleryComponent implements DynBar<Dyn
         }
     }
 
-    @Override
-    public int compareTo(DynBar o) {
-        return 0;
-    }
 
 }
 

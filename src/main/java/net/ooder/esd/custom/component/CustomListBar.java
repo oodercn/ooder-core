@@ -351,8 +351,4 @@ public class CustomListBar extends ListComponent implements DynBar<DynBar, TreeL
         this.apis = apis;
     }
 
-    @Override
-    public int compareTo(DynBar o) {
-        return 0;
-    }
 }

@@ -484,8 +484,4 @@ public class CustomCmdBar<T extends Component> implements DynBar<RowCmdDynBar, C
         this.tagCmdsAlign = tagCmdsAlign;
     }
 
-    @Override
-    public int compareTo(RowCmdDynBar o) {
-        return 0;
-    }
 }

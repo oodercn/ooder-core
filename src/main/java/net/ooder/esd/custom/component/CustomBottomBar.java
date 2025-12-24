@@ -370,10 +370,6 @@ public class CustomBottomBar extends StatusButtonsComponent implements DynBar<Dy
         this.menuType = menuType;
     }
 
-    @Override
-    public int compareTo(DynBar o) {
-        return 0;
-    }
 
 }
 

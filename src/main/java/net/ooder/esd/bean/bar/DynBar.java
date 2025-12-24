@@ -6,7 +6,7 @@ import net.ooder.esd.tool.properties.item.UIItem;
 
 import java.util.List;
 
-public interface DynBar<T extends DynBar, I extends UIItem> extends Comparable<T> {
+public interface DynBar<T extends DynBar, I extends UIItem> {
     public String getId();
 
     public List<I> filter(Object obj);

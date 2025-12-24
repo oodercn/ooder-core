@@ -557,11 +557,6 @@ public class CustomMenusBar extends MenuBarComponent implements MenuDynBar<MenuD
         this.showCaption = showCaption;
     }
 
-    @Override
-    public int compareTo(MenuDynBar o) {
-        return o.getIndex() - index;
-    }
-
 
     public List<APICallerComponent> getApis() {
         return apis;

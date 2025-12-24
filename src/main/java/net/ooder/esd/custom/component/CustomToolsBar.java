@@ -28,6 +28,7 @@ import net.ooder.esd.dsm.view.field.FieldFormConfig;
 import net.ooder.esd.engine.EUModule;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.APICallerComponent;
+import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.ToolBarComponent;
 import net.ooder.esd.tool.properties.Action;
 import net.ooder.esd.tool.properties.Condition;
@@ -546,10 +547,18 @@ public class CustomToolsBar extends ToolBarComponent implements MenuDynBar<MenuD
     }
 
     @Override
-    public int compareTo(MenuDynBar o) {
-        return o.getIndex() - index;
-    }
+    public int compareTo(Component o) {
+        if (o instanceof MenuDynBar) {
+            if (index == null) {
+                return -1;
+            }
+            if (index != null &&  ((MenuDynBar)o).getIndex()!= null) {
+                return this.index -  ((MenuDynBar)o).getIndex();
+            }
+        }
 
+        return super.compareTo(o);
+    }
 
     public List<APICallerComponent> getApis() {
         return apis;

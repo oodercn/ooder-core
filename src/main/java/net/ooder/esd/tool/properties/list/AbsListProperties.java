@@ -3,9 +3,9 @@ package net.ooder.esd.tool.properties.list;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.ooder.esd.annotation.ui.BorderType;
 import net.ooder.esd.annotation.ui.SelModeType;
-import net.ooder.esd.util.json.EnumsClassDeserializer;
 import net.ooder.esd.tool.properties.AbsUIProperties;
 import net.ooder.esd.tool.properties.FieldProperties;
+import net.ooder.esd.util.json.EnumsClassDeserializer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,12 +19,10 @@ public class AbsListProperties<T extends AbsUIProperties> extends FieldPropertie
     public Boolean dragSortable;
     public String valueSeparator;
     @JSONField(deserializeUsing = EnumsClassDeserializer.class)
-    public Class<? extends Enum>  enumClass;
+    public Class<? extends Enum> enumClass;
     public SelModeType selMode;
     public BorderType borderType;
     public Boolean activeLast;
-
-
 
 
     public AbsListProperties() {
@@ -55,7 +53,7 @@ public class AbsListProperties<T extends AbsUIProperties> extends FieldPropertie
         return enumClass;
     }
 
-    public void setEnumClass(Class<? extends Enum>  enumClass) {
+    public void setEnumClass(Class<? extends Enum> enumClass) {
         this.enumClass = enumClass;
     }
 
@@ -73,13 +71,20 @@ public class AbsListProperties<T extends AbsUIProperties> extends FieldPropertie
     }
 
 
-
     public List<T> getItems() {
 
         if (items != null) {
             Arrays.sort(items.toArray());
         } else {
             items = new ArrayList<>();
+        }
+        int k = 0;
+        for (T item : items) {
+            if (item != null && item.getTabindex() == null) {
+                item.setTabindex(k);
+
+            }
+            k = k + 1;
         }
         return items;
     }

@@ -20,6 +20,7 @@ import net.ooder.esd.custom.action.CustomConditionAction;
 import net.ooder.esd.custom.action.ShowPageAction;
 import net.ooder.esd.engine.enums.MenuBarBean;
 import net.ooder.esd.tool.component.APICallerComponent;
+import net.ooder.esd.tool.component.Component;
 import net.ooder.esd.tool.component.MenuBarComponent;
 import net.ooder.esd.tool.properties.*;
 import net.ooder.esd.util.json.CaseEnumsSerializer;
@@ -380,15 +381,16 @@ public class RADTopMenu extends MenuBarComponent implements MenuDynBar<MenuDynBa
     }
 
     @Override
-    public int compareTo(MenuDynBar o) {
-        if (index == null) {
-            return -1;
+    public int compareTo(Component o) {
+        if (o instanceof MenuDynBar) {
+            if (index == null) {
+                return -1;
+            }
+            if (index != null &&  ((MenuDynBar)o).getIndex()!= null) {
+                return this.index -  ((MenuDynBar)o).getIndex();
+            }
         }
 
-        if (index != null && o.getIndex() != null) {
-            return this.index - o.getIndex();
-        }
-
-        return 1;
+        return super.compareTo(o);
     }
 }
