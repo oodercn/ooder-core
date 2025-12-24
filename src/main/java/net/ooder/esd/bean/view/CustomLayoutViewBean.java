@@ -89,7 +89,7 @@ public class CustomLayoutViewBean extends CustomViewBean<FieldModuleConfig, Layo
         if (components != null && components.size() > 0) {
             for (Component childComponent : components) {
                 ModuleViewType comModuleViewType = ModuleViewType.getModuleViewByCom(ComponentType.fromType(childComponent.getKey()));
-                if (!comModuleViewType.equals(ModuleViewType.NONE)) {
+                if (!(childComponent instanceof ModuleComponent) && !comModuleViewType.equals(ModuleViewType.NONE)) {
                     GenLayoutChildModule genChildModule = new GenLayoutChildModule(moduleComponent, childComponent, this);
                     navModuleBeans.add(genChildModule.getCmoduleBean());
                     childModules.add(genChildModule);
