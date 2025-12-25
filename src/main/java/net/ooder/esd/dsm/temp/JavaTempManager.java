@@ -3,9 +3,12 @@ package net.ooder.esd.dsm.temp;
 import com.alibaba.fastjson.JSONObject;
 import net.ooder.annotation.AggregationType;
 import net.ooder.annotation.IconEnumstype;
+import net.ooder.common.JDSConstants;
 import net.ooder.common.JDSException;
 import net.ooder.common.database.metadata.MetadataFactory;
 import net.ooder.common.database.metadata.ProviderConfig;
+import net.ooder.common.logging.Log;
+import net.ooder.common.logging.LogFactory;
 import net.ooder.common.md5.MD5InputStream;
 import net.ooder.common.util.ClassUtility;
 import net.ooder.common.util.FileUtility;
@@ -19,6 +22,7 @@ import net.ooder.esd.dsm.enums.*;
 import net.ooder.esd.dsm.java.JavaPackage;
 import net.ooder.esd.dsm.java.JavaSrcBean;
 import net.ooder.esd.engine.MySpace;
+import net.ooder.esd.manager.editor.PluginsFactory;
 import net.ooder.jds.core.esb.EsbUtil;
 import net.ooder.server.JDSServer;
 import net.ooder.server.SubSystem;
@@ -33,6 +37,8 @@ import java.io.*;
 import java.util.*;
 
 public class JavaTempManager {
+
+    private static final Log logger = LogFactory.getLog(JDSConstants.CONFIG_KEY, PluginsFactory.class);
 
     public static final String THREAD_LOCK = "Thread Lock";
 
@@ -235,8 +241,6 @@ public class JavaTempManager {
         }
         return srcBean;
     }
-
-
 
 
     public JavaTemp updateJavaTemp(JavaTemp javaTemp) throws JDSException {
@@ -472,7 +476,7 @@ public class JavaTempManager {
                     }
                 }
             } catch (JDSException e) {
-                e.printStackTrace();
+                logger.warn(e);
             }
         }
         return javaTemps;
@@ -630,7 +634,6 @@ public class JavaTempManager {
         }
         return javaTemps;
     }
-
 
 
     public List<JavaTemp> getCustomViewTemps(ViewType type) throws JDSException {

@@ -92,8 +92,14 @@ public class Header extends UIItem {
         }
 
         for (TreeListItem item : items) {
-            TreeListItem colItem = new TreeListItem(item.getId(), item.getCaption());
-            editorListItems.add(colItem);
+            if (this.editable != null && this.editable) {
+                editorListItems.add(item);
+            } else {
+                TreeListItem colItem = new TreeListItem(item.getId(), item.getCaption());
+                editorListItems.add(colItem);
+            }
+
+
         }
 
         return this;
